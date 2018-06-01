@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="css/index.css">
 
   <!-- load main JAVASCRIPT for this lab -->
+  <script language="javascript" src="js/process_simParams.js" type="text/javascript"></script>
+  <script language="javascript" src="js/puPlugFlowReactor.js" type="text/javascript"></script>
+  <script language="javascript" src="js/puHeatExchanger.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_main.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_interface.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_units.js" type="text/javascript"></script>
@@ -36,21 +39,9 @@
 
 </head>
 <body>
-  <div id="div_page_header">
-    <p>
-    <a href="http://reactorlab.net/web-labs/">Back</a> to Web Labs at ReactorLab.net
-    <p><b><i>Plug Flow Reactor</i></b> with heat exchange jacket</p>
-    <!-- <p id="field_output_field"></p> -->
-    <p>
-      Click the Run button to start.
-      Change an input value, then hit the Enter key or click out of the field.
-      <a href="images/pfr-info.html" target="new">More info</a>
-    </p>
-  </div> <!-- end of div div_page_header -->
 <div id="div_simFrame">
-      <div id="div_PLOTDIV_PFR_plot">
-      </div> <!-- end of div div_PLOTDIV_T_plot -->
-   <canvas id="canvas_CANVAS_jacket" width="201" height="64"></canvas> <!-- canvas for colormap graphic -->
+   <div id="div_PLOTDIV_PFR_plot">
+   </div> <!-- end of div div_PLOTDIV_PFR_plot -->
    <!-- canvas element width & height must be specified here in HTML and not in CSS -->
    <canvas id="canvas_CANVAS_reactor" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
    <!-- canvas element width & height must be specified here in HTML and not in CSS -->
@@ -74,15 +65,51 @@
    <p id="field_reactor_right_T">
       337 K
    </p>
-   <p id='field_color_canvas_label'>
-     Temperature color plot
+   <p id="field_sys_outlet_label">
+      System OUT
    </p>
-   <input type="button" id="button_copyData" value="Copy Data" onclick="copyData(0)">
+  <div id="div_PLOTDIV_T_plot">
+  </div> <!-- end of div div_PLOTDIV_T_plot -->
+  <canvas id="canvas_CANVAS_hot" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
+  <!-- canvas element width & height must be specified here in HTML and not in CSS -->
+  <canvas id="canvas_CANVAS_cold" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
+  <!-- canvas element width & height must be specified here in HTML and not in CSS -->
+   <p id="field_cold_right_arrow">
+      &rarr;
+   </p>
+   <p id="field_hot_right_arrow">
+      &larr;
+   </p>
+   <p id="field_cold_left_arrow">
+      &rarr;
+   </p>
+   <p id="field_hot_left_arrow">
+      &larr;
+   </p>
+   <p id="field_hot_left_T">
+      333 K
+   </p>
+   <p id="field_hot_right_T">
+      333 K
+   </p>
+   <p id="field_cold_left_T">
+      333 K
+   </p>
+   <p id="field_cold_right_T">
+      333 K
+   </p>
+   <p id="field_T_color_plot_label">
+      Temperature color plot
+   </p>
+   <p id="field_sys_inlet_label">
+      System IN
+   </p>
 </div> <!-- end of div div_simFrame -->
-<div id="div_input_fields_group">
+<!-- ************ INPUT FIELDS ************ -->
+<div id="div_input_fields">
    <!-- onchange can send updateUIparams() to process_main.js to update all units *OR* send to specific units -->
    <p id="field_Kf300_label">
-      k at 300 K (m<sup>3</sup>/kg/s)
+      k at 300 K (m<sup shift="-4">3</sup>/kg/s)
    </p>
    <input id="input_field_Kf300" value="1.0e-7" onchange="updateUIparams()">
    <p id="field_Ea_label">
@@ -98,25 +125,23 @@
    </p>
    <input id="input_field_Wcat" value="100" onchange="updateUIparams()">
    <p id="field_Cain_label">
-      Ca-in (mol/m<sup>3</sup>)
+      Ca-in (mol/m<sup shift="-4">3</sup>)
    </p>
    <input id="input_field_Cain" value="500" onchange="updateUIparams()">
    <p id="field_flowrate_label">
-      Flow rate (m<sup>3</sup>/s)
+      Flow rate (m<sup shift="-4">3</sup>/s)
    </p>
    <input id="input_field_Flowrate" value="0.004" onchange="updateUIparams()">
    <p id="field_Tin_label">
-      Tin (K)
+      System inlet T (K)
    </p>
-   <input id="input_field_Tin" value="350" onchange="updateUIparams()">
+   <input id="input_field_Tin" value="325" onchange="updateUIparams()">
    <p id="field_UA_label">
-      UA (kW/kg/K)
+      Heat exch. UA (kW/K)
    </p>
-   <input id="input_field_UA" value="0.1" onchange="updateUIparams()">
-   <p id="field_Tjacket_label">
-      Tjacket (K)
-   </p>
-   <input id="input_field_Tjacket" value="360" onchange="updateUIparams()">
-</div> <!-- end of div div_input_fields_group -->
+   <input id="input_field_UA" value="10" onchange="updateUIparams()">
+   <input type="button" id="button_copyData_reactor" value="Copy RXR Data" onclick="copyData(0)">
+   <input type="button" id="button_copyData_exchanger" value="Copy HX Data" onclick="copyData(2)">
+</div> <!-- end of div div_input_fields -->
 </body>
 </html>

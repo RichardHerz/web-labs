@@ -57,7 +57,7 @@ var plotsObj = {
     plotsObj[pnum]['canvas'] = '#div_PLOTDIV_PFR_plot'; // flot.js wants ID with prefix #
     plotsObj[pnum]['numberPoints'] = processUnits[unum]['numNodes']; // should match numNodes in process unit
     // plot has numberPoints + 1 pts!
-    plotsObj[pnum]['xAxisLabel'] = 'position';
+    plotsObj[pnum]['xAxisLabel'] = 'Position in Reactor';
     plotsObj[pnum]['xAxisTableLabel'] = 'Position'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
@@ -141,7 +141,7 @@ var plotsObj = {
     plotsObj[pnum]['canvas'] = '#div_PLOTDIV_T_plot'; // flot.js wants ID with prefix #
     plotsObj[pnum]['numberPoints'] = processUnits[unum]['numNodes'];
     // plot has numberPoints + 1 pts!
-    plotsObj[pnum]['xAxisLabel'] = 'position in exchanger';
+    plotsObj[pnum]['xAxisLabel'] = 'Position in Heat Exchanger';
     plotsObj[pnum]['xAxisTableLabel'] = 'Position'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers

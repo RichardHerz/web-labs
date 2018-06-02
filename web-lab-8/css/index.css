@@ -146,6 +146,8 @@ canvas {
   border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
+  color: red;
+  font-size: 1.5em;
   border-style: none;
   opacity: 1;
   LCvScrollbar: false;
@@ -163,6 +165,8 @@ canvas {
   border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
+  color: orange;
+  font-size: 1.5em;
   border-style: none;
   opacity: 1;
   LCvScrollbar: false;
@@ -313,6 +317,8 @@ canvas {
   border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
+  color: orange;
+  font-size: 1.5em;
   border-style: none;
   opacity: 1;
   LCvScrollbar: false;
@@ -330,6 +336,8 @@ canvas {
   border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
+  color: red;
+  font-size: 1.5em;
   border-style: none;
   opacity: 1;
   LCvScrollbar: false;
@@ -347,6 +355,8 @@ canvas {
   border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
+  color: blue;
+  font-size: 1.5em;
   border-style: none;
   opacity: 1;
   LCvScrollbar: false;
@@ -364,6 +374,8 @@ canvas {
   border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
+  color: orange;
+  font-size: 1.5em;
   border-style: none;
   opacity: 1;
   LCvScrollbar: false;

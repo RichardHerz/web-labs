@@ -69,7 +69,7 @@ canvas {
 #rxr-hx-lines {
   position: absolute;
   left: 60px;
-  top: 262px;
+  top: 264px;
 }
 
 #div_PLOTDIV_PFR_plot {
@@ -109,7 +109,7 @@ canvas {
   position: absolute;
   /* left: 192px; */
   left: 80px;
-  top: 5px;
+  top: 0px;
   width: 72px;
   height: 23px;
   visibility: visible;
@@ -125,7 +125,7 @@ canvas {
   position: absolute;
   /* left: 268px; */
   left: 156px;
-  top: 4px;
+  top: 0px;
   width: 72px;
   height: 23px;
   visibility: visible;
@@ -244,7 +244,7 @@ canvas {
 #field_sys_outlet_label {
   position: absolute;
   left: 0px;
-  top: 603px;
+  top: 606px;
   width: 100px;
   height: 22px;
   text-align: right;
@@ -381,7 +381,7 @@ canvas {
 #field_hot_left_T {
   position: absolute;
   left: 113px;
-  top: 604px;
+  top: 606px;
   width: 55px;
   height: 22px;
   border-width: 1px;
@@ -398,7 +398,7 @@ canvas {
 #field_hot_right_T {
   position: absolute;
   left: 422px;
-  top: 604px;
+  top: 606px;
   width: 55px;
   height: 22px;
   border-width: 1px;
@@ -415,7 +415,7 @@ canvas {
 #field_cold_left_T {
   position: absolute;
   left: 113px;
-  top: 638px;
+  top: 640px;
   width: 55px;
   height: 22px;
   border-width: 1px;
@@ -432,7 +432,7 @@ canvas {
 #field_cold_right_T {
   position: absolute;
   left: 422px;
-  top: 639px;
+  top: 640px;
   width: 55px;
   height: 22px;
   border-width: 1px;
@@ -466,7 +466,7 @@ canvas {
 #field_sys_inlet_label {
   position: absolute;
   left: 0px;
-  top: 638px;
+  top: 640px;
   width: 100px;
   height: 22px;
   text-align: right;
@@ -485,7 +485,7 @@ canvas {
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 12px;
+  left: 108px;
   top: 0px;
   width: 285px;
   height: 264px;

@@ -53,13 +53,13 @@ canvas {
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 8px;
+  left: 0px;
   width: 536px;
   height: 685px;
   visibility: visible;
   border-width: 1px;
   background-color: rgb(255,255,255);
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   LCvScrollbar: false;
   LCthreeD: true;
@@ -140,7 +140,7 @@ canvas {
 #field_reactor_right_arrow {
   position: absolute;
   left: 390px;
-  top: 281px;
+  top: 268px;
   width: 23px;
   height: 22px;
   border-width: 1px;
@@ -153,13 +153,12 @@ canvas {
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: false;
-  font-size: 16px;
 }
 
 #field_reactor_left_arrow {
   position: absolute;
   left: 165px;
-  top: 281px;
+  top: 268px;
   width: 23px;
   height: 22px;
   border-width: 1px;
@@ -172,7 +171,6 @@ canvas {
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: false;
-  font-size: 16px;
 }
 
 #field_reactor_left_conc {
@@ -311,7 +309,7 @@ canvas {
 #field_cold_right_arrow {
   position: absolute;
   left: 394px;
-  top: 638px;
+  top: 626px;
   width: 23px;
   height: 22px;
   border-width: 1px;
@@ -324,13 +322,12 @@ canvas {
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: false;
-  font-size: 16px;
 }
 
 #field_hot_right_arrow {
   position: absolute;
   left: 394px;
-  top: 604px;
+  top: 592px;
   width: 19px;
   height: 22px;
   border-width: 1px;
@@ -343,13 +340,12 @@ canvas {
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: false;
-  font-size: 16px;
 }
 
 #field_cold_left_arrow {
   position: absolute;
-  left: 172px;
-  top: 638px;
+  left: 168px;
+  top: 626px;
   width: 19px;
   height: 22px;
   border-width: 1px;
@@ -362,13 +358,12 @@ canvas {
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: false;
-  font-size: 16px;
 }
 
 #field_hot_left_arrow {
   position: absolute;
   left: 168px;
-  top: 604px;
+  top: 592px;
   width: 23px;
   height: 22px;
   border-width: 1px;
@@ -381,7 +376,6 @@ canvas {
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: false;
-  font-size: 16px;
 }
 
 #field_hot_left_T {
@@ -491,14 +485,14 @@ canvas {
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 8px;
-  top: 64px;
+  left: 12px;
+  top: 12px;
   width: 285px;
   height: 264px;
   visibility: visible;
   border-width: 1px;
   background-color: rgb(255,255,255);
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   LCvScrollbar: false;
   LCthreeD: true;

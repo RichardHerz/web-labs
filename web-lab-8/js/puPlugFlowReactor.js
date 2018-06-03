@@ -387,7 +387,7 @@ puPlugFlowReactor = {
     document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1);
 
     // residence time used for timing checks for steady state
-    // use this for now but should consider voidFrac and Cp's...
+    // XXX use this for now but should consider voidFrac and Cp's...
     this.residenceTime = this.Wcat / this.densCat / this.Flowrate;
 
     // // UPDATE UNIT TIME STEP AND UNIT REPEATS

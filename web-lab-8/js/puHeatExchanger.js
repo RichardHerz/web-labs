@@ -413,14 +413,14 @@ puHeatExchanger = {
 
     // from Area and Diam inputs & specify cylindrical tube
     // can compute Length of heat exchanger
-    var Length = this.Area / this.Diam / Math.PI;
+    let Length = this.Area / this.Diam / Math.PI;
 
     // *** DEACTIVATE FOR HX COUPLED TO RXR ***
     // document.getElementById(this.displayLength).innerHTML = 'L (m) = ' + Length.toFixed(1);
     // note use .toFixed(n) method of object to round number to n decimal points
 
     // note Re is dimensionless Reynolds number in hot flow tube
-    var Re = this.FlowHot / this.FluidDensity / this.FluidKinematicViscosity * 4 / Math.PI / this.Diam;
+    let Re = this.FlowHot / this.FluidDensity / this.FluidKinematicViscosity * 4 / Math.PI / this.Diam;
 
     // *** DEACTIVATE FOR HX COUPLED TO RXR ***
     // document.getElementById(this.displayReynoldsNumber).innerHTML = 'Re<sub> hot-tube</sub> = ' + Re.toFixed(0);
@@ -452,9 +452,9 @@ puHeatExchanger = {
     // for 200 nodes & default conditions as of 20190505, effDisp = 6e-4 (m2/s)
     // compared to this.DispCoef = four times higher at 25.6e-4 (m2/s)
 
-    // *** DEACTIVATE FOR HX COUPLED TO RXR ***
+    // // *** DEACTIVATE FOR HX COUPLED TO RXR ***
+    // // *** COMPUTE IN updateInputs() FOR HX COUPLED TO RXR ***
     // // residence time used for timing checks for steady state
-    // this.residenceTime = Length / VelocHot;
 
     // *** DEACTIVATE FOR HX COUPLED TO RXR ***
     // // UPDATE UNIT TIME STEP AND UNIT REPEATS
@@ -511,10 +511,21 @@ puHeatExchanger = {
     let nn = processUnits[0].numNodes;
     this.TinCold = processUnits[0].TinHX;
     this.TinHot = processUnits[0]['Trxr'][nn];
-    this.FlowHot = processUnits[0].Flowrate; // m3/s in reactor
+    var volumetricFlow = processUnits[0].Flowrate; // m3/s in reactor
     // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
-    this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
+    this.FlowHot = this.FluidDensity * volumetricFlow; // kg/s = kg/m3 * m3/s
     this.FlowCold = this.FlowHot;
+
+    // *** NEW FOR ADIABATIC RXR + HX ***
+    // XXX arbitrarily set residence time of HX to match that of RXR
+    // XXX arbitrarily set Diam = 0.1 m
+    // in order to get wall Area for RXR+HX, since Diam and wall Area
+    // are independent inputs in standalone HX lab
+    // this.residenceTime used in simParams check for SS
+    this.residenceTime = processUnits[0].residenceTime;
+    this.Diam = 0.1; // (m), arbitrary
+    // volumetricFlow is obtained above, this.Area is HX wall area
+    this.Area = 4 * volumetricFlow * this.residenceTime / this.Diam;
 
   },
 
@@ -536,9 +547,8 @@ puHeatExchanger = {
 
     // *** NEW FOR ADIABATIC RXR + HX ***
     // WARNING: UAcoef can be zero, which interferes with HX method of getting Length
-    // pick arbitrary Diam and Area so can get Length and Ax needed below
-    this.Diam = 0.1; // arbitrary
-    this.Area = 10; // arbitrary
+    // this.Area and this.Diam are determined in updateInputs
+    // based on arbitrarily set this.Diam & set HX residence time to RXR res time
     var UAcoef = processUnits[0].UAcoef;
     this.Ucoef = UAcoef / this.Area;
 

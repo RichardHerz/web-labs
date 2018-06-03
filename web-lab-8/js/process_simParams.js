@@ -101,44 +101,41 @@ var simParams = {
     this.simTimeStep = factor * this.simTimeStep;
   },
 
-  // checkForSteadyState : function() {
-  //   // required - called by process_main.js
-  //   // use OS Activity Monitor of CPU load to see effect of this
-  //   // not implemented here
-  // }, // END OF checkForSteadyState()
-
   checkForSteadyState : function() {
     // required - called by process_main.js
-    // use OS Activity Monitor of CPU load to see effect of this
-    // // XXX WARNING: OLD CODE BELOW IS FROM ANOTHER LAB COPIED HERE AS EXAMPLE 
-    // // processUnits[0] is plug flow reactor in this web lab
-    // // required - called by process_main.js
-    // // use OS Activity Monitor of CPU load to see effect of this
-    // if (this.simTime >= this.oldSimTime + processUnits[0].residenceTime) {
-    //  // check in order to save CPU time when sim is at steady state
-    //  // check for SS by checking for any significant change in array end values
-    //  // but wait at least one residence time after the previous check
-    //  // to allow changes to propagate down reactor
-    //  // create SScheck which is a 16-digit number unique to current 4 end T's
-    //  // NOTE: these are end values in arrays, not those displayed in inlet & outlet fields
-    //  var nn = processUnits[0].numNodes;
-    //  var hlt = 1.0e5 * processUnits[0]['Trxr'][nn].toFixed(1);
-    //  var hrt = 1.0e1 * processUnits[0]['Trxr'][0].toFixed(1);
-    //  var clt = 1.0e-3 * processUnits[0]['Ca'][nn].toFixed(1);
-    //  var crt = 1.0e-7 * processUnits[0]['Ca'][0].toFixed(1);
-    //  var SScheck = hlt + hrt + clt + crt;
-    //  SScheck = SScheck.toFixed(8); // need because last sum operation adds significant figs
-    //  // note SScheck = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end values
-    //  var oldSScheck = processUnits[0].SScheck;
-    //  if (SScheck == oldSScheck) {
-    //    // set ssFlag
-    //    simParams.ssFlag = true;
-    //  } // end if (SScheck == oldSScheck)
+    // check in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    // open OS Activity Monitor of CPU load to see effect of this
     //
-    //  // save current values as the old values
-    //  processUnits[0].SScheck = SScheck;
-    //  simParams.oldSimTime = simParams.simTime;
-    // } // END OF if (simParams.simTime >= simParams.oldSimTime + processUnits[0].residenceTime)
+    // use HX [1] end T's to check for SS
+    var unum = 1; // unit number, [1] is heat exchanger in this lab
+    //
+    // found need 2 * processUnits[unum].residenceTime to reach SS
+    // when starting up at system T in = 350 K
+    // and now HX res time arbitrarily set to = RXR res time
+    if (this.simTime >= this.oldSimTime + 2 * processUnits[unum].residenceTime) {
+      var nn = processUnits[unum].numNodes;
+      var hlt = 1.0e5 * processUnits[unum]['Thot'][nn].toFixed(1);
+      var hrt = 1.0e1 * processUnits[unum]['Thot'][0].toFixed(1);
+      var clt = 1.0e-3 * processUnits[unum]['Tcold'][nn].toFixed(1);
+      var crt = 1.0e-7 * processUnits[unum]['Tcold'][0].toFixed(1);
+      // NOTE: SScheck = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
+      var SScheck = hlt + hrt + clt  + crt;
+      var oldSScheck = processUnits[unum].SScheck;
+      if (SScheck == oldSScheck) {
+        // set ssFlag
+        simParams.ssFlag = true;
+        // WARNING - call in line below has alerts - TESTING ONLY
+        // processUnits[unum].checkSSvalues(); // WARNING - has alerts - TESTING ONLY
+      } // end if (SScheck == oldSScheck)
+      // save current values as the old values
+      // processUnits[unum]['SScheck'] = SScheck;
+      processUnits[unum].SScheck = SScheck;
+      simParams.oldSimTime = simParams.simTime;
+    } // END OF if (simParams.simTime >= simParams.oldSimTime + processUnits[unum]['residenceTime'])
+
   }, // END OF checkForSteadyState()
 
 }; // END var simParams

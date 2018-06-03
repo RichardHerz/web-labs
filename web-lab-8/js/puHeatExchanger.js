@@ -110,8 +110,6 @@ puHeatExchanger = {
     // *** SPECIAL FOR HX COUPLED TO RXR ***
     // need something here for copy data to table
     // otherwise deactivate
-
-
     let v = 0;
     this.dataHeaders[v] = 'heat exchanger values listed above';
     this.dataInputs[v] = '';
@@ -122,7 +120,7 @@ puHeatExchanger = {
     this.TinHot = ''; // dataInitial used in getInputValue()
     this.dataValues[v] = ''; // current input value for reporting
 
-    // let v = 0;
+    // v = 0;
     // this.dataHeaders[v] = 'TinHot';
     // this.dataInputs[v] = 'input_field_TinHot';
     // this.dataUnits[v] = 'K';

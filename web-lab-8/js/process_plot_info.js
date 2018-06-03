@@ -80,38 +80,42 @@ var plotsObj = {
     // for all color names to hex see https://www.w3schools.com/colors/colors_picker.asp
     plotsObj[pnum]['plotDataSeriesColors'] = ['#ff6347','#1e90ff']; // optional, in variable order 0, 1, etc.
     // ['#ff6347','#1e90ff'] is Tomato and DodgerBlue
+    //
+    // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
+    // WARNING: all below with prefix 'var' must have same number of child objects,
+    // one for each variable placed on plot in _plotter.js
     plotsObj[pnum]['varUnitIndex'] = new Array();
-      plotsObj[pnum]['varUnitIndex'][0] = unum; // value is index of unit in processUnits object
-      plotsObj[pnum]['varUnitIndex'][1] = unum;
     plotsObj[pnum]['var'] = new Array();
-      // VALUES are data array var # to be put on plot & legend + those only in data table
-      // these values may not start at 0, e.g., one plot has 0,1, another has 2,3
-      plotsObj[pnum]['var'][0] = 0; // values are curve data number to be put on plot
-      plotsObj[pnum]['var'][1] = 1; // listed in order of varLabel order, etc.
     plotsObj[pnum]['varLabel'] = new Array();
-      // list labels in 'varLabel' in order of corresonding 'var' VALUES above
-      plotsObj[pnum]['varLabel'][0] = 'Trxr'; // 1st var
-      plotsObj[pnum]['varLabel'][1] = 'Ca';
-    // varDataUnits are dimensional units used in copy data table, along with varLabel
     plotsObj[pnum]['varDataUnits'] = new Array();
-      // list ['dataUnits'][#] elements in order of corresonding 'var' VALUES above
-      plotsObj[pnum]['varDataUnits'][0] = processUnits[unum]['dataUnits'][9]; // 1st var
-      plotsObj[pnum]['varDataUnits'][1] = processUnits[unum]['dataUnits'][10];
     plotsObj[pnum]['varShow'] = new Array();
-      // values are 'show' to show on plot and legend,
-      // 'tabled' to not show on plot nor legend but list in copy data table
-      // and any other value, e.g., 'hide' to not show on plot but do show in legend
-      // value can be changed by javascript if want to show/hide curve with checkbox
-      plotsObj[pnum]['varShow'][0] = 'show'; // 1st var
-      plotsObj[pnum]['varShow'][1] = 'show';
     plotsObj[pnum]['varYaxis'] = new Array();
-      plotsObj[pnum]['varYaxis'][0] = 'left'; // 1st var
-      plotsObj[pnum]['varYaxis'][1] = 'right';
     plotsObj[pnum]['varYscaleFactor'] = new Array();
-      plotsObj[pnum]['varYscaleFactor'][0] = 1; // 1st var
-      plotsObj[pnum]['varYscaleFactor'][1] = 1;
-    // ALTERNATIVE to separate arrays for variable number, show, axis
-    //    might be to have one array per variable equal to an array of info...?
+    //
+    // ADD SETTINGS FOR EACH VARIABLE
+    //
+    let vnum = 0; // 1st variable
+    plotsObj[pnum]['varUnitIndex'][0] = unum; // value is index of unit in processUnits object
+    plotsObj[pnum]['var'][vnum] = 0; // value is variable index in plot data array
+    plotsObj[pnum]['varLabel'][vnum] = 'Trxr';
+    // varDataUnits are dimensional units used in copy data table, along with varLabel
+    plotsObj[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][9]; // 1st var
+    // varShow values are 'show' to show on plot and legend,
+    // 'tabled' to not show on plot nor legend but list in copy data table
+    // and any other value, e.g., 'hide' to not show on plot but do show in legend
+    // varShow value can be changed by javascript if want to show/hide curve with checkbox
+    plotsObj[pnum]['varShow'][vnum] = 'show';
+    plotsObj[pnum]['varYaxis'][vnum] = 'left';
+    plotsObj[pnum]['varYscaleFactor'][vnum] = 1;
+    //
+    vnum = 1; // 2nd variable
+    plotsObj[pnum]['varUnitIndex'][1] = unum;
+    plotsObj[pnum]['var'][vnum] = 1;
+    plotsObj[pnum]['varLabel'][vnum] = 'Ca';
+    plotsObj[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][10];
+    plotsObj[pnum]['varShow'][vnum] = 'show';
+    plotsObj[pnum]['varYaxis'][vnum] = 'right';
+    plotsObj[pnum]['varYscaleFactor'][vnum] = 1;
     //
     // plot 1 info
     pnum = 1;
@@ -164,41 +168,43 @@ var plotsObj = {
     // for all color names to hex see https://www.w3schools.com/colors/colors_picker.asp
     plotsObj[pnum]['plotDataSeriesColors'] = ['#ff6347','#1e90ff']; // optional, in variable order 0, 1, etc.
     // ['#ff6347','#1e90ff'] is Tomato and DodgerBlue
+    //
+    // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
     // WARNING: all below with prefix 'var' must have same number of child objects,
     // one for each variable placed on plot in _plotter.js
     plotsObj[pnum]['varUnitIndex'] = new Array();
-      plotsObj[pnum]['varUnitIndex'][0] = unum; // value is index of unit in processUnits object
-      plotsObj[pnum]['varUnitIndex'][1] = unum;
     plotsObj[pnum]['var'] = new Array();
-      // VALUES are data array var # to be put on plot & legend + those only in data table
-      // these values may not start at 0, e.g., one plot has 0,1, another has 2,3
-      plotsObj[pnum]['var'][0] = 0; // values are variable index in plot data array
-      plotsObj[pnum]['var'][1] = 1; // listed in order of varLabel order, etc.
-      // varlabel is used in plot legend
     plotsObj[pnum]['varLabel'] = new Array();
-      // list labels in 'varLabel' in order of corresonding 'var' VALUES above
-      plotsObj[pnum]['varLabel'][0] = 'Thot'; // 1st var
-      plotsObj[pnum]['varLabel'][1] = 'Tcold';
-    // varDataUnits are dimensional units used in copy data table, along with varLabel
     plotsObj[pnum]['varDataUnits'] = new Array();
-      // list ['dataUnits'][#] elements in order of corresonding 'var' VALUES above
-      plotsObj[pnum]['varDataUnits'][0] = processUnits[unum]['dataUnits'][0]; // 1st var
-      plotsObj[pnum]['varDataUnits'][1] = processUnits[unum]['dataUnits'][1];
     plotsObj[pnum]['varShow'] = new Array();
-      // values are 'show' to show on plot and legend,
-      // 'tabled' to not show on plot nor legend but list in copy data table
-      // and any other value, e.g., 'hide' to not show on plot but do show in legend
-      // value can be changed by javascript if want to show/hide curve with checkbox
-      plotsObj[pnum]['varShow'][0] = 'show'; // 1st var
-      plotsObj[pnum]['varShow'][1] = 'show';
     plotsObj[pnum]['varYaxis'] = new Array();
-      plotsObj[pnum]['varYaxis'][0] = 'left'; // 1st var
-      plotsObj[pnum]['varYaxis'][1] = 'left';
     plotsObj[pnum]['varYscaleFactor'] = new Array();
-      plotsObj[pnum]['varYscaleFactor'][0] = 1; // 1st var
-      plotsObj[pnum]['varYscaleFactor'][1] = 1;
-    // ALTERNATIVE to separate arrays for variable number, show, axis
-    //    might be to have one array per variable equal to an array of info...?
+    //
+    // ADD SETTINGS FOR EACH VARIABLE
+    //
+    vnum = 0; // 1st variable
+    plotsObj[pnum]['varUnitIndex'][vnum] = unum; // value is index of unit in processUnits object
+    plotsObj[pnum]['var'][vnum] = 0; // value is variable index in plot data array
+    // varlabel is used in plot legend
+    plotsObj[pnum]['varLabel'][vnum] = 'Thot'; // 1st var
+    // varDataUnits are dimensional units used in copy data table, along with varLabel
+    plotsObj[pnum]['varDataUnits'][vnum] = 'K';
+    // varShow values are 'show' to show on plot and legend,
+    // 'tabled' to not show on plot nor legend but list in copy data table
+    // and any other value, e.g., 'hide' to not show on plot but do show in legend
+    // varShow value can be changed by javascript if want to show/hide curve with checkbox
+    plotsObj[pnum]['varShow'][vnum] = 'show'; // 1st var
+    plotsObj[pnum]['varYaxis'][vnum] = 'left'; // 1st var
+    plotsObj[pnum]['varYscaleFactor'][vnum] = 1; // 1st var
+    //
+    vnum = 1; // 2nd variable
+    plotsObj[pnum]['varUnitIndex'][vnum] = unum;
+    plotsObj[pnum]['var'][vnum] = 1;
+    plotsObj[pnum]['varLabel'][vnum] = 'Tcold';
+    plotsObj[pnum]['varDataUnits'][vnum] = 'K';
+    plotsObj[pnum]['varShow'][vnum] = 'show';
+    plotsObj[pnum]['varYaxis'][vnum] = 'left';
+    plotsObj[pnum]['varYscaleFactor'][vnum] = 1;
 
     // plot 3 info
     pnum = 3;

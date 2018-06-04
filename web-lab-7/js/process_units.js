@@ -330,7 +330,7 @@ processUnits[0] = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 250;
     this.dataMax[v] = 400;
-    this.dataInitial[v] = 360;
+    this.dataInitial[v] = 355;
     this.Tjacket = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Tjacket; // current input value for reporting
     //
@@ -371,14 +371,14 @@ processUnits[0] = {
     this.SScheck = 0; // rest steady state check number of array end values
 
     document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
-    document.getElementById(this.displayReactorRightT).innerHTML = this.Tjacket.toFixed(1) + ' K';
+    document.getElementById(this.displayReactorRightT).innerHTML = this.Tin.toFixed(1) + ' K';
 
     document.getElementById(this.displayReactorLeftConc).innerHTML = this.Cain.toFixed(1);
     document.getElementById(this.displayReactorRightConc).innerHTML = 0.0 + ' mol/m<sup>3</sup>';
 
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Trxr[k] = this.dataInitial[8]; // [8] is Tjacket
-      this.TrxrNew[k] = this.dataInitial[8]; // [8] is Tjacket
+      this.TrxrNew[k] = this.dataInitial[8];
       this.Ca[k] = 0;
       this.CaNew[k] = 0;
     }

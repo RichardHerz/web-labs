@@ -53,7 +53,7 @@ var plotsObj = {
     plotsObj[pnum]['type'] = 'profile';
     plotsObj[pnum]['title'] = 'PFR Temperature Profiles';
     plotsObj[pnum]['canvas'] = '#div_PLOTDIV_PFR_plot'; // flot.js wants ID with prefix #
-    plotsObj[pnum]['numberPoints'] = processUnits[unum]['numNodes']; // should match numNodes in process unit
+    plotsObj[pnum]['numberPoints'] = processUnits[unum].numNodes; // should match numNodes in process unit
     // plot has numberPoints + 1 pts!
     plotsObj[pnum]['xAxisLabel'] = 'position';
     plotsObj[pnum]['xAxisTableLabel'] = 'Position'; // label for copy data table
@@ -68,7 +68,7 @@ var plotsObj = {
     plotsObj[pnum]['yLeftAxisMax'] = processUnits[unum]['dataMax'][9];
     plotsObj[pnum]['yRightAxisLabel'] = 'Ca (mol/m3)';
     plotsObj[pnum]['yRightAxisMin'] = 0;
-    plotsObj[pnum]['yRightAxisMax'] = processUnits[unum]['Cain'];
+    plotsObj[pnum]['yRightAxisMax'] = processUnits[unum].Cain;
     plotsObj[pnum]['plotLegendShow'] = 1;  // Boolean, '' or 0 for no show, 1 or "show"
     plotsObj[pnum]['plotLegendPosition'] = 'nw';
     plotsObj[pnum]['plotGridBgColor'] = 'white';
@@ -121,7 +121,7 @@ var plotsObj = {
     plotsObj[pnum]['varUnitIndex'] = unum; // index of unit in processUnits object
     plotsObj[pnum]['var'] = 0; // variable number in array spaceTimeData, 0, 1, etc.
     // varTimePts & varSpacePts must match values used in unit array colorCanvasData
-    plotsObj[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
+    plotsObj[pnum]['varTimePts'] = processUnits[unum].numNodes;
     plotsObj[pnum]['varSpacePts'] = 1;
     plotsObj[pnum]['varValueMin'] = processUnits[unum]['dataMin'][9]; // [9] is Trxr
     plotsObj[pnum]['varValueMax'] = processUnits[unum]['dataMax'][9];
@@ -137,7 +137,7 @@ var plotsObj = {
     plotsObj[pnum]['varUnitIndex'] = unum; // index of unit in processUnits object
     plotsObj[pnum]['var'] = 1; // variable number in array spaceTimeData, 0, 1, etc.
     // varTimePts & varSpacePts must match values used in unit array colorCanvasData
-    plotsObj[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
+    plotsObj[pnum]['varTimePts'] = processUnits[unum].numNodes;
     plotsObj[pnum]['varSpacePts'] = 1;
     plotsObj[pnum]['varValueMin'] = processUnits[unum]['dataMin'][9]; // [9] is Trxr
     plotsObj[pnum]['varValueMax'] = processUnits[unum]['dataMax'][9];

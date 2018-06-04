@@ -127,7 +127,7 @@ canvas {
   visibility: visible;
   border-width: 1px;
   background-color: rgb(255,252,0);
-  border-style: outset;
+  border-style: solid;
   opacity: 1;
   LCthreeD: true;
   LCshowBorder: true;
@@ -180,7 +180,7 @@ canvas {
 
 #field_reactor_right_arrow {
   position: absolute;
-  left: 285px;
+  left: 288px;
   top: 270px;
   width: 23px;
   height: 22px;
@@ -197,7 +197,7 @@ canvas {
 
 #field_reactor_left_arrow {
   position: absolute;
-  left: 60px;
+  left: 57px;
   top: 270px;
   width: 23px;
   height: 22px;

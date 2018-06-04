@@ -458,7 +458,6 @@ puPlugFlowReactor = {
 
     // CpFluid, densFluid, densCat are properties of puPlugFlowReactor
     var CpCat= 2; // (kJ/kg/K), catalyst heat capacity
-    var CpCat = 2; // (kJ/kg/K), catalyst heat capacity
     var voidFrac = 0.3; // bed void fraction
     var densBed = (1 - voidFrac) * this.densCat; // (kg/m3), bed density
     // assume fluid and catalyst at same T at each position in reactor

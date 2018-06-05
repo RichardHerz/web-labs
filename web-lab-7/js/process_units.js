@@ -237,7 +237,7 @@ processUnits[0] = {
 
   // fluid Cp and both dens need to be accessible in updateUIparams()
   // Cp and dens for catalyst set in updateState()
-  CpFluid : 4.2, // (kJ/kg/K)
+  CpFluid : 2.24, // (kJ/kg/K)
   densFluid : 1000, // (kg/m3)
   densCat : 1000, // (kg/m3)
 
@@ -588,7 +588,7 @@ processUnits[0] = {
     var dCaDT = 0;
 
     // CpFluid, densFluid, densCat are properties of puPlugFlowReactor
-    var CpCat= 4.2; // (kJ/kg/K), catalyst heat capacity
+    var CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
     var voidFrac = 0.3; // bed void fraction
     var densBed = (1 - voidFrac) * this.densCat; // (kg/m3), bed density
     // assume fluid and catalyst at same T at each position in reactor

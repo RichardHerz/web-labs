@@ -552,7 +552,7 @@ puHeatExchanger = {
 
     // *** NEW FOR ADIABATIC RXR + HX ***
     // fix Cp's here
-    CpHot = 4.2; // kJ/kg/K
+    CpHot = 2.24; // kJ/kg/K
     CpCold = CpHot;
 
     // from cylindrical outer Area and Diam inputs & specify cylindrical tube for hot flow
@@ -695,7 +695,7 @@ puHeatExchanger = {
       return;
     }
     // *** for hx coupled to rxr, fix Cp ***
-    var CpHot = 4.2; // kJ/kg/K
+    var CpHot = 2.24; // kJ/kg/K
     var CpCold = CpHot;
     var UAlogMeanDT = this.Ucoef * this.Area * (dT2 - dT1) / Math.log(dT2/dT1); // kJ/s = kW
     var Qhot = (hrt - hlt) * this.FlowHot * CpHot; // kJ/s = kW

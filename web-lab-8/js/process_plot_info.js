@@ -67,7 +67,7 @@ var plotsObj = {
     plotsObj[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
     plotsObj[pnum]['yLeftAxisLabel'] = 'Trxr (K)'; // or d'less (T - TinCold)/(TinHot - TinCold)
     plotsObj[pnum]['yLeftAxisMin'] = 320; // XXX processUnits[unum]['dataMin'][9]; // [9] is Trxr
-    plotsObj[pnum]['yLeftAxisMax'] = 450; // XXX processUnits[unum]['dataMax'][9];
+    plotsObj[pnum]['yLeftAxisMax'] = 420; // XXX processUnits[unum]['dataMax'][9];
     plotsObj[pnum]['yRightAxisLabel'] = 'Ca (mol/m3)';
     plotsObj[pnum]['yRightAxisMin'] = 0;
     plotsObj[pnum]['yRightAxisMax'] = 550; // processUnits[unum]['Cain'];
@@ -130,7 +130,7 @@ var plotsObj = {
     plotsObj[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
     plotsObj[pnum]['varSpacePts'] = 1;
     plotsObj[pnum]['varValueMin'] = 320; // processUnits[unum]['dataMin'][9]; // [9] is Trxr
-    plotsObj[pnum]['varValueMax'] = 450; // processUnits[unum]['dataMax'][9];
+    plotsObj[pnum]['varValueMax'] = 420; // processUnits[unum]['dataMax'][9];
     plotsObj[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
     //
     // --------- below are plots for the heat exchanger ----------------

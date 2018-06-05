@@ -1,4 +1,4 @@
-/*
+2.24/*
   Design, text, images and code by Richard K. Herz, 2018
   Copyrights held by Richard K. Herz
   Licensed for use under the GNU General Public License v3.0
@@ -94,7 +94,7 @@ puPlugFlowReactor = {
 
   // fluid Cp and both dens need to be accessible in updateUIparams()
   // Cp and dens for catalyst set in updateState()
-  CpFluid : 4.2, // (kJ/kg/K)
+  CpFluid : 2.24, // (kJ/kg/K)
   densFluid : 1000, // (kg/m3)
   densCat : 1000, // (kg/m3)
 
@@ -156,7 +156,7 @@ puPlugFlowReactor = {
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 4.0e-3;
+    this.dataInitial[v] = 5.0e-3;
     this.Flowrate = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Flowrate; // current input value for reporting
     //
@@ -165,9 +165,9 @@ puPlugFlowReactor = {
     this.dataHeaders[v] = 'Tin'; // TinHX
     this.dataInputs[v] = 'input_field_Tin';
     this.dataUnits[v] = 'K';
-    this.dataMin[v] = 325;
-    this.dataMax[v] = 425;
-    this.dataInitial[v] = 325;
+    this.dataMin[v] = 320;
+    this.dataMax[v] = 380;
+    this.dataInitial[v] = this.dataMin[v];
     this.TinHX = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.TinHX; // current input value for reporting
     //
@@ -179,7 +179,7 @@ puPlugFlowReactor = {
     this.dataUnits[v] = 'kW/K';
     this.dataMin[v] = 0;
     this.dataMax[v] = 60;
-    this.dataInitial[v] = 10;
+    this.dataInitial[v] = 20;
     this.UAcoef = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.UAcoef; // current input value for reporting
     //
@@ -457,7 +457,7 @@ puPlugFlowReactor = {
     var dCaDT = 0;
 
     // CpFluid, densFluid, densCat are properties of puPlugFlowReactor
-    var CpCat= 4.2; // (kJ/kg/K), catalyst heat capacity
+    var CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
     var voidFrac = 0.3; // bed void fraction
     var densBed = (1 - voidFrac) * this.densCat; // (kg/m3), bed density
     // assume fluid and catalyst at same T at each position in reactor

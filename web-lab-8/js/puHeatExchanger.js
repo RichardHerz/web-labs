@@ -90,7 +90,7 @@ puHeatExchanger = {
 
   // WARNING: have to check for any changes to simTimeStep and simStepRepeats if change numNodes
   // WARNING: numNodes is accessed in process_plot_info.js
-  numNodes : 200, // XXX
+  numNodes : 200,
   // NOTE 20180427: discrepancy between steady-state Qcold and Qhot (from Qcold/Qhot)
   // from array end values with dispersion decreases as number of nodes increases
   // but shows same output field T's to one decimal place for 200-800 nodes
@@ -262,9 +262,13 @@ puHeatExchanger = {
     // *** NEW FOR ADIABATIC RXR + HX ***
     // *** GET INFO FROM REACTOR ***
     // processUnits[0] initializes before this processUnits[1]
-    let nn = processUnits[0].numNodes;
     this.TinCold = processUnits[0].TinHX;
+    //
+    // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
+    //   may be different than in [1]
+    let nn = processUnits[0].numNodes;
     this.TinHot = processUnits[0]['Trxr'][nn];
+    //
     this.FlowHot = processUnits[0].Flowrate; // m3/s in reactor
     // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
     this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
@@ -390,9 +394,13 @@ puHeatExchanger = {
 
     // *** NEW FOR ADIABATIC RXR + HX ***
     // *** GET INFO FROM REACTOR ***
-  let nn = processUnits[0].numNodes;
   this.TinCold = processUnits[0].TinHX;
+  //
+  // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
+  //   may be different than in [1]
+  let nn = processUnits[0].numNodes;
   this.TinHot = processUnits[0]['Trxr'][nn];
+  //
   this.FlowHot = processUnits[0].Flowrate; // m3/s in reactor
   // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
   this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
@@ -474,7 +482,7 @@ puHeatExchanger = {
     // // FOURTH and finally, recompute unitTimeStep with integer number unitStepRepeats
     // this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
-  }, // end of updateUIparams()
+  }, // END of updateUIparams()
 
   updateInputs : function() {
     //
@@ -504,11 +512,35 @@ puHeatExchanger = {
     // //   this.PV = this.initialPV;
     // }
 
+
     // *** NEW FOR ADIABATIC RXR + HX ***
     // *** GET INFO FROM REACTOR ***
-    let nn = processUnits[0].numNodes;
     this.TinCold = processUnits[0].TinHX;
+    //
+    // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
+    //   may be different than in [1]
+    let nn = processUnits[0].numNodes;
     this.TinHot = processUnits[0]['Trxr'][nn];
+    //
+    this.FlowHot = processUnits[0].Flowrate; // m3/s in reactor
+    // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
+    this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
+    this.FlowCold = this.FlowHot;
+    // WARNING: UAcoef can be zero, which interferes with HX method of getting Length
+    // this.Area and this.Diam are determined in updateInputs
+    // based on arbitrarily set this.Diam & set HX residence time to RXR res time
+    var UAcoef = processUnits[0].UAcoef;
+    this.Ucoef = UAcoef / this.Area;
+
+    // *** NEW FOR ADIABATIC RXR + HX ***
+    // *** GET INFO FROM REACTOR ***
+    this.TinCold = processUnits[0].TinHX;
+    //
+    // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
+    //   may be different than in [1]
+    nn = processUnits[0].numNodes;
+    this.TinHot = processUnits[0]['Trxr'][nn];
+    //
     var volumetricFlow = processUnits[0].Flowrate; // m3/s in reactor
     // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
     this.FlowHot = this.FluidDensity * volumetricFlow; // kg/s = kg/m3 * m3/s
@@ -525,30 +557,16 @@ puHeatExchanger = {
     // volumetricFlow is obtained above, this.Area is HX wall area
     this.Area = 4 * volumetricFlow * this.residenceTime / this.Diam;
 
-  },
+  }, // END of updateInputs()
 
   updateState : function() {
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
     // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
     // STATE VARIABLE
-
-      // *** NEW FOR ADIABATIC RXR + HX ***
-      // *** GET INFO FROM REACTOR ***
-    let nn = processUnits[0].numNodes;
-    this.TinCold = processUnits[0].TinHX;
-    this.TinHot = processUnits[0]['Trxr'][nn];
-    this.FlowHot = processUnits[0].Flowrate; // m3/s in reactor
-    // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
-    this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
-    this.FlowCold = this.FlowHot;
-
-    // *** NEW FOR ADIABATIC RXR + HX ***
-    // WARNING: UAcoef can be zero, which interferes with HX method of getting Length
-    // this.Area and this.Diam are determined in updateInputs
-    // based on arbitrarily set this.Diam & set HX residence time to RXR res time
-    var UAcoef = processUnits[0].UAcoef;
-    this.Ucoef = UAcoef / this.Area;
+    //
+    // WARNING: this method must NOT contain references to any other unit!
+    //          get info from other units ONLY in other methods
 
     // *** NEW FOR ADIABATIC RXR + HX ***
     // fix Cp's here
@@ -674,9 +692,9 @@ puHeatExchanger = {
       this.Thot = this.ThotNew;
       this.Tcold = this.TcoldNew;
 
-    } // END NEW FOR REPEAT for (i=0; i<this.unitStepRepeats; i+=1)
+    } // END of FOR REPEAT for (i=0; i<this.unitStepRepeats; i+=1)
 
-  }, // end updateState method
+  }, // END of updateState()
 
   checkSSvalues : function() {
     // WARNING: has alerts - may be called in simParams.checkForSteadyState()
@@ -706,7 +724,7 @@ puHeatExchanger = {
     alert('Qhot = UAlogMeanDT: ' + Qhot + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep.toFixed(3) + ' %');
     alert('Qcold = UAlogMeanDT: ' + Qcold + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep2.toFixed(3) + ' %');
     alert('Qhot = Qcold: ' + Qhot + ' = '+ Qcold + ', discrepancy = ' + discrep3.toFixed(3) + ' %');
-  },
+  }, // END of checkSSvalues()
 
   display : function() {
 
@@ -756,6 +774,6 @@ puHeatExchanger = {
     // FOR HEAT EXCHANGER - DO NOT USE STRIP CHART YET
     // HANDLE STRIP CHART DATA
 
-  } // end display method
+  } // END of display()
 
 } // END var puHeatExchanger

@@ -408,7 +408,7 @@ puPlugFlowReactor = {
     // // FOURTH and finally, recompute unitTimeStep with integer number unitStepRepeats
     // this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
-  }, // end of updateUIparams()
+  }, // END of updateUIparams()
 
   updateInputs : function() {
     //
@@ -441,13 +441,16 @@ puPlugFlowReactor = {
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
     this.Tin = processUnits[1]['Tcold'][0];
 
-  },
+  }, // END of updateInputs()
 
   updateState : function() {
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
     // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
     // STATE VARIABLE
+    //
+    // WARNING: this method must NOT contain references to any other unit!
+    //          get info from other units ONLY in other methods
 
     var i = 0; // index for step repeats
     var n = 0; // index for nodes
@@ -554,11 +557,11 @@ puPlugFlowReactor = {
 
     } // END NEW FOR REPEAT for (i=0; i<this.unitStepRepeats; i+=1)
 
-  }, // end updateState method
+  }, // END of updateState()
 
   checkSSvalues : function() {
     // not implemented
-  },
+  }, // END of checkSSvalues()
 
   display : function() {
 
@@ -601,6 +604,6 @@ puPlugFlowReactor = {
       this.colorCanvasData[1][n][0] = this.Tjacket; // XXX should only do this once...
     }
 
-  } // end display method
+  } // END of display()
 
 }; // END var puPlugFlowReactor

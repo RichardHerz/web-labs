@@ -269,9 +269,9 @@ puHeatExchanger = {
     let nn = processUnits[0].numNodes;
     this.TinHot = processUnits[0]['Trxr'][nn];
     //
-    this.FlowHot = processUnits[0].Flowrate; // m3/s in reactor
+    this.FlowHot = processUnits[0].Flowrate; // (m3/s) in reactor
     // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
-    this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
+    this.FlowHot = this.FluidDensity * this.FlowHot; // (kg/s) = kg/m3 * m3/s
     this.FlowCold = this.FlowHot;
 
     // initialize profile data array - must follow function initPlotData in this file
@@ -286,11 +286,12 @@ puHeatExchanger = {
     // initColorCanvasArray(numVars,numXpts,numYpts)
     this.colorCanvasData = initColorCanvasArray(2,this.numNodes,1);
 
+    var tInit = processUnits[0]['dataInitial'][6]; // initial system inlet T
     for (k = 0; k <= this.numNodes; k += 1) {
-      this.Thot[k] = processUnits[0]['dataInitial'][6]; // initial system inlet T
-      this.ThotNew[k] = processUnits[0]['dataInitial'][6];
-      this.Tcold[k] = processUnits[0]['dataInitial'][6];
-      this.TcoldNew[k] = processUnits[0]['dataInitial'][6];
+      this.Thot[k] = tInit;
+      this.ThotNew[k] = tInit;
+      this.Tcold[k] = tInit;
+      this.TcoldNew[k] = tInit;
     }
 
     var kn = 0;
@@ -309,7 +310,7 @@ puHeatExchanger = {
       this.profileData[1][k][1] = processUnits[0].TinHX;
     }
 
-  }, // end reset
+  }, // END of reset()
 
   updateUIparams : function() {
     //
@@ -512,41 +513,19 @@ puHeatExchanger = {
     // //   this.PV = this.initialPV;
     // }
 
-
     // *** NEW FOR ADIABATIC RXR + HX ***
     // *** GET INFO FROM REACTOR ***
-    this.TinCold = processUnits[0].TinHX;
-    //
     // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
     //   may be different than in [1]
     let nn = processUnits[0].numNodes;
     this.TinHot = processUnits[0]['Trxr'][nn];
-    //
-    this.FlowHot = processUnits[0].Flowrate; // m3/s in reactor
-    // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
-    this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
-    this.FlowCold = this.FlowHot;
-    // WARNING: UAcoef can be zero, which interferes with HX method of getting Length
-    // this.Area and this.Diam are determined in updateInputs
-    // based on arbitrarily set this.Diam & set HX residence time to RXR res time
-    var UAcoef = processUnits[0].UAcoef;
-    this.Ucoef = UAcoef / this.Area;
-
-    // *** NEW FOR ADIABATIC RXR + HX ***
-    // *** GET INFO FROM REACTOR ***
     this.TinCold = processUnits[0].TinHX;
-    //
-    // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
-    //   may be different than in [1]
-    nn = processUnits[0].numNodes;
-    this.TinHot = processUnits[0]['Trxr'][nn];
     //
     var volumetricFlow = processUnits[0].Flowrate; // m3/s in reactor
     // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
     this.FlowHot = this.FluidDensity * volumetricFlow; // kg/s = kg/m3 * m3/s
     this.FlowCold = this.FlowHot;
-
-    // *** NEW FOR ADIABATIC RXR + HX ***
+    //
     // XXX arbitrarily set residence time of HX to match that of RXR
     // XXX arbitrarily set Diam = 0.1 m
     // in order to get wall Area for RXR+HX, since Diam and wall Area
@@ -556,6 +535,12 @@ puHeatExchanger = {
     this.Diam = 0.1; // (m), arbitrary
     // volumetricFlow is obtained above, this.Area is HX wall area
     this.Area = 4 * volumetricFlow * this.residenceTime / this.Diam;
+    //
+    // WARNING: UAcoef can be zero, which interferes with HX method of getting Length
+    // this.Area and this.Diam are determined in updateInputs
+    // based on arbitrarily set this.Diam & set HX residence time to RXR res time
+    var UAcoef = processUnits[0].UAcoef;
+    this.Ucoef = UAcoef / this.Area;
 
   }, // END of updateInputs()
 
@@ -592,7 +577,7 @@ puHeatExchanger = {
     var DispHot = this.DispCoef; // (m2/s), axial dispersion coefficient for turbulent flow
 
     // *** FOR RXR + HX USE DISP = 0 ***
-    DispHot = 0.0 // XXX FOR TESTING
+    DispHot = 0.0;
 
     var DispCold = DispHot; // XXX check later
     var dz = Length / this.numNodes; // (m), distance between nodes

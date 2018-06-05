@@ -342,7 +342,10 @@ puPlugFlowReactor = {
     // this.Tjacket = getInputValue(unum, 8);
 
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
+
     this.Tin = processUnits[1]['Tcold'][0];
+
+    // alert('this.Tin in PFR updateUIparams = ' + this.Tin); // xxx
 
     // calc adiabatic delta T, positive for negative H (exothermic)
     var adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
@@ -440,6 +443,8 @@ puPlugFlowReactor = {
 
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
     this.Tin = processUnits[1]['Tcold'][0];
+
+    // alert('this.Tin in PFR updateInputs = ' + this.Tin); // xxx
 
   }, // END of updateInputs()
 

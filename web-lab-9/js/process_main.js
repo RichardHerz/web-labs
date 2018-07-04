@@ -136,6 +136,8 @@
       processUnits[n].updateInputs();
     }
 
+    // NOTE: UI params are updated whenever UI changes by HTML input actions
+
     // SECOND, have all units update their state
     for (n = 0; n < numUnits; n += 1) {
         processUnits[n].updateState();

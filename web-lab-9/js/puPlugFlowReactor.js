@@ -72,8 +72,7 @@ puPlugFlowReactor = {
   colorCanvasData : [], // for color canvas plots, plot script requires this name
 
   // allow this unit to take more than one step within one main loop step in updateState method
-  // WARNING: see special handling for time step in this unit's updateInputs method
-  unitStepRepeats : 200, // XXX
+  unitStepRepeats : 200,
   unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
 
   // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
@@ -162,7 +161,7 @@ puPlugFlowReactor = {
     //
     // *** WHEN RXR COUPLED TO HX, THIS IS Tin TO COLD SIDE HEAT EXCHANGER ***
     v = 6;
-    this.dataHeaders[v] = 'Tin'; // TinHX
+    this.dataHeaders[v] = 'System Tin'; // TinHX
     this.dataInputs[v] = 'input_field_Tin';
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 320;
@@ -242,11 +241,12 @@ puPlugFlowReactor = {
     simParams.ssFlag = false;
     this.SScheck = 0; // rest steady state check number of array end values
 
-    // **** CHANGE WHEN REACTOR COUPLED TO HEAT EXCHANGER ****
-    document.getElementById(this.displayReactorLeftT).innerHTML = this.TinHX.toFixed(1) + ' K';
-    document.getElementById(this.displayReactorRightT).innerHTML = this.TinHX.toFixed(1) + ' K';
-    document.getElementById(this.displayReactorLeftConc).innerHTML = this.Cain.toFixed(1);
-    document.getElementById(this.displayReactorRightConc).innerHTML = this.Cain.toFixed(1) + ' mol/m<sup>3</sup>';
+// XXXNEWXXX replace with local call to display() below
+    // // **** CHANGE WHEN REACTOR COUPLED TO HEAT EXCHANGER ****
+    // document.getElementById(this.displayReactorLeftT).innerHTML = this.TinHX.toFixed(1) + ' K';
+    // document.getElementById(this.displayReactorRightT).innerHTML = this.TinHX.toFixed(1) + ' K';
+    // document.getElementById(this.displayReactorLeftConc).innerHTML = this.Cain.toFixed(1);
+    // document.getElementById(this.displayReactorRightConc).innerHTML = this.Cain.toFixed(1) + ' mol/m<sup>3</sup>';
 
     for (k = 0; k <= this.numNodes; k += 1) {
       // **** CHANGE WHEN RXR COUPLED TO HX ****
@@ -284,6 +284,9 @@ puPlugFlowReactor = {
       this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
     }
 
+    // update display
+    this.display();
+
   }, // end reset
 
   updateUIparams : function() {
@@ -317,12 +320,10 @@ puPlugFlowReactor = {
     // if (document.getElementById(this.inputSliderReadout)) {
     //   document.getElementById(this.inputSliderReadout).innerHTML = this.Cmax;
 
-    // change simParams.ssFlag to false if true
-    if (simParams.ssFlag) {
-      // sim was at steady state, switch ssFlag to false
-      simParams.ssFlag = false;
-    }
-    // reset SScheck checksum used to check for ss
+    // set simParams.ssFlag to false
+    simParams.ssFlag = false;
+
+    // set SScheck checksum used to check for SS to zero
     this.SScheck = 0;
 
     // check input fields for new values
@@ -341,75 +342,9 @@ puPlugFlowReactor = {
     // // *** DEACTIVATE FOR ADIABATIC OPERATION ***
     // this.Tjacket = getInputValue(unum, 8);
 
-    // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
-
-    this.Tin = processUnits[1]['Tcold'][0];
-
-    // alert('this.Tin in PFR updateUIparams = ' + this.Tin); // xxx
-
-    // calc adiabatic delta T, positive for negative H (exothermic)
-    var adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
-
-    // *** CHANGE MIN-MAX T FOR ADIABATIC REACTOR ***
-    // calc max possible T
-    if(this.DelH < 0) {
-      // exothermic
-      this.dataMax[9] = this.TinHX + adiabDeltaT;
-    } else {
-      // endothermic
-      this.dataMax[9] = this.TinHX;
-    }
-    // calc min possible T
-    if(this.DelH > 0) {
-      // endothermic
-      this.dataMin[9] = this.TinHX + adiabDeltaT;
-    } else {
-      // exothermic
-      this.dataMin[9] = this.TinHX;
-    }
-
-    // // adjust axis of profile plot
-    // plotArrays['plotFlag'][0] = 0;  // so axes will refresh
-    // plotsObj[0]['yLeftAxisMin'] = this.dataMin[9]; // [9] is Trxr
-    // plotsObj[0]['yLeftAxisMax'] = this.dataMax[9];
-    // plotsObj[0]['yRightAxisMin'] = 0;
-    // plotsObj[0]['yRightAxisMax'] = this.Cain;
-    // // adjust color span of spaceTime, color canvas plots
-    // plotsObj[1]['varValueMin'] = this.dataMin[9]; // [9] is Trxr
-    // plotsObj[1]['varValueMax'] = this.dataMax[9];
-    // plotsObj[2]['varValueMin'] = this.dataMin[9];
-    // plotsObj[2]['varValueMax'] = this.dataMax[9];
-
-    // also update ONLY inlet values at inlet of reactor in case sim is paused
-    // but do not do full updateDisplay
-
-    // *** deactivate since inlet to reactor isn't directly affected by UI update ***
-    // document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
-
-    document.getElementById(this.displayReactorLeftConc).innerHTML = this.Cain.toFixed(1);
-    document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1);
-
-    // residence time used for timing checks for steady state
-    // XXX use this for now but should consider voidFrac and Cp's...
-    this.residenceTime = this.Wcat / this.densCat / this.Flowrate;
-
-    // // UPDATE UNIT TIME STEP AND UNIT REPEATS
-    //
-    // // FIRST, compute spaceTime = residence time between two nodes in hot tube, also
-    // //                          = space time of equivalent single mixing cell
-    // var spaceTime = (Length / this.numNodes) / VelocHot; // (s)
-    //
-    // // SECOND, estimate unitTimeStep
-    // // do NOT change simParams.simTimeStep here
-    // this.unitTimeStep = spaceTime / 15;
-    //
-    // // THIRD, get integer number of unitStepRepeats
-    // this.unitStepRepeats = Math.round(simParams.simTimeStep / this.unitTimeStep);
-    // // min value of unitStepRepeats is 1 or get divide by zero error
-    // if (this.unitStepRepeats <= 0) {this.unitStepRepeats = 1;}
-    //
-    // // FOURTH and finally, recompute unitTimeStep with integer number unitStepRepeats
-    // this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    // // XXXNEWXXX call display method here in case paused and changes needed now
+    // // XXXNEWXXX BUT GET ERROR ON FIRST CALL ON PAGE LOAD
+    // this.display();
 
   }, // END of updateUIparams()
 
@@ -420,9 +355,6 @@ puPlugFlowReactor = {
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     //
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     //
     // The following TRY-CATCH structures provide for unit independence
@@ -444,7 +376,25 @@ puPlugFlowReactor = {
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
     this.Tin = processUnits[1]['Tcold'][0];
 
-    // alert('this.Tin in PFR updateInputs = ' + this.Tin); // xxx
+    // *** UPDATE MIN-MAX T FOR ADIABATIC REACTOR ***
+    // calc adiabatic delta T, positive for negative H (exothermic)
+    var adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
+    // calc max possible T
+    if(this.DelH < 0) {
+      // exothermic
+      this.dataMax[9] = this.Tin + adiabDeltaT;
+    } else {
+      // endothermic
+      this.dataMax[9] = this.Tin;
+    }
+    // calc min possible T
+    if(this.DelH > 0) {
+      // endothermic
+      this.dataMin[9] = this.Tin + adiabDeltaT;
+    } else {
+      // exothermic
+      this.dataMin[9] = this.Tin;
+    }
 
   }, // END of updateInputs()
 
@@ -455,7 +405,10 @@ puPlugFlowReactor = {
     // STATE VARIABLE
     //
     // WARNING: this method must NOT contain references to any other unit!
-    //          get info from other units ONLY in other methods
+    //          get info from other units ONLY in updateInputs() method
+
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     var i = 0; // index for step repeats
     var n = 0; // index for nodes
@@ -491,12 +444,10 @@ puPlugFlowReactor = {
     // this unit can take multiple steps within one outer main loop repeat step
     for (i=0; i<this.unitStepRepeats; i+=1) {
 
-      // do node at inlet end
+      // do node at inlet node
       n = 0;
 
-      // TrxrN = this.TinHX; // XXX TEST
       TrxrN = this.Tin;
-
       CaN = this.Cain;
 
       this.TrxrNew[n] = TrxrN;
@@ -515,9 +466,9 @@ puPlugFlowReactor = {
         CaN = this.Ca[n] + dCaDT * this.unitTimeStep;
         TrxrN = this.Trxr[n] + dTrxrDT * this.unitTimeStep;
 
-        // XXX // CONSTRAIN TO BE IN BOUND
-        // if (TrxrN > this.dataMax[9]) {TrxrN = this.dataMax[9];} // [9] is Trxr
-        // if (TrxrN < this.dataMin[9]) {TrxrN = this.dataMin[9];}
+        // CONSTRAIN TO BE IN BOUND
+        if (TrxrN > this.dataMax[9]) {TrxrN = this.dataMax[9];} // [9] is Trxr
+        if (TrxrN < this.dataMin[9]) {TrxrN = this.dataMin[9];}
         if (CaN < 0.0) {CaN = 0.0;}
         if (CaN > this.Cain) {CaN = this.Cain;}
 
@@ -526,7 +477,7 @@ puPlugFlowReactor = {
 
       } // end repeat through internal nodes
 
-      // do node at hot outlet end
+      // do node at outlet node
 
       n = this.numNodes;
 
@@ -540,9 +491,9 @@ puPlugFlowReactor = {
       CaN = this.Ca[n] + dCaDT * this.unitTimeStep;
       TrxrN = this.Trxr[n] + dTrxrDT * this.unitTimeStep;
 
-      // XXX // CONSTRAIN TO BE IN BOUND
-      // if (TrxrN > this.dataMax[9]) {TrxrN = this.dataMax[9];} // [9] is Trxr
-      // if (TrxrN < this.dataMin[9]) {TrxrN = this.dataMin[9];}
+      // CONSTRAIN TO BE IN BOUND
+      if (TrxrN > this.dataMax[9]) {TrxrN = this.dataMax[9];} // [9] is Trxr
+      if (TrxrN < this.dataMin[9]) {TrxrN = this.dataMin[9];}
       if (CaN < 0.0) {CaN = 0.0;}
       if (CaN > this.Cain) {CaN = this.Cain;}
 
@@ -554,11 +505,6 @@ puPlugFlowReactor = {
       // copy new to current
       this.Trxr = this.TrxrNew;
       this.Ca = this.CaNew;
-
-      // XXX
-      // for (n = 0; n <= this.numNodes; n += 1) {
-      //   alert('this.Ca[' +n+ '] & this.Trxr[' +n+ '] = ' + this.Ca[n] + ', ' + this.Trxr[n]);
-      // }
 
     } // END NEW FOR REPEAT for (i=0; i<this.unitStepRepeats; i+=1)
 

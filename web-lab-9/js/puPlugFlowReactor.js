@@ -450,6 +450,8 @@ puPlugFlowReactor = {
       TrxrN = this.Tin;
       CaN = this.Cain;
 
+      document.getElementById('field_output_field').innerHTML = TrxrN;
+
       this.TrxrNew[n] = TrxrN;
       this.CaNew[n] = CaN;
 

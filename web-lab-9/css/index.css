@@ -49,6 +49,13 @@ canvas {
   display: none;
 }
 
+#field_output_field {
+  width: 800px;
+  height: 120px;
+  border-width: 1px;
+  border-style: dotted;
+}
+
 #div_simFrame {
   display: block;
   position: relative;

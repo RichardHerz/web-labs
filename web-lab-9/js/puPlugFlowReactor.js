@@ -374,7 +374,9 @@ puPlugFlowReactor = {
     // }
 
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
-    this.Tin = processUnits[1]['Tcold'][0];
+    this.Tin = 350; // processUnits[1]['Tcold'][0]; // yyy
+
+    document.getElementById('field_output_field').innerHTML = this.Tin; // yyy
 
     // *** UPDATE MIN-MAX T FOR ADIABATIC REACTOR ***
     // calc adiabatic delta T, positive for negative H (exothermic)
@@ -449,8 +451,6 @@ puPlugFlowReactor = {
 
       TrxrN = this.Tin;
       CaN = this.Cain;
-
-      document.getElementById('field_output_field').innerHTML = TrxrN;
 
       this.TrxrNew[n] = TrxrN;
       this.CaNew[n] = CaN;

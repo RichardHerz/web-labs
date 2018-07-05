@@ -343,12 +343,10 @@ puHeatExchanger = {
     // if (document.getElementById(this.inputSliderReadout)) {
     //   document.getElementById(this.inputSliderReadout).innerHTML = this.Cmax;
 
-    // change simParams.ssFlag to false if true
-    if (simParams.ssFlag) {
-      // sim was at steady state, switch ssFlag to false
-      simParams.ssFlag = false;
-    }
-    // reset SScheck checksum used to check for ss
+    // set simParams.ssFlag to false
+    simParams.ssFlag = false;
+
+    // set SScheck checksum used to check for SS to zero
     this.SScheck = 0;
 
     // // *** DEACTIVATE FOR HX COUPLED TO RXR ***

@@ -96,11 +96,7 @@ puHeatExchanger = {
   // from array end values with dispersion decreases as number of nodes increases
   // but shows same output field T's to one decimal place for 200-800 nodes
 
-  // for Reynolds number Re, use kinematic viscosity from
-  // https://www.engineeringtoolbox.com/water-dynamic-kinematic-viscosity-d_596.html?vA=30&units=C#
-  FluidKinematicViscosity : 5.0e-7, // m2/s, for water at mid-T of 330 K for Reynolds number
   FluidDensity : 1000.0, // kg/m3, fluid density specified to be that of water
-  DispCoef : 0, // (m2/s), will be updated below, axial dispersion coefficient
 
   // also see simParams.ssFlag and simParams.SScheck
   SScheck : 0, // for saving steady state check number
@@ -478,7 +474,7 @@ puHeatExchanger = {
 
   checkSSvalues : function() {
     // WARNING: has alerts - may be called in simParams.checkForSteadyState()
-  } // END of checkSSvalues()
+  }, // END of checkSSvalues()
 
   display : function() {
 

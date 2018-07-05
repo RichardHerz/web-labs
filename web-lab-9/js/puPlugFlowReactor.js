@@ -85,17 +85,14 @@ puPlugFlowReactor = {
 
   // WARNING: have to check for any changes to simTimeStep and simStepRepeats if change numNodes
   // WARNING: numNodes is accessed in process_plot_info.js
-  numNodes : 200, // XXX
+  numNodes : 200,
 
   // also see simParams.ssFlag and simParams.SScheck
   SScheck : 0, // for saving steady state check number of array end values
   residenceTime : 0, // for timing checks for steady state check
 
-  // fluid Cp and both dens need to be accessible in updateUIparams()
-  // Cp and dens for catalyst set in updateState()
   CpFluid : 2.24, // (kJ/kg/K)
   densFluid : 1000, // (kg/m3)
-  densCat : 1000, // (kg/m3)
 
   initialize : function() {
     //
@@ -389,10 +386,11 @@ puPlugFlowReactor = {
     var CaN = 0;
     var dCaDT = 0;
 
-    // CpFluid, densFluid, densCat are properties of puPlugFlowReactor
+    // CpFluid, and densFluid properties of puPlugFlowReactor
     var CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
+    let densCat = 1000; // (kg/m3)
     var voidFrac = 0.3; // bed void fraction
-    var densBed = (1 - voidFrac) * this.densCat; // (kg/m3), bed density
+    var densBed = (1 - voidFrac) * densCat; // (kg/m3), bed density
     // assume fluid and catalyst at same T at each position in reactor
     var CpMean = voidFrac * this.CpFluid + (1 - voidFrac) * CpCat;
 

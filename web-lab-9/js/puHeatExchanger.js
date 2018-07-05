@@ -105,6 +105,7 @@ puHeatExchanger = {
   // also see simParams.ssFlag and simParams.SScheck
   SScheck : 0, // for saving steady state check number
   residenceTime : 0, // for timing checks for steady state check
+  // residence time also computed for reactor and used to match HX to RXR
 
   initialize : function() {
     //
@@ -273,7 +274,7 @@ puHeatExchanger = {
     this.UAcoef = getInputValue(unum, 2);
 
     // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
-    this.FlowHot = this.FluidDensity * this.Flowrate; // kg/s = kg/m3 * m3/s
+    this.FlowHot = this.Flowrate * this.FluidDensity; // (kg/s) = (m3/s) * (kg/m3)
     this.FlowCold = this.FlowHot;
 
     // also update ONLY inlet T's on ends of heat exchanger in case sim is paused
@@ -306,14 +307,10 @@ puHeatExchanger = {
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     //
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
     //
     // The following TRY-CATCH structures provide for unit independence
     // such that when input doesn't exist, you get "initial" value
-
+    //
     // try {
     // //   let tmpFunc = new Function("return " + this.inputPV + ";");
     // //   this.PV = tmpFunc();
@@ -327,27 +324,17 @@ puHeatExchanger = {
     // //   this.PV = this.initialPV;
     // }
 
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+
     // *** GET INFO FROM REACTOR ***
     // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
     //   may be different than in [1]
     let nn = processUnits[0].numNodes;
     this.TinHot = processUnits[0]['Trxr'][nn];
 
-    // XXX arbitrarily set residence time of HX to match that of RXR
-    // XXX arbitrarily set Diam = 0.1 m
-    // in order to get wall Area for RXR+HX, since Diam and wall Area
-    // are independent inputs in standalone HX lab
-    // this.residenceTime used in simParams check for SS
+    // match residence time of HX to that of RXR
     this.residenceTime = processUnits[0].residenceTime;
-    this.Diam = 0.1; // (m), arbitrary
-    let volumetricFlow = this.Flowrate; // (m3/s)
-    // this.Area is HX wall area
-    this.Area = 4 * volumetricFlow * this.residenceTime / this.Diam;
-    //
-    // WARNING: UAcoef can be zero, which interferes with HX method of getting Length
-    // this.Area and this.Diam are determined in updateInputs
-    // based on arbitrarily set this.Diam & set HX residence time to RXR res time
-    this.Ucoef = this.UAcoef / this.Area;
 
   }, // END of updateInputs()
 
@@ -365,28 +352,29 @@ puHeatExchanger = {
     CpHot = 2.24; // kJ/kg/K
     CpCold = CpHot;
 
-    // from cylindrical outer Area and Diam inputs & specify cylindrical tube for hot flow
-    // can compute Length of exhanger
-    var Length = this.Area / this.Diam / Math.PI;
+    // this HX uses length for integration
+    // so need to make some assumptions and compute
+    // residenceTime is computed above in updateInputs to be same as reactor
+    let Volume = this.residenceTime * this.Flowrate; // use Flowrate (m3/s)
+    let Diam = 0.1; // (m), arbitrary, fix so can get length for integratino
+    let Length = Volume * 4.0 / Math.PI / Math.pow(Diam, 2); // (m)
 
-    // XXX check later for different Ax and Veloc for hot and cold
-    var Ax = Math.PI * Math.pow(this.Diam, 2) / 4.0; // (m2), cross-sectional area for flow
-    var VelocHot = this.FlowHot / this.FluidDensity / Ax; // (m/s), linear fluid velocity
-    // XXX assume cold uses same flow cross-sectional area as hot
-    var VelocCold = this.FlowCold / this.FluidDensity / Ax; // (m/s), linear fluid velocity
+    let Ax = Math.PI * Math.pow(Diam, 2) / 4.0; // (m2), cross-sectional area for flow
+    let VelocHot = this.Flowrate / Ax; // (m/s), linear fluid velocity
+    let VelocCold = VelocHot;
 
-    // note XferCoefHot = U * (wall area per unit length = pi * diam * L/L) / (rho * Cp * Ax)
-    var XferCoefHot = this.Ucoef * Math.PI * this.Diam / this.FluidDensity / CpHot / Ax;
-    var XferCoefCold = this.Ucoef * Math.PI * this.Diam / this.FluidDensity / CpCold / Ax;
+    // this.UAcoef from UI input has units of (kW/K)
+    let Awall = Math.PI * Diam * Length; // (m2)
+    let Ucoef = this.UAcoef / Awall; // (kW/m2/K)
 
-    // Disp (m2/s) is axial dispersion coefficient for turbulent flow
-    // this.DispCoef computed in updateUIparams()
-    var DispHot = this.DispCoef; // (m2/s), axial dispersion coefficient for turbulent flow
+    // note XferCoefHot = U * (wall area per unit length) / (rho * Cp * Ax)
+    var XferCoefHot = Ucoef * (Awall / Length) / (this.FluidDensity * CpHot * Ax);
+    var XferCoefCold = XferCoefHot;
 
     // *** FOR RXR + HX USE DISP = 0 ***
-    DispHot = 0.0;
+    let DispHot = 0.0;
+    let DispCold = DispHot;
 
-    var DispCold = DispHot; // XXX check later
     var dz = Length / this.numNodes; // (m), distance between nodes
     var VelocHotOverDZ = VelocHot / dz; // precompute to save time in loop
     var VelocColdOverDZ = VelocCold / dz; // precompute to save time in loop
@@ -490,33 +478,7 @@ puHeatExchanger = {
 
   checkSSvalues : function() {
     // WARNING: has alerts - may be called in simParams.checkForSteadyState()
-    // CHECK FOR ENERGY BALANCE ACROSS HEAT EXCHANGER AT STEADY STATE
-    // Q = U*A*(dT2 - dT1)/log(dT2/dT1) FOR dT1 != dT2 (or get log = inf)
-    var nn = this.numNodes;
-    // Thot and Tcold arrays are globals
-    var hlt = this.Thot[nn]; // outlet hot
-    var hrt = this.Thot[0]; // inlet hot
-    var clt = this.Tcold[nn];
-    var crt = this.Tcold[0];
-    var dT1 = hrt - crt;
-    var dT2 = hlt - clt;
-    if (dT1 == dT2) {
-      alert('dT1 == dT2');
-      return;
-    }
-    // *** for hx coupled to rxr, fix Cp ***
-    var CpHot = 2.24; // kJ/kg/K
-    var CpCold = CpHot;
-    var UAlogMeanDT = this.Ucoef * this.Area * (dT2 - dT1) / Math.log(dT2/dT1); // kJ/s = kW
-    var Qhot = (hrt - hlt) * this.FlowHot * CpHot; // kJ/s = kW
-    var Qcold = Math.abs((crt - clt) * this.FlowCold * CpCold); // abs for co- or counter-
-    var discrep = 100*(UAlogMeanDT/Qhot-1);
-    var discrep2 = 100*(UAlogMeanDT/Qcold-1);
-    var discrep3 = 100*(Qcold/Qhot-1);
-    alert('Qhot = UAlogMeanDT: ' + Qhot + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep.toFixed(3) + ' %');
-    alert('Qcold = UAlogMeanDT: ' + Qcold + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep2.toFixed(3) + ' %');
-    alert('Qhot = Qcold: ' + Qhot + ' = '+ Qcold + ', discrepancy = ' + discrep3.toFixed(3) + ' %');
-  }, // END of checkSSvalues()
+  } // END of checkSSvalues()
 
   display : function() {
 

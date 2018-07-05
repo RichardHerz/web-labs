@@ -1,4 +1,4 @@
-2.24/*
+/*
   Design, text, images and code by Richard K. Herz, 2018
   Copyrights held by Richard K. Herz
   Licensed for use under the GNU General Public License v3.0
@@ -150,18 +150,8 @@ puPlugFlowReactor = {
     this.dataValues[v] = this.Cain; // current input value for reporting
     //
     v = 5;
-    this.dataHeaders[v] = 'Flowrate';
-    this.dataInputs[v] = 'input_field_Flowrate';
-    this.dataUnits[v] = 'm3/s';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 10;
-    this.dataInitial[v] = 5.0e-3;
-    this.Flowrate = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Flowrate; // current input value for reporting
-    //
-    // *** WHEN RXR COUPLED TO HX, THIS IS Tin TO COLD SIDE HEAT EXCHANGER ***
-    v = 6;
-    this.dataHeaders[v] = 'System Tin'; // TinHX
+    // *** only used in reactor to initialize and reset plots
+    this.dataHeaders[v] = 'System Tin';
     this.dataInputs[v] = 'input_field_Tin';
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 320;
@@ -170,46 +160,22 @@ puPlugFlowReactor = {
     this.TinHX = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.TinHX; // current input value for reporting
     //
-    // *** WHEN RXR COUPLED TO HX, THIS IS UA of HEAT EXCHANGER ***
-    v = 7;
-    this.dataHeaders[v] = 'UAcoef';
-    // NOTE: dataInputs example where field ID name differs from variable name
-    this.dataInputs[v] = 'input_field_UA';
-    this.dataUnits[v] = 'kW/K';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 60;
-    this.dataInitial[v] = 20;
-    this.UAcoef = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.UAcoef; // current input value for reporting
-    //
-    // *** Tjacket not used for adiabatic reactor coupled to heat exch ***
-    v = 8;
-    this.dataHeaders[v] = 'Tjacket';
-    this.dataInputs[v] = 'input_field_Tjacket';
-    this.dataUnits[v] = 'K';
-    this.dataMin[v] = 250;
-    this.dataMax[v] = 400;
-    this.dataInitial[v] = 360;
-    this.Tjacket = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Tjacket; // current input value for reporting
-    //
     // END OF INPUT VARS
     // record number of input variables, VarCount
     // used, e.g., in copy data to table in _plotter.js
-
-    // *** CHANGE FROM = v TO = v-1 FOR ADIABATIC RXR COUPLED TO HX ***
+    //
+    // *** use v-1 here since TinHX only used to initialize & reset plots
     this.VarCount = v-1;
-
     //
     // OUTPUT VARS
     //
-    v = 9;
+    v = 6;
     this.dataHeaders[v] = 'Trxr';
     this.dataUnits[v] =  'K';
     // Trxr dataMin & dataMax can be changed in updateUIparams()
     this.dataMin[v] = 200;
     this.dataMax[v] = 500;
-    v = 10;
+    v = 7;
     this.dataHeaders[v] = 'Ca';
     this.dataUnits[v] =  'mol/m3';
     this.dataMin[v] = 0;
@@ -218,10 +184,10 @@ puPlugFlowReactor = {
 
     // *** heat exchanger needs reactor outlet T for HX hot inlet T ***
     for (k = 0; k <= this.numNodes; k += 1) {
-      this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
-      this.TrxrNew[k] = this.dataInitial[6]; // [6] is TinHX
       this.Ca[k] = this.dataInitial[4]; // [4] is Cain
       this.CaNew[k] = this.dataInitial[4]; // [4] is Cain
+      this.Trxr[k] = this.dataInitial[5]; // [5] is TinHX
+      this.TrxrNew[k] = this.dataInitial[5]; // [5] is TinHX
     }
 
   }, // END of initialize()
@@ -239,7 +205,7 @@ puPlugFlowReactor = {
     // this.errorIntegral = this.initialErrorIntegral;
 
     simParams.ssFlag = false;
-    this.SScheck = 0; // rest steady state check number of array end values
+    this.SScheck = 0; // reset steady state check number of array end values
 
 // XXXNEWXXX replace with local call to display() below
     // // **** CHANGE WHEN REACTOR COUPLED TO HEAT EXCHANGER ****
@@ -250,10 +216,10 @@ puPlugFlowReactor = {
 
     for (k = 0; k <= this.numNodes; k += 1) {
       // **** CHANGE WHEN RXR COUPLED TO HX ****
-      this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
-      this.TrxrNew[k] = this.dataInitial[6]; // [6] is TinHX
       this.Ca[k] = this.dataInitial[4]; // [4] is Cain
       this.CaNew[k] = this.dataInitial[4]; // [4] is Cain
+      this.Trxr[k] = this.dataInitial[5]; // [5] is TinHX
+      this.TrxrNew[k] = this.dataInitial[5]; // [5] is TinHX
     }
 
     // initialize profile data array - must follow function initPlotData in this file
@@ -329,17 +295,21 @@ puPlugFlowReactor = {
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
     // getInputValue(unit index in processUnits, var index in input arrays)
-    var unum = this.unitIndex;
+    //
+    let unum = this.unitIndex;
+    //
     this.Kf300 = getInputValue(unum, 0);
     this.Ea = getInputValue(unum, 1);
     this.DelH = getInputValue(unum, 2);
     this.Wcat = getInputValue(unum, 3);
     this.Cain = getInputValue(unum, 4);
     this.Flowrate = getInputValue(unum, 5);
+
+    // TinHX only used in reactor on initialization and reset of reactor plot
     this.TinHX = getInputValue(unum, 6);
-    this.UAcoef = getInputValue(unum, 7);
 
     // // *** DEACTIVATE FOR ADIABATIC OPERATION ***
+    // this.UAcoef = getInputValue(unum, 7);
     // this.Tjacket = getInputValue(unum, 8);
 
     // // XXXNEWXXX call display method here in case paused and changes needed now

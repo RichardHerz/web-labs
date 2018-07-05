@@ -89,10 +89,13 @@ puPlugFlowReactor = {
 
   // also see simParams.ssFlag and simParams.SScheck
   SScheck : 0, // for saving steady state check number of array end values
-  residenceTime : 0, // for timing checks for steady state check
+  // for timing checks for steady state check
+  residenceTime : 1,
 
   CpFluid : 2.24, // (kJ/kg/K)
   densFluid : 1000, // (kg/m3)
+  densCat : 1000, // (kg/m3)
+  voidFrac : 0.3, // bed void fraction
 
   initialize : function() {
     //
@@ -186,6 +189,11 @@ puPlugFlowReactor = {
       this.Trxr[k] = this.dataInitial[5]; // [5] is TinHX
       this.TrxrNew[k] = this.dataInitial[5]; // [5] is TinHX
     }
+
+    // update residenceTime, which is needed by HX to match that of RXR
+    // in case any change in Wcat or Flowrate
+    let densBed = this.densCat * (1 - this.voidFrac);
+    this.residenceTime = this.Wcat * this.voidFrac / densBed / this.Flowrate;
 
   }, // END of initialize()
 
@@ -305,9 +313,10 @@ puPlugFlowReactor = {
     // TinHX only used in reactor on initialization and reset of reactor plot
     this.TinHX = getInputValue(unum, 6);
 
-    // // *** DEACTIVATE FOR ADIABATIC OPERATION ***
-    // this.UAcoef = getInputValue(unum, 7);
-    // this.Tjacket = getInputValue(unum, 8);
+    // update residenceTime, which is needed by HX to match that of RXR
+    // in case any change in Wcat or Flowrate
+    let densBed = this.densCat * (1 - this.voidFrac);
+    this.residenceTime = this.Wcat * this.voidFrac / densBed / this.Flowrate;
 
     // // XXXNEWXXX call display method here in case paused and changes needed now
     // // XXXNEWXXX BUT GET ERROR ON FIRST CALL ON PAGE LOAD
@@ -386,13 +395,11 @@ puPlugFlowReactor = {
     var CaN = 0;
     var dCaDT = 0;
 
-    // CpFluid, and densFluid properties of puPlugFlowReactor
+    // CpFluid, voidFrac, densCat and densFluid properties of puPlugFlowReactor
     var CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
-    let densCat = 1000; // (kg/m3)
-    var voidFrac = 0.3; // bed void fraction
-    var densBed = (1 - voidFrac) * densCat; // (kg/m3), bed density
+    var densBed = (1 - this.voidFrac) * this.densCat; // (kg/m3), bed density
     // assume fluid and catalyst at same T at each position in reactor
-    var CpMean = voidFrac * this.CpFluid + (1 - voidFrac) * CpCat;
+    var CpMean = this.voidFrac * this.CpFluid + (1 - this.voidFrac) * CpCat;
 
     var dW = this.Wcat / this.numNodes;
     var Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
@@ -400,8 +407,8 @@ puPlugFlowReactor = {
     var EaOverRg = this.Ea / Rg; // so not compute in loop below
     var EaOverRg300 = EaOverRg / 300; // so not compute in loop below
 
-    var flowCoef = this.Flowrate * densBed / voidFrac / dW;
-    var rxnCoef = densBed / voidFrac;
+    var flowCoef = this.Flowrate * densBed / this.voidFrac / dW;
+    var rxnCoef = densBed / this.voidFrac;
 
     var energyFlowCoef = this.Flowrate * this.densFluid * this.CpFluid / CpMean / dW;
 

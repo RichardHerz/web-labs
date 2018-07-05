@@ -100,7 +100,7 @@ puHeatExchanger = {
 
   // also see simParams.ssFlag and simParams.SScheck
   SScheck : 0, // for saving steady state check number
-  residenceTime : 0, // for timing checks for steady state check
+  residenceTime : 1,
   // residence time also computed for reactor and used to match HX to RXR
 
   initialize : function() {
@@ -350,7 +350,7 @@ puHeatExchanger = {
 
     // this HX uses length for integration
     // so need to make some assumptions and compute
-    // residenceTime is computed above in updateInputs to be same as reactor
+    // residenceTime is obtained in updateInputs from reactor
     let Volume = this.residenceTime * this.Flowrate; // use Flowrate (m3/s)
     let Diam = 0.1; // (m), arbitrary, fix so can get length for integratino
     let Length = Volume * 4.0 / Math.PI / Math.pow(Diam, 2); // (m)

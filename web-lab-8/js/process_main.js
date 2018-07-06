@@ -113,8 +113,6 @@
       // tIdleTime = Number(tIdleTime).toPrecision(2);
       // document.getElementById("field_output_field").innerHTML = "% idle = " + tIdleTime + "&nbsp;&nbsp;";
 
-// runThisLab(); // yyy stop execution
-
       // END updateProcess WITH CALL TO ITSELF AFTER updateMs WAIT
       setTimeout(updateProcess, updateMs);  // updateMs
 

@@ -30,6 +30,8 @@ puPlugFlowReactor = {
   displayReactorRightConc: 'field_reactor_right_conc',
   displayReactorLeftT: 'field_reactor_left_T',
   displayReactorRightT: 'field_reactor_right_T',
+
+  // *** FOR HX coupled to RXR, let RXR set HX hot inlet T so get agreement
   displayHotRightT: 'field_hot_right_T', // use to get agreement with rxr out
 
   // displayJacketLeftArrow : '#field_jacket_left_arrow', // needs # with ID
@@ -381,12 +383,13 @@ puPlugFlowReactor = {
   }, // END of updateInputs()
 
   updateState : function() {
+    //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
     // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
     // STATE VARIABLE
     //
-    // WARNING: this method must NOT contain references to any other unit!
+    // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
 
     // check for change in overall main time step simTimeStep
@@ -421,7 +424,7 @@ puPlugFlowReactor = {
     var energyXferCoef = 0;
     // var energyXferCoef = this.UAcoef / CpMean;
 
-    // *** FOR ADIABATIC RXR 
+    // *** FOR ADIABATIC RXR
     // also need to define this.Tjacket for no error of omission
     // in full equations below but value is irrelevant
     // with energyXferCoef = 0

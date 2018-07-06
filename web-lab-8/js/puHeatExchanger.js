@@ -38,6 +38,10 @@ puHeatExchanger = {
   displayColdLeftArrow : '#field_cold_left_arrow', // needs # with ID
   displayColdRightArrow : '#field_cold_right_arrow', // needs # with ID
 
+  // *** FOR HX coupled to RXR, let HX set RXR inlet T display field
+  // so always get agreement
+  displayReactorLeftT: 'field_reactor_left_T',
+
   // define main inputs
   // values will be set in method intialize()
   TinHot : 0,
@@ -328,13 +332,14 @@ puHeatExchanger = {
   }, // END of updateInputs()
 
   updateState : function() {
+    //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
     // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
     // STATE VARIABLE
     //
-    // WARNING: this method must NOT contain references to any other unit!
-    //          get info from other units ONLY in other methods
+    // WARNING: this method must NOT contain references to other units!
+    //          get info from other units ONLY in updateInputs() method
 
     // *** NEW FOR ADIABATIC RXR + HX ***
     // fix Cp's here
@@ -342,8 +347,8 @@ puHeatExchanger = {
     CpCold = CpHot;
 
     // this HX uses length for integration
-    // so need to make some assumptions and compute
-    // residenceTime is obtained in updateInputs from reactor
+    // so need to make some assumptions to obtain HX length
+    // residenceTime is obtained in updateInputs() from reactor
     let Volume = this.residenceTime * this.Flowrate; // use Flowrate (m3/s)
     let Diam = 0.1; // (m), arbitrary, fix so can get length for integratino
     let Length = Volume * 4.0 / Math.PI / Math.pow(Diam, 2); // (m)
@@ -465,8 +470,11 @@ puHeatExchanger = {
 
     document.getElementById(this.displayHotLeftT).innerHTML = this.Thot[this.numNodes].toFixed(1) + ' K';
 
-    // *** FOR HX coupled to RXR, let RXR set TinHot right display field
+    // *** FOR HX coupled to RXR, let RXR set HX TinHot right display field
     // document.getElementById(this.displayHotRightT).innerHTML = this.TinHot.toFixed(1) + ' K';
+
+    // *** FOR HX coupled to RXR, let HX set RXR inlet T display field
+    document.getElementById(this.displayReactorLeftT).innerHTML = this.Tcold[0].toFixed(1) + ' K';
 
     switch(this.ModelFlag) {
       case 0: // co-current

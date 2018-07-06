@@ -1,9 +1,12 @@
-2.24/*
+/*
   Design, text, images and code by Richard K. Herz, 2018
   Copyrights held by Richard K. Herz
   Licensed for use under the GNU General Public License v3.0
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
+
+// copy line below for display of development values
+// document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
 
 puPlugFlowReactor = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
@@ -27,6 +30,8 @@ puPlugFlowReactor = {
   displayReactorRightConc: 'field_reactor_right_conc',
   displayReactorLeftT: 'field_reactor_left_T',
   displayReactorRightT: 'field_reactor_right_T',
+  displayHotRightT: 'field_hot_right_T', // use to get agreement with rxr out
+
   // displayJacketLeftArrow : '#field_jacket_left_arrow', // needs # with ID
 
   // define main inputs
@@ -37,10 +42,16 @@ puPlugFlowReactor = {
   Wcat : 0,
   Cain : 0,
   Flowrate : 0,
+
   // *** WHEN RXR COUPLED TO HX, THIS IS INLET T TO COLD SIDE HX ***
-  // *** WHEN RXR COUPLED TO HX, SEE Tin BELOW FOR RXR INLET T ***
   TinHX : 0, // inlet T to heat exchanger cold side
-  UAcoef : 0,
+
+  // *** WHEN RXR COUPLED TO HX, Tin IS RXR INLET T ***
+  Tin : 0, // inlet T to reactor - to be obtained from HX cold outlet
+
+  // *** FOR ADIABATIC RXR just define Tjacket for no error
+  // of omission in equations
+  // but heat transfer term multiplying this is set to zero
   Tjacket : 0,
 
   // define arrays to hold info for variables
@@ -60,11 +71,6 @@ puPlugFlowReactor = {
   TrxrNew : [], // 'New' hold intermediate values during updateState
   CaNew : [],
 
-  // *** WHEN RXR COUPLED TO HX, Tin IS RXR INLET T ***
-  // these will be filled with values in method initialize()
-  // and updated in updateState()
-  Tin : 0, //
-
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
   profileData : [], // for profile plots, plot script requires this name
@@ -72,8 +78,7 @@ puPlugFlowReactor = {
   colorCanvasData : [], // for color canvas plots, plot script requires this name
 
   // allow this unit to take more than one step within one main loop step in updateState method
-  // WARNING: see special handling for time step in this unit's updateInputs method
-  unitStepRepeats : 200, // XXX
+  unitStepRepeats : 200,
   unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
 
   // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
@@ -86,17 +91,17 @@ puPlugFlowReactor = {
 
   // WARNING: have to check for any changes to simTimeStep and simStepRepeats if change numNodes
   // WARNING: numNodes is accessed in process_plot_info.js
-  numNodes : 200, // XXX
+  numNodes : 200,
 
   // also see simParams.ssFlag and simParams.SScheck
   SScheck : 0, // for saving steady state check number of array end values
-  residenceTime : 0, // for timing checks for steady state check
+  // for timing checks for steady state check
+  residenceTime : 1,
 
-  // fluid Cp and both dens need to be accessible in updateUIparams()
-  // Cp and dens for catalyst set in updateState()
   CpFluid : 2.24, // (kJ/kg/K)
   densFluid : 1000, // (kg/m3)
   densCat : 1000, // (kg/m3)
+  voidFrac : 0.3, // bed void fraction
 
   initialize : function() {
     //
@@ -160,9 +165,9 @@ puPlugFlowReactor = {
     this.Flowrate = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Flowrate; // current input value for reporting
     //
-    // *** WHEN RXR COUPLED TO HX, THIS IS Tin TO COLD SIDE HEAT EXCHANGER ***
     v = 6;
-    this.dataHeaders[v] = 'Tin'; // TinHX
+    // *** only used in reactor to initialize and reset plots
+    this.dataHeaders[v] = 'System Tin';
     this.dataInputs[v] = 'input_field_Tin';
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 320;
@@ -171,46 +176,22 @@ puPlugFlowReactor = {
     this.TinHX = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.TinHX; // current input value for reporting
     //
-    // *** WHEN RXR COUPLED TO HX, THIS IS UA of HEAT EXCHANGER ***
-    v = 7;
-    this.dataHeaders[v] = 'UAcoef';
-    // NOTE: dataInputs example where field ID name differs from variable name
-    this.dataInputs[v] = 'input_field_UA';
-    this.dataUnits[v] = 'kW/K';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 60;
-    this.dataInitial[v] = 20;
-    this.UAcoef = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.UAcoef; // current input value for reporting
-    //
-    // *** Tjacket not used for adiabatic reactor coupled to heat exch ***
-    v = 8;
-    this.dataHeaders[v] = 'Tjacket';
-    this.dataInputs[v] = 'input_field_Tjacket';
-    this.dataUnits[v] = 'K';
-    this.dataMin[v] = 250;
-    this.dataMax[v] = 400;
-    this.dataInitial[v] = 360;
-    this.Tjacket = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Tjacket; // current input value for reporting
-    //
     // END OF INPUT VARS
     // record number of input variables, VarCount
     // used, e.g., in copy data to table in _plotter.js
-
-    // *** CHANGE FROM = v TO = v-1 FOR ADIABATIC RXR COUPLED TO HX ***
+    //
+    // *** use v-1 here since TinHX only used to initialize & reset plots
     this.VarCount = v-1;
-
     //
     // OUTPUT VARS
     //
-    v = 9;
+    v = 7;
     this.dataHeaders[v] = 'Trxr';
     this.dataUnits[v] =  'K';
     // Trxr dataMin & dataMax can be changed in updateUIparams()
     this.dataMin[v] = 200;
     this.dataMax[v] = 500;
-    v = 10;
+    v = 8;
     this.dataHeaders[v] = 'Ca';
     this.dataUnits[v] =  'mol/m3';
     this.dataMin[v] = 0;
@@ -219,11 +200,16 @@ puPlugFlowReactor = {
 
     // *** heat exchanger needs reactor outlet T for HX hot inlet T ***
     for (k = 0; k <= this.numNodes; k += 1) {
-      this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
-      this.TrxrNew[k] = this.dataInitial[6]; // [6] is TinHX
       this.Ca[k] = this.dataInitial[4]; // [4] is Cain
       this.CaNew[k] = this.dataInitial[4]; // [4] is Cain
+      this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
+      this.TrxrNew[k] = this.dataInitial[6]; // [6] is TinHX
     }
+
+    // update residenceTime, which is needed by HX to match that of RXR
+    // in case any change in Wcat or Flowrate
+    let densBed = this.densCat * (1 - this.voidFrac);
+    this.residenceTime = this.Wcat * this.voidFrac / densBed / this.Flowrate;
 
   }, // END of initialize()
 
@@ -240,20 +226,13 @@ puPlugFlowReactor = {
     // this.errorIntegral = this.initialErrorIntegral;
 
     simParams.ssFlag = false;
-    this.SScheck = 0; // rest steady state check number of array end values
-
-    // **** CHANGE WHEN REACTOR COUPLED TO HEAT EXCHANGER ****
-    document.getElementById(this.displayReactorLeftT).innerHTML = this.TinHX.toFixed(1) + ' K';
-    document.getElementById(this.displayReactorRightT).innerHTML = this.TinHX.toFixed(1) + ' K';
-    document.getElementById(this.displayReactorLeftConc).innerHTML = this.Cain.toFixed(1);
-    document.getElementById(this.displayReactorRightConc).innerHTML = this.Cain.toFixed(1) + ' mol/m<sup>3</sup>';
+    this.SScheck = 0; // reset steady state check number of array end values
 
     for (k = 0; k <= this.numNodes; k += 1) {
-      // **** CHANGE WHEN RXR COUPLED TO HX ****
-      this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
-      this.TrxrNew[k] = this.dataInitial[6]; // [6] is TinHX
       this.Ca[k] = this.dataInitial[4]; // [4] is Cain
       this.CaNew[k] = this.dataInitial[4]; // [4] is Cain
+      this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
+      this.TrxrNew[k] = this.dataInitial[6]; // [6] is TinHX
     }
 
     // initialize profile data array - must follow function initPlotData in this file
@@ -266,7 +245,8 @@ puPlugFlowReactor = {
 
     // initialize local array to hold color-canvas data, e.g., space-time data -
     // initColorCanvasArray(numVars,numXpts,numYpts)
-    this.colorCanvasData = initColorCanvasArray(2,this.numNodes,1);
+    // *** FOR ADIABATIC RXR, numVars = 1 since don't show jacket canvas
+    this.colorCanvasData = initColorCanvasArray(1,this.numNodes,1);
 
     var kn = 0;
     for (k = 0; k <= this.numNodes; k += 1) {
@@ -280,9 +260,12 @@ puPlugFlowReactor = {
       this.profileData[0][k][0] = kn;
       this.profileData[1][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = this.dataInitial[6]; // [6] is Tin
+      this.profileData[0][k][1] = this.dataInitial[6]; // [6] is TinHX
       this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
     }
+
+    // update display
+    this.display();
 
   }, // end reset
 
@@ -317,99 +300,32 @@ puPlugFlowReactor = {
     // if (document.getElementById(this.inputSliderReadout)) {
     //   document.getElementById(this.inputSliderReadout).innerHTML = this.Cmax;
 
-    // change simParams.ssFlag to false if true
-    if (simParams.ssFlag) {
-      // sim was at steady state, switch ssFlag to false
-      simParams.ssFlag = false;
-    }
-    // reset SScheck checksum used to check for ss
+    // set simParams.ssFlag to false
+    simParams.ssFlag = false;
+
+    // set SScheck checksum used to check for SS to zero
     this.SScheck = 0;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
     // getInputValue(unit index in processUnits, var index in input arrays)
-    var unum = this.unitIndex;
+    //
+    let unum = this.unitIndex;
+    //
     this.Kf300 = getInputValue(unum, 0);
     this.Ea = getInputValue(unum, 1);
     this.DelH = getInputValue(unum, 2);
     this.Wcat = getInputValue(unum, 3);
     this.Cain = getInputValue(unum, 4);
     this.Flowrate = getInputValue(unum, 5);
+
+    // TinHX only used in reactor on initialization and reset of reactor plot
     this.TinHX = getInputValue(unum, 6);
-    this.UAcoef = getInputValue(unum, 7);
 
-    // // *** DEACTIVATE FOR ADIABATIC OPERATION ***
-    // this.Tjacket = getInputValue(unum, 8);
-
-    // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
-
-    this.Tin = processUnits[1]['Tcold'][0];
-
-    // alert('this.Tin in PFR updateUIparams = ' + this.Tin); // xxx
-
-    // calc adiabatic delta T, positive for negative H (exothermic)
-    var adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
-
-    // *** CHANGE MIN-MAX T FOR ADIABATIC REACTOR ***
-    // calc max possible T
-    if(this.DelH < 0) {
-      // exothermic
-      this.dataMax[9] = this.TinHX + adiabDeltaT;
-    } else {
-      // endothermic
-      this.dataMax[9] = this.TinHX;
-    }
-    // calc min possible T
-    if(this.DelH > 0) {
-      // endothermic
-      this.dataMin[9] = this.TinHX + adiabDeltaT;
-    } else {
-      // exothermic
-      this.dataMin[9] = this.TinHX;
-    }
-
-    // // adjust axis of profile plot
-    // plotArrays['plotFlag'][0] = 0;  // so axes will refresh
-    // plotsObj[0]['yLeftAxisMin'] = this.dataMin[9]; // [9] is Trxr
-    // plotsObj[0]['yLeftAxisMax'] = this.dataMax[9];
-    // plotsObj[0]['yRightAxisMin'] = 0;
-    // plotsObj[0]['yRightAxisMax'] = this.Cain;
-    // // adjust color span of spaceTime, color canvas plots
-    // plotsObj[1]['varValueMin'] = this.dataMin[9]; // [9] is Trxr
-    // plotsObj[1]['varValueMax'] = this.dataMax[9];
-    // plotsObj[2]['varValueMin'] = this.dataMin[9];
-    // plotsObj[2]['varValueMax'] = this.dataMax[9];
-
-    // also update ONLY inlet values at inlet of reactor in case sim is paused
-    // but do not do full updateDisplay
-
-    // *** deactivate since inlet to reactor isn't directly affected by UI update ***
-    // document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
-
-    document.getElementById(this.displayReactorLeftConc).innerHTML = this.Cain.toFixed(1);
-    document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1);
-
-    // residence time used for timing checks for steady state
-    // XXX use this for now but should consider voidFrac and Cp's...
-    this.residenceTime = this.Wcat / this.densCat / this.Flowrate;
-
-    // // UPDATE UNIT TIME STEP AND UNIT REPEATS
-    //
-    // // FIRST, compute spaceTime = residence time between two nodes in hot tube, also
-    // //                          = space time of equivalent single mixing cell
-    // var spaceTime = (Length / this.numNodes) / VelocHot; // (s)
-    //
-    // // SECOND, estimate unitTimeStep
-    // // do NOT change simParams.simTimeStep here
-    // this.unitTimeStep = spaceTime / 15;
-    //
-    // // THIRD, get integer number of unitStepRepeats
-    // this.unitStepRepeats = Math.round(simParams.simTimeStep / this.unitTimeStep);
-    // // min value of unitStepRepeats is 1 or get divide by zero error
-    // if (this.unitStepRepeats <= 0) {this.unitStepRepeats = 1;}
-    //
-    // // FOURTH and finally, recompute unitTimeStep with integer number unitStepRepeats
-    // this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    // update residenceTime, which is needed by HX to match that of RXR
+    // in case any change in Wcat or Flowrate
+    let densBed = this.densCat * (1 - this.voidFrac);
+    this.residenceTime = this.Wcat * this.voidFrac / densBed / this.Flowrate;
 
   }, // END of updateUIparams()
 
@@ -420,9 +336,6 @@ puPlugFlowReactor = {
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     //
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     //
     // The following TRY-CATCH structures provide for unit independence
@@ -444,7 +357,26 @@ puPlugFlowReactor = {
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
     this.Tin = processUnits[1]['Tcold'][0];
 
-    // alert('this.Tin in PFR updateInputs = ' + this.Tin); // xxx
+    // *** UPDATE MIN-MAX T FOR ADIABATIC REACTOR ***
+    // calc adiabatic delta T, positive for negative H (exothermic)
+    var adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
+    var varMinMaxT = 7; // 7 is Trxr used for constraint during integration
+    // calc max possible T
+    if(this.DelH < 0) {
+      // exothermic
+      this.dataMax[varMinMaxT] = this.Tin + adiabDeltaT;
+    } else {
+      // endothermic
+      this.dataMax[varMinMaxT] = this.Tin;
+    }
+    // calc min possible T
+    if(this.DelH > 0) {
+      // endothermic
+      this.dataMin[varMinMaxT] = this.Tin + adiabDeltaT;
+    } else {
+      // exothermic
+      this.dataMin[varMinMaxT] = this.Tin;
+    }
 
   }, // END of updateInputs()
 
@@ -455,7 +387,10 @@ puPlugFlowReactor = {
     // STATE VARIABLE
     //
     // WARNING: this method must NOT contain references to any other unit!
-    //          get info from other units ONLY in other methods
+    //          get info from other units ONLY in updateInputs() method
+
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     var i = 0; // index for step repeats
     var n = 0; // index for nodes
@@ -463,13 +398,13 @@ puPlugFlowReactor = {
     var dTrxrDT = 0;
     var CaN = 0;
     var dCaDT = 0;
+    var varMinMaxT = 7; // 7 is Trxr used for constraint during integration
 
-    // CpFluid, densFluid, densCat are properties of puPlugFlowReactor
+    // CpFluid, voidFrac, densCat and densFluid properties of puPlugFlowReactor
     var CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
-    var voidFrac = 0.3; // bed void fraction
-    var densBed = (1 - voidFrac) * this.densCat; // (kg/m3), bed density
+    var densBed = (1 - this.voidFrac) * this.densCat; // (kg/m3), bed density
     // assume fluid and catalyst at same T at each position in reactor
-    var CpMean = voidFrac * this.CpFluid + (1 - voidFrac) * CpCat;
+    var CpMean = this.voidFrac * this.CpFluid + (1 - this.voidFrac) * CpCat;
 
     var dW = this.Wcat / this.numNodes;
     var Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
@@ -477,8 +412,8 @@ puPlugFlowReactor = {
     var EaOverRg = this.Ea / Rg; // so not compute in loop below
     var EaOverRg300 = EaOverRg / 300; // so not compute in loop below
 
-    var flowCoef = this.Flowrate * densBed / voidFrac / dW;
-    var rxnCoef = densBed / voidFrac;
+    var flowCoef = this.Flowrate * densBed / this.voidFrac / dW;
+    var rxnCoef = densBed / this.voidFrac;
 
     var energyFlowCoef = this.Flowrate * this.densFluid * this.CpFluid / CpMean / dW;
 
@@ -486,17 +421,20 @@ puPlugFlowReactor = {
     var energyXferCoef = 0;
     // var energyXferCoef = this.UAcoef / CpMean;
 
+    // *** FOR ADIABATIC RXR 
+    // also need to define this.Tjacket for no error of omission
+    // in full equations below but value is irrelevant
+    // with energyXferCoef = 0
+
     var energyRxnCoef = this.DelH / CpMean;
 
     // this unit can take multiple steps within one outer main loop repeat step
     for (i=0; i<this.unitStepRepeats; i+=1) {
 
-      // do node at inlet end
+      // do node at inlet node
       n = 0;
 
-      // TrxrN = this.TinHX; // XXX TEST
       TrxrN = this.Tin;
-
       CaN = this.Cain;
 
       this.TrxrNew[n] = TrxrN;
@@ -515,18 +453,18 @@ puPlugFlowReactor = {
         CaN = this.Ca[n] + dCaDT * this.unitTimeStep;
         TrxrN = this.Trxr[n] + dTrxrDT * this.unitTimeStep;
 
-        // XXX // CONSTRAIN TO BE IN BOUND
-        // if (TrxrN > this.dataMax[9]) {TrxrN = this.dataMax[9];} // [9] is Trxr
-        // if (TrxrN < this.dataMin[9]) {TrxrN = this.dataMin[9];}
-        if (CaN < 0.0) {CaN = 0.0;}
-        if (CaN > this.Cain) {CaN = this.Cain;}
+        // // CONSTRAIN TO BE IN BOUND
+        // if (TrxrN > this.dataMax[varMinMaxT]) {TrxrN = this.dataMax[varMinMaxT];}
+        // if (TrxrN < this.dataMin[varMinMaxT]) {TrxrN = this.dataMin[varMinMaxT];}
+        // if (CaN < 0.0) {CaN = 0.0;}
+        // if (CaN > this.Cain) {CaN = this.Cain;}
 
         this.TrxrNew[n] = TrxrN;
         this.CaNew[n] = CaN;
 
       } // end repeat through internal nodes
 
-      // do node at hot outlet end
+      // do node at outlet node
 
       n = this.numNodes;
 
@@ -540,11 +478,11 @@ puPlugFlowReactor = {
       CaN = this.Ca[n] + dCaDT * this.unitTimeStep;
       TrxrN = this.Trxr[n] + dTrxrDT * this.unitTimeStep;
 
-      // XXX // CONSTRAIN TO BE IN BOUND
-      // if (TrxrN > this.dataMax[9]) {TrxrN = this.dataMax[9];} // [9] is Trxr
-      // if (TrxrN < this.dataMin[9]) {TrxrN = this.dataMin[9];}
-      if (CaN < 0.0) {CaN = 0.0;}
-      if (CaN > this.Cain) {CaN = this.Cain;}
+      // // CONSTRAIN TO BE IN BOUND
+      // if (TrxrN > this.dataMax[varMinMaxT]) {TrxrN = this.dataMax[varMinMaxT];}
+      // if (TrxrN < this.dataMin[varMinMaxT]) {TrxrN = this.dataMin[varMinMaxT];}
+      // if (CaN < 0.0) {CaN = 0.0;}
+      // if (CaN > this.Cain) {CaN = this.Cain;}
 
       this.TrxrNew[n] = TrxrN;
       this.CaNew[n] = CaN;
@@ -554,11 +492,6 @@ puPlugFlowReactor = {
       // copy new to current
       this.Trxr = this.TrxrNew;
       this.Ca = this.CaNew;
-
-      // XXX
-      // for (n = 0; n <= this.numNodes; n += 1) {
-      //   alert('this.Ca[' +n+ '] & this.Trxr[' +n+ '] = ' + this.Ca[n] + ', ' + this.Trxr[n]);
-      // }
 
     } // END NEW FOR REPEAT for (i=0; i<this.unitStepRepeats; i+=1)
 
@@ -579,6 +512,9 @@ puPlugFlowReactor = {
     document.getElementById(this.displayReactorLeftT).innerHTML = this.Trxr[0].toFixed(1) + ' K';
 
     document.getElementById(this.displayReactorRightT).innerHTML = this.Trxr[this.numNodes].toFixed(1) + ' K';
+
+    // also set HX hot in (right) so always agree with RXR out
+    document.getElementById(this.displayHotRightT).innerHTML = this.Trxr[this.numNodes].toFixed(1) + ' K';
 
     document.getElementById(this.displayReactorLeftConc).innerHTML = this.Cain.toFixed(1);
     document.getElementById(this.displayReactorRightConc).innerHTML = this.Ca[this.numNodes].toFixed(1) + ' mol/m<sup>3</sup>';;
@@ -606,7 +542,6 @@ puPlugFlowReactor = {
     // colorCanvasData[v][x][y]
     for (n=0; n<=this.numNodes; n+=1) {
       this.colorCanvasData[0][n][0] = this.Trxr[n];
-      this.colorCanvasData[1][n][0] = this.Tjacket; // XXX should only do this once...
     }
 
   } // END of display()

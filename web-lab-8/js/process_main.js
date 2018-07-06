@@ -113,6 +113,8 @@
       // tIdleTime = Number(tIdleTime).toPrecision(2);
       // document.getElementById("field_output_field").innerHTML = "% idle = " + tIdleTime + "&nbsp;&nbsp;";
 
+// runThisLab(); // yyy stop execution
+
       // END updateProcess WITH CALL TO ITSELF AFTER updateMs WAIT
       setTimeout(updateProcess, updateMs);  // updateMs
 
@@ -135,6 +137,8 @@
     for (n = 0; n < numUnits; n += 1) {
       processUnits[n].updateInputs();
     }
+
+    // NOTE: UI params are updated whenever UI changes by HTML input actions
 
     // SECOND, have all units update their state
     for (n = 0; n < numUnits; n += 1) {

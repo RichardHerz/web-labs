@@ -5,6 +5,9 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
+// copy line below for display of development values
+// document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
+
 puHeatExchanger = {
   unitIndex : 1, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
@@ -24,9 +27,6 @@ puHeatExchanger = {
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
   //   e.g., inputModel01 : "radio_Model_1",
-  //
-  inputModel00 : "radio_co-current_flow", // model 0 is co-current flow
-  inputModel01 : "radio_counter-current_flow", // model 1 is counter-current flow
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
   displayHotLeftT: 'field_hot_left_T',
@@ -42,6 +42,7 @@ puHeatExchanger = {
   // values will be set in method intialize()
   TinHot : 0,
   TinCold : 0,
+  Flowrate : 0,
   FlowHot : 0,
   FlowCold : 0,
   CpHot : 0,
@@ -76,7 +77,7 @@ puHeatExchanger = {
 
   // allow this unit to take more than one step within one main loop step in updateState method
   // WARNING: see special handling for time step in this unit's updateInputs method
-  unitStepRepeats : 200, // XXX
+  unitStepRepeats : 200,
   unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
 
   // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
@@ -95,154 +96,69 @@ puHeatExchanger = {
   // from array end values with dispersion decreases as number of nodes increases
   // but shows same output field T's to one decimal place for 200-800 nodes
 
-  // for Reynolds number Re, use kinematic viscosity from
-  // https://www.engineeringtoolbox.com/water-dynamic-kinematic-viscosity-d_596.html?vA=30&units=C#
-  FluidKinematicViscosity : 5.0e-7, // m2/s, for water at mid-T of 330 K for Reynolds number
   FluidDensity : 1000.0, // kg/m3, fluid density specified to be that of water
-  DispCoef : 0, // (m2/s), will be updated below, axial dispersion coefficient
 
   // also see simParams.ssFlag and simParams.SScheck
   SScheck : 0, // for saving steady state check number
-  residenceTime : 0, // for timing checks for steady state check
+  residenceTime : 1,
+  // residence time also computed for reactor and used to match HX to RXR
 
   initialize : function() {
-
-    // *** SPECIAL FOR HX COUPLED TO RXR ***
-    // need something here for copy data to table
-    // otherwise deactivate
-    let v = 0;
-    this.dataHeaders[v] = 'heat exchanger values listed above';
-    this.dataInputs[v] = '';
-    this.dataUnits[v] = '';
-    this.dataMin[v] = '';
-    this.dataMax[v] = '';
-    this.dataInitial[v] = '';
-    this.TinHot = ''; // dataInitial used in getInputValue()
-    this.dataValues[v] = ''; // current input value for reporting
-
-    // v = 0;
-    // this.dataHeaders[v] = 'TinHot';
-    // this.dataInputs[v] = 'input_field_TinHot';
-    // this.dataUnits[v] = 'K';
-    // this.dataMin[v] = 300;
-    // this.dataMax[v] = 370;
-    // this.dataInitial[v] = 300;
-    // this.TinHot = this.dataInitial[v]; // dataInitial used in getInputValue()
-    // this.dataValues[v] = this.TinHot; // current input value for reporting
     //
-    // v = 1;
-    // this.dataHeaders[v] = 'TinCold';
-    // this.dataInputs[v] = 'input_field_TinCold';
-    // this.dataUnits[v] = 'K';
-    // this.dataMin[v] = 300;
-    // this.dataMax[v] = 370;
-    // this.dataInitial[v] = 300;
-    // this.TinCold =  this.dataInitial[v];
-    // this.dataValues[v] = this.TinCold;
-    // //
-    // v = 2;
-    // this.dataHeaders[v] = 'FlowHot';
-    // this.dataInputs[v] = 'input_field_FlowHot';
-    // this.dataUnits[v] = 'kg/s';
-    // this.dataMin[v] = 0.15;
-    // this.dataMax[v] = 4.0;
-    // this.dataInitial[v] = 0.5;
-    // this.FlowHot = this.dataInitial[v];
-    // this.dataValues[v] = this.FlowHot;
-    // //
-    // v = 3;
-    // this.dataHeaders[v] = 'FlowCold';
-    // this.dataInputs[v] = 'input_field_FlowCold';
-    // this.dataUnits[v] = 'kg/s';
-    // this.dataMin[v] = 0.15;
-    // this.dataMax[v] = 4.0;
-    // this.dataInitial[v] = 0.75;
-    // this.FlowCold = this.dataInitial[v];
-    // this.dataValues[v] = this.FlowCold;
-    // //
-    // v = 4;
-    // this.dataHeaders[v] = 'CpHot';
-    // this.dataInputs[v] = 'input_field_CpHot';
-    // this.dataUnits[v] =  'kJ/kg/K';
-    // this.dataMin[v] = 1;
-    // this.dataMax[v] = 10;
-    // this.dataInitial[v] = 4.2;
-    // this.CpHot = this.dataInitial[v];
-    // this.dataValues[v] = this.CpHot;
-    // //
-    // v = 5;
-    // this.dataHeaders[v] = 'CpCold';
-    // this.dataInputs[v] = 'input_field_CpCold';
-    // this.dataUnits[v] =  'kJ/kg/K';
-    // this.dataMin[v] = 1;
-    // this.dataMax[v] = 10;
-    // this.dataInitial[v] = 4.2;
-    // this.CpCold = this.dataInitial[v];
-    // this.dataValues[v] = this.CpCold;
-    // //
-    // v = 6;
-    // this.dataHeaders[v] = 'Ucoef';
-    // this.dataInputs[v] = 'input_field_Ucoef';
-    // this.dataUnits[v] =  'kW/m2/K';
-    // this.dataMin[v] = 0;
-    // this.dataMax[v] = 10;
-    // this.dataInitial[v] = 10;
-    // this.Ucoef = this.dataInitial[v];
-    // this.dataValues[v] = this.Ucoef;
-    // //
-    // v = 7;
-    // this.dataHeaders[v] = 'Area';
-    // this.dataInputs[v] = 'input_field_Area';
-    // this.dataUnits[v] =  'm2';
-    // this.dataMin[v] = 1;
-    // this.dataMax[v] = 10;
-    // this.dataInitial[v] = 4;
-    // this.Area = this.dataInitial[v];
-    // this.dataValues[v] = this.Area;
-    // //
-    // v = 8;
-    // this.dataHeaders[v] = 'Diam';
-    // this.dataInputs[v] = 'input_field_Diam';
-    // this.dataUnits[v] =  'm';
-    // this.dataMin[v] = 0.05;
-    // this.dataMax[v] = 0.20;
-    // this.dataInitial[v] = 0.15;
-    // this.Diam = this.dataInitial[v];
-    // this.dataValues[v] = this.Diam;
+    let v = 0;
+    // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
+    this.dataHeaders[v] = 'Flowrate';
+    this.dataInputs[v] = 'input_field_Flowrate';
+    this.dataUnits[v] = 'm3/s';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 10;
+    this.dataInitial[v] = 5.0e-3;
+    this.Flowrate = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.Flowrate; // current input value for reporting
+    //
+    v = 1;
+    this.dataHeaders[v] = 'System Tin';
+    this.dataInputs[v] = 'input_field_Tin';
+    this.dataUnits[v] = 'K';
+    this.dataMin[v] = 320;
+    this.dataMax[v] = 380;
+    this.dataInitial[v] = this.dataMin[v];
+    this.Tin = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.Tin; // current input value for reporting
+    //
+    v = 2;
+    this.dataHeaders[v] = 'UAcoef';
+    // NOTE: dataInputs example where field ID name differs from variable name
+    this.dataInputs[v] = 'input_field_UA';
+    this.dataUnits[v] = 'kW/K';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 60;
+    this.dataInitial[v] = 20;
+    this.UAcoef = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.UAcoef; // current input value for reporting
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
     // used, e.g., in copy data to table in _plotter.js
-    // *** FOR HX COUPLED TO RXR, change from = v to = 5
     this.VarCount = v;
-
+    //
     // OUTPUT VARS
     //
-    v = 9;
-    this.dataHeaders[v] = 'Thot';
-    this.dataUnits[v] =  'K';
-    this.dataMin[v] = this.dataMin[1]; // [1] is TinCold
-    this.dataMax[v] = this.dataMax[0]; // [0] is TinHot
-    //
-    v = 10;
-    this.dataHeaders[v] = 'Tcold';
-    this.dataUnits[v] =  'K';
-    this.dataMin[v] = this.dataMin[1]; // [1] is TinCold
-    this.dataMax[v] = this.dataMax[0]; // [0] is TinHot
-    //
 
-    // *** FOR HX COUPLED TO RXR ***
-    // processUnits[0] initializes before this processUnits[1]
+    this.FlowHot = this.Flowrate; // m3/s in reactor
+    // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
+    this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
+    this.FlowCold = this.FlowHot;
+
     for (k = 0; k <= this.numNodes; k += 1) {
-      this.Thot[k] = processUnits[0].TinHX;
-      this.ThotNew[k] = processUnits[0].TinHX;
-      this.Tcold[k] = processUnits[0].TinHX;
-      this.TcoldNew[k] = processUnits[0].TinHX;
-      // *** FOR HX COUPLED TO RXR ***
-      this.FlowHot = processUnits[0].Flowrate; // m3/s in reactor
-      // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
-      this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
-      this.FlowCold = this.FlowHot;
+      this.Thot[k] = 320;
+      this.ThotNew[k] = 320;
+      this.Tcold[k] = 320;
+      this.TcoldNew[k] = 320;
+      // this.Thot[k] = this.Tin;
+      // this.ThotNew[k] = this.Tin;
+      // this.Tcold[k] = this.Tin;
+      // this.TcoldNew[k] = this.Tin;
     }
 
   }, // END of initialize()
@@ -259,18 +175,11 @@ puHeatExchanger = {
     simParams.ssFlag = false;
     this.SScheck = 0;
 
-    // *** NEW FOR ADIABATIC RXR + HX ***
-    // *** GET INFO FROM REACTOR ***
-    // processUnits[0] initializes before this processUnits[1]
-    this.TinCold = processUnits[0].TinHX;
-    //
-    // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
-    //   may be different than in [1]
-    let nn = processUnits[0].numNodes;
-    this.TinHot = processUnits[0]['Trxr'][nn];
-    //
-    this.FlowHot = processUnits[0].Flowrate; // (m3/s) in reactor
-    // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
+    this.TinCold = this.Tin;
+    this.TinHot = this.Tin;
+
+    this.FlowHot = this.Flowrate; // input field is (m3/s)
+    // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
     this.FlowHot = this.FluidDensity * this.FlowHot; // (kg/s) = kg/m3 * m3/s
     this.FlowCold = this.FlowHot;
 
@@ -286,7 +195,7 @@ puHeatExchanger = {
     // initColorCanvasArray(numVars,numXpts,numYpts)
     this.colorCanvasData = initColorCanvasArray(2,this.numNodes,1);
 
-    var tInit = processUnits[0]['dataInitial'][6]; // initial system inlet T
+    var tInit = 320; // this.Tin; // initial system inlet T
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Thot[k] = tInit;
       this.ThotNew[k] = tInit;
@@ -306,8 +215,8 @@ puHeatExchanger = {
       this.profileData[0][k][0] = kn;
       this.profileData[1][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = processUnits[0].TinHX;
-      this.profileData[1][k][1] = processUnits[0].TinHX;
+      this.profileData[0][k][1] = 320; // this.Tin;
+      this.profileData[1][k][1] = 320; // this.Tin;
     }
 
   }, // END of reset()
@@ -343,71 +252,33 @@ puHeatExchanger = {
     // if (document.getElementById(this.inputSliderReadout)) {
     //   document.getElementById(this.inputSliderReadout).innerHTML = this.Cmax;
 
-    // change simParams.ssFlag to false if true
-    if (simParams.ssFlag) {
-      // sim was at steady state, switch ssFlag to false
-      simParams.ssFlag = false;
-    }
-    // reset SScheck checksum used to check for ss
+    // set simParams.ssFlag to false
+    simParams.ssFlag = false;
+
+    // set SScheck checksum used to check for SS to zero
     this.SScheck = 0;
 
-    // // *** DEACTIVATE FOR HX COUPLED TO RXR ***
-    // // RADIO BUTTONS & CHECK BOX
-    // // at least for now, do not check existence of UI elements
-    // // Model radio buttons
-    // var m00 = document.querySelector('#' + this.inputModel00);
-    // var cra = document.querySelector(this.displayColdRightArrow);
-    // var cla = document.querySelector(this.displayColdLeftArrow);
-    // if (m00.checked) {
-    //   // alert('co-current flow');
-    //   this.ModelFlag = 0; // co-current flow
-    //   cra.style.color = 'blue';
-    //   cla.style.color = 'orange';
-    //   cra.innerHTML = '&larr;';
-    //   cla.innerHTML = '&larr;';
-    // } else {
-    //   // alert('counter-current flow');
-    //   this.ModelFlag = 1; // counter-current flow
-    //   cra.style.color = 'orange';
-    //   cla.style.color = 'blue';
-    //   cra.innerHTML = '&rarr;';
-    //   cla.innerHTML = '&rarr;';
-    // }
+    // check input fields for new values
+    // function getInputValue() is defined in file process_interface.js
+    // getInputValue(unit index in processUnits, var index in input arrays)
+    //
+    let unum = this.unitIndex;
+    //
+    this.Flowrate = getInputValue(unum, 0);
+    this.Tin = getInputValue(unum, 1);
+    this.UAcoef = getInputValue(unum, 2);
 
-    // // *** DEACTIVATE FOR HX COUPLED TO RXR ***
-    // // check input fields for new values
-    // // function getInputValue() is defined in file process_interface.js
-    // // getInputValue(unit index in processUnits, var index in input arrays)
-    // var unum = this.unitIndex;
-    // this.TinHot = getInputValue(unum, 0);
-    // this.TinCold = getInputValue(unum, 1);
-    // this.FlowHot = getInputValue(unum, 2);
-    // this.FlowCold = getInputValue(unum, 3);
-    // this.CpHot = getInputValue(unum, 4);
-    // this.CpCold = getInputValue(unum, 5);
-    // this.Ucoef = getInputValue(unum, 6);
-    // this.Area = getInputValue(unum, 7);
-    // this.Diam = getInputValue(unum, 8);
+    // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
+    this.FlowHot = this.Flowrate * this.FluidDensity; // (kg/s) = (m3/s) * (kg/m3)
+    this.FlowCold = this.FlowHot;
 
     // also update ONLY inlet T's on ends of heat exchanger in case sim is paused
     // outlet T's not defined on first entry into page
     // but do not do full updateDisplay
 
-    // *** NEW FOR ADIABATIC RXR + HX ***
-    // *** GET INFO FROM REACTOR ***
-  this.TinCold = processUnits[0].TinHX;
-  //
-  // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
-  //   may be different than in [1]
-  let nn = processUnits[0].numNodes;
-  this.TinHot = processUnits[0]['Trxr'][nn];
-  //
-  this.FlowHot = processUnits[0].Flowrate; // m3/s in reactor
-  // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
-  this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
-  this.FlowCold = this.FlowHot;
+    this.TinCold = this.Tin;
+    // *** FOR HX coupled to RXR, let RXR set TinHot display field
 
-    document.getElementById(this.displayHotRightT).innerHTML = this.TinHot.toFixed(1) + ' K';
     switch(this.ModelFlag) {
       case 0: // co-current
         document.getElementById(this.displayColdRightT).innerHTML = this.TinCold.toFixed(1) + ' K';
@@ -415,73 +286,6 @@ puHeatExchanger = {
       case 1: // counter-current
         document.getElementById(this.displayColdLeftT).innerHTML = this.TinCold.toFixed(1) + ' K';
     }
-
-    // update display of tube length and Reynolds number
-
-    // from Area and Diam inputs & specify cylindrical tube
-    // can compute Length of heat exchanger
-    let Length = this.Area / this.Diam / Math.PI;
-
-    // *** DEACTIVATE FOR HX COUPLED TO RXR ***
-    // document.getElementById(this.displayLength).innerHTML = 'L (m) = ' + Length.toFixed(1);
-    // note use .toFixed(n) method of object to round number to n decimal points
-
-    // note Re is dimensionless Reynolds number in hot flow tube
-    let Re = this.FlowHot / this.FluidDensity / this.FluidKinematicViscosity * 4 / Math.PI / this.Diam;
-
-    // *** DEACTIVATE FOR HX COUPLED TO RXR ***
-    // document.getElementById(this.displayReynoldsNumber).innerHTML = 'Re<sub> hot-tube</sub> = ' + Re.toFixed(0);
-
-    // *** DEACTIVATE FOR HX COUPLED TO RXR ***
-    this.DispCoef = 0;
-    // // compute axial dispersion coefficient for turbulent flow
-    // // Dispersion coefficient correlation for Re > 2000 from Wen & Fan as shown in
-    // // https://classes.engineering.wustl.edu/che503/Axial%20Dispersion%20Model%20Figures.pdf
-    // // and
-    // // https://classes.engineering.wustl.edu/che503/chapter%205.pdf
-    // var Ax = Math.PI * Math.pow(this.Diam, 2) / 4.0; // (m2), cross-sectional area for flow
-    // var VelocHot = this.FlowHot / this.FluidDensity / Ax; // (m/s), linear fluid velocity
-    // this.DispCoef = VelocHot * this.Diam * (3.0e7/Math.pow(Re, 2.1) + 1.35/Math.pow(Re, 0.125)); // (m2/s)
-
-    // NOTE: to see independent effect of DispCoef = 0, set heat transfer
-    // coefficient U = 0, since heat exchange contributes to "spreading" of T's
-    // NOTE: with DispCoef = 0 and U = 0 you still get effective dispersion
-    // because, at zero dispersion coefficient, the finite difference method is
-    // same numerically as a mixing-cell-in-series model.
-    // Mixing-cell-in-series provide dispersion, though dispersion with some
-    // different characteristics, e.g., no upstream information propagation.
-    // For N nodes and zero dispersion coefficient value specified,
-    // the effective dispersion coefficient = effDisp = v*L/2/(N-1)
-    // per https://classes.engineering.wustl.edu/che503/chapter%205.pdf
-    // var effDisp = VelocHot * Length / 2 / (this.numNodes + 1 - 1);
-    // alert('effDisp = ' + effDisp);
-    // alert('this.DispCoef = ' + this.DispCoef);
-    // for 200 nodes & default conditions as of 20190505, effDisp = 6e-4 (m2/s)
-    // compared to this.DispCoef = four times higher at 25.6e-4 (m2/s)
-
-    // // *** DEACTIVATE FOR HX COUPLED TO RXR ***
-    // // *** COMPUTE IN updateInputs() FOR HX COUPLED TO RXR ***
-    // // residence time used for timing checks for steady state
-
-    // *** DEACTIVATE FOR HX COUPLED TO RXR ***
-    // // UPDATE UNIT TIME STEP AND UNIT REPEATS
-    //
-    // this.unitTimeStep = 0.1 * simParams.simTimeStep; // XXX NEED TO CHECK THIS
-    // // // FIRST, compute spaceTime = residence time between two nodes in hot tube, also
-    // // //                          = space time of equivalent single mixing cell
-    // // var spaceTime = (Length / this.numNodes) / VelocHot; // (s)
-    // //
-    // // // SECOND, estimate unitTimeStep
-    // // // do NOT change simParams.simTimeStep here
-    // // this.unitTimeStep = spaceTime / 15;
-    //
-    // // THIRD, get integer number of unitStepRepeats
-    // this.unitStepRepeats = Math.round(simParams.simTimeStep / this.unitTimeStep);
-    // // min value of unitStepRepeats is 1 or get divide by zero error
-    // if (this.unitStepRepeats <= 0) {this.unitStepRepeats = 1;}
-    //
-    // // FOURTH and finally, recompute unitTimeStep with integer number unitStepRepeats
-    // this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
   }, // END of updateUIparams()
 
@@ -492,14 +296,10 @@ puHeatExchanger = {
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     //
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
     //
     // The following TRY-CATCH structures provide for unit independence
     // such that when input doesn't exist, you get "initial" value
-
+    //
     // try {
     // //   let tmpFunc = new Function("return " + this.inputPV + ";");
     // //   this.PV = tmpFunc();
@@ -513,34 +313,17 @@ puHeatExchanger = {
     // //   this.PV = this.initialPV;
     // }
 
-    // *** NEW FOR ADIABATIC RXR + HX ***
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+
     // *** GET INFO FROM REACTOR ***
     // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
     //   may be different than in [1]
     let nn = processUnits[0].numNodes;
     this.TinHot = processUnits[0]['Trxr'][nn];
-    this.TinCold = processUnits[0].TinHX;
-    //
-    var volumetricFlow = processUnits[0].Flowrate; // m3/s in reactor
-    // *** reactor Flow is m3/s, whereas heat exchanger flow is kg/s ***
-    this.FlowHot = this.FluidDensity * volumetricFlow; // kg/s = kg/m3 * m3/s
-    this.FlowCold = this.FlowHot;
-    //
-    // XXX arbitrarily set residence time of HX to match that of RXR
-    // XXX arbitrarily set Diam = 0.1 m
-    // in order to get wall Area for RXR+HX, since Diam and wall Area
-    // are independent inputs in standalone HX lab
-    // this.residenceTime used in simParams check for SS
+
+    // match residence time of HX to that of RXR
     this.residenceTime = processUnits[0].residenceTime;
-    this.Diam = 0.1; // (m), arbitrary
-    // volumetricFlow is obtained above, this.Area is HX wall area
-    this.Area = 4 * volumetricFlow * this.residenceTime / this.Diam;
-    //
-    // WARNING: UAcoef can be zero, which interferes with HX method of getting Length
-    // this.Area and this.Diam are determined in updateInputs
-    // based on arbitrarily set this.Diam & set HX residence time to RXR res time
-    var UAcoef = processUnits[0].UAcoef;
-    this.Ucoef = UAcoef / this.Area;
 
   }, // END of updateInputs()
 
@@ -558,28 +341,29 @@ puHeatExchanger = {
     CpHot = 2.24; // kJ/kg/K
     CpCold = CpHot;
 
-    // from cylindrical outer Area and Diam inputs & specify cylindrical tube for hot flow
-    // can compute Length of exhanger
-    var Length = this.Area / this.Diam / Math.PI;
+    // this HX uses length for integration
+    // so need to make some assumptions and compute
+    // residenceTime is obtained in updateInputs from reactor
+    let Volume = this.residenceTime * this.Flowrate; // use Flowrate (m3/s)
+    let Diam = 0.1; // (m), arbitrary, fix so can get length for integratino
+    let Length = Volume * 4.0 / Math.PI / Math.pow(Diam, 2); // (m)
 
-    // XXX check later for different Ax and Veloc for hot and cold
-    var Ax = Math.PI * Math.pow(this.Diam, 2) / 4.0; // (m2), cross-sectional area for flow
-    var VelocHot = this.FlowHot / this.FluidDensity / Ax; // (m/s), linear fluid velocity
-    // XXX assume cold uses same flow cross-sectional area as hot
-    var VelocCold = this.FlowCold / this.FluidDensity / Ax; // (m/s), linear fluid velocity
+    let Ax = Math.PI * Math.pow(Diam, 2) / 4.0; // (m2), cross-sectional area for flow
+    let VelocHot = this.Flowrate / Ax; // (m/s), linear fluid velocity
+    let VelocCold = VelocHot;
 
-    // note XferCoefHot = U * (wall area per unit length = pi * diam * L/L) / (rho * Cp * Ax)
-    var XferCoefHot = this.Ucoef * Math.PI * this.Diam / this.FluidDensity / CpHot / Ax;
-    var XferCoefCold = this.Ucoef * Math.PI * this.Diam / this.FluidDensity / CpCold / Ax;
+    // this.UAcoef from UI input has units of (kW/K)
+    let Awall = Math.PI * Diam * Length; // (m2)
+    let Ucoef = this.UAcoef / Awall; // (kW/m2/K)
 
-    // Disp (m2/s) is axial dispersion coefficient for turbulent flow
-    // this.DispCoef computed in updateUIparams()
-    var DispHot = this.DispCoef; // (m2/s), axial dispersion coefficient for turbulent flow
+    // note XferCoefHot = U * (wall area per unit length) / (rho * Cp * Ax)
+    var XferCoefHot = Ucoef * (Awall / Length) / (this.FluidDensity * CpHot * Ax);
+    var XferCoefCold = XferCoefHot;
 
     // *** FOR RXR + HX USE DISP = 0 ***
-    DispHot = 0.0;
+    let DispHot = 0.0;
+    let DispCold = DispHot;
 
-    var DispCold = DispHot; // XXX check later
     var dz = Length / this.numNodes; // (m), distance between nodes
     var VelocHotOverDZ = VelocHot / dz; // precompute to save time in loop
     var VelocColdOverDZ = VelocCold / dz; // precompute to save time in loop
@@ -641,18 +425,6 @@ puHeatExchanger = {
         ThotN = ThotN + dThotDT * this.unitTimeStep;
         TcoldN = TcoldN + dTcoldDT * this.unitTimeStep;
 
-        // XXX // CONSTRAIN T's TO BE IN BOUND
-        // if (ThotN > maxTinHot) {ThotN = maxTinHot;}
-        // if (ThotN < minTinCold) {ThotN = minTinCold;}
-        // if (TcoldN > maxTinHot) {TcoldN = maxTinHot;}
-        // if (TcoldN < minTinCold) {TcoldN = minTinCold;}
-
-        // // XXX // CONSTRAIN T's TO BE IN BOUND
-        // if (ThotN > 400) {ThotN = 400;}
-        // if (ThotN < 300) {ThotN = 300;}
-        // if (TcoldN > 400) {TcoldN = 400;}
-        // if (TcoldN < 300) {TcoldN = 300;}
-
         this.ThotNew[n] = ThotN;
         this.TcoldNew[n] = TcoldN;
 
@@ -683,32 +455,6 @@ puHeatExchanger = {
 
   checkSSvalues : function() {
     // WARNING: has alerts - may be called in simParams.checkForSteadyState()
-    // CHECK FOR ENERGY BALANCE ACROSS HEAT EXCHANGER AT STEADY STATE
-    // Q = U*A*(dT2 - dT1)/log(dT2/dT1) FOR dT1 != dT2 (or get log = inf)
-    var nn = this.numNodes;
-    // Thot and Tcold arrays are globals
-    var hlt = this.Thot[nn]; // outlet hot
-    var hrt = this.Thot[0]; // inlet hot
-    var clt = this.Tcold[nn];
-    var crt = this.Tcold[0];
-    var dT1 = hrt - crt;
-    var dT2 = hlt - clt;
-    if (dT1 == dT2) {
-      alert('dT1 == dT2');
-      return;
-    }
-    // *** for hx coupled to rxr, fix Cp ***
-    var CpHot = 2.24; // kJ/kg/K
-    var CpCold = CpHot;
-    var UAlogMeanDT = this.Ucoef * this.Area * (dT2 - dT1) / Math.log(dT2/dT1); // kJ/s = kW
-    var Qhot = (hrt - hlt) * this.FlowHot * CpHot; // kJ/s = kW
-    var Qcold = Math.abs((crt - clt) * this.FlowCold * CpCold); // abs for co- or counter-
-    var discrep = 100*(UAlogMeanDT/Qhot-1);
-    var discrep2 = 100*(UAlogMeanDT/Qcold-1);
-    var discrep3 = 100*(Qcold/Qhot-1);
-    alert('Qhot = UAlogMeanDT: ' + Qhot + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep.toFixed(3) + ' %');
-    alert('Qcold = UAlogMeanDT: ' + Qcold + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep2.toFixed(3) + ' %');
-    alert('Qhot = Qcold: ' + Qhot + ' = '+ Qcold + ', discrepancy = ' + discrep3.toFixed(3) + ' %');
   }, // END of checkSSvalues()
 
   display : function() {
@@ -718,7 +464,10 @@ puHeatExchanger = {
     var n = 0; // used as index
 
     document.getElementById(this.displayHotLeftT).innerHTML = this.Thot[this.numNodes].toFixed(1) + ' K';
-    document.getElementById(this.displayHotRightT).innerHTML = this.TinHot.toFixed(1) + ' K';
+
+    // *** FOR HX coupled to RXR, let RXR set TinHot right display field
+    // document.getElementById(this.displayHotRightT).innerHTML = this.TinHot.toFixed(1) + ' K';
+
     switch(this.ModelFlag) {
       case 0: // co-current
         document.getElementById(this.displayColdLeftT).innerHTML = this.Tcold[this.numNodes].toFixed(1) + ' K';

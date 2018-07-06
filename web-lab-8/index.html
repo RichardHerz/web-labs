@@ -120,6 +120,7 @@
   </div> <!-- end of div div_simFrame -->
   <div id="div_input_fields">
      <!-- onchange can send updateUIparams() to process_main.js to update all units *OR* send to specific units -->
+     <!-- here, must send updateUIparams() to process_main.js for Flowrate, Tin, UA since they are used by both units -->
      <p id="field_Kf300_label">
         k at 300 K (m<sup shift="-4">3</sup>/kg/s)
      </p>
@@ -152,6 +153,7 @@
         Heat exch. UA (kW/K)
      </p>
      <input id="input_field_UA" value="10" onchange="updateUIparams()">
+     <!-- input argument for copyData() is plot index, not unit index -->
      <input type="button" id="button_copyData_reactor" value="Copy RXR Data" onclick="copyData(0)">
      <input type="button" id="button_copyData_exchanger" value="Copy HX Data" onclick="copyData(2)">
   </div> <!-- end of div div_input_fields -->

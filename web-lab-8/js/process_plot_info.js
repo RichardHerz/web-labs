@@ -99,7 +99,7 @@ var plotsObj = {
     plotsObj[pnum]['var'][vnum] = 0; // value is variable index in plot data array
     plotsObj[pnum]['varLabel'][vnum] = 'Trxr';
     // varDataUnits are dimensional units used in copy data table, along with varLabel
-    plotsObj[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][9]; // 1st var
+    plotsObj[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][7]; // 1st var
     // varShow values are 'show' to show on plot and legend,
     // 'tabled' to not show on plot nor legend but list in copy data table
     // and any other value, e.g., 'hide' to not show on plot but do show in legend
@@ -112,7 +112,7 @@ var plotsObj = {
     plotsObj[pnum]['varUnitIndex'][1] = unum;
     plotsObj[pnum]['var'][vnum] = 1;
     plotsObj[pnum]['varLabel'][vnum] = 'Ca';
-    plotsObj[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][10];
+    plotsObj[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][8];
     plotsObj[pnum]['varShow'][vnum] = 'show';
     plotsObj[pnum]['varYaxis'][vnum] = 'right';
     plotsObj[pnum]['varYscaleFactor'][vnum] = 1;

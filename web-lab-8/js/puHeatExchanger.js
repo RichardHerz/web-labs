@@ -81,7 +81,7 @@ puHeatExchanger = {
 
   // allow this unit to take more than one step within one main loop step in updateState method
   // WARNING: see special handling for time step in this unit's updateInputs method
-  unitStepRepeats : 200,
+  unitStepRepeats : 100,
   unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
 
   // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
@@ -469,12 +469,13 @@ puHeatExchanger = {
     var n = 0; // used as index
 
     document.getElementById(this.displayHotLeftT).innerHTML = this.Thot[this.numNodes].toFixed(1) + ' K';
+    document.getElementById(this.displayHotRightT).innerHTML = this.Thot[0].toFixed(1) + ' K';
 
-    // *** FOR HX coupled to RXR, let RXR set HX TinHot right display field
-    // document.getElementById(this.displayHotRightT).innerHTML = this.TinHot.toFixed(1) + ' K';
-
-    // *** FOR HX coupled to RXR, let HX set RXR inlet T display field
-    document.getElementById(this.displayReactorLeftT).innerHTML = this.Tcold[0].toFixed(1) + ' K';
+    // NOTE: HX cold out T (right) and RXR T in will not agree except at SS
+    // and HX hot in T (right) and RXR T out with not agree except at SS
+    // because RXR T in doesn't get set to HX cold out until start of next time step
+    // and HX hot in doesn't get set to RXR out until start of next time step
+    // decide not to force match in display so that display agrees with copy data
 
     switch(this.ModelFlag) {
       case 0: // co-current

@@ -46,14 +46,14 @@ var simParams = {
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
   simStepRepeats : 1, // integer number of unit updates between display updates
-  simTimeStep : 1, // time step value, simulation time, of main repeat
+  simTimeStep : 0.5, // time step value, simulation time, of main repeat
 
   // individual units may do more steps in one unit updateState()
   // see individual units for any unitTimeStep and unitStepRepeats
 
   // set updateDisplayTimingMs to 50 ms because runs too fast on fast desktop
   // and 50 ms gives about same speed as 0 ms on my laptop
-  updateDisplayTimingMs : 100, // real time milliseconds between display updates
+  updateDisplayTimingMs : 50, // real time milliseconds between display updates
 
   simTime : 0, // (s), time, initialize simulation time, also see resetSimTime
   oldSimTime : 0, // (s), used to check for steady state

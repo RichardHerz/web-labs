@@ -80,7 +80,7 @@ puPlugFlowReactor = {
   colorCanvasData : [], // for color canvas plots, plot script requires this name
 
   // allow this unit to take more than one step within one main loop step in updateState method
-  unitStepRepeats : 200,
+  unitStepRepeats : 100,
   unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
 
   // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
@@ -510,14 +510,15 @@ puPlugFlowReactor = {
 
     var n = 0; // used as index
 
-    // XXX *** change next line when rxr + hx - but maybe do this to regular rxr?
     // document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
     document.getElementById(this.displayReactorLeftT).innerHTML = this.Trxr[0].toFixed(1) + ' K';
-
     document.getElementById(this.displayReactorRightT).innerHTML = this.Trxr[this.numNodes].toFixed(1) + ' K';
 
-    // also set HX hot in (right) so always agree with RXR out
-    document.getElementById(this.displayHotRightT).innerHTML = this.Trxr[this.numNodes].toFixed(1) + ' K';
+    // NOTE: HX cold out T (right) and RXR T in will not agree except at SS
+    // and HX hot in T (right) and RXR T out with not agree except at SS
+    // because RXR T in doesn't get set to HX cold out until start of next time step
+    // and HX hot in doesn't get set to RXR out until start of next time step
+    // decide not to force match in display so that display agrees with copy data
 
     document.getElementById(this.displayReactorLeftConc).innerHTML = this.Cain.toFixed(1);
     document.getElementById(this.displayReactorRightConc).innerHTML = this.Ca[this.numNodes].toFixed(1) + ' mol/m<sup>3</sup>';;

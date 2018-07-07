@@ -109,6 +109,7 @@
       updateMs = updateDisplayTimingMs - elapsedMs;
 
       // // DISPLAY TIMING DATA DURING DEVELOPMENT - PERCENT TIME IDLE
+      // // NEED TO EDIT INDEX.HTML TO ACTIVATE "field_output_field"
       // var tIdleTime = 100*(1-elapsedMs/updateMs);
       // tIdleTime = Number(tIdleTime).toPrecision(2);
       // document.getElementById("field_output_field").innerHTML = "% idle = " + tIdleTime + "&nbsp;&nbsp;";

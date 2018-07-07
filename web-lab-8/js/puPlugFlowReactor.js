@@ -25,7 +25,13 @@ puPlugFlowReactor = {
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
   //    heat exchanger cold out T is reactor inlet T
 
-  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  refExchangerColdOutTemp : "processUnits[1]['Tcold'][0]", // note ' in string
+
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
+  // SEE dataInputs array in initialize() method for input field ID's
+
+  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
   displayReactorLeftConc: 'field_reactor_left_conc',
   displayReactorRightConc: 'field_reactor_right_conc',
   displayReactorLeftT: 'field_reactor_left_T',
@@ -34,12 +40,12 @@ puPlugFlowReactor = {
 
   // define main inputs
   // values will be set in method intialize()
-  Kf300 : 0,
-  Ea : 0,
-  DelH : 0,
-  Wcat : 0,
-  Cain : 0,
-  Flowrate : 0,
+  Kf300 : 0, // forward rate coefficient value at 300 K
+  Ea : 0, // activation energy
+  DelH : 0, // heat of reaction
+  Wcat : 0, // mass of catalyst
+  Cain : 0, // inlet reactant concentration
+  Flowrate : 0, // inlet volumetric flow rate
 
   // *** WHEN RXR COUPLED TO HX, THIS IS INLET T TO COLD SIDE HX ***
   TinHX : 0, // inlet T to heat exchanger cold side
@@ -352,8 +358,11 @@ puPlugFlowReactor = {
     // //   this.PV = this.initialPV;
     // }
 
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
-    this.Tin = processUnits[1]['Tcold'][0];
+    eval('this.Tin = ' + this.refExchangerColdOutTemp + ';');
 
     // *** UPDATE MIN-MAX T FOR ADIABATIC REACTOR ***
     // calc adiabatic delta T, positive for negative H (exothermic)
@@ -387,9 +396,6 @@ puPlugFlowReactor = {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     var i = 0; // index for step repeats
     var n = 0; // index for nodes

@@ -25,10 +25,15 @@ puHeatExchanger = {
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
   //    reactor outlet T is heat exchanger hot inlet T
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
-  //   e.g., inputModel01 : "radio_Model_1",
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  refReactorNumNodes : "processUnits[0].numNodes", // numNodes my differ from this unit
+  refReactorTout : "processUnits[0]['Trxr'][nn]", // note ' in string
+  refReactorResidenceTime : "processUnits[0].residenceTime",
 
-  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
+  // SEE dataInputs array in initialize() method for input field ID's
+
+  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
   displayHotLeftT: 'field_hot_left_T',
   displayHotRightT: 'field_hot_right_T',
   displayColdLeftT: 'field_cold_left_T',
@@ -87,6 +92,9 @@ puHeatExchanger = {
 
   // define variables which will not be plotted nor saved in copy data table
 
+  // NOTE: only ModelFlag = 1 (countercurrent) is used in HX + RXR simulation
+  // this code from HX simulation which allowed both flow modes
+  // reference to UI radio buttons for model selection deleted from this simulation 
   ModelFlag : 1, // 0 is cocurrent flow, 1 is countercurrent flow
 
   // WARNING: have to check for any changes to simTimeStep and simStepRepeats if change numNodes
@@ -317,13 +325,10 @@ puHeatExchanger = {
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     // *** GET INFO FROM REACTOR ***
-    // WARNING: use nn = processUnits[0].numNodes since numNodes in [0]
-    //   may be different than in [1]
-    let nn = processUnits[0].numNodes;
-    this.TinHot = processUnits[0]['Trxr'][nn];
-
-    // match residence time of HX to that of RXR
-    this.residenceTime = processUnits[0].residenceTime;
+    let nn = 0; // reactor numNodes may differ from heat exchanger numNodes
+    eval('nn = ' + this.refReactorNumNodes + ';');
+    eval('this.TinHot = ' + this.refReactorTout + ';');
+    eval('this.residenceTime = ' + this.refReactorResidenceTime + ';');
 
   }, // END of updateInputs()
 

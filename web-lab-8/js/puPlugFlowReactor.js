@@ -38,6 +38,9 @@ puPlugFlowReactor = {
   displayReactorRightT: 'field_reactor_right_T',
   // displayJacketLeftArrow : '#field_jacket_left_arrow', // needs # with ID
 
+  // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
+  // ***       EXCEPT TO HTML ID'S IN method initialize()                  ***
+
   // define main inputs
   // values will be set in method intialize()
   Kf300 : 0, // forward rate coefficient value at 300 K

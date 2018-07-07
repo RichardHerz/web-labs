@@ -43,6 +43,9 @@ puHeatExchanger = {
   displayColdLeftArrow : '#field_cold_left_arrow', // needs # with ID
   displayColdRightArrow : '#field_cold_right_arrow', // needs # with ID
 
+  // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
+  // ***       EXCEPT TO HTML ID'S IN method initialize()                  ***
+
   // define main inputs
   // values will be set in method intialize()
   TinHot : 0,
@@ -94,7 +97,7 @@ puHeatExchanger = {
 
   // NOTE: only ModelFlag = 1 (countercurrent) is used in HX + RXR simulation
   // this code from HX simulation which allowed both flow modes
-  // reference to UI radio buttons for model selection deleted from this simulation 
+  // reference to UI radio buttons for model selection deleted from this simulation
   ModelFlag : 1, // 0 is cocurrent flow, 1 is countercurrent flow
 
   // WARNING: have to check for any changes to simTimeStep and simStepRepeats if change numNodes

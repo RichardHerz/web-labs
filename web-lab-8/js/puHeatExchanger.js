@@ -44,7 +44,7 @@ puHeatExchanger = {
   displayColdRightArrow : '#field_cold_right_arrow', // needs # with ID
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
-  // ***       EXCEPT TO HTML ID'S IN method initialize()                  ***
+  // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
 
   // define main inputs
   // values will be set in method intialize()

@@ -38,10 +38,6 @@ puHeatExchanger = {
   displayColdLeftArrow : '#field_cold_left_arrow', // needs # with ID
   displayColdRightArrow : '#field_cold_right_arrow', // needs # with ID
 
-  // *** FOR HX coupled to RXR, let HX set RXR inlet T display field
-  // so always get agreement
-  displayReactorLeftT: 'field_reactor_left_T',
-
   // define main inputs
   // values will be set in method intialize()
   TinHot : 0,

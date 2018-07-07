@@ -30,10 +30,6 @@ puPlugFlowReactor = {
   displayReactorRightConc: 'field_reactor_right_conc',
   displayReactorLeftT: 'field_reactor_left_T',
   displayReactorRightT: 'field_reactor_right_T',
-
-  // *** FOR HX coupled to RXR, let RXR set HX hot inlet T so get agreement
-  displayHotRightT: 'field_hot_right_T', // use to get agreement with rxr out
-
   // displayJacketLeftArrow : '#field_jacket_left_arrow', // needs # with ID
 
   // define main inputs

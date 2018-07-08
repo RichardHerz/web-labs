@@ -8,7 +8,7 @@
 // copy line below for display of development values
 // document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
 
-puPlugFlowReactor = {
+puAdiabaticPackedBedPFR = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'Adiabatic Packed Bed PFR',

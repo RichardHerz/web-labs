@@ -5,8 +5,7 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// This file defines an object that holds simulation parameter values and
-// defines objects that represent process units
+// This file defines objects that represent process units
 
 // ------------ PROCESS UNIT OBJECT DEFINITIONS ----------------------
 

@@ -26,9 +26,13 @@ puHeatExchanger = {
   //    reactor outlet T is heat exchanger hot inlet T
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  refReactorNumNodes : "processUnits[0].numNodes", // numNodes my differ from this unit
-  refReactorTout : "processUnits[0]['Trxr'][nn]", // note ' in string
-  refReactorResidenceTime : "processUnits[0].residenceTime",
+  getInputs : function() {
+    let inputs = [];
+    let nn = processUnits[0].numNodes; // numNodes my differ from this unit's
+    inputs[0] = processUnits[0]['Trxr'][nn]; // nn from above, RXR T out = HX TinHot
+    inputs[1] = processUnits[0].residenceTime; // match RXR time to HX time
+    return inputs;
+  },
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -328,10 +332,10 @@ puHeatExchanger = {
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     // *** GET INFO FROM REACTOR ***
-    let nn = 0; // reactor numNodes may differ from heat exchanger numNodes
-    eval('nn = ' + this.refReactorNumNodes + ';');
-    eval('this.TinHot = ' + this.refReactorTout + ';');
-    eval('this.residenceTime = ' + this.refReactorResidenceTime + ';');
+    // get array of current input values to this unit from other units
+    let inputs = this.getInputs();
+    this.TinHot = inputs[0]; // HX TinHot = RXR T out
+    this.residenceTime = inputs[1]; // match RXR time to HX time
 
   }, // END of updateInputs()
 

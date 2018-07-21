@@ -26,7 +26,11 @@ puAdiabaticPackedBedPFR = {
   //    heat exchanger cold out T is reactor inlet T
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  refExchangerColdOutTemp : "processUnits[1]['Tcold'][0]", // note ' in string
+  getInputs : function() {
+    let inputs = [];
+    inputs[0] = processUnits[1]['Tcold'][0]; // HX T cold out = RXR Tin
+    return inputs;
+  },
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -365,7 +369,9 @@ puAdiabaticPackedBedPFR = {
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
-    eval('this.Tin = ' + this.refExchangerColdOutTemp + ';');
+    // get array of current input values to this unit from other units
+    let inputs = this.getInputs();
+    this.Tin = inputs[0]; // RXR Tin = HX T cold out 
 
     // *** UPDATE MIN-MAX T FOR ADIABATIC REACTOR ***
     // calc adiabatic delta T, positive for negative H (exothermic)

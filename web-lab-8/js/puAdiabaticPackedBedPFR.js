@@ -79,8 +79,6 @@ puAdiabaticPackedBedPFR = {
   // these will be filled with initial values in method reset()
   Trxr : [],
   Ca : [],
-  TrxrNew : [], // 'New' hold intermediate values during updateState
-  CaNew : [],
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -212,9 +210,7 @@ puAdiabaticPackedBedPFR = {
     // *** heat exchanger needs reactor outlet T for HX hot inlet T ***
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Ca[k] = this.dataInitial[4]; // [4] is Cain
-      this.CaNew[k] = this.dataInitial[4]; // [4] is Cain
       this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
-      this.TrxrNew[k] = this.dataInitial[6]; // [6] is TinHX
     }
 
     // update residenceTime, which is needed by HX to match that of RXR
@@ -241,9 +237,7 @@ puAdiabaticPackedBedPFR = {
 
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Ca[k] = this.dataInitial[4]; // [4] is Cain
-      this.CaNew[k] = this.dataInitial[4]; // [4] is Cain
       this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
-      this.TrxrNew[k] = this.dataInitial[6]; // [6] is TinHX
     }
 
     // initialize profile data array - must follow function initPlotData in this file
@@ -371,7 +365,7 @@ puAdiabaticPackedBedPFR = {
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
     // get array of current input values to this unit from other units
     let inputs = this.getInputs();
-    this.Tin = inputs[0]; // RXR Tin = HX T cold out 
+    this.Tin = inputs[0]; // RXR Tin = HX T cold out
 
     // *** UPDATE MIN-MAX T FOR ADIABATIC REACTOR ***
     // calc adiabatic delta T, positive for negative H (exothermic)
@@ -442,6 +436,9 @@ puAdiabaticPackedBedPFR = {
 
     var energyRxnCoef = this.DelH / CpMean;
 
+    let TrxrNew = []; // temporary new values for this updateState 
+    let CaNew = [];
+
     // this unit can take multiple steps within one outer main loop repeat step
     for (i=0; i<this.unitStepRepeats; i+=1) {
 
@@ -451,8 +448,8 @@ puAdiabaticPackedBedPFR = {
       TrxrN = this.Tin;
       CaN = this.Cain;
 
-      this.TrxrNew[n] = TrxrN;
-      this.CaNew[n] = CaN;
+      TrxrNew[n] = TrxrN;
+      CaNew[n] = CaN;
 
       // internal nodes
       for (n = 1; n < this.numNodes; n += 1) {
@@ -473,8 +470,8 @@ puAdiabaticPackedBedPFR = {
         // if (CaN < 0.0) {CaN = 0.0;}
         // if (CaN > this.Cain) {CaN = this.Cain;}
 
-        this.TrxrNew[n] = TrxrN;
-        this.CaNew[n] = CaN;
+        TrxrNew[n] = TrxrN;
+        CaNew[n] = CaN;
 
       } // end repeat through internal nodes
 
@@ -498,14 +495,14 @@ puAdiabaticPackedBedPFR = {
       // if (CaN < 0.0) {CaN = 0.0;}
       // if (CaN > this.Cain) {CaN = this.Cain;}
 
-      this.TrxrNew[n] = TrxrN;
-      this.CaNew[n] = CaN;
+      TrxrNew[n] = TrxrN;
+      CaNew[n] = CaN;
 
       // finished updating all nodes
 
       // copy new to current
-      this.Trxr = this.TrxrNew;
-      this.Ca = this.CaNew;
+      this.Trxr = TrxrNew;
+      this.Ca = CaNew;
 
     } // END NEW FOR REPEAT for (i=0; i<this.unitStepRepeats; i+=1)
 

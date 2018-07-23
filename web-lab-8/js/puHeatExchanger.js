@@ -78,8 +78,6 @@ puHeatExchanger = {
   // these will be filled with initial values in method reset()
   Thot : [],
   Tcold : [],
-  ThotNew : [], // 'New' hold intermediate values during updateState
-  TcoldNew : [],
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -167,13 +165,9 @@ puHeatExchanger = {
 
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Thot[k] = 320;
-      this.ThotNew[k] = 320;
       this.Tcold[k] = 320;
-      this.TcoldNew[k] = 320;
       // this.Thot[k] = this.Tin;
-      // this.ThotNew[k] = this.Tin;
       // this.Tcold[k] = this.Tin;
-      // this.TcoldNew[k] = this.Tin;
     }
 
   }, // END of initialize()
@@ -213,9 +207,7 @@ puHeatExchanger = {
     var tInit = 320; // this.Tin; // initial system inlet T
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Thot[k] = tInit;
-      this.ThotNew[k] = tInit;
       this.Tcold[k] = tInit;
-      this.TcoldNew[k] = tInit;
     }
 
     var kn = 0;
@@ -396,19 +388,22 @@ puHeatExchanger = {
     var minTinCold = this.dataMin[1];
     var maxTinHot = this.dataMax[0];
 
+    let ThotNew = []; // temporary new values for this updateState 
+    let TcoldNew = [];
+
     // this unit can take multiple steps within one outer main loop repeat step
     for (i=0; i<this.unitStepRepeats; i+=1) {
 
       // do node at hot inlet end
       n = 0;
 
-      this.ThotNew[0] = this.TinHot;
+      ThotNew[0] = this.TinHot;
       switch(this.ModelFlag) {
         case 0: // co-current, [0] is cold inlet
-          this.TcoldNew[0] = this.TinCold;
+          TcoldNew[0] = this.TinCold;
         break
         case 1: // counter-current, [0] is cold outlet
-          this.TcoldNew[0] = this.Tcold[1];
+          TcoldNew[0] = this.Tcold[1];
       }
 
       // internal nodes
@@ -438,8 +433,8 @@ puHeatExchanger = {
         ThotN = ThotN + dThotDT * this.unitTimeStep;
         TcoldN = TcoldN + dTcoldDT * this.unitTimeStep;
 
-        this.ThotNew[n] = ThotN;
-        this.TcoldNew[n] = TcoldN;
+        ThotNew[n] = ThotN;
+        TcoldNew[n] = TcoldN;
 
       } // end repeat through internal nodes
 
@@ -447,20 +442,20 @@ puHeatExchanger = {
 
       n = this.numNodes;
 
-      this.ThotNew[n] = this.Thot[n - 1];
+      ThotNew[n] = this.Thot[n - 1];
       switch(this.ModelFlag) {
         case 0: // co-current, [n = this.numNodes] is cold outlet
-          this.TcoldNew[n] = this.Tcold[n-1];
+          TcoldNew[n] = this.Tcold[n-1];
         break
         case 1: // counter-current, [n = this.numNodes] is cold inlet
-          this.TcoldNew[n] = this.TinCold;
+          TcoldNew[n] = this.TinCold;
       }
 
       // finished updating all nodes
 
       // copy new to current
-      this.Thot = this.ThotNew;
-      this.Tcold = this.TcoldNew;
+      this.Thot = ThotNew;
+      this.Tcold = TcoldNew;
 
     } // END of FOR REPEAT for (i=0; i<this.unitStepRepeats; i+=1)
 

@@ -207,18 +207,9 @@ puAdiabaticPackedBedPFR = {
     this.dataMax[v] = this.dataMax[4]; // [4] is Cain
     //
 
-    // *** heat exchanger needs reactor outlet T for HX hot inlet T ***
-    for (k = 0; k <= this.numNodes; k += 1) {
-      this.Ca[k] = this.dataInitial[4]; // [4] is Cain
-      this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
-    }
-
-    // update residenceTime, which is needed by HX to match that of RXR
-    // in case any change in Wcat or Flowrate
-    let densBed = this.densCat * (1 - this.voidFrac);
-    this.residenceTime = this.Wcat * this.voidFrac / densBed / this.Flowrate;
-
   }, // END of initialize()
+
+  // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
 
   reset : function() {
 
@@ -268,6 +259,11 @@ puAdiabaticPackedBedPFR = {
       this.profileData[0][k][1] = this.dataInitial[6]; // [6] is TinHX
       this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
     }
+
+    // update residenceTime, which is needed by HX to match that of RXR
+    // in case any change in Wcat or Flowrate
+    let densBed = this.densCat * (1 - this.voidFrac);
+    this.residenceTime = this.Wcat * this.voidFrac / densBed / this.Flowrate;
 
     // update display
     this.display();

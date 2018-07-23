@@ -153,19 +153,15 @@ puCounterCurrentHeatExchanger = {
     // OUTPUT VARS
     //
 
+    // *** SPECIAL - NEED TO MATCH FLOW RATE DIMENSIONAL UNITS BETWEEN PROCESS UNITS *** 
     this.FlowHot = this.Flowrate; // m3/s in reactor
     // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
     this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
     this.FlowCold = this.FlowHot;
 
-    for (k = 0; k <= this.numNodes; k += 1) {
-      this.Thot[k] = 320;
-      this.Tcold[k] = 320;
-      // this.Thot[k] = this.Tin;
-      // this.Tcold[k] = this.Tin;
-    }
-
   }, // END of initialize()
+
+  // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
 
   reset : function() {
 

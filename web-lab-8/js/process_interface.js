@@ -28,7 +28,7 @@ function runThisLab() {
 // HANDLE RESET BUTTON CLICK
 function resetThisLab() {
   // uses object simParams from file process_units.js
-  // input argument is the RUN button ID, not the reset button ID
+  // REQUIRES BELOW that run button id="button_runButton"
   simParams.stopRunningFlag();
   simParams.resetSimTime();
   simParams.ssFlag = false; // unit sets true when sim reaches steady state

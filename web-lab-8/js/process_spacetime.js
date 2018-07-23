@@ -13,15 +13,15 @@ function jetColorMap(n) {
   //
   // ANOTHER WAY would be a look up table - would that be faster?
   //
-  var r;
-  var g;
-  var b;
+  let r;
+  let g;
+  let b;
   if (n<0) {n = 0;}
   if (n>1) {n = 1;}
   // would not need to round input to integers with IF statements
   // EXCEPT if don't round then can get rgb values > 1.0 at end of IF
   // so would then need to add more IF statements to check - SO ROUND NOW
-  var n64 = Math.round(1 + 63*n); // n64 = 1 when n = 0; n64 = 64 when n = 1
+  let n64 = Math.round(1 + 63*n); // n64 = 1 when n = 0; n64 = 64 when n = 1
   if (n64 >= 1 && n64 < 9) {
     r = 0;
     g = 0;
@@ -62,43 +62,43 @@ function plotColorCanvasPlot(pNumber) {
   // use this to plot space-time plots as well as other color canvas plots
   // see https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial
 
-  var canvasID = plotsObj[pNumber]['canvas'];
-  var canvas = document.getElementById(canvasID);
-  var context = canvas.getContext('2d');
+  let canvasID = plotsObj[pNumber]['canvas'];
+  let canvas = document.getElementById(canvasID);
+  let context = canvas.getContext('2d');
 
   // copy data from unit local array colorCanvasData to local array colorCanvasData
-  var varUnitIndex = plotsObj[pNumber]['varUnitIndex'];
+  let varUnitIndex = plotsObj[pNumber]['varUnitIndex'];
   // v is the index number of the one variable to plot on the canvas
   // where 0 is first, 1 is second, etc.
-  var v = plotsObj[pNumber]['var'];
+  let v = plotsObj[pNumber]['var'];
 
   // next line REQUIRES unit object array to be named colorCanvasData
-  var colorCanvasData = processUnits[varUnitIndex]['colorCanvasData'][v];
+  let colorCanvasData = processUnits[varUnitIndex]['colorCanvasData'][v];
 
-  var t;
-  var s;
-  var r;
-  var g;
-  var b;
-  var jet;
-  var x;
-  var y;
+  let t;
+  let s;
+  let r;
+  let g;
+  let b;
+  let jet;
+  let x;
+  let y;
   // below we have to convert computed color values
   // to text string for fillStyle below, so get pieces ready
-  var tColor1 = 'rgb(';
-  var tColor2;
-  var tColor3;
-  var tColor4;
-  var tColor5 = ')';
-  var tPixels = canvas.width; // canvas width, height set in HTML canvas element
-  var sPixels = canvas.height;
-  var numTimePts = plotsObj[pNumber]['varTimePts'];
-  var numSpacePts = plotsObj[pNumber]['varSpacePts'];
-  var tPixelsPerPoint = tPixels/(numTimePts+1); // pixels per point, note +1
-  var sPixelsPerPoint = sPixels/numSpacePts; // pixels per point
-  var minVarVal = plotsObj[pNumber]['varValueMin'];
-  var maxVarVal = plotsObj[pNumber]['varValueMax'];
-  var scaledVarVal; // holds variable value scaled 0-1 by minVarVal & maxVarVal
+  let tColor1 = 'rgb(';
+  let tColor2;
+  let tColor3;
+  let tColor4;
+  let tColor5 = ')';
+  let tPixels = canvas.width; // canvas width, height set in HTML canvas element
+  let sPixels = canvas.height;
+  let numTimePts = plotsObj[pNumber]['varTimePts'];
+  let numSpacePts = plotsObj[pNumber]['varSpacePts'];
+  let tPixelsPerPoint = tPixels/(numTimePts+1); // pixels per point, note +1
+  let sPixelsPerPoint = sPixels/numSpacePts; // pixels per point
+  let minVarVal = plotsObj[pNumber]['varValueMin'];
+  let maxVarVal = plotsObj[pNumber]['varValueMax'];
+  let scaledVarVal; // holds variable value scaled 0-1 by minVarVal & maxVarVal
 
   for (t = 0; t <= numTimePts; t += 1) { // NOTE = at t <=
     for (s = 0; s < numSpacePts; s += 1) {
@@ -138,10 +138,10 @@ function initColorCanvasArray(numVars,numXpts,numYpts) {
   //    index 3 specifies the y-axis (space) point [0 to numYpts-1]
   //    the element value at plotDataStub[v][x][y] will be the value
   //      to be shown for that variable at that x,y location
-  var v;
-  var x;
-  var y;
-  var plotDataStub = new Array();
+  let v;
+  let x;
+  let y;
+  let plotDataStub = new Array();
   for (v = 0; v < numVars; v += 1) {
     plotDataStub[v] = new Array();
       for (x = 0; x <= numXpts; x += 1) { // NOTE = AT <=

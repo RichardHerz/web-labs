@@ -14,7 +14,7 @@ function runThisLab() {
   // TOGGLE runningFlag FIRST before doing stuff below
   simParams.toggleRunningFlag(); // toggle runningFlag true-false
   // TOGGLE runningFlag FIRST before doing stuff below
-  var runningFlag = simParams.runningFlag;
+  let runningFlag = simParams.runningFlag;
   if (runningFlag) {
     simParams.ssFlag = false; // unit sets true when sim reaches steady state
     button_runButton.value = 'Pause'; // REQUIRES run button id="button_runButton"
@@ -33,7 +33,7 @@ function resetThisLab() {
   simParams.resetSimTime();
   simParams.ssFlag = false; // unit sets true when sim reaches steady state
   // reset all units
-  var numUnits = Object.keys(processUnits).length; // number of units
+  let numUnits = Object.keys(processUnits).length; // number of units
   for (n = 0; n < numUnits; n += 1) {
     processUnits[n].reset();
   }
@@ -44,14 +44,15 @@ function resetThisLab() {
 
 // GET INPUT VALUES FROM INPUT FIELDS - CALLED IN UNITS updateUIparams()
 function getInputValue(pUnitIndex,pVar) {
-  var varInputID = processUnits[pUnitIndex]['dataInputs'][pVar];
-  var varInitial = processUnits[pUnitIndex]['dataInitial'][pVar];
-  var varMin = processUnits[pUnitIndex]['dataMin'][pVar];
-  var varMax = processUnits[pUnitIndex]['dataMax'][pVar];
+  let varInputID = processUnits[pUnitIndex]['dataInputs'][pVar];
+  let varInitial = processUnits[pUnitIndex]['dataInitial'][pVar];
+  let varMin = processUnits[pUnitIndex]['dataMin'][pVar];
+  let varMax = processUnits[pUnitIndex]['dataMax'][pVar];
+  let varValue = 0; // set below
   // get the contents of the input and handle
   if (document.getElementById(varInputID)) {
     // the input exists so get the value and make sure it is within range
-    var varValue = document.getElementById(varInputID).value;
+    varValue = document.getElementById(varInputID).value;
     varValue = Number(varValue); // force any number as string to numeric number
     if (isNaN(varValue)) {varValue = varInitial;} // handle e.g., 259x, xxx
     if (varValue < varMin) {varValue = varMin;}

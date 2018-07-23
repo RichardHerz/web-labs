@@ -5,7 +5,7 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// PLOTTING WITH THE FLOT LIBRARY 
+// PLOTTING WITH THE FLOT LIBRARY
 // THESE FUNCTIONS DEPEND ON JQUERY.JS AND JQUERY.FLOT.JS FOR PLOTTING
 
 // SEE PLOT DEFINITIONS IN FILE process_plot_info.js
@@ -19,17 +19,17 @@ function getPlotData(plotsObjNum) {
   //
   // uses plotsObj and plotArrays objects defined in file process_plot_info.js
 
-  var v = 0; // used as index to select the variable
-  var p = 0; // used as index to select data point pair
-  var n = 0; // used as index
-  var sf = 1; // scale factor used below
+  let v = 0; // used as index to select the variable
+  let p = 0; // used as index to select data point pair
+  let n = 0; // used as index
+  let sf = 1; // scale factor used below
 
-  var numPlotPoints = plotsObj[plotsObjNum]['numberPoints'];
+  let numPlotPoints = plotsObj[plotsObjNum]['numberPoints'];
   // plot will have 0 to numberPoints for total of numberPoints + 1 points
-  var varNumbers = plotsObj[plotsObjNum]['var'];
-  var numVar = varNumbers.length;
-  var varUnitIndex;
-  var plotData = initPlotData(numVar,numPlotPoints);
+  let varNumbers = plotsObj[plotsObjNum]['var'];
+  let numVar = varNumbers.length;
+  let varUnitIndex;
+  let plotData = initPlotData(numVar,numPlotPoints);
 
   // get data for plot
   for (v = 0; v < numVar; v += 1) {
@@ -52,7 +52,7 @@ function getPlotData(plotsObjNum) {
     }
 
     // NOTE: if I go back to earlier scheme I might be able to use some of the
-    // strategy here in copying entire var vectors in order to eliminate
+    // strategy here in copying entire let vectors in order to eliminate
     // some steps in this 'for' repeat...
   }
 
@@ -84,19 +84,19 @@ function plotPlotData(pData,pNumber) {
   // input pData holds the data to plot
   // input pNumber is number of plot as 1st index in plotsObj
 
-  // var plot = [];
+  // let plot = [];
 
   // get info about the variables
 
-  var plotList = plotsObj[pNumber]['var'];
+  let plotList = plotsObj[pNumber]['var'];
   // plotList is array whose elements are the values of the
   // first index in pData array which holds the x,y values to plot
 
-  var k = 0; // used as index in plotList
-  var v = 0; // value of element k in plotList
-  var vLabel = []; // array to hold variable names for plot legend
-  var yAxis = []; // array to hold y-axis, "left" or "right"
-  var vShow = []; // array to hold "show" or "hide" (hide still in copy-save data)
+  let k = 0; // used as index in plotList
+  let v = 0; // value of element k in plotList
+  let vLabel = []; // array to hold variable names for plot legend
+  let yAxis = []; // array to hold y-axis, "left" or "right"
+  let vShow = []; // array to hold "show" or "hide" (hide still in copy-save data)
   plotList.forEach(fGetAxisData);
   function fGetAxisData(v,k) {
 	  // v = value of element k of plotList array
@@ -108,11 +108,11 @@ function plotPlotData(pData,pNumber) {
 
   // put data in form needed by flot.js
 
-  var plotCanvasHtmlID = plotsObj[pNumber]['canvas'];
+  let plotCanvasHtmlID = plotsObj[pNumber]['canvas'];
 
-  var dataToPlot = [];
-  var numVar = plotList.length;
-  var numToShow = 0; // index for variables to show on plot
+  let dataToPlot = [];
+  let numVar = plotList.length;
+  let numToShow = 0; // index for variables to show on plot
   // KEEP numToShow as well as for index k because not all k vars will show!
   // only variables with property "show" will appear on plot
   for (k = 0; k < numVar; k += 1) {
@@ -146,22 +146,22 @@ function plotPlotData(pData,pNumber) {
 
   // set up the plot axis labels and plot legend
 
-    var xShow = plotsObj[pNumber]['xAxisShow'];
-    var xLabel = plotsObj[pNumber]['xAxisLabel'];;
-    var xMin= plotsObj[pNumber]['xAxisMin'];
-    var xMax = plotsObj[pNumber]['xAxisMax'];
-    var yLeftLabel = plotsObj[pNumber]['yLeftAxisLabel'];
-    var yLeftMin = plotsObj[pNumber]['yLeftAxisMin'];
-    var yLeftMax = plotsObj[pNumber]['yLeftAxisMax'];
-    var yRightLabel = plotsObj[pNumber]['yRightAxisLabel'];
-    var yRightMin = plotsObj[pNumber]['yRightAxisMin'];
-    var yRightMax = plotsObj[pNumber]['yRightAxisMax'];
-    var plotLegendPosition = plotsObj[pNumber]['plotLegendPosition'];
-    var plotLegendShow = plotsObj[pNumber]['plotLegendShow']; // Boolean 0,1
-    var plotGridBgColor = plotsObj[pNumber]['plotGridBgColor'];
-    var plotDataSeriesColors = plotsObj[pNumber]['plotDataSeriesColors'];
+    let xShow = plotsObj[pNumber]['xAxisShow'];
+    let xLabel = plotsObj[pNumber]['xAxisLabel'];;
+    let xMin= plotsObj[pNumber]['xAxisMin'];
+    let xMax = plotsObj[pNumber]['xAxisMax'];
+    let yLeftLabel = plotsObj[pNumber]['yLeftAxisLabel'];
+    let yLeftMin = plotsObj[pNumber]['yLeftAxisMin'];
+    let yLeftMax = plotsObj[pNumber]['yLeftAxisMax'];
+    let yRightLabel = plotsObj[pNumber]['yRightAxisLabel'];
+    let yRightMin = plotsObj[pNumber]['yRightAxisMin'];
+    let yRightMax = plotsObj[pNumber]['yRightAxisMax'];
+    let plotLegendPosition = plotsObj[pNumber]['plotLegendPosition'];
+    let plotLegendShow = plotsObj[pNumber]['plotLegendShow']; // Boolean 0,1
+    let plotGridBgColor = plotsObj[pNumber]['plotGridBgColor'];
+    let plotDataSeriesColors = plotsObj[pNumber]['plotDataSeriesColors'];
 
-    var options = {
+    let options = {
       // axisLabels REQUIRES LIBRARY flot.axislabels.js, SEE
       //     https://github.com/markrcote/flot-axislabels
       axisLabels : {show: true},
@@ -206,7 +206,7 @@ function plotPlotData(pData,pNumber) {
 
 // ----- OBJECT USED TO HOLD PLOT DEFINITIONS BETWEEN DISPLAY UPDATES ---
 
-var plotArrays = {
+let plotArrays = {
 
   // DEFINE plot array used to save complete description of plot between updates
   // plot array used in function plotPlotData
@@ -239,9 +239,9 @@ function initPlotData(numVars,numPlotPoints) {
   //    index 1 specifies the variable [0 to numVars-1],
   //    index 2 specifies the data point pair [0 to & including numPlotPoints]
   //    index 3 specifies x or y in x,y data point pair [0 & 1]
-  var v;
-  var p;
-  var plotDataStub = new Array();
+  let v;
+  let p;
+  let plotDataStub = new Array();
   for (v = 0; v < numVars; v += 1) {
     plotDataStub[v] = new Array();
     for (p = 0; p <= numPlotPoints; p += 1) { // NOTE = AT p <=

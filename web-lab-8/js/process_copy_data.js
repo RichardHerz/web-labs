@@ -14,21 +14,21 @@ function copyData(plotIndex){
   // if sim is running, pause the sim
   // copy grabs what is showing on plot when copy button clicked
   // so want user to be able to take screenshot to compare with data copied
-  var runningFlag = simParams.runningFlag;
+  let runningFlag = simParams.runningFlag;
   if (runningFlag) {
     runThisLab(); // toggles running state
   }
 
-  var n; // index
-  var v; // variable index
-  var k; // points index
-  var numUnits;
-  var numVar;
-  var varIndex; // index of selected variable in unit local data array
-  var varUnitIndex; // index of unit from which variable is to be obtained
-  var tText; // we will put the data into this variable
-  var tItemDelimiter = ', &nbsp;'
-  var tVarLabelLen = plotsObj[plotIndex]['varLabel'].length; // length for loops below
+  let n; // index
+  let v; // variable index
+  let k; // points index
+  let numUnits;
+  let numVar;
+  let varIndex; // index of selected variable in unit local data array
+  let varUnitIndex; // index of unit from which variable is to be obtained
+  let tText; // we will put the data into this variable
+  let tItemDelimiter = ', &nbsp;'
+  let tVarLabelLen = plotsObj[plotIndex]['varLabel'].length; // length for loops below
 
   tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
@@ -73,8 +73,8 @@ function copyData(plotIndex){
   // initiate string that holds the data table
     tText += '<p>';
 
-  var plotType = plotsObj[plotIndex]['type']; // profile or strip
-  var dataName = plotType + 'Data'; // profileData or stripData
+  let plotType = plotsObj[plotIndex]['type']; // profile or strip
+  let dataName = plotType + 'Data'; // profileData or stripData
   if ((plotType == 'profile') || (plotType == 'strip')) {
     // repeat to make each line in table for each data point
     for (k = 0; k <= plotsObj[plotIndex]['numberPoints']; k += 1) {
@@ -114,7 +114,7 @@ function copyData(plotIndex){
  // ----- FUNCTIONS TO COPY DATA TO TABLE ---------
 
  function formatNum(n) {
-   var nn = n;
+   let nn = n;
    if ((nn > 1000) || (nn < -1000)) {
      nn = nn.toExponential(3);
    } else if ((nn > 100) || (nn < -100)) {

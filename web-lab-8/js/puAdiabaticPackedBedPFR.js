@@ -253,7 +253,7 @@ puAdiabaticPackedBedPFR = {
     // *** FOR ADIABATIC RXR, numVars = 1 since don't show jacket canvas
     this.colorCanvasData = initColorCanvasArray(1,this.numNodes,1);
 
-    var kn = 0;
+    let kn = 0;
     for (k = 0; k <= this.numNodes; k += 1) {
       kn = k/this.numNodes;
       // x-axis values
@@ -287,7 +287,7 @@ puAdiabaticPackedBedPFR = {
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
-    // getInputValue(unit index in processUnits, var index in input arrays)
+    // getInputValue(unit index in processUnits, let index in input arrays)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
     //   is only used in plotter.js for copyData() to report input values
@@ -327,8 +327,8 @@ puAdiabaticPackedBedPFR = {
 
     // *** UPDATE MIN-MAX T FOR ADIABATIC REACTOR ***
     // calc adiabatic delta T, positive for negative H (exothermic)
-    var adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
-    var varMinMaxT = 7; // 7 is Trxr used for constraint during integration
+    let adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
+    let varMinMaxT = 7; // 7 is Trxr used for constraint during integration
     // calc max possible T
     if(this.DelH < 0) {
       // exothermic
@@ -358,41 +358,41 @@ puAdiabaticPackedBedPFR = {
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
 
-    var i = 0; // index for step repeats
-    var n = 0; // index for nodes
-    var TrxrN = 0;
-    var dTrxrDT = 0;
-    var CaN = 0;
-    var dCaDT = 0;
-    var varMinMaxT = 7; // 7 is Trxr used for constraint during integration
+    let i = 0; // index for step repeats
+    let n = 0; // index for nodes
+    let TrxrN = 0;
+    let dTrxrDT = 0;
+    let CaN = 0;
+    let dCaDT = 0;
+    let varMinMaxT = 7; // 7 is Trxr used for constraint during integration
 
     // CpFluid, voidFrac, densCat and densFluid properties of puPlugFlowReactor
-    var CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
-    var densBed = (1 - this.voidFrac) * this.densCat; // (kg/m3), bed density
+    let CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
+    let densBed = (1 - this.voidFrac) * this.densCat; // (kg/m3), bed density
     // assume fluid and catalyst at same T at each position in reactor
-    var CpMean = this.voidFrac * this.CpFluid + (1 - this.voidFrac) * CpCat;
+    let CpMean = this.voidFrac * this.CpFluid + (1 - this.voidFrac) * CpCat;
 
-    var dW = this.Wcat / this.numNodes;
-    var Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
-    var kT = 0; // will vary with T below
-    var EaOverRg = this.Ea / Rg; // so not compute in loop below
-    var EaOverRg300 = EaOverRg / 300; // so not compute in loop below
+    let dW = this.Wcat / this.numNodes;
+    let Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
+    let kT = 0; // will vary with T below
+    let EaOverRg = this.Ea / Rg; // so not compute in loop below
+    let EaOverRg300 = EaOverRg / 300; // so not compute in loop below
 
-    var flowCoef = this.Flowrate * densBed / this.voidFrac / dW;
-    var rxnCoef = densBed / this.voidFrac;
+    let flowCoef = this.Flowrate * densBed / this.voidFrac / dW;
+    let rxnCoef = densBed / this.voidFrac;
 
-    var energyFlowCoef = this.Flowrate * this.densFluid * this.CpFluid / CpMean / dW;
+    let energyFlowCoef = this.Flowrate * this.densFluid * this.CpFluid / CpMean / dW;
 
     // *** FOR ADIABATIC RXR + HX, no heat transfer to rxr walls ***
-    var energyXferCoef = 0;
-    // var energyXferCoef = this.UAcoef / CpMean;
+    let energyXferCoef = 0;
+    // let energyXferCoef = this.UAcoef / CpMean;
 
     // *** FOR ADIABATIC RXR
     // also need to define this.Tjacket for no error of omission
     // in full equations below but value is irrelevant
     // with energyXferCoef = 0
 
-    var energyRxnCoef = this.DelH / CpMean;
+    let energyRxnCoef = this.DelH / CpMean;
 
     let TrxrNew = []; // temporary new values for this updateState
     let CaNew = [];
@@ -474,7 +474,7 @@ puAdiabaticPackedBedPFR = {
 
     // note use .toFixed(n) method of object to round number to n decimal points
 
-    var n = 0; // used as index
+    let n = 0; // used as index
 
     // document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
     document.getElementById(this.displayReactorLeftT).innerHTML = this.Trxr[0].toFixed(1) + ' K';
@@ -516,4 +516,4 @@ puAdiabaticPackedBedPFR = {
 
   } // END of display()
 
-}; // END var puPlugFlowReactor
+}; // END let puPlugFlowReactor

@@ -199,13 +199,13 @@ puCounterCurrentHeatExchanger = {
     // initColorCanvasArray(numVars,numXpts,numYpts)
     this.colorCanvasData = initColorCanvasArray(2,this.numNodes,1);
 
-    var tInit = 320; // this.Tin; // initial system inlet T
+    let tInit = 320; // this.Tin; // initial system inlet T
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Thot[k] = tInit;
       this.Tcold[k] = tInit;
     }
 
-    var kn = 0;
+    let kn = 0;
     for (k=0; k<=this.numNodes; k+=1) {
       kn = k/this.numNodes;
       // x-axis values
@@ -236,7 +236,7 @@ puCounterCurrentHeatExchanger = {
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
-    // getInputValue(unit index in processUnits, var index in input arrays)
+    // getInputValue(unit index in processUnits, let index in input arrays)
     // see variable numbers above in initialize()
     // note: processUnits[pUnitIndex]['dataValues'][pVar]
     //   is only used in plotter.js for copyData() to report input values
@@ -309,31 +309,31 @@ puCounterCurrentHeatExchanger = {
     let Ucoef = this.UAcoef / Awall; // (kW/m2/K)
 
     // note XferCoefHot = U * (wall area per unit length) / (rho * Cp * Ax)
-    var XferCoefHot = Ucoef * (Awall / Length) / (this.FluidDensity * CpHot * Ax);
-    var XferCoefCold = XferCoefHot;
+    let XferCoefHot = Ucoef * (Awall / Length) / (this.FluidDensity * CpHot * Ax);
+    let XferCoefCold = XferCoefHot;
 
     // *** FOR RXR + HX USE DISP = 0 ***
     let DispHot = 0.0;
     let DispCold = DispHot;
 
-    var dz = Length / this.numNodes; // (m), distance between nodes
-    var VelocHotOverDZ = VelocHot / dz; // precompute to save time in loop
-    var VelocColdOverDZ = VelocCold / dz; // precompute to save time in loop
-    var DispHotOverDZ2 = DispHot / Math.pow(dz, 2);  // precompute to save time in loop
-    var DispColdOverDZ2 = DispCold / Math.pow(dz, 2);  // precompute to save time in loop
+    let dz = Length / this.numNodes; // (m), distance between nodes
+    let VelocHotOverDZ = VelocHot / dz; // precompute to save time in loop
+    let VelocColdOverDZ = VelocCold / dz; // precompute to save time in loop
+    let DispHotOverDZ2 = DispHot / Math.pow(dz, 2);  // precompute to save time in loop
+    let DispColdOverDZ2 = DispCold / Math.pow(dz, 2);  // precompute to save time in loop
 
-    var i = 0; // index for step repeats
-    var n = 0; // index for nodes
-    var ThotN = 0.0;
-    var ThotNm1 = 0.0;
-    var ThotNp1 = 0.0;
-    var TcoldN = 0.0;
-    var TcoldNm1 = 0.0;
-    var TcoldNp1 = 0.0;
-    var dThotDT = 0.0;
-    var dTcoldDT = 0.0;
-    var minTinCold = this.dataMin[1];
-    var maxTinHot = this.dataMax[0];
+    let i = 0; // index for step repeats
+    let n = 0; // index for nodes
+    let ThotN = 0.0;
+    let ThotNm1 = 0.0;
+    let ThotNp1 = 0.0;
+    let TcoldN = 0.0;
+    let TcoldNm1 = 0.0;
+    let TcoldNp1 = 0.0;
+    let dThotDT = 0.0;
+    let dTcoldDT = 0.0;
+    let minTinCold = this.dataMin[1];
+    let maxTinHot = this.dataMax[0];
 
     let ThotNew = []; // temporary new values for this updateState
     let TcoldNew = [];
@@ -397,7 +397,7 @@ puCounterCurrentHeatExchanger = {
 
     // note use .toFixed(n) method of object to round number to n decimal points
 
-    var n = 0; // used as index
+    let n = 0; // used as index
 
     document.getElementById(this.displayHotLeftT).innerHTML = this.Thot[this.numNodes].toFixed(1) + ' K';
     document.getElementById(this.displayHotRightT).innerHTML = this.Thot[0].toFixed(1) + ' K';
@@ -443,4 +443,4 @@ puCounterCurrentHeatExchanger = {
 
   } // END of display()
 
-} // END var puHeatExchanger
+} // END let puHeatExchanger

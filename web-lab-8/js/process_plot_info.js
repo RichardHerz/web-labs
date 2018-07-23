@@ -26,7 +26,7 @@
 //
 // method initialize() below places the plot definitions into plotsObj
 //
-var plotsObj = {
+let plotsObj = {
 
   // after the openThisLab() function in _main.js calls method initialize()
   // here, this object will contain a child object for each plot

@@ -7,7 +7,7 @@
 
 // ----- OBJECT TO CONTAIN & SET SIMULATION & PLOT PARAMETERS ---------
 
-var simParams = {
+let simParams = {
   //
   // file process_main.js uses in object simParams the following:
   //    function updateCurrentRunCountDisplay()
@@ -29,7 +29,7 @@ var simParams = {
   // REDUCES CPU LOAD ONLY when return from top of process_main.js functions
   // updateProcessUnits and updateDisplay but NOT from top of unit functions here
   ssFlag : false, // steady state flag set true when sim reaches steady state
-  // also see below in simParams the var oldSimTime
+  // also see below in simParams the let oldSimTime
   // also see in process unit the vars SScheck and residenceTime
 
   runningFlag : false, // set runningFlag to false initially
@@ -110,20 +110,20 @@ var simParams = {
     // open OS Activity Monitor of CPU load to see effect of this
     //
     // use HX [1] end T's to check for SS
-    var unum = 1; // unit number, [1] is heat exchanger in this lab
+    let unum = 1; // unit number, [1] is heat exchanger in this lab
     //
     // found need 2 * processUnits[unum].residenceTime to reach SS
     // when starting up at system T in = 350 K
     // and now HX res time arbitrarily set to = RXR res time
     if (this.simTime >= this.oldSimTime + 2 * processUnits[unum].residenceTime) {
-      var nn = processUnits[unum].numNodes;
-      var hlt = 1.0e5 * processUnits[unum]['Thot'][nn].toFixed(1);
-      var hrt = 1.0e1 * processUnits[unum]['Thot'][0].toFixed(1);
-      var clt = 1.0e-3 * processUnits[unum]['Tcold'][nn].toFixed(1);
-      var crt = 1.0e-7 * processUnits[unum]['Tcold'][0].toFixed(1);
+      let nn = processUnits[unum].numNodes;
+      let hlt = 1.0e5 * processUnits[unum]['Thot'][nn].toFixed(1);
+      let hrt = 1.0e1 * processUnits[unum]['Thot'][0].toFixed(1);
+      let clt = 1.0e-3 * processUnits[unum]['Tcold'][nn].toFixed(1);
+      let crt = 1.0e-7 * processUnits[unum]['Tcold'][0].toFixed(1);
       // NOTE: SScheck = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
-      var SScheck = hlt + hrt + clt  + crt;
-      var oldSScheck = processUnits[unum].SScheck;
+      let SScheck = hlt + hrt + clt  + crt;
+      let oldSScheck = processUnits[unum].SScheck;
       if (SScheck == oldSScheck) {
         // set ssFlag
         simParams.ssFlag = true;
@@ -138,4 +138,4 @@ var simParams = {
 
   }, // END OF checkForSteadyState()
 
-}; // END var simParams
+}; // END let simParams

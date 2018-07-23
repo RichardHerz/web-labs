@@ -15,7 +15,7 @@
 
 // -------------------------------------------------------------------
 
-var processUnits = new Object();
+let processUnits = new Object();
   // contents must be only the process units as child objects
   // children optionally can be defined in separate script files, e.g., as puHeatExchanger,
   // then inserted into processUnits, e.g., processUnits[0] = puHeatExchanger,

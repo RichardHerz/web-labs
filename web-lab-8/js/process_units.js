@@ -24,8 +24,8 @@ var processUnits = new Object();
 
 // load process unit objects into this object
 processUnits[0] = puAdiabaticPackedBedPFR;
-processUnits[1] = puHeatExchanger;
+processUnits[1] = puCounterCurrentHeatExchanger;
 
 // clear separate process units for garbage collection
 puAdiabaticPackedBedPFR = null;
-puHeatExchanger = null;
+puCounterCurrentHeatExchanger = null;

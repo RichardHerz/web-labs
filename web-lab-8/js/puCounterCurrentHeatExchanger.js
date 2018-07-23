@@ -8,10 +8,10 @@
 // copy line below for display of development values
 // document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
 
-puHeatExchanger = {
+puCounterCurrentHeatExchanger = {
   unitIndex : 1, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
-  name : 'Heat Exchanger',
+  name : 'Counter-Current Heat Exchanger',
   //
   // USES OBJECT simParam
   //    simParams.simTimeStep, simParams.ssFlag
@@ -96,11 +96,6 @@ puHeatExchanger = {
   // DISPLAY UPDATES
 
   // define variables which will not be plotted nor saved in copy data table
-
-  // NOTE: only ModelFlag = 1 (countercurrent) is used in HX + RXR simulation
-  // this code from HX simulation which allowed both flow modes
-  // reference to UI radio buttons for model selection deleted from this simulation
-  ModelFlag : 1, // 0 is cocurrent flow, 1 is countercurrent flow
 
   // WARNING: have to check for any changes to simTimeStep and simStepRepeats if change numNodes
   // WARNING: numNodes is accessed in process_plot_info.js
@@ -230,34 +225,8 @@ puHeatExchanger = {
 
   updateUIparams : function() {
     //
-    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
-    //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
-    //
-    // The following IF structures provide for unit independence
-    // such that when input doesn't exist, you get "initial" value
-    //
-    // // EXAMPLE FOR SETTING VALUE OF AN OBJECT WITH MULTIPLE properties
-    // //   THUS set value of this.setPoint.value
-    // if (document.getElementById(this.inputSetPoint)) {
-    //   let tmpFunc = new Function("return " + this.inputSetPoint + ".value;");
-    //   this.setPoint.value = tmpFunc();
-    // } else {
-    //   this.setPoint.value = this.initialSetPoint;
-    // }
-    //
-    // // EXAMPLE SETTING VALUE OF SIMPLE VARIABLE (no .value = )
-    // if (document.getElementById(this.inputCmax)) {
-    //   let tmpFunc = new Function("return " + this.inputCmax + ".value;");
-    //   this.Cmax = tmpFunc();
-    // } else {
-    //   this.Cmax= this.initialCmax;
-    // }
-    //
-    // // EXAMPLE OF SETTING VALUE FROM RANGE SLIDER
-    // // update the readout field of range slider
-    // if (document.getElementById(this.inputSliderReadout)) {
-    //   document.getElementById(this.inputSliderReadout).innerHTML = this.Cmax;
+    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
     // set simParams.ssFlag to false
     simParams.ssFlag = false;
@@ -268,12 +237,15 @@ puHeatExchanger = {
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
     // getInputValue(unit index in processUnits, var index in input arrays)
+    // see variable numbers above in initialize()
+    // note: processUnits[pUnitIndex]['dataValues'][pVar]
+    //   is only used in plotter.js for copyData() to report input values
     //
     let unum = this.unitIndex;
     //
-    this.Flowrate = getInputValue(unum, 0);
-    this.Tin = getInputValue(unum, 1);
-    this.UAcoef = getInputValue(unum, 2);
+    this.Flowrate = this.dataValues[0] = getInputValue(unum, 0);
+    this.Tin = this.dataValues[1] = getInputValue(unum, 1);
+    this.UAcoef = this.dataValues[2] = getInputValue(unum, 2);
 
     // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
     this.FlowHot = this.Flowrate * this.FluidDensity; // (kg/s) = (m3/s) * (kg/m3)
@@ -285,40 +257,15 @@ puHeatExchanger = {
 
     this.TinCold = this.Tin;
     // *** FOR HX coupled to RXR, let RXR set TinHot display field
-
-    switch(this.ModelFlag) {
-      case 0: // co-current
-        document.getElementById(this.displayColdRightT).innerHTML = this.TinCold.toFixed(1) + ' K';
-        break
-      case 1: // counter-current
-        document.getElementById(this.displayColdLeftT).innerHTML = this.TinCold.toFixed(1) + ' K';
-    }
+    document.getElementById(this.displayColdLeftT).innerHTML = this.TinCold.toFixed(1) + ' K';
 
   }, // END of updateUIparams()
 
   updateInputs : function() {
     //
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
-    //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    //
-    //
-    // The following TRY-CATCH structures provide for unit independence
-    // such that when input doesn't exist, you get "initial" value
-    //
-    // try {
-    // //   let tmpFunc = new Function("return " + this.inputPV + ";");
-    // //   this.PV = tmpFunc();
-    // //   // note: can't test for definition of this.inputVAR because any
-    // //   // definition is true BUT WHEN try to get value of bad input
-    // //   // to see if value is undefined then get "uncaught reference" error
-    // //   // that the value of the bad input specified is undefined,
-    // //   // which is why use try-catch structure here
-    // }
-    // catch(err) {
-    // //   this.PV = this.initialPV;
-    // }
+    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
+    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
 
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
@@ -388,7 +335,7 @@ puHeatExchanger = {
     var minTinCold = this.dataMin[1];
     var maxTinHot = this.dataMax[0];
 
-    let ThotNew = []; // temporary new values for this updateState 
+    let ThotNew = []; // temporary new values for this updateState
     let TcoldNew = [];
 
     // this unit can take multiple steps within one outer main loop repeat step
@@ -398,13 +345,7 @@ puHeatExchanger = {
       n = 0;
 
       ThotNew[0] = this.TinHot;
-      switch(this.ModelFlag) {
-        case 0: // co-current, [0] is cold inlet
-          TcoldNew[0] = this.TinCold;
-        break
-        case 1: // counter-current, [0] is cold outlet
-          TcoldNew[0] = this.Tcold[1];
-      }
+      TcoldNew[0] = this.Tcold[1];
 
       // internal nodes
       for (n = 1; n < this.numNodes; n += 1) {
@@ -420,15 +361,8 @@ puHeatExchanger = {
         TcoldN = this.Tcold[n];
         TcoldNm1 = this.Tcold[n-1];
         TcoldNp1 = this.Tcold[n+1];
-        switch(this.ModelFlag) {
-          case 0: // co-current
-            dTcoldDT = VelocColdOverDZ*(TcoldNm1-TcoldN) + XferCoefCold*(ThotN-TcoldN)
-                          + DispColdOverDZ2 * (TcoldNp1 - 2.0 * TcoldN + TcoldNm1);
-          break
-          case 1: // counter-current
-            dTcoldDT = VelocColdOverDZ*(TcoldNp1-TcoldN) + XferCoefCold*(ThotN-TcoldN)
-                          + DispColdOverDZ2 * (TcoldNp1 - 2.0 * TcoldN + TcoldNm1);
-        }
+        dTcoldDT = VelocColdOverDZ*(TcoldNp1-TcoldN) + XferCoefCold*(ThotN-TcoldN)
+                      + DispColdOverDZ2 * (TcoldNp1 - 2.0 * TcoldN + TcoldNm1);
 
         ThotN = ThotN + dThotDT * this.unitTimeStep;
         TcoldN = TcoldN + dTcoldDT * this.unitTimeStep;
@@ -443,13 +377,7 @@ puHeatExchanger = {
       n = this.numNodes;
 
       ThotNew[n] = this.Thot[n - 1];
-      switch(this.ModelFlag) {
-        case 0: // co-current, [n = this.numNodes] is cold outlet
-          TcoldNew[n] = this.Tcold[n-1];
-        break
-        case 1: // counter-current, [n = this.numNodes] is cold inlet
-          TcoldNew[n] = this.TinCold;
-      }
+      TcoldNew[n] = this.TinCold;
 
       // finished updating all nodes
 
@@ -480,15 +408,8 @@ puHeatExchanger = {
     // and HX hot in doesn't get set to RXR out until start of next time step
     // decide not to force match in display so that display agrees with copy data
 
-    switch(this.ModelFlag) {
-      case 0: // co-current
-        document.getElementById(this.displayColdLeftT).innerHTML = this.Tcold[this.numNodes].toFixed(1) + ' K';
-        document.getElementById(this.displayColdRightT).innerHTML = this.TinCold.toFixed(1) + ' K';
-        break
-      case 1: // counter-current
-        document.getElementById(this.displayColdLeftT).innerHTML = this.TinCold.toFixed(1) + ' K';
-        document.getElementById(this.displayColdRightT).innerHTML = this.Tcold[0].toFixed(1) + ' K';
-    }
+    document.getElementById(this.displayColdLeftT).innerHTML = this.TinCold.toFixed(1) + ' K';
+    document.getElementById(this.displayColdRightT).innerHTML = this.Tcold[0].toFixed(1) + ' K';
 
     // HANDLE PROFILE PLOT DATA
 

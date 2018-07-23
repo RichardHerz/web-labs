@@ -62,6 +62,5 @@ function getInputValue(pUnitIndex,pVar) {
     // allow for independence and portability of this process unit
     varValue = varInitial;
   }
-  processUnits[pUnitIndex]['dataValues'][pVar] = varValue;
   return varValue
 } // end of getInputValue()

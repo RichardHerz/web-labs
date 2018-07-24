@@ -102,7 +102,9 @@ puAdiabaticPackedBedPFR = {
   numNodes : 200,
 
   ssCheckSum : 0, // used to check for steady state
-  residenceTime : 1, // for timing checks for steady state check
+  residenceTime : 0, // for timing checks for steady state check
+  // residenceTime is set in this unit's updateUIparams()
+  // residenceTime is an output from this unit to HX unit
 
   CpFluid : 2.24, // (kJ/kg/K)
   densFluid : 1000, // (kg/m3)
@@ -214,11 +216,10 @@ puAdiabaticPackedBedPFR = {
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
     // reset function will use whatever last values user has entered.
-    this.updateUIparams(); // this first, then set other values as needed
-    // set state variables not set by updateUIparams to initial settings
 
-    // this.command.value = this.initialCommand;
-    // this.errorIntegral = this.initialErrorIntegral;
+    this.updateUIparams(); // this first, then set other values as needed
+
+    // set state variables not set by updateUIparams() to initial settings
 
     // set to zero ssCheckSum used to check for steady state
     this.ssCheckSum = 0;
@@ -257,11 +258,6 @@ puAdiabaticPackedBedPFR = {
       this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
     }
 
-    // update residenceTime, which is needed by HX to match that of RXR
-    // in case any change in Wcat or Flowrate
-    let densBed = this.densCat * (1 - this.voidFrac);
-    this.residenceTime = this.Wcat * this.voidFrac / densBed / this.Flowrate;
-
     // update display
     this.display();
 
@@ -273,7 +269,7 @@ puAdiabaticPackedBedPFR = {
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
     // need to directly set simParams.ssFlag to false to get sim to run
-    // when previously at steady state
+    // after change in UI params when previously at steady state
     simParams.ssFlag = false;
 
     // set to zero ssCheckSum used to check for steady state by this unit

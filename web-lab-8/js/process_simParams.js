@@ -102,14 +102,15 @@ let simParams = {
   },
 
   checkForSteadyState : function() {
-    // required - called by process_main.js
+    // required - called by process_main.js - may be empty
     // check in order to save CPU time when sim is at steady state
     // check for SS by checking for any significant change in array end values
     // but wait at least one residence time after the previous check
     // to allow changes to propagate down unit
     // open OS Activity Monitor of CPU load to see effect of this
     //
-    // use HX [1] end T's to check for SS
+    // here use process unit [1] HX end T's to check for SS
+    // note here that RXR inlet T = HX cold outlet T & RXR outlet = HX hot inlet
     let unum = 1; // unit number, [1] is heat exchanger in this lab
     //
     // found need 2 * processUnits[unum].residenceTime to reach SS

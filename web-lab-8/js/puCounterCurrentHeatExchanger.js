@@ -309,7 +309,7 @@ puCounterCurrentHeatExchanger = {
     let XferCoefHot = Ucoef * (Awall / Length) / (this.FluidDensity * CpHot * Ax);
     let XferCoefCold = XferCoefHot;
 
-    // *** FOR RXR + HX USE TURBULENT DISPERSION COEFFICIENT = 0 ***
+    // *** FOR RXR + HX USE ZERO TURBULENT DISPERSION COEFFICIENT ***
     // *** will get effective dispersion due to finite difference approx ***
     let DispHot = 0.0;
     let DispCold = DispHot;
@@ -362,7 +362,7 @@ puCounterCurrentHeatExchanger = {
         TcoldNp1 = this.Tcold[n+1];
         dTcoldDT = VelocColdOverDZ*(TcoldNp1-TcoldN) + XferCoefCold*(ThotN-TcoldN)
                       // + DispHotOverDZ2 * (ThotNp1 - 2.0 * ThotN + ThotNm1)
-                    ; // deactivate dispersion calc for speed, save for future use 
+                    ; // deactivate dispersion calc for speed, save for future use
 
         ThotN = ThotN + dThotDT * this.unitTimeStep;
         TcoldN = TcoldN + dTcoldDT * this.unitTimeStep;

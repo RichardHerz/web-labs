@@ -21,10 +21,10 @@ function runThisLab() {
     button_runButton.value = 'Pause'; // REQUIRES run button id="button_runButton"
     runSimulation();
     simParams.updateRunCount();
-    } else {
-      // sim will stop after last updateProcess and its updateDisplay finishes
-      // so change run button label from pause to run 
-      button_runButton.value = 'Run'; // REQUIRES run button id="button_runButton"
+  } else {
+    // sim will stop after last updateProcess and its updateDisplay finishes
+    // so change run button label from pause to run
+    button_runButton.value = 'Run'; // REQUIRES run button id="button_runButton"
   }
 } // END OF function runThisLab
 

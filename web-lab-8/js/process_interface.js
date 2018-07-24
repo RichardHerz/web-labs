@@ -16,11 +16,14 @@ function runThisLab() {
   // TOGGLE runningFlag FIRST before doing stuff below
   let runningFlag = simParams.runningFlag;
   if (runningFlag) {
+    // start sim running again
     simParams.ssFlag = false; // unit sets true when sim reaches steady state
     button_runButton.value = 'Pause'; // REQUIRES run button id="button_runButton"
     runSimulation();
     simParams.updateRunCount();
     } else {
+      // sim will stop after last updateProcess and its updateDisplay finishes
+      // so change run button label from pause to run 
       button_runButton.value = 'Run'; // REQUIRES run button id="button_runButton"
   }
 } // END OF function runThisLab

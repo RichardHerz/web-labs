@@ -14,6 +14,7 @@ function copyData(plotIndex){
   // if sim is running, pause the sim
   // copy grabs what is showing on plot when copy button clicked
   // so want user to be able to take screenshot to compare with data copied
+  // this will let last updateDisplay of updateProcess finish before sim pauses 
   let runningFlag = simParams.runningFlag;
   if (runningFlag) {
     runThisLab(); // toggles running state

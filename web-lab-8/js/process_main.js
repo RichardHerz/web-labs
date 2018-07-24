@@ -71,7 +71,7 @@
       let runningFlag = simParams.runningFlag;
       if (!runningFlag) {
         // exit if runningFlag is not true
-        // runningFlag can become not true by click of RUN-PAUSE or RESET buttons
+        // runningFlag can become not true by click of RUN-PAUSE, RESET or COPY DATA buttons
         return;
       }
 

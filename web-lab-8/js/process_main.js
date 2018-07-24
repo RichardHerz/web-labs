@@ -1,4 +1,3 @@
-
 /*
   Design, text, images and code by Richard K. Herz, 2017-2018
   Copyrights held by Richard K. Herz
@@ -127,6 +126,7 @@
 
     if (simParams.ssFlag) {
       // exit if simParams.ssFlag true
+      // checkForSteadyState() at end of updateDisplay() in this file
       return;
     }
 
@@ -143,9 +143,6 @@
     for (n = 0; n < numUnits; n += 1) {
         processUnits[n].updateState();
     }
-
-    // check and set simParams.ssFlag to true if at steady state
-    simParams.checkForSteadyState();
 
   } // END OF updateProcessUnits
 
@@ -184,6 +181,11 @@
       }
     }
 
+    // check and set simParams.ssFlag to true if at steady state
+    // do this here in updateDisplay rather than each process update
+    // so that don't suspend before a final display update of the steady state
+    simParams.checkForSteadyState();
+
     // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
     let thisDate = new Date();
     let thisMs = thisDate.getTime();
@@ -195,7 +197,7 @@
     // User changed an input
     // Update user-entered inputs from UI to ALL units.
     // Could be called from onclick or onchange in HTML element, if desired.
-    // Alternative: in HTML input tag onchange, send updateUIparams() to 
+    // Alternative: in HTML input tag onchange, send updateUIparams() to
     // specific unit involved in that input.
 
     let numUnits = Object.keys(processUnits).length; // number of units

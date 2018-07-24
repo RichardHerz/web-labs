@@ -101,12 +101,9 @@ puCounterCurrentHeatExchanger = {
 
   // define variables which will not be plotted nor saved in copy data table
 
-  // WARNING: have to check for any changes to simTimeStep and simStepRepeats if change numNodes
-  // WARNING: numNodes is accessed in process_plot_info.js
+  // check for any changes to simTimeStep and simStepRepeats if change numNodes
+  // numNodes is accessed in process_plot_info.js
   numNodes : 200,
-  // NOTE 20180427: discrepancy between steady-state Qcold and Qhot (from Qcold/Qhot)
-  // from array end values with dispersion decreases as number of nodes increases
-  // but shows same output field T's to one decimal place for 200-800 nodes
 
   FluidDensity : 1000.0, // kg/m3, fluid density specified to be that of water
 
@@ -357,13 +354,15 @@ puCounterCurrentHeatExchanger = {
         ThotNm1 = this.Thot[n-1];
         ThotNp1 = this.Thot[n+1];
         dThotDT = VelocHotOverDZ*(ThotNm1-ThotN) + XferCoefHot*(TcoldN-ThotN)
-                      + DispHotOverDZ2 * (ThotNp1 - 2.0 * ThotN + ThotNm1);
+                      // + DispHotOverDZ2 * (ThotNp1 - 2.0 * ThotN + ThotNm1)
+                    ; // deactivate dispersion calc for speed, save for future use
 
         TcoldN = this.Tcold[n];
         TcoldNm1 = this.Tcold[n-1];
         TcoldNp1 = this.Tcold[n+1];
         dTcoldDT = VelocColdOverDZ*(TcoldNp1-TcoldN) + XferCoefCold*(ThotN-TcoldN)
-                      + DispColdOverDZ2 * (TcoldNp1 - 2.0 * TcoldN + TcoldNm1);
+                      // + DispHotOverDZ2 * (ThotNp1 - 2.0 * ThotN + ThotNm1)
+                    ; // deactivate dispersion calc for speed, save for future use 
 
         ThotN = ThotN + dThotDT * this.unitTimeStep;
         TcoldN = TcoldN + dTcoldDT * this.unitTimeStep;

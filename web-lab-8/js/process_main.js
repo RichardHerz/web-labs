@@ -31,7 +31,7 @@
 
   function openThisLab() {
     // initialize variables in each process unit
-    var numUnits = Object.keys(processUnits).length; // number of units
+    let numUnits = Object.keys(processUnits).length; // number of units
     for (n = 0; n < numUnits; n += 1) {
       processUnits[n].initialize();
     }
@@ -54,14 +54,14 @@
     // THE MORE COMPLEX TIMING METHOD USED IN dynamic-process-v2.livecode
 
     // updateDisplayTimingMs is real time milliseconds between display updates
-    var updateDisplayTimingMs = simParams.updateDisplayTimingMs;
-    var startDate = new Date(); // need this here
-    var startMs;
-    var currentMs;
-    var elapsedMs;
+    let updateDisplayTimingMs = simParams.updateDisplayTimingMs;
+    let startDate = new Date(); // need this here
+    let startMs;
+    let currentMs;
+    let elapsedMs;
     // updateMs is computed below in function updateProcess to be real time
     // between finish last display update and start next update process
-    var updateMs = 0; // initialize as zero for first call immediately below
+    let updateMs = 0; // initialize as zero for first call immediately below
 
     // first call to updateProcess, which then calls itself
     // use setTimeout, since updateProcess by itself does not work
@@ -69,7 +69,7 @@
 
     function updateProcess() {
 
-      var runningFlag = simParams.runningFlag;
+      let runningFlag = simParams.runningFlag;
       if (!runningFlag) {
         // exit if runningFlag is not true
         // runningFlag can become not true by click of RUN-PAUSE or RESET buttons
@@ -110,7 +110,7 @@
 
       // // DISPLAY TIMING DATA DURING DEVELOPMENT - PERCENT TIME IDLE
       // // NEED TO EDIT INDEX.HTML TO ACTIVATE "field_output_field"
-      // var tIdleTime = 100*(1-elapsedMs/updateMs);
+      // let tIdleTime = 100*(1-elapsedMs/updateMs);
       // tIdleTime = Number(tIdleTime).toPrecision(2);
       // document.getElementById("field_output_field").innerHTML = "% idle = " + tIdleTime + "&nbsp;&nbsp;";
 
@@ -130,7 +130,7 @@
       return;
     }
 
-    var numUnits = Object.keys(processUnits).length; // number of units
+    let numUnits = Object.keys(processUnits).length; // number of units
 
     // FIRST, have all units update their unit input connections
     for (n = 0; n < numUnits; n += 1) {
@@ -156,12 +156,12 @@
       // BUT FIRST MUST DO THIS (also done below at end normal update)
       // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
       // or, if do not do here, simTime will race ahead
-      var thisDate = new Date();
-      var thisMs = thisDate.getTime();
+      let thisDate = new Date();
+      let thisMs = thisDate.getTime();
       return thisMs;
     }
 
-    var numUnits = Object.keys(processUnits).length; // number of units
+    let numUnits = Object.keys(processUnits).length; // number of units
 
     // display all units but do not step
     for (n = 0; n < numUnits; n += 1) {
@@ -169,10 +169,10 @@
     }
 
     // GET AND PLOT ALL PLOTS defined in object plotsObj in process_plot_info.js
-    var numPlots = Object.keys(plotsObj).length;
+    let numPlots = Object.keys(plotsObj).length;
     numPlots = numPlots - 1; // subtract method initialize(), which is counted in length
-    var p; // used as index
-    var data;
+    let p; // used as index
+    let data;
     for (p = 0; p < numPlots; p += 1) {
       if (plotsObj[p]['type'] == 'canvas') {
         // space-time, color-canvas plot
@@ -185,8 +185,8 @@
     }
 
     // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
-    var thisDate = new Date();
-    var thisMs = thisDate.getTime();
+    let thisDate = new Date();
+    let thisMs = thisDate.getTime();
     return thisMs;
 
   }  // END OF function updateDisplay
@@ -197,7 +197,7 @@
     // Alternative: in HTML input tag onchange, send unitName.updateUIparams()
     // to method updateUIparams of specific unit involved in that input.
 
-    var numUnits = Object.keys(processUnits).length; // number of units
+    let numUnits = Object.keys(processUnits).length; // number of units
     for (n = 0; n < numUnits; n += 1) {
       processUnits[n].updateUIparams();
     }

@@ -8,6 +8,10 @@
 // copy line below for display of development values
 // document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
 
+// EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 6 FUNCTIONS:
+//   initialize, reset, updateUIparams, updateInputs, updateState, display
+// WARNING: THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
+
 puAdiabaticPackedBedPFR = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
@@ -59,11 +63,6 @@ puAdiabaticPackedBedPFR = {
 
   // *** WHEN RXR COUPLED TO HX, Tin IS RXR INLET T ***
   Tin : 0, // inlet T to reactor - to be obtained from HX cold outlet
-
-  // *** FOR ADIABATIC RXR just define Tjacket for no error
-  // of omission in equations
-  // but heat transfer term multiplying this is set to zero
-  Tjacket : 0,
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -378,17 +377,9 @@ puAdiabaticPackedBedPFR = {
     let rxnCoef = densBed / this.voidFrac;
 
     let energyFlowCoef = this.Flowrate * this.densFluid * this.CpFluid / CpMean / dW;
+    let energyRxnCoef = this.DelH / CpMean;
 
     // *** FOR ADIABATIC RXR + HX, no heat transfer to rxr walls ***
-    let energyXferCoef = 0;
-    // let energyXferCoef = this.UAcoef / CpMean;
-
-    // *** FOR ADIABATIC RXR
-    // also need to define this.Tjacket for no error of omission
-    // in full equations below but value is irrelevant
-    // with energyXferCoef = 0
-
-    let energyRxnCoef = this.DelH / CpMean;
 
     let TrxrNew = []; // temporary new values for this updateState
     let CaNew = [];
@@ -412,7 +403,6 @@ puAdiabaticPackedBedPFR = {
 
         dCaDT = -flowCoef * (this.Ca[n] - this.Ca[n-1]) - rxnCoef * kT * this.Ca[n];
         dTrxrDT = - energyFlowCoef * (this.Trxr[n] - this.Trxr[n-1])
-                  + energyXferCoef * (this.Tjacket - this.Trxr[n])
                   - energyRxnCoef * kT * this.Ca[n];
 
         CaN = this.Ca[n] + dCaDT * this.unitTimeStep;
@@ -437,7 +427,6 @@ puAdiabaticPackedBedPFR = {
 
       dCaDT = -flowCoef * (this.Ca[n] - this.Ca[n-1]) - rxnCoef * kT * this.Ca[n];
       dTrxrDT = - energyFlowCoef * (this.Trxr[n] - this.Trxr[n-1])
-                + energyXferCoef * (this.Tjacket - this.Trxr[n])
                 - energyRxnCoef * kT * this.Ca[n];
 
       CaN = this.Ca[n] + dCaDT * this.unitTimeStep;

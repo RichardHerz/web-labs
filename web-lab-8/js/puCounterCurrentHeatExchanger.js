@@ -8,6 +8,10 @@
 // copy line below for display of development values
 // document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
 
+// EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 6 FUNCTIONS:
+//   initialize, reset, updateUIparams, updateInputs, updateState, display
+// WARNING: THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
+
 puCounterCurrentHeatExchanger = {
   unitIndex : 1, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
@@ -153,7 +157,7 @@ puCounterCurrentHeatExchanger = {
     // OUTPUT VARS
     //
 
-    // *** SPECIAL - NEED TO MATCH FLOW RATE DIMENSIONAL UNITS BETWEEN PROCESS UNITS *** 
+    // *** SPECIAL - NEED TO MATCH FLOW RATE DIMENSIONAL UNITS BETWEEN PROCESS UNITS ***
     this.FlowHot = this.Flowrate; // m3/s in reactor
     // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
     this.FlowHot = this.FluidDensity * this.FlowHot; // kg/s = kg/m3 * m3/s
@@ -308,7 +312,8 @@ puCounterCurrentHeatExchanger = {
     let XferCoefHot = Ucoef * (Awall / Length) / (this.FluidDensity * CpHot * Ax);
     let XferCoefCold = XferCoefHot;
 
-    // *** FOR RXR + HX USE DISP = 0 ***
+    // *** FOR RXR + HX USE TURBULENT DISPERSION COEFFICIENT = 0 ***
+    // *** will get effective dispersion due to finite difference approx ***
     let DispHot = 0.0;
     let DispCold = DispHot;
 

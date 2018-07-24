@@ -9,9 +9,9 @@
 
 // ------------ PROCESS UNIT OBJECT DEFINITIONS ----------------------
 
-// EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 6 FUNCTIONS:
-//   initialize, reset, updateUIparams, updateInputs, updateState, display
-// WARNING: THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
+// EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
+// initialize, reset, updateUIparams, updateInputs, updateState, display, checkForSteadyState
+// THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
 
 // -------------------------------------------------------------------
 

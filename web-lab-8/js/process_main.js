@@ -192,10 +192,11 @@
   }  // END OF function updateDisplay
 
   function updateUIparams() {
+    // User changed an input
     // Update user-entered inputs from UI to ALL units.
     // Could be called from onclick or onchange in HTML element, if desired.
-    // Alternative: in HTML input tag onchange, send unitName.updateUIparams()
-    // to method updateUIparams of specific unit involved in that input.
+    // Alternative: in HTML input tag onchange, send updateUIparams() to 
+    // specific unit involved in that input.
 
     let numUnits = Object.keys(processUnits).length; // number of units
     for (n = 0; n < numUnits; n += 1) {

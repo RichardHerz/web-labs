@@ -8,9 +8,9 @@
 // copy line below for display of development values
 // document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
 
-// EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 6 FUNCTIONS:
-//   initialize, reset, updateUIparams, updateInputs, updateState, display
-// WARNING: THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
+// EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
+// initialize, reset, updateUIparams, updateInputs, updateState, display, checkForSteadyState
+// THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
 
 puCounterCurrentHeatExchanger = {
   unitIndex : 1, // index of this unit as child in processUnits parent object
@@ -18,9 +18,9 @@ puCounterCurrentHeatExchanger = {
   name : 'Counter-Current Heat Exchanger',
   //
   // USES OBJECT simParam
-  //    simParams.simTimeStep, simParams.ssFlag
+  //    simParams.simTimeStep, SETS simParams.ssFlag
   // OBJECT simParams USES the following from this process unit
-  //    variables SScheck, residenceTime, numNodes
+  //    variables residenceTime, numNodes
 
   // **** WHEN HX COUPLED TO RXR *****
   //    all flow rates are the same in reactor and heat exchanger
@@ -107,9 +107,8 @@ puCounterCurrentHeatExchanger = {
 
   FluidDensity : 1000.0, // kg/m3, fluid density specified to be that of water
 
-  // also see simParams.ssFlag and simParams.SScheck
-  SScheck : 0, // for saving steady state check number
-  residenceTime : 1,
+  ssCheckSum : 0, // used to check for steady state
+  residenceTime : 1, // for timing checks for steady state check
   // residence time also computed for reactor and used to match HX to RXR
 
   initialize : function() {
@@ -173,8 +172,8 @@ puCounterCurrentHeatExchanger = {
     this.updateUIparams(); // this first, then set other values as needed
     // set state variables not set by updateUIparams to initial settings
 
-    simParams.ssFlag = false;
-    this.SScheck = 0;
+    // set to zero ssCheckSum used to check for steady state
+    this.ssCheckSum = 0;
 
     this.TinCold = this.Tin;
     this.TinHot = this.Tin;
@@ -225,11 +224,12 @@ puCounterCurrentHeatExchanger = {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // set simParams.ssFlag to false
+    // need to directly set simParams.ssFlag to false to get sim to run
+    // when previously at steady state
     simParams.ssFlag = false;
 
-    // set SScheck checksum used to check for SS to zero
-    this.SScheck = 0;
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
@@ -441,6 +441,36 @@ puCounterCurrentHeatExchanger = {
     // FOR HEAT EXCHANGER - DO NOT USE STRIP CHART YET
     // HANDLE STRIP CHART DATA
 
-  } // END of display()
+  }, // END of display()
+
+  checkForSteadyState : function() {
+    // required - called by simParams
+    // if not active, return ssFlag = true to calling unit
+    // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    // here use HX end T's to check for SS
+    // found need 2 * residenceTime to reach SS
+    // when starting up at system T in = 350 K
+    // and now HX res time arbitrarily set to = RXR res time
+    //
+    let nn = this.numNodes;
+    let hlt = 1.0e5 * this.Thot[nn].toFixed(1);
+    let hrt = 1.0e1 * this.Thot[0].toFixed(1);
+    let clt = 1.0e-3 * this.Tcold[nn].toFixed(1);
+    let crt = 1.0e-7 * this.Tcold[0].toFixed(1);
+    // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
+    let newCheckSum = hlt + hrt + clt  + crt;
+    let oldSScheckSum = this.ssCheckSum;
+    let ssFlag = false;
+    if (newCheckSum == oldSScheckSum) {ssFlag = true;}
+    this.ssCheckSum = newCheckSum; // save current value for use next time
+    return ssFlag;
+  } // END OF checkForSteadyState()
 
 } // END let puHeatExchanger

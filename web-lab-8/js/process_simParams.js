@@ -24,13 +24,11 @@ let simParams = {
 
   title : 'Packed Bed PFR + Heat Exchanger', // title of simulation
 
-  // ssFlag new for process with one unit - rethink for multiple-unit processes
-  // unit's updateState can set ssFlag true when unit reaches steady state
-  // REDUCES CPU LOAD ONLY when return from top of process_main.js functions
-  // updateProcessUnits and updateDisplay but NOT from top of unit functions here
-  ssFlag : false, // steady state flag set true when sim reaches steady state
-  // also see below in simParams the let oldSimTime
-  // also see in process unit the vars SScheck and residenceTime
+  // ssFlag set to true in checkForSteadyState() in simParams when
+  //           sim reaches steady state
+  // ssFlag set to false in runThisLab() and resetThisLab() in main.js
+  // ssFlag set to false by updateUIparams() in each process unit
+  ssFlag : false,
 
   runningFlag : false, // set runningFlag to false initially
   runButtonID : "button_runButton", // for functions to run, reset, copy data
@@ -55,8 +53,10 @@ let simParams = {
   // and 50 ms gives about same speed as 0 ms on my laptop
   updateDisplayTimingMs : 50, // real time milliseconds between display updates
 
-  simTime : 0, // (s), time, initialize simulation time, also see resetSimTime
-  oldSimTime : 0, // (s), used to check for steady state
+  // simTime is changed in updateSimTime() and resetSimTime()
+  // simTime & oldSimTime are used to in checkForSteadyState()
+  simTime : 0, // (s)
+  oldSimTime : 0, // (s)
 
   updateRunCount : function() {
     // need literal "field_run_counter" below - this.runCounterFieldID does NOT work
@@ -102,41 +102,35 @@ let simParams = {
   },
 
   checkForSteadyState : function() {
-    // required - called by process_main.js - may be empty
-    // check in order to save CPU time when sim is at steady state
+    // required - called by process_main.js
+    // uses this.simTime
+    // sets this.ssFlag and this.oldSimTime
+    // calls each unit's own checkForSteadyState()
+    // check for SS in order to save CPU time when sim is at steady state
     // check for SS by checking for any significant change in array end values
     // but wait at least one residence time after the previous check
     // to allow changes to propagate down unit
     // open OS Activity Monitor of CPU load to see effect of this
     //
-    // here use process unit [1] HX end T's to check for SS
-    // note here that RXR inlet T = HX cold outlet T & RXR outlet = HX hot inlet
-    let unum = 1; // unit number, [1] is heat exchanger in this lab
+    // FOR THIS LAB, HX is processUnits[1] and HX determines SS
+    // found that should wait two times residence time between checks in this lab
+    let resTime = processUnits[1]['residenceTime'];
     //
-    // found need 2 * processUnits[unum].residenceTime to reach SS
-    // when starting up at system T in = 350 K
-    // and now HX res time arbitrarily set to = RXR res time
-    if (this.simTime >= this.oldSimTime + 2 * processUnits[unum].residenceTime) {
-      let nn = processUnits[unum].numNodes;
-      let hlt = 1.0e5 * processUnits[unum]['Thot'][nn].toFixed(1);
-      let hrt = 1.0e1 * processUnits[unum]['Thot'][0].toFixed(1);
-      let clt = 1.0e-3 * processUnits[unum]['Tcold'][nn].toFixed(1);
-      let crt = 1.0e-7 * processUnits[unum]['Tcold'][0].toFixed(1);
-      // NOTE: SScheck = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
-      let SScheck = hlt + hrt + clt  + crt;
-      let oldSScheck = processUnits[unum].SScheck;
-      if (SScheck == oldSScheck) {
-        // set ssFlag
-        simParams.ssFlag = true;
-        // WARNING - call in line below has alerts - TESTING ONLY
-        // processUnits[unum].checkSSvalues(); // WARNING - has alerts - TESTING ONLY
-      } // end if (SScheck == oldSScheck)
-      // save current values as the old values
-      // processUnits[unum]['SScheck'] = SScheck;
-      processUnits[unum].SScheck = SScheck;
-      simParams.oldSimTime = simParams.simTime;
-    } // END OF if (simParams.simTime >= simParams.oldSimTime + processUnits[unum]['residenceTime'])
+    if (this.simTime >= this.oldSimTime + 2 * resTime) {
+      // get ssFlag from each unit
+      let thisFlag = true; // changes to false if any unit not at steady state
+      let numUnits = Object.keys(processUnits).length; // number of units
+      for (let n = 0; n < numUnits; n += 1) {
+        if (!processUnits[n].checkForSteadyState()){
+          // result returned by unit is not true
+          thisFlag = false;
+        }
+      }
+      this.ssFlag = thisFlag;
+      // save sim time of this check
+      // do not save for every call of this function or will never enter IF & check
+      this.oldSimTime = this.simTime;
+    } // END of if (this.simTime >= this.oldSimTime + 2 * resTime)
+  } // END OF checkForSteadyState()
 
-  }, // END OF checkForSteadyState()
-
-}; // END let simParams
+}; // END simParams object

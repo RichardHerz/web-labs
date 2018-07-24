@@ -8,9 +8,9 @@
 // copy line below for display of development values
 // document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
 
-// EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 6 FUNCTIONS:
-//   initialize, reset, updateUIparams, updateInputs, updateState, display
-// WARNING: THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
+// EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
+// initialize, reset, updateUIparams, updateInputs, updateState, display, checkForSteadyState
+// THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
 
 puAdiabaticPackedBedPFR = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
@@ -18,9 +18,9 @@ puAdiabaticPackedBedPFR = {
   name : 'Adiabatic Packed Bed PFR',
   //
   // USES OBJECT simParam
-  //    simParams.simTimeStep, simParams.ssFlag
+  //    simParams.simTimeStep, SETS simParams.ssFlag
   // OBJECT simParams USES the following from this process unit
-  //    variables SScheck, residenceTime, numNodes
+  //    variables residenceTime, numNodes
 
   // **** WHEN RXR COUPLED TO HX *****
   //    all flow rates are the same in reactor and heat exchanger
@@ -101,10 +101,8 @@ puAdiabaticPackedBedPFR = {
   // WARNING: numNodes is accessed in process_plot_info.js
   numNodes : 200,
 
-  // also see simParams.ssFlag and simParams.SScheck
-  SScheck : 0, // for saving steady state check number of array end values
-  // for timing checks for steady state check
-  residenceTime : 1,
+  ssCheckSum : 0, // used to check for steady state
+  residenceTime : 1, // for timing checks for steady state check
 
   CpFluid : 2.24, // (kJ/kg/K)
   densFluid : 1000, // (kg/m3)
@@ -222,8 +220,8 @@ puAdiabaticPackedBedPFR = {
     // this.command.value = this.initialCommand;
     // this.errorIntegral = this.initialErrorIntegral;
 
-    simParams.ssFlag = false;
-    this.SScheck = 0; // reset steady state check number of array end values
+    // set to zero ssCheckSum used to check for steady state
+    this.ssCheckSum = 0;
 
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Ca[k] = this.dataInitial[4]; // [4] is Cain
@@ -274,11 +272,12 @@ puAdiabaticPackedBedPFR = {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // set simParams.ssFlag to false
+    // need to directly set simParams.ssFlag to false to get sim to run
+    // when previously at steady state
     simParams.ssFlag = false;
 
-    // set SScheck checksum used to check for SS to zero
-    this.SScheck = 0;
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
@@ -499,6 +498,23 @@ puAdiabaticPackedBedPFR = {
       this.colorCanvasData[0][n][0] = this.Trxr[n];
     }
 
-  } // END of display()
+  }, // END of display()
+
+  checkForSteadyState : function() {
+    // required - called by simParams
+    // if not active, return ssFlag = true to calling unit
+    // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    // *** RXR CHECK NOT ACTIVE IN THIS LAB - HX is checked ***
+    //
+    let ssFlag = true;
+    return ssFlag;
+  } // END OF checkForSteadyState()
 
 }; // END let puPlugFlowReactor

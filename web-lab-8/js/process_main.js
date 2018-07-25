@@ -162,7 +162,7 @@
 
     // display all units but do not step
     for (n = 0; n < numUnits; n += 1) {
-      processUnits[n].display();
+      processUnits[n].updateDisplay();
     }
 
     // GET AND PLOT ALL PLOTS defined in object plotsObj in process_plot_info.js

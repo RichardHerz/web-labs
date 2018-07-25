@@ -9,28 +9,45 @@
 // document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
 
 // EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
-// initialize, reset, updateUIparams, updateInputs, updateState, display, checkForSteadyState
+// initialize, reset, updateUIparams, updateInputs, updateState,
+//   updateDisplay, checkForSteadyState
 // THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
 
 let puCounterCurrentHeatExchanger = {
   unitIndex : 1, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'Counter-Current Heat Exchanger',
+
+  //  SUMMARY OF DEPENDENCIES
   //
-  // **** WHEN HX COUPLED TO RXR *****
-  //    all flow rates are the same in reactor and heat exchanger
-  // USES FROM OBJECT simParams the following:
+  //  THIS OBJECT HAS MULTIPLE I/O CONNECTIONS TO HTML
+  //
+  //  USES FROM OBJECT simParams the following:
   //    GETS simParams.simTimeStep, SETS simParams.ssFlag
-  // OBJECT simParams USES the following from this process unit:
+  //  OBJECT simParams USES FROM THIS OBJECT:
   //    residenceTime
-  // USES FROM UNIT OBJECT puAdiabaticPackedBedPFR, here as processUnits[0], the following:
+  //  OBJECT plotsObj USES FROM THIS OBJECT:
+  //    numNodes, and possibly others
+  //  USES FROM OBJECT puAdiabaticPackedBedPFR, here as processUnits[0], the following:
   //    numNodes, residenceTime, Trxr[]
   //    reactor outlet T is heat exchanger hot inlet T
-  // UNIT OBJECT puAdiabaticPackedBedPFR, here as processUnits[0],
-  //  USES FROM THIS UNIT:
-  //    Tcold[]
-  //    heat exchanger cold outlet T is reactor inlet T
-  // THIS OBJECT HAS MULTIPLE IO CONNECTIONS TO HTML
+  //  OBJECT puAdiabaticPackedBedPFR, here as processUnits[0],
+  //    USES FROM THIS UNIT:
+  //      Tcold[] - heat exchanger cold outlet T is reactor inlet T
+  //  CALLS TO FUNCTIONS HERE ARE SENT BY THE FOLLOWING EXTERNAL FUNCTIONS:
+  //    initialize() sent by openThisLab() in main.js
+  //    reset() sent by resetThisLab() in interface.js
+  //    updateInputs() & updateState() sent by updateProcessUnits() in main.js
+  //    updateDisplay() sent by updateDisplay() in main.js
+  //    updateUIparams() sent by updateUIparams() in main.js
+  //    checkForSteadyState() sent by checkForSteadyState() in simParams object
+  //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
+  //    copyData() in copy_data.js uses name, varCount, dataHeaders[],
+  //        dataUnits[], dataValues[], profileData[], stripData[]
+  //    getInputValue() in interface.js uses dataInputs[], dataInitial[],
+  //        dataMin[], dataMax[]
+  //    getPlotData() in plotter_flot.js uses profileData[], stripData[]
+  //    plotColorCanvasPlot() in spacetime.js uses colorCanvasData[]
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
   getInputs : function() {
@@ -222,7 +239,10 @@ let puCounterCurrentHeatExchanger = {
       this.profileData[1][k][1] = 320; // this.Tin;
     }
 
-  }, // END of reset()
+     // update display
+    this.updateDisplay();
+
+  }, // end reset
 
   updateUIparams : function() {
     //
@@ -398,7 +418,7 @@ let puCounterCurrentHeatExchanger = {
     // WARNING: has alerts - may be called in simParams.checkForSteadyState()
   }, // END of checkSSvalues()
 
-  display : function() {
+  updateDisplay : function() {
 
     // note use .toFixed(n) method of object to round number to n decimal points
 
@@ -446,7 +466,7 @@ let puCounterCurrentHeatExchanger = {
     // FOR HEAT EXCHANGER - DO NOT USE STRIP CHART YET
     // HANDLE STRIP CHART DATA
 
-  }, // END of display()
+  }, // END of updateDisplay()
 
   checkForSteadyState : function() {
     // required - called by simParams

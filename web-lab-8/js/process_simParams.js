@@ -17,7 +17,7 @@ let simParams = {
   //    variables updateDisplayTimingMs
   //
   // simParams uses the following from process unit puHeatExchanger
-  //    variables SScheck, residenceTime, numNodes
+  //    variables SScheck, residenceTime
   //
   // simParams uses the following global variables:
   //    Thot and Tcold used in function checkForSteadyState()

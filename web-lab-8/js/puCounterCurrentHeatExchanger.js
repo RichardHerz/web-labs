@@ -12,7 +12,7 @@
 // initialize, reset, updateUIparams, updateInputs, updateState, display, checkForSteadyState
 // THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
 
-puCounterCurrentHeatExchanger = {
+let puCounterCurrentHeatExchanger = {
   unitIndex : 1, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'Counter-Current Heat Exchanger',
@@ -173,7 +173,7 @@ puCounterCurrentHeatExchanger = {
     // reset function will use whatever last values user has entered
 
     this.updateUIparams(); // this first, then set other values as needed
-    
+
     // set state variables not set by updateUIparams() to initial settings
 
     // set to zero ssCheckSum used to check for steady state

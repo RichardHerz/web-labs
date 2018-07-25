@@ -12,7 +12,7 @@
 // initialize, reset, updateUIparams, updateInputs, updateState, display, checkForSteadyState
 // THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
 
-puAdiabaticPackedBedPFR = {
+let puAdiabaticPackedBedPFR = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'Adiabatic Packed Bed PFR',

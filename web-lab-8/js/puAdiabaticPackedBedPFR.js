@@ -25,8 +25,7 @@ let puAdiabaticPackedBedPFR = {
   //  USES FROM OBJECT simParams
   //    GETS simParams.simTimeStep, SETS simParams.ssFlag
   //  USES FROM OBJECT puCounterCurrentHeatExchanger, here as processUnits[1], the following:
-  //    Tcold[]
-  //    heat exchanger cold outlet T is reactor inlet T
+  //    Tcold[] - heat exchanger cold outlet T is reactor inlet T
   //  OBJECT plotsObj USES FROM THIS OBJECT:
   //    numNodes, and possibly others
   //  OBJECT puCounterCurrentHeatExchanger, here as processUnits[1],

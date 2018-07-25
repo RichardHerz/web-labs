@@ -17,17 +17,20 @@ let puAdiabaticPackedBedPFR = {
   // unitIndex used in this object's updateUIparams() method
   name : 'Adiabatic Packed Bed PFR',
   //
-  // USES OBJECT simParam
-  //    simParams.simTimeStep, SETS simParams.ssFlag
-  // OBJECT simParams USES the following from this process unit
-  //    variables residenceTime, numNodes
-
   // **** WHEN RXR COUPLED TO HX *****
   //    all flow rates are the same in reactor and heat exchanger
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //    reactor outlet T to heat exchanger hot inlet T
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //    heat exchanger cold out T is reactor inlet T
+  // USES FROM OBJECT simParams
+  //    GETS simParams.simTimeStep, SETS simParams.ssFlag
+  // OBJECT simParams USES the following from this process unit
+  //    variables residenceTime, numNodes
+  // USES FROM OBJECT puCounterCurrentHeatExchanger, here as processUnits[1], the following:
+  //    Tcold[]
+  //    heat exchanger cold outlet T is reactor inlet T
+  // UNIT OBJECT puCounterCurrentHeatExchanger, here as processUnits[1],
+  //  USES FROM THIS UNIT:
+  //    Trxr[]
+  //    reactor outlet T is heat exchanger hot inlet T
+  // THIS OBJECT HAS MULTIPLE IO CONNECTIONS TO HTML
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
   getInputs : function() {

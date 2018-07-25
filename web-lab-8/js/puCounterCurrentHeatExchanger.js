@@ -17,17 +17,20 @@ let puCounterCurrentHeatExchanger = {
   // unitIndex used in this object's updateUIparams() method
   name : 'Counter-Current Heat Exchanger',
   //
-  // USES OBJECT simParam
-  //    simParams.simTimeStep, SETS simParams.ssFlag
-  // OBJECT simParams USES the following from this process unit
-  //    variables residenceTime, numNodes
-
   // **** WHEN HX COUPLED TO RXR *****
   //    all flow rates are the same in reactor and heat exchanger
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //    heat exchanger cold outlet T is reactor inlet T
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
+  // USES FROM OBJECT simParams the following:
+  //    GETS simParams.simTimeStep, SETS simParams.ssFlag
+  // OBJECT simParams USES the following from this process unit:
+  //    residenceTime
+  // USES FROM UNIT OBJECT puAdiabaticPackedBedPFR, here as processUnits[0], the following:
+  //    numNodes, residenceTime, Trxr[]
   //    reactor outlet T is heat exchanger hot inlet T
+  // UNIT OBJECT puAdiabaticPackedBedPFR, here as processUnits[0],
+  //  USES FROM THIS UNIT:
+  //    Tcold[]
+  //    heat exchanger cold outlet T is reactor inlet T
+  // THIS OBJECT HAS MULTIPLE IO CONNECTIONS TO HTML
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
   getInputs : function() {
@@ -46,8 +49,6 @@ let puCounterCurrentHeatExchanger = {
   displayHotRightT: 'field_hot_right_T',
   displayColdLeftT: 'field_cold_left_T',
   displayColdRightT: 'field_cold_right_T',
-  displayReynoldsNumber : 'field_Reynolds',
-  displayLength : 'field_length',
   displayColdLeftArrow : '#field_cold_left_arrow', // needs # with ID
   displayColdRightArrow : '#field_cold_right_arrow', // needs # with ID
 

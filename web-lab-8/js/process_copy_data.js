@@ -14,7 +14,7 @@ function copyData(plotIndex){
   // if sim is running, pause the sim
   // copy grabs what is showing on plot when copy button clicked
   // so want user to be able to take screenshot to compare with data copied
-  // this will let last updateDisplay of updateProcess finish before sim pauses 
+  // this will let last updateDisplay of updateProcess finish before sim pauses
   let runningFlag = simParams.runningFlag;
   if (runningFlag) {
     runThisLab(); // toggles running state
@@ -101,9 +101,20 @@ function copyData(plotIndex){
   // terminate string that holds the data table
   tText += '</p>';
 
+  //
   // for window.open, see http://www.w3schools.com/jsref/met_win_open.asp
+  //
+  // NOTE: window.open VERSION BELOW OPENS NEW POPUP WINDOW - MAY GET HIDDEN
+  //       BEHIND FULL SCREEN BROWSER IF USER CLICKS ON PAGE BEFORE POPUP OPENS
   dataWindow = window.open('', 'Copy data',
         'height=600, left=20, resizable=1, scrollbars=1, top=40, width=600');
+  //
+  // NOTE: window.open VERSION BELOW OPENS NEW TAB IN SAME BROWSER WINDOW
+  //       NEED TO ADD TOOLTIP TO BTN AND/OR TEXT OR LINK ON COPY DATA TAB...
+  // dataWindow = window.open('',
+  //       'height=600, left=20, resizable=1, scrollbars=1, top=40, width=600');
+  //
+
   dataWindow.document.writeln('<html><head><title>Copy data</title></head>' +
          '<body>' +
          tText +

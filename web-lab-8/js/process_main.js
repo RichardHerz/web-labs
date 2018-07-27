@@ -6,10 +6,8 @@
 */
 
 // this file contains common simulation functions
-// see file process_units.js for simulation parameter values and
-// definitions of the process units
 //
-// USES in file process_interface.js the function resetThisLab()
+// USES function resetThisLab() in file process_interface.js
 //
 // USES in object simParams from file process_units.js the following:
 //    function updateCurrentRunCountDisplay()

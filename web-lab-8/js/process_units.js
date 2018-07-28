@@ -23,6 +23,8 @@ let processUnits = new Object();
   // units defined in separate files makes them easier to edit
 
 // load process unit objects into this object
+// as indexed objects in order to allow object controller
+// to access them in a repeat with numeric index
 processUnits[0] = puAdiabaticPackedBedPFR;
 processUnits[1] = puCounterCurrentHeatExchanger;
 

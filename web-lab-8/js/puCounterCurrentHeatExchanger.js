@@ -5,9 +5,6 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// copy line below for display of development values
-// document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
-
 // EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
 // initialize, reset, updateUIparams, updateInputs, updateState,
 //   updateDisplay, checkForSteadyState
@@ -26,7 +23,7 @@ let puCounterCurrentHeatExchanger = {
   //    GETS simParams.simTimeStep, SETS simParams.ssFlag
   //  OBJECT simParams USES FROM THIS OBJECT:
   //    residenceTime
-  //  OBJECT plotsObj USES FROM THIS OBJECT:
+  //  OBJECT plotInfo USES FROM THIS OBJECT:
   //    numNodes, and possibly others
   //  USES FROM OBJECT puAdiabaticPackedBedPFR, here as processUnits[0], the following:
   //    numNodes, residenceTime, Trxr[]
@@ -35,19 +32,19 @@ let puCounterCurrentHeatExchanger = {
   //    USES FROM THIS UNIT:
   //      Tcold[] - heat exchanger cold outlet T is reactor inlet T
   //  CALLS TO FUNCTIONS HERE ARE SENT BY THE FOLLOWING EXTERNAL FUNCTIONS:
-  //    initialize() sent by openThisLab() in main.js
-  //    reset() sent by resetThisLab() in interface.js
-  //    updateInputs() & updateState() sent by updateProcessUnits() in main.js
-  //    updateDisplay() sent by updateDisplay() in main.js
-  //    updateUIparams() sent by updateUIparams() in main.js
+  //    initialize() sent by openThisLab() in object controller
+  //    reset() sent by resetThisLab() in object controller
+  //    updateInputs() & updateState() sent by updateProcessUnits() in object controller
+  //    updateDisplay() sent by updateDisplay() in object controller
+  //    updateUIparams() sent by updateUIparams() in object controller
   //    checkForSteadyState() sent by checkForSteadyState() in simParams object
   //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
-  //    copyData() in copy_data.js uses name, varCount, dataHeaders[],
+  //    copyData() in object interface uses name, varCount, dataHeaders[],
   //        dataUnits[], dataValues[], profileData[], stripData[]
-  //    getInputValue() in interface.js uses dataInputs[], dataInitial[],
+  //    getInputValue() in object interface uses dataInputs[], dataInitial[],
   //        dataMin[], dataMax[]
-  //    getPlotData() in plotter_flot.js uses profileData[], stripData[]
-  //    plotColorCanvasPlot() in spacetime.js uses colorCanvasData[]
+  //    getPlotData() in object plotFlot uses profileData[], stripData[]
+  //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
   getInputs : function() {
@@ -167,7 +164,7 @@ let puCounterCurrentHeatExchanger = {
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
-    // used, e.g., in copy data to table in _plotter.js
+    // used, e.g., in copy data to table
     this.VarCount = v;
     //
     // OUTPUT VARS
@@ -205,17 +202,17 @@ let puCounterCurrentHeatExchanger = {
     this.FlowHot = this.FluidDensity * this.FlowHot; // (kg/s) = kg/m3 * m3/s
     this.FlowCold = this.FlowHot;
 
-    // initialize profile data array - must follow function initPlotData in this file
+    // initialize profile data array
     // initPlotData(numProfileVars,numProfilePts)
-    this.profileData = initPlotData(2,this.numNodes); // holds data for static profile plots
+    this.profileData = plotter.initPlotData(2,this.numNodes); // holds data for static profile plots
 
     // // initialize strip chart data array
     // // initPlotData(numStripVars,numStripPts)
-    // this.stripData = initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
+    // this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
 
     // initialize local array to hold color-canvas data, e.g., space-time data -
-    // initColorCanvasArray(numVars,numXpts,numYpts)
-    this.colorCanvasData = initColorCanvasArray(2,this.numNodes,1);
+    // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
+    this.colorCanvasData = plotter.initColorCanvasArray(2,this.numNodes,1);
 
     let tInit = 320; // this.Tin; // initial system inlet T
     for (k = 0; k <= this.numNodes; k += 1) {
@@ -248,7 +245,6 @@ let puCounterCurrentHeatExchanger = {
     //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
-
     // need to directly set simParams.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
     simParams.ssFlag = false;
@@ -261,13 +257,13 @@ let puCounterCurrentHeatExchanger = {
     // getInputValue(unit index in processUnits, let index in input arrays)
     // see variable numbers above in initialize()
     // note: processUnits[pUnitIndex]['dataValues'][pVar]
-    //   is only used in plotter.js for copyData() to report input values
+    //   is only used in copyData() to report input values
     //
     let unum = this.unitIndex;
     //
-    this.Flowrate = this.dataValues[0] = getInputValue(unum, 0);
-    this.Tin = this.dataValues[1] = getInputValue(unum, 1);
-    this.UAcoef = this.dataValues[2] = getInputValue(unum, 2);
+    this.Flowrate = this.dataValues[0] = interface.getInputValue(unum, 0);
+    this.Tin = this.dataValues[1] = interface.getInputValue(unum, 1);
+    this.UAcoef = this.dataValues[2] = interface.getInputValue(unum, 2);
 
     // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
     this.FlowHot = this.Flowrate * this.FluidDensity; // (kg/s) = (m3/s) * (kg/m3)
@@ -414,11 +410,10 @@ let puCounterCurrentHeatExchanger = {
 
   }, // END of updateState()
 
-  checkSSvalues : function() {
-    // WARNING: has alerts - may be called in simParams.checkForSteadyState()
-  }, // END of checkSSvalues()
-
   updateDisplay : function() {
+    // update display elements which only depend on this process unit
+    // except do all plotting at main controller updateDisplay
+    // since some plots may contain data from more than one process unit
 
     // note use .toFixed(n) method of object to round number to n decimal points
 
@@ -470,7 +465,7 @@ let puCounterCurrentHeatExchanger = {
 
   checkForSteadyState : function() {
     // required - called by simParams
-    // if not active, return ssFlag = true to calling unit
+    // if not used to check for SS, return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
     // uses and sets this.ssCheckSum
     // this.ssCheckSum can be set by reset() and updateUIparams()

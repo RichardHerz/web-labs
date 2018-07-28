@@ -5,42 +5,49 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// this file contains common simulation functions
-//
-// USES function resetThisLab() in file process_interface.js
-//
-// USES in object simParams from file process_units.js the following:
-//    function updateCurrentRunCountDisplay()
-//    function checkForSteadyState()
-//    function updateSimTime()
-//    variables runningFlag, ssFlag, simStepRepeats, processUnits
-//    variables updateDisplayTimingMs
-//
-// USES object plotsObj defined in file process_plot_info.js
-//
-// USES in file process_plotter.js the functions
-//    getPlotData(), plotPlotData(), plotArrays.initialize()
-//
-// USES in file process_spacetime.js the function plotColorCanvasPlot()
+// NOTE: move window.onload to <script> tag in HTML file
+// since object controller not defined when above or below controller{} here
+// // DISPLAY INITIAL STATE ON OPEN WINDOW
+// window.onload = controller.openThisLab; // can NOT use () after openThisLab
 
-  // DISPLAY INITIAL STATE ON OPEN WINDOW
-  window.onload = openThisLab; // can NOT use = openThisLab();
+let controller = {
 
-  function openThisLab() {
+  // OBJECT controller contains functions that run the simulation time stepping
+
+  // SUMMARY OF DEPENDENCIES
+  //
+  // function interface.runThisLab() USES FROM THIS OBJECT function runSimulation()
+  //
+  // USES in object interface the function interface.resetThisLab()
+  //
+  // USES in object simParams the following:
+  //    function updateCurrentRunCountDisplay()
+  //    function checkForSteadyState()
+  //    function updateSimTime()
+  //    variables runningFlag, ssFlag, simStepRepeats, processUnits
+  //    variables updateDisplayTimingMs
+  //
+  // USES object plotInfo defined in file process_plot_info.js
+  //
+  // USES in object plotter the functions
+  //    getPlotData(), plotPlotData(), plotArrays.initialize(),
+  //    plotColorCanvasPlot()
+
+  openThisLab : function() {
     // initialize variables in each process unit
     let numUnits = Object.keys(processUnits).length; // number of units
     for (n = 0; n < numUnits; n += 1) {
       processUnits[n].initialize();
     }
-    // initialize plotObj to define plots after initialize units
-    plotsObj.initialize();
-    // initialize plot arrays after initialize plotsObj
-    plotArrays.initialize();
-    resetThisLab(); // defined in file process_interface.js
+    // initialize plotInfo to define plots after initialize units
+    plotInfo.initialize();
+    // initialize plot arrays after initialize plotInfo
+    plotter.plotArrays.initialize();
+    interface.resetThisLab(); // defined in file process_interface.js
     simParams.updateCurrentRunCountDisplay();
-  } // END OF function openThisLab
+  }, // END OF function openThisLab
 
-  function runSimulation() {
+  runSimulation : function() {
 
     // CALLED BY function runThisLab ON CLICK OF RUN-PAUSE BUTTON
 
@@ -62,7 +69,10 @@
 
     // first call to updateProcess, which then calls itself
     // use setTimeout, since updateProcess by itself does not work
-    setTimeout(updateProcess, updateMs);
+    // NOTE: updateProcess() is a sub function of controller.runSimulation()
+    // and therefore do not use prefix of this. or controller.
+    // () optional at end of updateProcess here
+    setTimeout(updateProcess(), updateMs);
 
     function updateProcess() {
 
@@ -90,13 +100,19 @@
       // to maintain correspondence between sim time and real time
       //
 
+      // NOTE: updateProcessUnits() and updateDisplay() are members
+      // of top level of controller object and not of this subfunction
+      // updateProcess() inside controller.runSimulation()
+      // which calls them, so need controller. prefix
+      // controller.updateProcessUnits() & controller.updateDisplay()
+
       for (i = 0; i < simParams.simStepRepeats; i += 1) {
-        updateProcessUnits();
+        controller.updateProcessUnits();
       }
 
       // get time at end of repeating updateProcessUnits and call
       // to updateDisplay from updateDisplay function return value
-      currentMs = updateDisplay();
+      currentMs = controller.updateDisplay();
 
       // Adjust wait until next updateProcess to allow for time taken
       // to do updateProcessUnits and updateDisplay.
@@ -116,9 +132,10 @@
 
     } // END OF function updateProcess (inside function runSimulation)
 
-  } // END OF function runSimulation
+  }, // END OF function runSimulation
 
-  function updateProcessUnits() {
+  updateProcessUnits : function() {
+
     // DO COMPUTATIONS TO UPDATE STATE OF PROCESS
     // step all units but do not display
 
@@ -142,9 +159,9 @@
         processUnits[n].updateState();
     }
 
-  } // END OF updateProcessUnits
+  }, // END OF function updateProcessUnits
 
-  function updateDisplay() {
+  updateDisplay : function() {
 
     if (simParams.ssFlag) {
       // exit if simParams.ssFlag true
@@ -163,19 +180,19 @@
       processUnits[n].updateDisplay();
     }
 
-    // GET AND PLOT ALL PLOTS defined in object plotsObj in process_plot_info.js
-    let numPlots = Object.keys(plotsObj).length;
+    // GET AND PLOT ALL PLOTS defined in object plotInfo in process_plot_info.js
+    let numPlots = Object.keys(plotInfo).length;
     numPlots = numPlots - 1; // subtract method initialize(), which is counted in length
     let p; // used as index
     let data;
     for (p = 0; p < numPlots; p += 1) {
-      if (plotsObj[p]['type'] == 'canvas') {
+      if (plotInfo[p]['type'] == 'canvas') {
         // space-time, color-canvas plot
-        plotColorCanvasPlot(p); // defined in file process_spacetime.js
+        plotter.plotColorCanvasPlot(p); // defined in file process_spacetime.js
       } else {
         // profile (static x,y) or strip chart (scolling x,y)
-        data = getPlotData(p); // defined in file process_plotter.js
-        plotPlotData(data,p); // defined in file process_plotter.js
+        data = plotter.getPlotData(p);
+        plotter.plotPlotData(data,p);
       }
     }
 
@@ -191,16 +208,4 @@
 
   }  // END OF function updateDisplay
 
-  function updateUIparams() {
-    // User changed an input
-    // Update user-entered inputs from UI to ALL units.
-    // Could be called from onclick or onchange in HTML element, if desired.
-    // Alternative: in HTML input tag onchange, send updateUIparams() to
-    // specific unit involved in that input.
-
-    let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
-      processUnits[n].updateUIparams();
-    }
-
-  }  // END OF function updateUIparams
+} // END OF OBJECT controller

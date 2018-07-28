@@ -5,22 +5,22 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// ----- OBJECT TO CONTAIN & SET SIMULATION & PLOT PARAMETERS ---------
-
 let simParams = {
   //
-  // file process_main.js uses in object simParams the following:
+  // ----- OBJECT TO CONTAIN & SET GENERAL SIMULATION PARAMETERS ---------
+  //
+  // process unit objects USE object simParams:
+  //    GET simParams.simTimeStep, SET simParams.ssFlag
+  //
+  // OBJECT controller USES in object simParams the following:
   //    function updateCurrentRunCountDisplay()
   //    function checkForSteadyState()
   //    function updateSimTime()
-  //    variables runningFlag, ssFlag, simStepRepeats, processUnits
-  //    variables updateDisplayTimingMs
+  //    variables runningFlag, ssFlag, simStepRepeats
+  //    variable updateDisplayTimingMs
   //
-  // simParams uses the following from process unit puHeatExchanger
-  //    variables SScheck, residenceTime
+  // simParams uses variable residenceTime from process unit puHeatExchanger
   //
-  // simParams uses the following global variables:
-  //    Thot and Tcold used in function checkForSteadyState()
 
   title : 'Packed Bed PFR + Heat Exchanger', // title of simulation
 

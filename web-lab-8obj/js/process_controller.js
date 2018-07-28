@@ -5,28 +5,39 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// this file contains common simulation functions
-//
-// USES function resetThisLab() in file process_interface.js
-//
-// USES in object simParams from file process_units.js the following:
-//    function updateCurrentRunCountDisplay()
-//    function checkForSteadyState()
-//    function updateSimTime()
-//    variables runningFlag, ssFlag, simStepRepeats, processUnits
-//    variables updateDisplayTimingMs
-//
-// USES object plotsObj defined in file process_plot_info.js
-//
-// USES in file process_plotter.js the functions
-//    getPlotData(), plotPlotData(), plotArrays.initialize()
-//
-// USES in file process_spacetime.js the function plotColorCanvasPlot()
+// NOTE: move window.onload to <script> tag in HTML file
+// since object controller not defined when here or below controller{}
+// // DISPLAY INITIAL STATE ON OPEN WINDOW
+// window.onload = controller.openThisLab; // can NOT use = openThisLab();
 
-  // DISPLAY INITIAL STATE ON OPEN WINDOW
-  window.onload = openThisLab; // can NOT use = openThisLab();
+// OBJECT controller contains functions that run the simulation time stepping
 
-  function openThisLab() {
+let controller = {
+
+  // SUMMARY OF DEPENDENCIES
+  //
+  // function runThisLab() USES FROM THIS OBJECT function runSimulation()
+  //
+  // USES function resetThisLab() in file process_interface.js
+  //
+  // USES in object simParams from file process_units.js the following:
+  //    function updateCurrentRunCountDisplay()
+  //    function checkForSteadyState()
+  //    function updateSimTime()
+  //    variables runningFlag, ssFlag, simStepRepeats, processUnits
+  //    variables updateDisplayTimingMs
+  //
+  // USES object plotsObj defined in file process_plot_info.js
+  //
+  // USES in file process_plotter.js the functions
+  //    getPlotData(), plotPlotData(), plotArrays.initialize()
+  //
+  // USES in file process_spacetime.js the function plotColorCanvasPlot()
+
+  openThisLab : function() {
+
+    // console.log('enter openThisLab');
+
     // initialize variables in each process unit
     let numUnits = Object.keys(processUnits).length; // number of units
     for (n = 0; n < numUnits; n += 1) {
@@ -38,9 +49,11 @@
     plotArrays.initialize();
     resetThisLab(); // defined in file process_interface.js
     simParams.updateCurrentRunCountDisplay();
-  } // END OF function openThisLab
+  }, // END OF function openThisLab
 
-  function runSimulation() {
+  runSimulation : function() {
+
+    console.log('enter controller.runSimulation');
 
     // CALLED BY function runThisLab ON CLICK OF RUN-PAUSE BUTTON
 
@@ -62,9 +75,14 @@
 
     // first call to updateProcess, which then calls itself
     // use setTimeout, since updateProcess by itself does not work
-    setTimeout(updateProcess, updateMs);
+    // NOTE: updateProcess() is a sub function of controller.runSimulation()
+    // and therefore do not use prefix of this. or controller.
+    // () optional at end of updateProcess here
+    setTimeout(updateProcess(), updateMs);
 
     function updateProcess() {
+
+      // console.log('enter controller.updateProcess');
 
       let runningFlag = simParams.runningFlag;
       if (!runningFlag) {
@@ -90,13 +108,19 @@
       // to maintain correspondence between sim time and real time
       //
 
+      // NOTE: updateProcessUnits() and updateDisplay() are members
+      // of top level of controller object and not of this subfunction
+      // updateProcess() inside controller.runSimulation()
+      // which calls them, so need controller. prefix
+      //controller.updateProcessUnits() & controller.updateDisplay()
+
       for (i = 0; i < simParams.simStepRepeats; i += 1) {
-        updateProcessUnits();
+        controller.updateProcessUnits();
       }
 
       // get time at end of repeating updateProcessUnits and call
       // to updateDisplay from updateDisplay function return value
-      currentMs = updateDisplay();
+      currentMs = controller.updateDisplay();
 
       // Adjust wait until next updateProcess to allow for time taken
       // to do updateProcessUnits and updateDisplay.
@@ -116,9 +140,12 @@
 
     } // END OF function updateProcess (inside function runSimulation)
 
-  } // END OF function runSimulation
+  }, // END OF function runSimulation
 
-  function updateProcessUnits() {
+  updateProcessUnits : function() {
+
+    // console.log('enter controller.updateProcessUnits');
+
     // DO COMPUTATIONS TO UPDATE STATE OF PROCESS
     // step all units but do not display
 
@@ -142,9 +169,11 @@
         processUnits[n].updateState();
     }
 
-  } // END OF updateProcessUnits
+  }, // END OF function updateProcessUnits
 
-  function updateDisplay() {
+  updateDisplay : function() {
+
+    // console.log('enter controller.updateDisplay');
 
     if (simParams.ssFlag) {
       // exit if simParams.ssFlag true
@@ -189,9 +218,12 @@
     let thisMs = thisDate.getTime();
     return thisMs;
 
-  }  // END OF function updateDisplay
+  },  // END OF function updateDisplay
 
-  function updateUIparams() {
+  updateUIparams : function() {
+
+    // console.log('enter controller.updateUIparams');
+
     // User changed an input
     // Update user-entered inputs from UI to ALL units.
     // Could be called from onclick or onchange in HTML element, if desired.
@@ -204,3 +236,5 @@
     }
 
   }  // END OF function updateUIparams
+
+} // END OF OBJECT controller

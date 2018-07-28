@@ -20,12 +20,17 @@
   <script language="javascript" src="js/puAdiabaticPackedBedPFR.js" type="text/javascript"></script>
   <script language="javascript" src="js/puCounterCurrentHeatExchanger.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_units.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_main.js" type="text/javascript"></script>
+  <script language="javascript" src="js/process_controller.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_interface.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_plot_info.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_plotter_flot.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_copy_data.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_spacetime.js" type="text/javascript"></script>
+
+<script language="javascript">
+  // DISPLAY INITIAL STATE ON OPEN WINDOW
+  window.onload = controller.openThisLab; // can NOT use = openThisLab();
+</script>
 
   <!-- load flot PLOTTING LIBRARY -->
   <!-- need full jquery.js for flot.js to work -->

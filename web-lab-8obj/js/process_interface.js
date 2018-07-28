@@ -7,8 +7,30 @@
 
 // ----------- HANDLE UI CONTROLS & INPUT FIELDS ------------------
 
+function CheckRunThisLab() {
+  console.log('enter CheckRunThisLab');
+  simParams.toggleRunningFlag(); // toggle runningFlag true-false
+  console.log('runningFlag = ' + simParams.runningFlag);
+  let runningFlag = simParams.runningFlag;
+  if (runningFlag) {
+    console.log('if (runningFlag) is true');
+    // start sim running again
+    simParams.ssFlag = false; // unit sets true when sim reaches steady state
+    button_runButton.value = 'Pause'; // REQUIRES run button id="button_runButton"
+    console.log('just before: controller.runSimulation;');
+    controller.runSimulation();
+    // simParams.updateRunCount();
+  } else {
+    console.log('if (runningFlag) is NOT true');
+    // // sim will stop after last updateProcess and its updateDisplay finishes
+    // // so change run button label from pause to run
+    button_runButton.value = 'Run'; // REQUIRES run button id="button_runButton"
+  }
+} // END OF function CheckRunThisLab
+
 // HANDLE RUN-PAUSE BUTTON CLICK
 function runThisLab() {
+  console.log('enter runThisLab;');
   // uses object simParams from file process_units.js
   // CALLED BY UI RUN-PAUSE BUTTON DEFINED IN HTML
   // TOGGLE runningFlag FIRST before doing stuff below
@@ -19,7 +41,8 @@ function runThisLab() {
     // start sim running again
     simParams.ssFlag = false; // unit sets true when sim reaches steady state
     button_runButton.value = 'Pause'; // REQUIRES run button id="button_runButton"
-    runSimulation();
+    console.log('just before: controller.runSimulation;');
+    controller.runSimulation();
     simParams.updateRunCount();
   } else {
     // sim will stop after last updateProcess and its updateDisplay finishes
@@ -40,7 +63,7 @@ function resetThisLab() {
   for (n = 0; n < numUnits; n += 1) {
     processUnits[n].reset();
   }
-  updateDisplay();
+  controller.updateDisplay();
   button_runButton.value = 'Run'; // REQUIRES run button id="button_runButton"
   // do NOT update process nor display again here (will take one step)
 } // END OF function resetThisLab

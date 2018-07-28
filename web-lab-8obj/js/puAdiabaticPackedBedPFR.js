@@ -5,9 +5,6 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// copy line below for display of development values
-// document.getElementById('field_output_field').innerHTML = dTrxrDT; // yyy
-
 // EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
 // initialize, reset, updateUIparams, updateInputs, updateState,
 //   updateDisplay, checkForSteadyState

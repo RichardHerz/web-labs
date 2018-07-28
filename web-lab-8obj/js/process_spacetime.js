@@ -5,7 +5,7 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// SEE PLOT DEFINITIONS IN FILE process_plot_info.js
+// SEE PLOT DEFINITIONS IN OBJECT plotInfo IN FILE process_plot_info.js
 
 function jetColorMap(n) {
   // input n should be value between 0 and 1
@@ -58,19 +58,19 @@ function jetColorMap(n) {
 function plotColorCanvasPlot(pNumber) {
   //
   // input argument pNumber refers to plot info in child pNumber
-  // of object plotsObj which is defined in file process_plot_info.js
+  // of object plotInfo which is defined in file process_plot_info.js
   // use this to plot space-time plots as well as other color canvas plots
   // see https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial
 
-  let canvasID = plotsObj[pNumber]['canvas'];
+  let canvasID = plotInfo[pNumber]['canvas'];
   let canvas = document.getElementById(canvasID);
   let context = canvas.getContext('2d');
 
   // copy data from unit local array colorCanvasData to local array colorCanvasData
-  let varUnitIndex = plotsObj[pNumber]['varUnitIndex'];
+  let varUnitIndex = plotInfo[pNumber]['varUnitIndex'];
   // v is the index number of the one variable to plot on the canvas
   // where 0 is first, 1 is second, etc.
-  let v = plotsObj[pNumber]['var'];
+  let v = plotInfo[pNumber]['var'];
 
   // next line REQUIRES unit object array to be named colorCanvasData
   let colorCanvasData = processUnits[varUnitIndex]['colorCanvasData'][v];
@@ -92,12 +92,12 @@ function plotColorCanvasPlot(pNumber) {
   let tColor5 = ')';
   let tPixels = canvas.width; // canvas width, height set in HTML canvas element
   let sPixels = canvas.height;
-  let numTimePts = plotsObj[pNumber]['varTimePts'];
-  let numSpacePts = plotsObj[pNumber]['varSpacePts'];
+  let numTimePts = plotInfo[pNumber]['varTimePts'];
+  let numSpacePts = plotInfo[pNumber]['varSpacePts'];
   let tPixelsPerPoint = tPixels/(numTimePts+1); // pixels per point, note +1
   let sPixelsPerPoint = sPixels/numSpacePts; // pixels per point
-  let minVarVal = plotsObj[pNumber]['varValueMin'];
-  let maxVarVal = plotsObj[pNumber]['varValueMax'];
+  let minVarVal = plotInfo[pNumber]['varValueMin'];
+  let maxVarVal = plotInfo[pNumber]['varValueMax'];
   let scaledVarVal; // holds variable value scaled 0-1 by minVarVal & maxVarVal
 
   for (t = 0; t <= numTimePts; t += 1) { // NOTE = at t <=
@@ -113,7 +113,7 @@ function plotColorCanvasPlot(pNumber) {
       tColor4 = b.toString();
       tColor = tColor1.concat(tColor2,',',tColor3,',',tColor4,tColor5);
       context.fillStyle = tColor;
-      if (plotsObj[pNumber]['xAxisReversed']) {
+      if (plotInfo[pNumber]['xAxisReversed']) {
         // swap directions in plot from that in colorCanvasData array
         x = tPixelsPerPoint * (numTimePts - t);
       } else {

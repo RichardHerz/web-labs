@@ -23,24 +23,24 @@ let puAdiabaticPackedBedPFR = {
   //    GETS simParams.simTimeStep, SETS simParams.ssFlag
   //  USES FROM OBJECT puCounterCurrentHeatExchanger, here as processUnits[1], the following:
   //    Tcold[] - heat exchanger cold outlet T is reactor inlet T
-  //  OBJECT plotsObj USES FROM THIS OBJECT:
+  //  OBJECT plotInfo USES FROM THIS OBJECT:
   //    numNodes, and possibly others
   //  OBJECT puCounterCurrentHeatExchanger, here as processUnits[1],
   //    USES FROM THIS OBJECT:
   //      Trxr[] - reactor outlet T is heat exchanger hot inlet T
   //  CALLS TO FUNCTIONS HERE ARE SENT BY THE FOLLOWING EXTERNAL FUNCTIONS:
-  //    initialize() sent by openThisLab() in main.js
-  //    reset() sent by resetThisLab() in interface.js
-  //    updateInputs() & updateState() sent by updateProcessUnits() in main.js
-  //    updateDisplay() sent by updateDisplay() in main.js
-  //    updateUIparams() sent by updateUIparams() in main.js
-  //    checkForSteadyState() sent by checkForSteadyState() in simParams object
+  //    initialize() sent by openThisLab() in object controller
+  //    reset() sent by resetThisLab() in object interface
+  //    updateInputs() & updateState() sent by updateProcessUnits() in object controller
+  //    updateDisplay() sent by updateDisplay() in object controller
+  //    updateUIparams() sent by updateUIparams() in object controller
+  //    checkForSteadyState() sent by checkForSteadyState() in object simParams
   //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
   //    copyData() in copy_data.js uses name, varCount, dataHeaders[],
   //        dataUnits[], dataValues[], profileData[], stripData[]
-  //    getInputValue() in interface.js uses dataInputs[], dataInitial[],
+  //    getInputValue() in object interface uses dataInputs[], dataInitial[],
   //        dataMin[], dataMax[]
-  //    getPlotData() in plotter_flot.js uses profileData[], stripData[]
+  //    getPlotData() in object plotFlot uses profileData[], stripData[]
   //    plotColorCanvasPlot() in spacetime.js uses colorCanvasData[]
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
@@ -200,7 +200,7 @@ let puAdiabaticPackedBedPFR = {
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
-    // used, e.g., in copy data to table in _plotter.js
+    // used, e.g., in copy data to table
     //
     // *** use v-1 here since TinHX only used to initialize & reset plots
     this.VarCount = v-1;
@@ -243,13 +243,13 @@ let puAdiabaticPackedBedPFR = {
       this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
     }
 
-    // initialize profile data array - must follow function initPlotData in this file
+    // initialize profile data array
     // initPlotData(numProfileVars,numProfilePts)
-    this.profileData = initPlotData(2,this.numNodes); // holds data for static profile plots
+    this.profileData = plotterFlot.initPlotData(2,this.numNodes); // holds data for static profile plots
 
     // // initialize strip chart data array
     // // initPlotData(numStripVars,numStripPts)
-    // this.stripData = initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
+    // this.stripData = plotterFlot.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
 
     // initialize local array to hold color-canvas data, e.g., space-time data -
     // initColorCanvasArray(numVars,numXpts,numYpts)
@@ -261,7 +261,7 @@ let puAdiabaticPackedBedPFR = {
       kn = k/this.numNodes;
       // x-axis values
       // x-axis values will not change during sim
-      // XXX change to get number vars for this plotsObj variable
+      // XXX change to get number vars for this plotInfo variable
       //     so can put in repeat - or better yet, a function
       //     and same for y-axis below
       // first index specifies which variable
@@ -294,19 +294,19 @@ let puAdiabaticPackedBedPFR = {
     // getInputValue(unit index in processUnits, let index in input arrays)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
-    //   is only used in plotter.js for copyData() to report input values
+    //   is only used in copyData() to report input values
     //
     let unum = this.unitIndex;
     //
-    this.Kf300 = this.dataValues[0] = getInputValue(unum, 0);
-    this.Ea = this.dataValues[1] = getInputValue(unum, 1);
-    this.DelH = this.dataValues[2] = getInputValue(unum, 2);
-    this.Wcat = this.dataValues[3] = getInputValue(unum, 3);
-    this.Cain = this.dataValues[4] = getInputValue(unum, 4);
-    this.Flowrate = this.dataValues[5] = getInputValue(unum, 5);
+    this.Kf300 = this.dataValues[0] = interface.getInputValue(unum, 0);
+    this.Ea = this.dataValues[1] = interface.getInputValue(unum, 1);
+    this.DelH = this.dataValues[2] = interface.getInputValue(unum, 2);
+    this.Wcat = this.dataValues[3] = interface.getInputValue(unum, 3);
+    this.Cain = this.dataValues[4] = interface.getInputValue(unum, 4);
+    this.Flowrate = this.dataValues[5] = interface.getInputValue(unum, 5);
 
     // TinHX only used in reactor on initialization and reset of reactor plot
-    this.TinHX = this.dataValues[6] = getInputValue(unum, 6);
+    this.TinHX = this.dataValues[6] = interface.getInputValue(unum, 6);
 
     // update residenceTime, which is needed by HX to match that of RXR
     // in case any change in Wcat or Flowrate
@@ -460,11 +460,10 @@ let puAdiabaticPackedBedPFR = {
 
   }, // END of updateState()
 
-  checkSSvalues : function() {
-    // not implemented
-  }, // END of checkSSvalues()
-
   updateDisplay : function() {
+    // update display elements which only depend on this process unit
+    // except do all plotting at main controller updateDisplay
+    // since some plots may contain data from more than one process unit
 
     // note use .toFixed(n) method of object to round number to n decimal points
 
@@ -512,7 +511,7 @@ let puAdiabaticPackedBedPFR = {
 
   checkForSteadyState : function() {
     // required - called by simParams
-    // if not active, return ssFlag = true to calling unit
+    // if not used to check for SS, return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
     // uses and sets this.ssCheckSum
     // this.ssCheckSum can be set by reset() and updateUIparams()
@@ -521,7 +520,7 @@ let puAdiabaticPackedBedPFR = {
     // but wait at least one residence time after the previous check
     // to allow changes to propagate down unit
     //
-    // *** RXR CHECK NOT ACTIVE IN THIS LAB - HX is checked ***
+    // *** RXR NOT USED TO CHECK FOR SS IN THIS LAB - HX is checked ***
     //
     let ssFlag = true;
     return ssFlag;

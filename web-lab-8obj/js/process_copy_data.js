@@ -8,8 +8,9 @@
 // SEE PLOT DEFINITIONS IN FILE process_plot_info.js
 
 function copyData(plotIndex){
-  // plotIndex is the index of the plotsObj object of the desired plot to copy
-  // as specified in process_plot_info.js
+  
+  // plotIndex is the index of the plotInfo object of the desired plot to copy
+  // as specified in object plotInfo in process_plot_info.js
 
   // if sim is running, pause the sim
   // copy grabs what is showing on plot when copy button clicked
@@ -17,7 +18,7 @@ function copyData(plotIndex){
   // this will let last updateDisplay of updateProcess finish before sim pauses
   let runningFlag = simParams.runningFlag;
   if (runningFlag) {
-    runThisLab(); // toggles running state
+    interface.runThisLab(); // toggles running state
   }
 
   let n; // index
@@ -29,7 +30,7 @@ function copyData(plotIndex){
   let varUnitIndex; // index of unit from which variable is to be obtained
   let tText; // we will put the data into this variable
   let tItemDelimiter = ', &nbsp;'
-  let tVarLabelLen = plotsObj[plotIndex]['varLabel'].length; // length for loops below
+  let tVarLabelLen = plotInfo[plotIndex]['varLabel'].length; // length for loops below
 
   tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
@@ -49,16 +50,16 @@ function copyData(plotIndex){
   }
   tText += '</p>';
 
-  tText += '<p>' + plotsObj[plotIndex]['title'] + '</p>';
+  tText += '<p>' + plotInfo[plotIndex]['title'] + '</p>';
 
   // column headers
   tText += '<p>';
   // first, x-axis variable name for table
-  tText += plotsObj[plotIndex]['xAxisTableLabel'] + tItemDelimiter;
+  tText += plotInfo[plotIndex]['xAxisTableLabel'] + tItemDelimiter;
   // then other column names for y-axis variables
   for (v = 0; v < tVarLabelLen; v += 1) {
-    tText += plotsObj[plotIndex]['varLabel'][v];
-    tText += ' (' + plotsObj[plotIndex]['varDataUnits'][v] + ')';
+    tText += plotInfo[plotIndex]['varLabel'][v];
+    tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
     if (v < (tVarLabelLen - 1)) {
       tText += tItemDelimiter;
     }
@@ -74,20 +75,20 @@ function copyData(plotIndex){
   // initiate string that holds the data table
     tText += '<p>';
 
-  let plotType = plotsObj[plotIndex]['type']; // profile or strip
+  let plotType = plotInfo[plotIndex]['type']; // profile or strip
   let dataName = plotType + 'Data'; // profileData or stripData
   if ((plotType == 'profile') || (plotType == 'strip')) {
     // repeat to make each line in table for each data point
-    for (k = 0; k <= plotsObj[plotIndex]['numberPoints']; k += 1) {
+    for (k = 0; k <= plotInfo[plotIndex]['numberPoints']; k += 1) {
       // first get x value in [k][0], get it from ['var'][0]
       // x values should be same for all units for this plot
-      varIndex = plotsObj[plotIndex]['var'][0];
-      varUnitIndex = plotsObj[plotIndex]['varUnitIndex'][0];
+      varIndex = plotInfo[plotIndex]['var'][0];
+      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
       tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][0]) + tItemDelimiter;
         // get y value for each variable in [k][1]
         for (v = 0; v < tVarLabelLen; v += 1) {
-          varIndex = plotsObj[plotIndex]['var'][v];
-          varUnitIndex = plotsObj[plotIndex]['varUnitIndex'][v];
+          varIndex = plotInfo[plotIndex]['var'][v];
+          varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
           tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][1]); // [k][1] is y value
           if (v < (tVarLabelLen - 1)) {tText += tItemDelimiter;}
         }

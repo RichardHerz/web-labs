@@ -6,54 +6,49 @@
 */
 
 // NOTE: move window.onload to <script> tag in HTML file
-// since object controller not defined when here or below controller{}
+// since object controller not defined when above or below controller{} here
 // // DISPLAY INITIAL STATE ON OPEN WINDOW
-// window.onload = controller.openThisLab; // can NOT use = openThisLab();
-
-// OBJECT controller contains functions that run the simulation time stepping
+// window.onload = controller.openThisLab; // can NOT use () after openThisLab
 
 let controller = {
 
+  // OBJECT controller contains functions that run the simulation time stepping
+
   // SUMMARY OF DEPENDENCIES
   //
-  // function runThisLab() USES FROM THIS OBJECT function runSimulation()
+  // function interface.runThisLab() USES FROM THIS OBJECT function runSimulation()
   //
-  // USES function resetThisLab() in file process_interface.js
+  // USES in object interface the function interface.resetThisLab()
   //
-  // USES in object simParams from file process_units.js the following:
+  // USES in object simParams the following:
   //    function updateCurrentRunCountDisplay()
   //    function checkForSteadyState()
   //    function updateSimTime()
   //    variables runningFlag, ssFlag, simStepRepeats, processUnits
   //    variables updateDisplayTimingMs
   //
-  // USES object plotsObj defined in file process_plot_info.js
+  // USES object plotInfo defined in file process_plot_info.js
   //
-  // USES in file process_plotter.js the functions
+  // USES object plotterFlot in file process_plotter_flot.js the functions
   //    getPlotData(), plotPlotData(), plotArrays.initialize()
   //
   // USES in file process_spacetime.js the function plotColorCanvasPlot()
 
   openThisLab : function() {
-
-    // console.log('enter openThisLab');
-
     // initialize variables in each process unit
     let numUnits = Object.keys(processUnits).length; // number of units
     for (n = 0; n < numUnits; n += 1) {
       processUnits[n].initialize();
     }
-    // initialize plotObj to define plots after initialize units
-    plotsObj.initialize();
-    // initialize plot arrays after initialize plotsObj
-    plotArrays.initialize();
-    resetThisLab(); // defined in file process_interface.js
+    // initialize plotInfo to define plots after initialize units
+    plotInfo.initialize();
+    // initialize plot arrays after initialize plotInfo
+    plotterFlot.plotArrays.initialize();
+    interface.resetThisLab(); // defined in file process_interface.js
     simParams.updateCurrentRunCountDisplay();
   }, // END OF function openThisLab
 
   runSimulation : function() {
-
-    console.log('enter controller.runSimulation');
 
     // CALLED BY function runThisLab ON CLICK OF RUN-PAUSE BUTTON
 
@@ -81,9 +76,7 @@ let controller = {
     setTimeout(updateProcess(), updateMs);
 
     function updateProcess() {
-
-      // console.log('enter controller.updateProcess');
-
+      
       let runningFlag = simParams.runningFlag;
       if (!runningFlag) {
         // exit if runningFlag is not true
@@ -144,8 +137,6 @@ let controller = {
 
   updateProcessUnits : function() {
 
-    // console.log('enter controller.updateProcessUnits');
-
     // DO COMPUTATIONS TO UPDATE STATE OF PROCESS
     // step all units but do not display
 
@@ -173,8 +164,6 @@ let controller = {
 
   updateDisplay : function() {
 
-    // console.log('enter controller.updateDisplay');
-
     if (simParams.ssFlag) {
       // exit if simParams.ssFlag true
       // BUT FIRST MUST DO THIS (also done below at end normal update)
@@ -192,19 +181,19 @@ let controller = {
       processUnits[n].updateDisplay();
     }
 
-    // GET AND PLOT ALL PLOTS defined in object plotsObj in process_plot_info.js
-    let numPlots = Object.keys(plotsObj).length;
+    // GET AND PLOT ALL PLOTS defined in object plotInfo in process_plot_info.js
+    let numPlots = Object.keys(plotInfo).length;
     numPlots = numPlots - 1; // subtract method initialize(), which is counted in length
     let p; // used as index
     let data;
     for (p = 0; p < numPlots; p += 1) {
-      if (plotsObj[p]['type'] == 'canvas') {
+      if (plotInfo[p]['type'] == 'canvas') {
         // space-time, color-canvas plot
         plotColorCanvasPlot(p); // defined in file process_spacetime.js
       } else {
         // profile (static x,y) or strip chart (scolling x,y)
-        data = getPlotData(p); // defined in file process_plotter.js
-        plotPlotData(data,p); // defined in file process_plotter.js
+        data = plotterFlot.getPlotData(p);
+        plotterFlot.plotPlotData(data,p);
       }
     }
 
@@ -221,8 +210,6 @@ let controller = {
   },  // END OF function updateDisplay
 
   updateUIparams : function() {
-
-    // console.log('enter controller.updateUIparams');
 
     // User changed an input
     // Update user-entered inputs from UI to ALL units.

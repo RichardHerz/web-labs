@@ -5,9 +5,9 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// ----- OBJECT TO CONTAIN & SET SIMULATION & PLOT PARAMETERS ---------
-
 let simParams = {
+  //
+  // ----- OBJECT TO CONTAIN & SET SIMULATION & PLOT PARAMETERS ---------
   //
   // file process_main.js uses in object simParams the following:
   //    function updateCurrentRunCountDisplay()

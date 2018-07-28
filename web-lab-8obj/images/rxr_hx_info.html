@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>Web Labs at ReactorLab.net</title>
+
+  <meta name='description' content='designed with lcCardLayoutToWeb project at GitHub'>
+  <meta name='description' content='PFR plug flow reactor simulation'>
+</head>
+<body>
+  <p><b><i>Adiabatic PFR with feed-product heat exchange</i></b> - Web Labs at www.ReactorLab.net - by Richard K. Herz</p>
+
+  <p>
+    The system inlet flow enters the "cold side" of a heat exchanger, then
+    flows to the inlet of an adiabatic, packed-bed, plug-flow reactor.
+    The reaction is A &rarr; products over catalyst pellets.
+    The reaction is first-order in reactant.
+    For simplicity, the reaction equilibrium composition is
+    specified to be almost all product under all conditions, i.e., an essentially
+    irreversible reaction.
+    The concentration of reactant A is represented as Ca. Constant fluid density
+    is assumed. The variable Kf300 is the value of the forward reaction rate coefficient at 300 K.
+  </p>
+
+  <p>
+    When the reaction enthalpy (heat of reaction) is negatively valued, the reaction
+    is exothermic and heats the fluid, which tends to increase the reaction
+    and energy release rates. The fluid leaving the reactor enters
+    the "hot side" of the heat exchanger. For an exothermic reaction, this heats
+    the inlet flow. This type of system is related to an "autothermal reactor" in which
+    the heat exchanger is integrated with the reactor.
+  </p>
+
+  <p>This system has <b>feedback</b> of energy. As the lab starts running
+    from the default conditions, notice the temperature change flow to the right
+    in the cold side of the heat exchanger (bottom color panel),
+    then from left to right in the reactor (top panel),
+    then from right to left in the hot side of the exchanger, just above the cold side.
+    This heats
+    the cold side again and the process is repeated again in a <b>feedback loop</b>.
+  </p>
+
+  <p>This system can exbibit <b>hysteresis</b>. Click the Run button and let the system
+    reach steady state at the default conditions with an inlet T of 340 K.
+    Then decrease the System inlet T to 330 K and wait for steady state.
+    Note the relatively high conversion of reactant to product.
+  </p>
+  <p>Next, decrease the inlet T to 320 K and wait for steady state. Finally, increase the
+    inlet T back to the previous 330 K and wait for steady state. Note the
+    relatively low conversion of reactant compared to the earlier result at 330K.
+    Thus, there are <b>multiple steady states</b> at 330 K.
+  </p>
+
+  <p>Many industrial ammonia synthesis reactor (ammonia converter) designs contain
+    a reactor-heat exchanger structure like this.
+  </p>
+
+  <p>At any instant, there are not exact matches between the heat exchanger cold outlet temperature and the reactor inlet temperature,
+    nor between the reactor outlet and exchanger hot inlet because of transit times in the connecting pipes.
+  </p>
+
+  <p>Currently in this simulation, the only heat capacities which affect the dynamic response are that of the
+    fluid and catalyst. The heat capacities of the reactor and exchanger bodies may
+    be added later. The residence times of the reactor and heat exchanger are set equal.
+  </p>
+
+  <p>Parameters remaining constant:
+    <ul>
+      <li>Fluid density = 1000 kg/m<sup>3</sup></li>
+      <li>Fluid heat capacity = 2.24 kJ/kg/K</li>
+      <li>Catalyst pellet density = 1000 kg/m<sup>3</sup></li>
+      <li>Pellet heat capacity = 1.24 kJ/kg/K</li>
+      <li>Packed bed void fraction = 0.3</li>
+    </ul>
+  </p>
+
+</body>
+</html>

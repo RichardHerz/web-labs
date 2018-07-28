@@ -245,11 +245,11 @@ let puAdiabaticPackedBedPFR = {
 
     // initialize profile data array
     // initPlotData(numProfileVars,numProfilePts)
-    this.profileData = plotterFlot.initPlotData(2,this.numNodes); // holds data for static profile plots
+    this.profileData = plotter.initPlotData(2,this.numNodes); // holds data for static profile plots
 
     // // initialize strip chart data array
     // // initPlotData(numStripVars,numStripPts)
-    // this.stripData = plotterFlot.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
+    // this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
 
     // initialize local array to hold color-canvas data, e.g., space-time data -
     // initColorCanvasArray(numVars,numXpts,numYpts)

@@ -29,7 +29,7 @@ let controller = {
   //
   // USES object plotInfo defined in file process_plot_info.js
   //
-  // USES object plotterFlot in file process_plotter_flot.js the functions
+  // USES in object plotter the functions
   //    getPlotData(), plotPlotData(), plotArrays.initialize()
   //
   // USES in file process_spacetime.js the function plotColorCanvasPlot()
@@ -43,7 +43,7 @@ let controller = {
     // initialize plotInfo to define plots after initialize units
     plotInfo.initialize();
     // initialize plot arrays after initialize plotInfo
-    plotterFlot.plotArrays.initialize();
+    plotter.plotArrays.initialize();
     interface.resetThisLab(); // defined in file process_interface.js
     simParams.updateCurrentRunCountDisplay();
   }, // END OF function openThisLab
@@ -76,7 +76,7 @@ let controller = {
     setTimeout(updateProcess(), updateMs);
 
     function updateProcess() {
-      
+
       let runningFlag = simParams.runningFlag;
       if (!runningFlag) {
         // exit if runningFlag is not true
@@ -192,8 +192,8 @@ let controller = {
         plotColorCanvasPlot(p); // defined in file process_spacetime.js
       } else {
         // profile (static x,y) or strip chart (scolling x,y)
-        data = plotterFlot.getPlotData(p);
-        plotterFlot.plotPlotData(data,p);
+        data = plotter.getPlotData(p);
+        plotter.plotPlotData(data,p);
       }
     }
 

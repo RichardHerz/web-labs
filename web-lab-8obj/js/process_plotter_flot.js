@@ -5,8 +5,11 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-let plotterFlot = {
-  // use for plotting with flot.js library
+// *** THIS VERSION OF OBJECT plotter USES THE FLOT.JS LIBRARY ***
+// *** TO USE ANOTHER LIBRARY, WRITE ANOTHER VERSION IN ANOTHER FILE ***
+
+let plotter = {
+  // plotting with the flot.js library
   // USES OBJECT plotInfo in file process_plot_info.js
 
   getPlotData : function(plotInfoNum) {
@@ -262,4 +265,4 @@ let plotterFlot = {
     //    plotDataStub [v] [p+1] [1] = 0; // etc.
   } // END function initPlotData
 
-} // END of object plotterFlot
+} // END of object plotter

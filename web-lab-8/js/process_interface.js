@@ -51,9 +51,6 @@ let interface = {
   getInputValue : function(pUnitIndex,pVar) {
     // GET INPUT VALUES FROM INPUT FIELDS - CALLED IN UNITS updateUIparams()
     // USES OBJECT processUnits
-
-    console.log('enter getInputValue(' + pUnitIndex + '. ' + pVar + ')');
-
     let varInputID = processUnits[pUnitIndex]['dataInputs'][pVar];
     let varInitial = processUnits[pUnitIndex]['dataInitial'][pVar];
     let varMin = processUnits[pUnitIndex]['dataMin'][pVar];
@@ -73,7 +70,6 @@ let interface = {
       // allow for independence and portability of this process unit
       varValue = varInitial;
     }
-    console.log('just before return in getInputValue, ' + varValue);
     return varValue
   }, // END of getInputValue()
 

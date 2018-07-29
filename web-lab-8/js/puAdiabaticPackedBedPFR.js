@@ -302,9 +302,6 @@ let puAdiabaticPackedBedPFR = {
     this.Ea = this.dataValues[1] = interface.getInputValue(unum, 1);
     this.DelH = this.dataValues[2] = interface.getInputValue(unum, 2);
     this.Wcat = this.dataValues[3] = interface.getInputValue(unum, 3);
-
-    console.log('after getInputValue, Wcat = ' + this.Wcat);
-
     this.Cain = this.dataValues[4] = interface.getInputValue(unum, 4);
     this.Flowrate = this.dataValues[5] = interface.getInputValue(unum, 5);
 

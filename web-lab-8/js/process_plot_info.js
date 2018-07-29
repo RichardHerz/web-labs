@@ -4,24 +4,26 @@
   Licensed for use under the GNU General Public License v3.0
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
-
-// THIS FILE USED FOR DEFINITION OF PLOTS: PROFILE, STRIP CHART, & COLOR CANVAS
-
+//
 // WARNING: in units, local data array names for plotting must be
 //          'profileData' for ['type'] = 'profile'
 //          'stripData' for ['type'] = 'strip'
 //          'colorCanvasData' for ['type'] = 'canvas'
-
-// WE CURRENTLY USE FLOT.JS FOR PLOTTING PROFILE & STRIP PLOTS
-// some options below such as plotDataSeriesColors are optional for flot.js
-// and flot.js will use default values for those options
-
-// ------- DECLARE PARENT OBJECT TO HOLD PLOT INFO --------
-
+//
+// ---------- DECLARE PARENT OBJECT TO HOLD PLOT INFO --------
+// --- DEFINITION OF PLOTS: PROFILE, STRIP CHART, & COLOR CANVAS ---
+//
 // the object properties are used by plotting functions
 // more than one plot can be put one one web page by
 // defining multiple object children, where the first index
 // plotInfo[0] is the plot number index (starting at 0)
+//
+// plotting is called by the controller object and not individual process
+// units in order that a plot may contain data from more than one process unit
+//
+// some options may be optional for some plotting packages, such as
+// plotDataSeriesColors for flot.js package, in which case default values will
+// be used by the plotting package
 //
 // method initialize() below places the plot definitions into plotInfo
 //

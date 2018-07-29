@@ -173,8 +173,6 @@ let controller = {
       return thisMs;
     }
 
-    let numUnits = Object.keys(processUnits).length; // number of units
-
     // DISPLAY ALL UNITS BUT DO NOT STEP
     let numUnits = Object.keys(processUnits).length; // number of units
     for (n = 0; n < numUnits; n += 1) {

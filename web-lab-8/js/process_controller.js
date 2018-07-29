@@ -175,12 +175,16 @@ let controller = {
 
     let numUnits = Object.keys(processUnits).length; // number of units
 
-    // display all units but do not step
+    // DISPLAY ALL UNITS BUT DO NOT STEP
+    let numUnits = Object.keys(processUnits).length; // number of units
     for (n = 0; n < numUnits; n += 1) {
       processUnits[n].updateDisplay();
     }
 
-    // GET AND PLOT ALL PLOTS defined in object plotInfo in process_plot_info.js
+    // UPDATE PLOTS HERE AND NOT IN PROCESS UNITS IN ORDER TO ALLOW
+    // PLOTS TO CONTAIN DATA FROM MORE THAN ONE PROCESS UNIT
+
+    // GET AND PLOT ALL PLOTS defined in object plotInfo
     let numPlots = Object.keys(plotInfo).length;
     numPlots = numPlots - 1; // subtract method initialize(), which is counted in length
     let p; // used as index

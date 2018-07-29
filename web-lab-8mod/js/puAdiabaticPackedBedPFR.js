@@ -10,7 +10,12 @@
 //   updateDisplay, checkForSteadyState
 // THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
 
+// SEE https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
+// TO ALLOW EXPERIMENTAL JS VERSION SEE chrome://flags/#enable-javascript-harmony
+import * as plotter from 'process_plotter_flot.js';
+
 let puAdiabaticPackedBedPFR = {
+
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'Adiabatic Packed Bed PFR',

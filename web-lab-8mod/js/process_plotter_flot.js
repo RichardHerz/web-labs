@@ -5,18 +5,13 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// *** THIS VERSION OF OBJECT plotter USES THE FLOT.JS LIBRARY
+// *** THIS VERSION USES THE FLOT.JS LIBRARY
 // *** FOR X-Y PLOTS
 // *** TO USE ANOTHER LIBRARY, WRITE ANOTHER VERSION IN A DIFFERENT FILE
 // *** COMPONENTS (functions, objects) NAMES SHOULD STAY SAME BUT
 // *** definitions of those components will change
 
-let plotter = {
-  // plotting with the flot.js library AND ALSO
-  // generates the color canvas plots indpendently of flot.js or other libaries
-  // USES OBJECT plotInfo in file process_plot_info.js
-
-  getPlotData : function(plotInfoNum) {
+export function getPlotData(plotInfoNum) {
     //
     // input argument plotInfoNum refers to plot number in object plotInfo
     // which is defined in file process_plot_info.js
@@ -72,9 +67,9 @@ let plotter = {
 
     return plotData;
 
-  }, // END OF function getPlotData
+} // END OF function getPlotData
 
-  plotPlotData : function(pData,pNumber) {
+export function plotPlotData(pData,pNumber) {
 
     // PLOTTING WITH THE FLOT LIBRARY
     // THESE FUNCTIONS DEPEND ON JQUERY.JS AND JQUERY.FLOT.JS FOR PLOTTING
@@ -169,24 +164,24 @@ let plotter = {
       let options = {
         // axisLabels REQUIRES LIBRARY flot.axislabels.js, SEE
         //     https://github.com/markrcote/flot-axislabels
-        axisLabels : {show: true},
+        axisLabels : {show: true}
         xaxes: [ { show: xShow, min: xMin, max: xMax, axisLabel: xLabel } ],
         yaxes: [
         // yaxis object listed first is "yaxis: 1" in dataToPlot, second is 2
-          {position: 'right', min: yRightMin, max: yRightMax, axisLabel: yRightLabel },
-          {position: 'left', min: yLeftMin, max: yLeftMax, axisLabel: yLeftLabel },
+          {position: 'right', min: yRightMin, max: yRightMax, axisLabel: yRightLabel }
+          {position: 'left', min: yLeftMin, max: yLeftMax, axisLabel: yLeftLabel }
         ],
-      legend: { show: plotLegendShow },
-      legend: { position: plotLegendPosition },
-      grid: { backgroundColor: plotGridBgColor },
+      legend: { show: plotLegendShow }
+      legend: { position: plotLegendPosition }
+      grid: { backgroundColor: plotGridBgColor }
       colors: plotDataSeriesColors
-    };
+    }
 
     // check if want to reverse data left-right on x-axis
     // when reversed, xmax is on left, xmin on right
     if (plotInfo[pNumber]['xAxisReversed']) {
       options.xaxis = {
-        transform: function (v) { return -v; },
+        transform: function (v) { return -v; }
         inverseTransform: function (v) { return -v; }
       }
     }
@@ -207,9 +202,9 @@ let plotter = {
       this.plotArrays['plot'][pNumber].draw();
     }
 
-  }, // END OF function plotPlotData
+} // END OF function plotPlotData
 
-  plotArrays : {
+export plotArrays{
     // ----- OBJECT USED TO HOLD PLOT DEFINITIONS BETWEEN DISPLAY UPDATES ---
     //
     // DEFINE plot array used to save complete description of plot between updates
@@ -232,9 +227,9 @@ let plotter = {
       }
     } // END of method initialize()
 
-  }, // END of object plotArrays
+} // END of object plotArrays
 
-  initPlotData : function(numVars,numPlotPoints) {
+export function initPlotData(numVars,numPlotPoints) {
     // returns 3D array to hold x,y scatter plot data for multiple variables
     // inputs are list of variables and # of x,y point pairs per variable
     // returns array with all elements for plot filled with zero
@@ -265,11 +260,11 @@ let plotter = {
     // Then can do
     //    plotDataStub [v] [p+1] [0] = 0;
     //    plotDataStub [v] [p+1] [1] = 0; // etc.
-  }, // END function initPlotData
+} // END function initPlotData
 
-  // *** FUNCTIONS BELOW ARE INDEPENDENT OF FLOT.JS AND OTHER LIBRARIES ***
+// *** FUNCTIONS BELOW ARE INDEPENDENT OF FLOT.JS AND OTHER LIBRARIES ***
 
-  plotColorCanvasPlot : function(pNumber) {
+export function plotColorCanvasPlot(pNumber) {
     // generates color plot on html canvas element
     // USES OBJECT plotInfo
     // input argument pNumber refers to plot info in child pNumber
@@ -389,9 +384,9 @@ let plotter = {
       return [r,g,b];
     } // END of function jetColorMap
 
-  }, // END of function plotColorCanvasPlot
+} // END of function plotColorCanvasPlot
 
-  initColorCanvasArray : function(numVars,numXpts,numYpts) {
+export function initColorCanvasArray(numVars,numXpts,numYpts) {
     // used by units to initialize local data arrays
     // returns 3D array to hold data for multiple variables for COLOR CANVAS
     // plots, e.g., space-time plots
@@ -416,6 +411,4 @@ let plotter = {
     }
     // document.getElementById("dev01").innerHTML = "hello";
     return plotDataStub;
-  } // END of function initColorCanvasArray
-
-} // END of object plotter
+} // END of function initColorCanvasArray

@@ -10,6 +10,10 @@
 // // DISPLAY INITIAL STATE ON OPEN WINDOW
 // window.onload = controller.openThisLab; // can NOT use () after openThisLab
 
+// SEE https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import
+// TO ALLOW EXPERIMENTAL JS VERSION SEE chrome://flags/#enable-javascript-harmony
+import * as plotter from 'process_plotter_flot.js';
+
 let controller = {
 
   // OBJECT controller contains functions that run the simulation time stepping

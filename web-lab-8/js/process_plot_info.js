@@ -4,42 +4,39 @@
   Licensed for use under the GNU General Public License v3.0
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
-//
-// WARNING: in units, local data array names for plotting must be
+
+// WARNING: in process units, local data array names for plotting must be
 //          'profileData' for ['type'] = 'profile'
 //          'stripData' for ['type'] = 'strip'
 //          'colorCanvasData' for ['type'] = 'canvas'
-//
+
 // ---------- DECLARE PARENT OBJECT TO HOLD PLOT INFO --------
 // --- DEFINITION OF PLOTS: PROFILE, STRIP CHART, & COLOR CANVAS ---
-//
-// the object properties are used by plotting functions
-// more than one plot can be put one one web page by
-// defining multiple object children, where the first index
-// plotInfo[0] is the plot number index (starting at 0)
-//
+
 // plotting is called by the controller object and not individual process
 // units in order that a plot may contain data from more than one process unit
-//
+
 // some options may be optional for some plotting packages, such as
 // plotDataSeriesColors for flot.js package, in which case default values will
 // be used by the plotting package
-//
-// method initialize() below places the plot definitions into plotInfo
-//
+
+// more than one plot can be put one one web page by
+// defining multiple object children, where the first index
+// plotInfo[0] is the plot number index (starting at 0)
+
 let plotInfo = {
 
   // after the openThisLab() function in _main.js calls method initialize()
   // here, this object will contain a child object for each plot
   //
-  // method initialize() is run after each process units initialize() method
-  // is run by openThisLab() so that it can use values from the units,
-  // e.g., processUnits[unum]['dataMin'][1]; // [1] is TinCold
-  //
   // in _main.js, the function updateDisplay() uses the length of plotInfo
   // after subtracting 1 for method initialize, in order to plot all the plots;
   // if you add another method, you need to update the length correction
   // in updateDisplay()
+  //
+  // method initialize() is run after each process units initialize() method
+  // is run by openThisLab() so that it can use values from the units,
+  // e.g., processUnits[unum]['dataMin'][1];
 
   initialize : function() {
     //

@@ -34,7 +34,7 @@ let plotInfo = {
   // if you add another method, you need to update the length correction
   // in updateDisplay()
   //
-  // method initialize() is run after each process units initialize() method
+  // method initialize() is run after each process unit's initialize() method
   // is run by openThisLab() so that it can use values from the units,
   // e.g., processUnits[unum]['dataMin'][1];
 
@@ -44,9 +44,9 @@ let plotInfo = {
     //          operation of the program, e.g., show, scale
     //
     // --------- below are plots for the reactor ----------------
-    //
+
     let unum = 0; // useful when only one unit in plot, processUnits[unum]
-    //
+
     // plot 0 info
     let pnum = 0;
     plotInfo[pnum] = new Object();
@@ -130,11 +130,11 @@ let plotInfo = {
     plotInfo[pnum]['varValueMin'] = 320; // processUnits[unum]['dataMin'][9]; // [9] is Trxr
     plotInfo[pnum]['varValueMax'] = 420; // processUnits[unum]['dataMax'][9];
     plotInfo[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
-    //
+
     // --------- below are plots for the heat exchanger ----------------
-    //
+
     unum = 1; // useful when only one unit in plot, processUnits[unum]
-    //
+    
     // plot 2 info
     pnum = 2;
     plotInfo[pnum] = new Object();

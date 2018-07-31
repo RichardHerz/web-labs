@@ -87,7 +87,7 @@ canvas {
 
 #image_reactor_empty {
   visibility: hidden;
-} 
+}
 
 #button_Fill {
   position: absolute;
@@ -135,6 +135,25 @@ canvas {
   border-style: solid;
   border-color: DodgerBlue;
   opacity: 1;
+  LCvScrollbar: false;
+}
+
+#div_PLOTDIV_conc_plot {
+  display: block;
+  position: absolute;
+  left: 300px;
+  top: 40px;
+  width: 240px;
+  height: 180px;
+  visibility: visible;
+  border-width: 1px;
+  background-color: rgb(0,253,255);
+  border-style: outset;
+  opacity: 1;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: true;
+  LCshowBorder: true;
   LCvScrollbar: false;
 }
 

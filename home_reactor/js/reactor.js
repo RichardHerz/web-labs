@@ -188,6 +188,10 @@ let reactor = {
     // set color for this reactConc
     el.style.backgroundColor = colorString; // backgroundColor NOT background-color
 
+    // update x-y plot
+    let data = plotter.getPlotData(0);
+    plotter.plotPlotData(data,0);
+
     // CONTINUE WITH CALL TO ITSELF AFTER updateMs WAIT
     let thisDate = new Date();
     let currentMs = thisDate.getTime();

@@ -15,6 +15,7 @@ let reactor = {
   reactConc : 1,
   reactConcMIN : 0.1,
   reactImgCounter : 0,
+  reactTimeSteps : 0,
 
   openThisLab : function() {
 
@@ -23,7 +24,48 @@ let reactor = {
     el.style.height = "70px";
     el.style.backgroundColor = "rgb(0,0,255)";
 
+    reactor.fInitialize();
+
   }, // END OF function openThisLab
+
+  fInitialize : function() {
+
+    // THESE GLOBAL VARS ARE DEFINED IN process_plot_info.js
+    //   let numProfileVars = 2; // or other value
+    //   let numProfilePts = 100; // or other value
+    //   let profileData
+
+    let x = 0;
+    let k = 0;
+    for (k=0; k<=numProfilePts; k+=1) {
+
+      // x-axis values
+      x = k/numProfilePts;
+      profileData[0][k][0] = x;
+      profileData[1][k][0] = x;
+
+      // y-axis values
+      //   reactant conc
+      profileData[0][k][1] = -1; // -1 because want pts off plot at start
+      //   product conc
+      profileData[1][k][1] = -1;
+    }
+
+    reactor.fUpdatePlot();
+
+  }, // END OF function initialize
+
+  fUpdatePlot : function() {
+    // GET AND PLOT ALL PLOTS defined in plotsObj in process_plot_info
+    // plots are specified in object plotsObj in file process_plot_info.js
+    let npl = Object.keys(plotsObj).length; // number of plots
+    let p; // used as index
+    let data;
+    for (p = 0; p < npl; p += 1) {
+      data = getPlotData(p);
+      plotPlotData(data,p);
+    }
+  }, // END OF function fUpdatePlot
 
   fChangeImage : function(imgName) {
     // first set all to hidden
@@ -38,7 +80,7 @@ let reactor = {
     // now set the chosen image to visible
     tImage = document.querySelector(imgName);
     tImage.style.visibility = "visible";
-  },
+  }, // END OF function fChangeImage
 
   fillReactor : function() {
 
@@ -80,6 +122,7 @@ let reactor = {
     el.style.height = height + 'px';
 
     // CONTINUE fillReactor WITH CALL TO ITSELF AFTER updateMs WAIT
+    // this function will stop with an internal return above when full
     let thisDate = new Date();
     let currentMs = thisDate.getTime();
     let elapsedMs = currentMs - startMs;
@@ -130,11 +173,23 @@ let reactor = {
   }, // END OF function emptyReactor
 
   reactReactor : function() {
-    if (reactor.fillFlag == 1 || reactor.emptyFlag == 1) {
-      reactor.reactFlag = 0;
+    if (reactor.fillFlag == 1 || reactor.emptyFlag == 1 || reactor.reactFlag == 1) {
+      // note check on reactFlag - don't activate this again while reacting
       return;
     }
+    reactor.reactFlag = 1;
     reactor.updateRunCount();
+    reactor.fInitialize();
+    reactor.reactTimeSteps = 0;
+
+    // y-axis values
+    //   reactant conc
+    profileData[0][0][1] = reactor.reactConc0;
+    //   product conc
+    profileData[1][0][1] = 0;
+
+    reactor.fUpdatePlot();
+
     reactor.reactReactorContinue();
   },
 
@@ -163,9 +218,19 @@ let reactor = {
       reactor.reactImgCounter = 0;
     }
 
+    // // >>> BREAK OUT WHEN REACTION DONE
+    // // *** OLD - when conc drops to low value ***
+    // // put this before change reaction or get reaction change each onclick
+    // if (reactor.reactConc/reactor.reactConc0 <= reactor.reactConcMIN) {
+    //   reactor.fChangeImage("#image_reactor_mix_00");
+    //   reactor.reactFlag = 0;
+    //   return;
+    // }
+
     // >>> BREAK OUT WHEN REACTION DONE
+    // *** NEW - when reach number points in plot
     // put this before change reaction or get reaction change each onclick
-    if (reactor.reactConc/reactor.reactConc0 <= reactor.reactConcMIN) {
+    if (reactor.reactTimeSteps >= numProfilePts) {
       reactor.fChangeImage("#image_reactor_mix_00");
       reactor.reactFlag = 0;
       return;
@@ -176,6 +241,7 @@ let reactor = {
     // let el = document.getElementById("div_PLOTDIV_reactor_contents");
 
     // step reaction
+    reactor.reactTimeSteps = reactor.reactTimeSteps + 1;
     let k = 1;
     let dt = 0.075;
     reactor.reactConc = reactor.reactConc- k * reactor.reactConc* dt;
@@ -188,9 +254,14 @@ let reactor = {
     // set color for this reactConc
     el.style.backgroundColor = colorString; // backgroundColor NOT background-color
 
-    // update x-y plot
-    let data = plotter.getPlotData(0);
-    plotter.plotPlotData(data,0);
+    // y-axis values
+    //   reactant conc
+    profileData[0][reactor.reactTimeSteps][1] = reactor.reactConc;
+    //   product conc
+    profileData[1][reactor.reactTimeSteps][1] = reactor.reactConc0 - reactor.reactConc;
+
+    // UPDATE PLOT
+    reactor.fUpdatePlot();
 
     // CONTINUE WITH CALL TO ITSELF AFTER updateMs WAIT
     let thisDate = new Date();

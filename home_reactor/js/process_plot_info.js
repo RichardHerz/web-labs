@@ -1,120 +1,120 @@
 /*
-  Design, text, images and code by Richard K. Herz, 2017-2018
+  Design, text, images and code by Richard K. Herz, 2017
   Copyrights held by Richard K. Herz
   Licensed for use under the GNU General Public License v3.0
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// WARNING: in process units, local data array names for plotting must be
-//          'profileData' for ['type'] = 'profile'
-//          'stripData' for ['type'] = 'strip'
-//          'colorCanvasData' for ['type'] = 'canvas'
+// WARNING: number plot points here should match number plot points in
+//          unit that generates the plot data
+// where number plot points + 1 for origin are plotted
 
-// ---------- DECLARE PARENT OBJECT TO HOLD PLOT INFO --------
-// --- DEFINITION OF PLOTS: PROFILE, STRIP CHART, & COLOR CANVAS ---
+// these vars used several places below in this file for static profile plot
+let numProfileVars = 2;
+let numProfilePts = 100;
 
-// plotting is called by the controller object and not individual process
-// units in order that a plot may contain data from more than one process unit
+// these vars used several places below this file for scrolling strip chart plot
+let numStripVars = 0;
+let numStripPts = 0;
 
-// some options may be optional for some plotting packages, such as
-// plotDataSeriesColors for flot.js package, in which case default values will
-// be used by the plotting package
-
+// DECLARE PARENT OBJECT TO HOLD PLOT INFO
 // more than one plot can be put one one web page by
 // defining multiple object children, where the first index
-// plotInfo[0] is the plot number index (starting at 0)
+// plotsObj[0] is the plot number index (starting at 0)
+//
+let plotsObj = new Object();
+//
+// USE THIS TO GET NUMBER OF plots, i.e., top-level children of plotsObj
+//    Object.keys(plotsObj).length;
+// except this will include any additional top level children
 
-let plotInfo = {
+// ADD A CHILD TO plotsObj FOR EACH PLOT TO APPEAR ON WEB PAGE
+//
+// WARNING: some of these object properties may be changed during
+//          operation of the program, e.g., show, scale
+//
 
-  // after the openThisLab() function in _main.js calls method initialize()
-  // here, this object will contain a child object for each plot
-  //
-  // in _main.js, the function updateDisplay() uses the length of plotInfo
-  // after subtracting 1 for method initialize, in order to plot all the plots;
-  // if you add another method, you need to update the length correction
-  // in updateDisplay()
-  //
-  // method initialize() is run after each process unit's initialize() method
-  // is run by openThisLab() so that it can use values from the units,
-  // e.g., processUnits[unum]['dataMin'][1];
+// plot 0 info
+plotsObj[0] = new Object();
+plotsObj[0]['name'] = 'Reactor Concentrations';
+plotsObj[0]['type'] = 'profile';
+plotsObj[0]['canvas'] = '#div_PLOTDIV_conc_plot';
+plotsObj[0]['numberPoints'] = numProfilePts;
+// plot has numberPoints + 1 pts!
+plotsObj[0]['xAxisLabel'] = 'time';
+plotsObj[0]['xAxisMin'] = 0;
+plotsObj[0]['xAxisMax'] = 1;
+plotsObj[0]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
+plotsObj[0]['yLeftAxisLabel'] = 'concentration';
+plotsObj[0]['yLeftAxisMin'] = 0;
+plotsObj[0]['yLeftAxisMax'] = 1;
+plotsObj[0]['yRightAxisLabel'] = '';
+plotsObj[0]['yRightAxisMin'] = 0;
+plotsObj[0]['yRightAxisMax'] = 1;
+plotsObj[0]['plotLegendPosition'] = 'ne';
+plotsObj[0]['var'] = new Array();
+  plotsObj[0]['var'][0] = 1; // 1st var in profile data array
+  plotsObj[0]['var'][1] = 0; // 2nd var
+plotsObj[0]['varLabel'] = new Array();
+  plotsObj[0]['varLabel'][0] = 'product';
+  plotsObj[0]['varLabel'][1] = 'reactant';
+plotsObj[0]['varShow'] = new Array();
+  plotsObj[0]['varShow'][0] = 'show'; // 1st var, 'show' to show, '' to not
+  plotsObj[0]['varShow'][1] = 'show';
+plotsObj[0]['varYaxis'] = new Array();
+  plotsObj[0]['varYaxis'][0] = 'left'; // 1st var
+  plotsObj[0]['varYaxis'][1] = 'left';
+plotsObj[0]['varYscaleFactor'] = new Array();
+  plotsObj[0]['varYscaleFactor'][0] = 1; // 1st var
+  plotsObj[0]['varYscaleFactor'][1] = 1;
 
-  initialize : function() {
-    //
-    // WARNING: some of these object properties may be changed during
-    //          operation of the program, e.g., show, scale
-    //
-    // --------- below are plots for the reactor ----------------
+// DEFINE plotFlag ARRAY so don't have to generate
+// entire plot everytime want to just change data (and not axes, etc.)
+// for example, for 4 plots on page, this ran in 60% of time for full refresh
+// plotFlag array used in function plotPlotData
+//
+// WARNING: plotFlag ARRAY MUST BE DEFINED AFTER ALL plotsObj CHILDREN
+//
+let npl = Object.keys(plotsObj).length; // number of plots
+let p; // used as index
+let plotFlag = [0];
+for (p = 1; p < npl; p += 1) {
+  plotFlag.push(0);
+}
 
-    let unum = 0; // useful when only one unit in plot, processUnits[unum]
+function initPlotData(numVar,numPlotPoints) {
+  // returns 3D array to hold x,y scatter plot data for multiple variables
+  // inputs are list of variables and # of x,y point pairs per variable
+  // returns array with all elements for plot filled with zero
+  //    index 1 specifies the variable,
+  //    index 2 specifies the data point pair
+  //    index 3 specifies x or y in x,y data point pair
+  let v;
+  let p;
+  let plotDataStub = new Array();
+  for (v = 0; v < numVar; v += 1) {
+    plotDataStub[v] = new Array();
+    for (p = 0; p <= numPlotPoints; p += 1) { // NOTE = AT p <=
+      plotDataStub[v][p] = new Array();
+      plotDataStub[v][p][0] = 0;
+      plotDataStub[v][p][1] = 0;
+    }
+  }
+  return plotDataStub;
+  // Note above initialize values for
+  //    plotDataStub [0 to numVar-1] [0 to numPlotPoints] [0 & 1]
+  // If want later outside this constructor to add new elements,
+  // then you can do easily for 3rd index, e.g.,
+  //    plotDataStub [v] [p] [2] = 0;
+  // But can NOT do assignment for [v] [p+1] [0] since p+1 element does not yet
+  // exist, where here p = numPlotPoints+1.
+  // Would have to first create new p+1 array
+  //    plotDataStub [v] [p+1] = new Array();
+  // Then can do
+  //    plotDataStub [v] [p+1] [0] = 0;
+  //    plotDataStub [v] [p+1] [1] = 0; // etc.
+} // end function initPlotData
 
-    // plot 0 info
-    let pnum = 0;
-    plotInfo[pnum] = new Object();
-    plotInfo[pnum]['type'] = 'profile';
-    plotInfo[pnum]['title'] = 'Reactor Profiles';
-    plotInfo[pnum]['canvas'] = '#div_PLOTDIV_conc_plot'; // flot.js wants ID with prefix #
-    plotInfo[pnum]['numberPoints'] = 200;
-    // plot has numberPoints + 1 pts!
-    plotInfo[pnum]['xAxisLabel'] = 'time';
-    plotInfo[pnum]['xAxisTableLabel'] = 'time'; // label for copy data table
-    // xAxisShow false does not show numbers, nor label, nor grid for x-axis
-    // might be better to cover numbers if desire not to show numbers
-    plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
-    plotInfo[pnum]['xAxisMin'] = 0;
-    plotInfo[pnum]['xAxisMax'] = 200;
-    plotInfo[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
-    plotInfo[pnum]['yLeftAxisLabel'] = 'Ca (mol/m3)';
-    plotInfo[pnum]['yLeftAxisMin'] = 0;
-    plotInfo[pnum]['yLeftAxisMax'] = 1;
-    plotInfo[pnum]['yRightAxisLabel'] = 'Ca (mol/m3)';
-    plotInfo[pnum]['yRightAxisMin'] = 0;
-    plotInfo[pnum]['yRightAxisMax'] = 1;
-    plotInfo[pnum]['plotLegendShow'] = 1;  // Boolean, '' or 0 for no show, 1 or "show"
-    plotInfo[pnum]['plotLegendPosition'] = 'nw';
-    plotInfo[pnum]['plotGridBgColor'] = 'white';
-    // colors can be specified rgb, rgba, hex, and color names
-    // for flot.js colors, only basic color names appear to work, e.g., white, blue, red
-    // for all html color names to hex see http://www.color-hex.com
-    // for all color names to hex see https://www.w3schools.com/colors/colors_picker.asp
-    plotInfo[pnum]['plotDataSeriesColors'] = ['#ff6347','#1e90ff']; // optional, in variable order 0, 1, etc.
-    // ['#ff6347','#1e90ff'] is Tomato and DodgerBlue
-    //
-    // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
-    // WARNING: all below with prefix 'var' must have same number of child objects,
-    // one for each variable placed on plot
-    plotInfo[pnum]['varUnitIndex'] = new Array();
-    plotInfo[pnum]['var'] = new Array();
-    plotInfo[pnum]['varLabel'] = new Array();
-    plotInfo[pnum]['varDataUnits'] = new Array();
-    plotInfo[pnum]['varShow'] = new Array();
-    plotInfo[pnum]['varYaxis'] = new Array();
-    plotInfo[pnum]['varYscaleFactor'] = new Array();
-    //
-    // ADD SETTINGS FOR EACH VARIABLE
-    //
-    let vnum = 0; // 1st variable
-    plotInfo[pnum]['varUnitIndex'][0] = unum; // value is index of unit in processUnits object
-    plotInfo[pnum]['var'][vnum] = 0; // value is variable index in plot data array
-    plotInfo[pnum]['varLabel'][vnum] = 'Trxr';
-    // varDataUnits are dimensional units used in copy data table, along with varLabel
-    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][7]; // 1st var
-    // varShow values are 'show' to show on plot and legend,
-    // 'tabled' to not show on plot nor legend but list in copy data table
-    // and any other value, e.g., 'hide' to not show on plot but do show in legend
-    // varShow value can be changed by javascript if want to show/hide curve with checkbox
-    plotInfo[pnum]['varShow'][vnum] = 'show';
-    plotInfo[pnum]['varYaxis'][vnum] = 'left';
-    plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
-    //
-    vnum = 1; // 2nd variable
-    plotInfo[pnum]['varUnitIndex'][1] = unum;
-    plotInfo[pnum]['var'][vnum] = 1;
-    plotInfo[pnum]['varLabel'][vnum] = 'Ca';
-    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][8];
-    plotInfo[pnum]['varShow'][vnum] = 'show';
-    plotInfo[pnum]['varYaxis'][vnum] = 'right';
-    plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
-
-  }, // end initialize method of plotInfo
-
-} // end plotInfo
+// initialize data arrays - must follow function initPlotData in this file
+let profileData = initPlotData(numProfileVars,numProfilePts); // holds data for static profile plots
+let stripData = initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots

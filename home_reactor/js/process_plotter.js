@@ -156,7 +156,8 @@ function plotPlotData(pData,pNumber) {
                 }
     },
     grid: { backgroundColor: 'white' },
-    colors: ['#ff6347','#1e90ff'],
+    // colors: ['#ff6347','#1e90ff'],
+    colors: ['Red','Blue'],
     // --------------------------
 
     axisLabels : {show: true},

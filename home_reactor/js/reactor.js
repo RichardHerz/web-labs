@@ -16,6 +16,8 @@ let reactor = {
   reactConcMIN : 0.1,
   reactImgCounter : 0,
   reactTimeSteps : 0,
+  Trxr : 0,
+  RateConst : 0,
 
   openThisLab : function() {
 
@@ -190,6 +192,39 @@ let reactor = {
 
     reactor.fUpdatePlot();
 
+    // get reactor T here at start - ignore user changes in middle of rxn
+    let varInputID = 'input_field_Trxr';
+    let varValue = 0; // reaction T in (K)
+    let varMin = 300;
+    let varMax = 340;
+    let varInitial = 320;
+    if (document.getElementById(varInputID)) {
+      // the input exists so get the value and make sure it is within range
+      varValue = document.getElementById(varInputID).value;
+      varValue = Number(varValue); // force any number as string to numeric number
+      if (isNaN(varValue)) {varValue = varInitial;} // handle e.g., 259x, xxx
+      if (varValue < varMin) {varValue = varMin;}
+      if (varValue > varMax) {varValue = varMax;}
+      document.getElementById(varInputID).value = varValue;
+    } else {
+      // this 'else' is in case there is no input on the web page yet in order to
+      // allow for independence and portability of this process unit
+      varValue = varInitial;
+    }
+    // finish getting Trxr
+    reactor.Trxr = varValue;
+
+    // compute RateConst here only
+    let Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
+    let Ea = 34; // (kJ/mol)
+    let EaOverRg = Ea / Rg;
+    let EaOverRg300 = EaOverRg / 300;
+    let Kf300 = 0.15;
+    reactor.RateConst = Kf300 * Math.exp(EaOverRg300 - EaOverRg/reactor.Trxr);
+    
+    // console.log('T = ' + reactor.Trxr + ', k = ' + reactor.RateConst);
+
+    // ready to go to next step and react
     reactor.reactReactorContinue();
   },
 
@@ -242,9 +277,8 @@ let reactor = {
 
     // step reaction
     reactor.reactTimeSteps = reactor.reactTimeSteps + 1;
-    let k = 1;
     let dt = 0.075;
-    reactor.reactConc = reactor.reactConc- k * reactor.reactConc* dt;
+    reactor.reactConc = reactor.reactConc - reactor.RateConst * reactor.reactConc * dt;
 
     // compute color for this reactConc
     let B = Math.round(255*reactor.reactConc/reactor.reactConc0); // Blue = reactant

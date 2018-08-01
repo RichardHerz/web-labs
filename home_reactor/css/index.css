@@ -55,10 +55,10 @@ canvas {
   float: left; /* flow text around, right or left*/
   margin: 0px 20px 0px 0px; /* top right bottom left */
   border-color: DodgerBlue;
-  width: 292px;
+  width: 570px;
   height: 256px;
   visibility: visible;
-  border-width: 0px;
+  border-width: 1px;
   border-style: dotted;
   LCvScrollbar: false;
 }
@@ -160,14 +160,14 @@ canvas {
 
 #field_Trxr_label {
   position: absolute;
-  left: 310px;
+  left: 300px;
   top: 20px;
-  width: 170px;
+  width: 220px;
   height: 21px;
   border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
-  border-style: dotted;
+  border-style: none;
   opacity: 1;
   LCvScrollbar: false;
   LCthreeD: true;
@@ -180,7 +180,7 @@ canvas {
   position: abolute;
   left: 490px;
   top: 34px;
-  width: 91px;
+  width: 70px;
   height: 21px;
 border-width: 1px;
   visibility: visible;

@@ -53,9 +53,23 @@ canvas {
   display: block;
   position: relative;
   float: left; /* flow text around, right or left*/
-  margin: 0px 20px 0px 0px; /* top right bottom left */
+  margin: 0px 0px 0px 0px; /* top right bottom left */
   border-color: DodgerBlue;
-  width: 570px;
+  width: 300px;
+  height: 256px;
+  visibility: visible;
+  border-width: 1px;
+  border-style: dotted;
+  LCvScrollbar: false;
+}
+
+#div_plotFrame {
+  display: block;
+  position: relative;
+  float: left; /* flow text around, right or left*/
+  margin: 0px 0px 0px 0px; /* top right bottom left */
+  border-color: DodgerBlue;
+  width: 270px;
   height: 256px;
   visibility: visible;
   border-width: 1px;
@@ -141,7 +155,7 @@ canvas {
 #div_PLOTDIV_conc_plot {
   display: block;
   position: absolute;
-  left: 300px;
+  left: 10px;
   top: 70px;
   width: 240px;
   height: 180px;
@@ -160,7 +174,7 @@ canvas {
 
 #field_Trxr_label {
   position: absolute;
-  left: 300px;
+  left: 0px;
   top: 20px;
   width: 220px;
   height: 21px;
@@ -178,8 +192,8 @@ canvas {
 
 #input_field_Trxr {
   position: abolute;
-  left: 490px;
-  top: 34px;
+  left: 180px;
+  top: 32px;
   width: 70px;
   height: 21px;
 border-width: 1px;

@@ -140,6 +140,7 @@ function plotPlotData(pData,pNumber) {
   var yRightLabel = plotsObj[pNumber]['yRightAxisLabel'];
   var yRightMin = plotsObj[pNumber]['yRightAxisMin'];
   var yRightMax = plotsObj[pNumber]['yRightAxisMax'];
+  var plotLegendShow = plotsObj[pNumber]['plotLegendShow'];
   var plotLegendPosition = plotsObj[pNumber]['plotLegendPosition'];
 
   var options = {
@@ -165,8 +166,10 @@ function plotPlotData(pData,pNumber) {
       {position: 'right', min: yRightMin, max: yRightMax, axisLabel: yRightLabel },
       {position: 'left', min: yLeftMin, max: yLeftMax, axisLabel: yLeftLabel },
     ],
-    legend: { position: plotLegendPosition }
-  };
+    legend: {
+      show: plotLegendShow,
+      position: plotLegendPosition }
+    };
 
   // check if want to reverse data left-right on x-axis
   // when reversed, xmax is on left, xmin on right

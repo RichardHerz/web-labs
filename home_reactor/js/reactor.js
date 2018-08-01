@@ -42,7 +42,7 @@ let reactor = {
     for (k=0; k<=numProfilePts; k+=1) {
 
       // x-axis values
-      x = k/numProfilePts;
+      x = 100 * k/numProfilePts;
       profileData[0][k][0] = x;
       profileData[1][k][0] = x;
 
@@ -174,26 +174,13 @@ let reactor = {
 
   }, // END OF function emptyReactor
 
-  reactReactor : function() {
-    if (reactor.fillFlag == 1 || reactor.emptyFlag == 1 || reactor.reactFlag == 1) {
-      // note check on reactFlag - don't activate this again while reacting
+  fGetTrxr : function() {
+    let varInputID = 'input_field_Trxr';
+    if (reactor.reactFlag == 1) {
+      // don't allow changes while reacting
+      document.getElementById(varInputID).value = reactor.Trxr;
       return;
     }
-    reactor.reactFlag = 1;
-    reactor.updateRunCount();
-    reactor.fInitialize();
-    reactor.reactTimeSteps = 0;
-
-    // y-axis values
-    //   reactant conc
-    profileData[0][0][1] = reactor.reactConc0;
-    //   product conc
-    profileData[1][0][1] = 0;
-
-    reactor.fUpdatePlot();
-
-    // get reactor T here at start - ignore user changes in middle of rxn
-    let varInputID = 'input_field_Trxr';
     let varValue = 0; // reaction T in (K)
     let varMin = 300;
     let varMax = 340;
@@ -211,9 +198,35 @@ let reactor = {
       // allow for independence and portability of this process unit
       varValue = varInitial;
     }
-    // finish getting Trxr
-    reactor.Trxr = varValue;
+    // only return value here, do not set to Trxr
+    // in case called when not to be used
+    // onclick in input field calls this and want input validation but don't change Trxr
+    // return and use when this function called at start of reaction
+    return(varValue);
+  },
 
+  reactReactor : function() {
+    if (reactor.fillFlag == 1 || reactor.emptyFlag == 1 || reactor.reactFlag == 1) {
+      // note check on reactFlag - don't activate this again while reacting
+      return;
+    }
+    // set reactFlag AFTER get Trxr from input field
+    // only get reactor T here at start
+    // ignore user changes in middle of rxn
+    reactor.Trxr = reactor.fGetTrxr();
+    reactor.reactFlag = 1;
+    reactor.updateRunCount();
+    reactor.fInitialize();
+    reactor.reactTimeSteps = 0;
+
+    // y-axis values
+    //   reactant conc
+    profileData[0][0][1] = reactor.reactConc0;
+    //   product conc
+    profileData[1][0][1] = 0;
+
+    reactor.fUpdatePlot();
+    
     // compute RateConst here only
     let Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
     let Ea = 34; // (kJ/mol)
@@ -221,7 +234,7 @@ let reactor = {
     let EaOverRg300 = EaOverRg / 300;
     let Kf300 = 0.15;
     reactor.RateConst = Kf300 * Math.exp(EaOverRg300 - EaOverRg/reactor.Trxr);
-    
+
     // console.log('T = ' + reactor.Trxr + ', k = ' + reactor.RateConst);
 
     // ready to go to next step and react

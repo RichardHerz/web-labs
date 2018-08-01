@@ -43,7 +43,7 @@ plotsObj[0]['numberPoints'] = numProfilePts;
 // plot has numberPoints + 1 pts!
 plotsObj[0]['xAxisLabel'] = 'time';
 plotsObj[0]['xAxisMin'] = 0;
-plotsObj[0]['xAxisMax'] = 1;
+plotsObj[0]['xAxisMax'] = 100;
 plotsObj[0]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
 plotsObj[0]['yLeftAxisLabel'] = 'concentration';
 plotsObj[0]['yLeftAxisMin'] = 0;
@@ -51,6 +51,7 @@ plotsObj[0]['yLeftAxisMax'] = 1;
 plotsObj[0]['yRightAxisLabel'] = '';
 plotsObj[0]['yRightAxisMin'] = 0;
 plotsObj[0]['yRightAxisMax'] = 1;
+plotsObj[0]['plotLegendShow'] = false; // true, false
 plotsObj[0]['plotLegendPosition'] = 'ne';
 plotsObj[0]['var'] = new Array();
   plotsObj[0]['var'][0] = 1; // 1st var in profile data array

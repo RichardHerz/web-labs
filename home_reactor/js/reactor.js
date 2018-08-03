@@ -8,16 +8,20 @@
 let reactor = {
 
   updateDisplayTimingMs : 100,
-  fillFlag : 0,
-  emptyFlag : 0,
-  reactFlag : 0,
-  reactConc0 : 1,
-  reactConc : 1,
-  reactConcMIN : 0.1,
+  stateFlag : 1,
+  reactantConcInitial : 1,
   reactImgCounter : 0,
   reactTimeSteps : 0,
   Trxr : 0,
   RateConst : 0,
+
+  // STATES, saved in stateFlag
+  // 1 - full - allow start reaction or start empty
+  // 2 - reacting - only allow continued reaction
+  // 3 - reacted - only allow start emptying
+  // 4 - emptying - only allow continued emptying
+  // 5 - empty - only allow start filling
+  // 6 - filling - only allow continued filling
 
   openThisLab : function() {
 
@@ -26,11 +30,11 @@ let reactor = {
     el.style.height = "70px";
     el.style.backgroundColor = "rgb(0,0,255)";
 
-    reactor.fInitialize();
+    reactor.fInitializePlot();
 
   }, // END OF function openThisLab
 
-  fInitialize : function() {
+  fInitializePlot : function() {
 
     // THESE GLOBAL VARS ARE DEFINED IN process_plot_info.js
     //   let numProfileVars = 2; // or other value
@@ -55,7 +59,7 @@ let reactor = {
 
     reactor.fUpdatePlot();
 
-  }, // END OF function initialize
+  }, // END OF function fInitializePlot
 
   fUpdatePlot : function() {
     // GET AND PLOT ALL PLOTS defined in plotsObj in process_plot_info
@@ -86,12 +90,13 @@ let reactor = {
 
   fillReactor : function() {
 
-    if (reactor.emptyFlag == 1 || reactor.reactFlag == 1) {
-      reactor.fillFlag = 0;
+    // console.log('at fillReactor, stateFlag = ' + reactor.stateFlag);
+
+    if (reactor.stateFlag !=5 && reactor.stateFlag !=6) {
+      // console.log('in fillReactor, if (reactor.stateFlag !=5 && reactor.stateFlag !=6) is true, returning');
       return;
-    } else {
-      reactor.fillFlag = 1;
     }
+    reactor.stateFlag = 6;
 
     // get time at start of repeating fillReactor
     startDate = new Date(); // need this here
@@ -108,13 +113,14 @@ let reactor = {
     let height = parseFloat(el.style.height); // convert, e.g., "100px" to 100
     // return if already full
     if (height >= 70) {
-      reactor.fillFlag = 0;
+      reactor.stateFlag = 1;
       reactor.fChangeImage("#image_reactor_mix_00");
+      // console.log('in fillReactor, if (height >= 70) is true, returning');
       return;
     }
 
-    // reset reactConc
-    reactor.reactConc = reactor.reactConc0;
+    // reset reactantConc
+    reactor.reactantConc = reactor.reactantConcInitial;
 
       // fill with blue reactant
     el.style.backgroundColor = "rgb(0, 0, 255)"; // backgroundColor NOT background-color
@@ -135,12 +141,19 @@ let reactor = {
 
   emptyReactor : function() {
 
-    if (reactor.fillFlag == 1 || reactor.reactFlag == 1) {
-      reactor.emptyFlag = 0;
-      return;
+    // console.log('at emptyReactor, stateFlag = ' + reactor.stateFlag);
+
+    if (reactor.stateFlag == 1 || reactor.stateFlag == 3 || reactor.stateFlag == 4) {
+      // console.log('in emptyReactor, if (reactor.stateFlag == 1 or 3 or 4 is true, continue');
+      // OK to start emptying, continue
     } else {
-      reactor.emptyFlag = 1;
+      // console.log('in emptyReactor, if (reactor.stateFlag == 1 or 3 or 4 NOT true, returning');
+      // not OK to start emptying
+      return;
     }
+    reactor.stateFlag = 4;
+
+    // console.log('in emptyReactor, reactor.stateFlag (4?) = ' + reactor.stateFlag);
 
     // get time at start of repeating emptyReactor
     startDate = new Date(); // need this here
@@ -155,9 +168,13 @@ let reactor = {
     let height = parseFloat(el.style.height); // convert, e.g., "100px" to 100
 
     // put this before change height or get height change each onclick
-    if (height <= 2) {
-      reactor.emptyFlag = 0;
+    if (height > 2) {
       reactor.fChangeImage("#image_reactor_mix_00");
+      // console.log('in emptyReactor, if (height > 2) is true');
+    } else {
+      // console.log('in emptyReactor, if (height > 2) is NOT true');
+      // reactor full, set flag to allow reaction
+      reactor.stateFlag = 5;
       return;
     }
 
@@ -176,11 +193,13 @@ let reactor = {
 
   fGetTrxr : function() {
     let varInputID = 'input_field_Trxr';
-    if (reactor.reactFlag == 1) {
+    if (reactor.stateFlag == 2) {
       // don't allow changes while reacting
+      // replace to old (current) value
       document.getElementById(varInputID).value = reactor.Trxr;
       return;
     }
+    let varValueOLD = reactor.Trxr; // so don't clear plot below if same value
     let varValue = 0; // reaction T in (K)
     let varMin = 300;
     let varMax = 340;
@@ -198,6 +217,12 @@ let reactor = {
       // allow for independence and portability of this process unit
       varValue = varInitial;
     }
+
+    if (varValue == varValueOLD) {
+      // keep plot
+    } else {
+      reactor.fInitializePlot();
+    }
     // only return value here, do not set to Trxr
     // in case called when not to be used
     // onclick in input field calls this and want input validation but don't change Trxr
@@ -205,28 +230,38 @@ let reactor = {
     return(varValue);
   },
 
+  updateRunCount : function() {
+    $.post("http://reactorlab.net/web_labs/webAppRunLog.lc", {webAppNumber: "home_reactor"});
+  },
+
   reactReactor : function() {
-    if (reactor.fillFlag == 1 || reactor.emptyFlag == 1 || reactor.reactFlag == 1) {
-      // note check on reactFlag - don't activate this again while reacting
+
+    // console.log('at reactReactor, reactor.stateFlag = ' + reactor.stateFlag);
+
+    if (reactor.stateFlag != 1) {
+      // console.log('at reactReactor, if (reactor.stateFlag != 1) is true, returning');
       return;
     }
-    // set reactFlag AFTER get Trxr from input field
+    // set stateFlag ONLY AFTER get Trxr from input field
+    // AND AFTER initialize
     // only get reactor T here at start
     // ignore user changes in middle of rxn
     reactor.Trxr = reactor.fGetTrxr();
-    reactor.reactFlag = 1;
-    reactor.updateRunCount();
-    reactor.fInitialize();
+    reactor.fInitializePlot();
+
+    reactor.stateFlag = 2;
+    reactor.reactantConc = reactor.reactantConcInitial;
     reactor.reactTimeSteps = 0;
+    reactor.updateRunCount();
 
     // y-axis values
     //   reactant conc
-    profileData[0][0][1] = reactor.reactConc0;
+    profileData[0][0][1] = reactor.reactantConc;
     //   product conc
     profileData[1][0][1] = 0;
 
     reactor.fUpdatePlot();
-    
+
     // compute RateConst here only
     let Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
     let Ea = 34; // (kJ/mol)
@@ -235,23 +270,17 @@ let reactor = {
     let Kf300 = 0.15;
     reactor.RateConst = Kf300 * Math.exp(EaOverRg300 - EaOverRg/reactor.Trxr);
 
-    // console.log('T = ' + reactor.Trxr + ', k = ' + reactor.RateConst);
-
     // ready to go to next step and react
     reactor.reactReactorContinue();
   },
 
-  updateRunCount : function() {
-    $.post("http://reactorlab.net/web_labs/webAppRunLog.lc", {webAppNumber: "home_reactor"});
-  },
-
   reactReactorContinue : function() {
 
-    if (reactor.fillFlag == 1 || reactor.emptyFlag == 1) {
-      reactor.reactFlag = 0;
+    // console.log('at reactReactorContinue, stateFlag = ' + reactor.stateFlag);
+
+    if (reactor.stateFlag != 2) {
+      // console.log('in reactReactorContinue, if (reactor.stateFlag != 2) is true, returning');
       return;
-    } else {
-      reactor.reactFlag = 1;
     }
 
     // get time at start of repeating
@@ -266,23 +295,17 @@ let reactor = {
       reactor.reactImgCounter = 0;
     }
 
-    // // >>> BREAK OUT WHEN REACTION DONE
-    // // *** OLD - when conc drops to low value ***
-    // // put this before change reaction or get reaction change each onclick
-    // if (reactor.reactConc/reactor.reactConc0 <= reactor.reactConcMIN) {
-    //   reactor.fChangeImage("#image_reactor_mix_00");
-    //   reactor.reactFlag = 0;
-    //   return;
-    // }
-
     // >>> BREAK OUT WHEN REACTION DONE
     // *** NEW - when reach number points in plot
     // put this before change reaction or get reaction change each onclick
     if (reactor.reactTimeSteps >= numProfilePts) {
       reactor.fChangeImage("#image_reactor_mix_00");
-      reactor.reactFlag = 0;
+      reactor.stateFlag = 3;
+      // console.log('in reactReactorContinue, if (reactor.reactTimeSteps >= numProfilePts) is true, returning');
       return;
     }
+
+    // console.log('in reactReactorContinue, reactor.reactTimeSteps = ' + reactor.reactTimeSteps);
 
     // both two lines below work by themselves and don't require jquery
     let el = document.querySelector("#div_PLOTDIV_reactor_contents");
@@ -291,21 +314,24 @@ let reactor = {
     // step reaction
     reactor.reactTimeSteps = reactor.reactTimeSteps + 1;
     let dt = 0.075;
-    reactor.reactConc = reactor.reactConc - reactor.RateConst * reactor.reactConc * dt;
+    reactor.reactantConc = reactor.reactantConc - reactor.RateConst * reactor.reactantConc * dt;
 
-    // compute color for this reactConc
-    let B = Math.round(255*reactor.reactConc/reactor.reactConc0); // Blue = reactant
+    // console.log('in reactReactorContinue, reactor.RateConst = ' + reactor.RateConst);
+    // console.log('in reactReactorContinue, reactor.reactantConc = ' + reactor.reactantConc);
+
+    // compute color for this reactantConc
+    let B = Math.round(255*reactor.reactantConc/reactor.reactantConcInitial); // Blue = reactant
     let R = 255 - B; // Red = product
     let colorString = "rgb(" + R + ", 0, " + B + ")";
 
-    // set color for this reactConc
+    // set color for this reactantConc
     el.style.backgroundColor = colorString; // backgroundColor NOT background-color
 
     // y-axis values
     //   reactant conc
-    profileData[0][reactor.reactTimeSteps][1] = reactor.reactConc;
+    profileData[0][reactor.reactTimeSteps][1] = reactor.reactantConc;
     //   product conc
-    profileData[1][reactor.reactTimeSteps][1] = reactor.reactConc0 - reactor.reactConc;
+    profileData[1][reactor.reactTimeSteps][1] = reactor.reactantConcInitial - reactor.reactantConc;
 
     // UPDATE PLOT
     reactor.fUpdatePlot();

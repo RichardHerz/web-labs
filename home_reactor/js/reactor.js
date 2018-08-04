@@ -169,7 +169,6 @@ let reactor = {
 
     // put this before change height or get height change each onclick
     if (height > 2) {
-      reactor.fChangeImage("#image_reactor_mix_00");
       // console.log('in emptyReactor, if (height > 2) is true');
     } else {
       // console.log('in emptyReactor, if (height > 2) is NOT true');

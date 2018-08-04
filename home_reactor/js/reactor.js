@@ -8,12 +8,13 @@
 let reactor = {
 
   updateDisplayTimingMs : 100,
-  stateFlag : 1,
   reactantConcInitial : 1,
   reactImgCounter : 0,
   reactTimeSteps : 0,
   Trxr : 0,
   RateConst : 0,
+  currentImage: '', // set in fChangeImage()
+  stateFlag : 1,
 
   // STATES, saved in stateFlag
   // 1 - full - allow start reaction or start empty
@@ -86,6 +87,7 @@ let reactor = {
     // now set the chosen image to visible
     tImage = document.querySelector(imgName);
     tImage.style.visibility = "visible";
+    reactor.currentImage = imgName; // used during filling and emptying
   }, // END OF function fChangeImage
 
   fillReactor : function() {
@@ -102,7 +104,9 @@ let reactor = {
     startDate = new Date(); // need this here
     startMs = startDate.getTime();
 
-    reactor.fChangeImage("#image_reactor_fill");
+    if (reactor.currentImage != "#image_reactor_fill") {
+      reactor.fChangeImage("#image_reactor_fill");
+    }
 
     // put this before change height & color or change each onclick
     // both two lines below work by themselves and don't require jquery
@@ -159,7 +163,9 @@ let reactor = {
     startDate = new Date(); // need this here
     startMs = startDate.getTime();
 
-    reactor.fChangeImage("#image_reactor_empty");
+    if (reactor.currentImage != "#image_reactor_empty") {
+      reactor.fChangeImage("#image_reactor_empty");
+    }
 
     // both two lines below work by themselves and don't require jquery
     let el = document.querySelector("#div_PLOTDIV_reactor_contents");

@@ -15,20 +15,22 @@
   <!-- load CSS style sheets for this lab  -->
   <link rel="stylesheet" href="css/index.css">
 
-  <!-- load main JAVASCRIPT for this lab -->
+  <!-- load SPECIFIC JAVASCRIPT for this lab -->
   <script language="javascript" src="js/process_sim_params.js" type="text/javascript"></script>
   <script language="javascript" src="js/puAdiabaticPackedBedPFR.js" type="text/javascript"></script>
   <script language="javascript" src="js/puCounterCurrentHeatExchanger.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_units.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_controller.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_interface.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_plot_info.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_plotter_flot.js" type="text/javascript"></script>
+
+  <!-- COMMON JAVASCRIPT for Web Labs -->
+  <script language="javascript" src="../web_labs_JS/process_controller.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_interface.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_plotter_flot.js" type="text/javascript"></script>
 
   <!-- load flot.js PLOTTING LIBRARY -->
-  <script language="javascript" src="js/jquery/new_jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
-  <script language="javascript" src="js/jquery/new_jquery/jquery.flot.min-0.8.3.js" type="text/javascript"></script>
-  <script language="javascript" src="js/jquery/new_jquery/jquery.flot.axislabels-20141122.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery.flot.min-0.8.3.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery.flot.axislabels-20141122.js" type="text/javascript"></script>
 
   <!-- initialize simulation after loading of this window -->
   <script language="javascript">
@@ -40,7 +42,7 @@
 <body>
   <div id="div_page_header">
     <!-- output field can be used in development by controller to display timing -->
-    <!-- uncomment next line and comment following <p> and contents -->
+    <!-- uncomment next line and comment the following <p> and contents -->
     <!-- <p id="field_output_field"></p> -->
     <p>
     <a href="http://reactorlab.net/web-labs/">Back</a> to Web Labs at ReactorLab.net

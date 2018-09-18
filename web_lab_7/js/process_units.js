@@ -28,4 +28,4 @@ let processUnits = new Object();
 processUnits[0] = puPlugFlowReactor;
 
 // clear separate process units for garbage collection
-puPackedBedPFR = null;
+puPlugFlowReactor = null;

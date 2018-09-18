@@ -125,7 +125,7 @@ let puPlugFlowReactor = {
     //
     let v = 0;
     this.dataHeaders[v] = 'Kf300';
-    this.dataInputs[v] = 'input_field_KF300';
+    this.dataInputs[v] = 'input_field_Kf300';
     this.dataUnits[v] = 'm3/kg/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 10;
@@ -265,35 +265,33 @@ let puPlugFlowReactor = {
       this.CaNew[k] = 0;
     }
 
-    // XXX PROBLEMS HERE AND WITH FOR BELOW WITH this.profileData
-    //
-    // // initialize profile data array - must follow function initPlotData in this file
-    // // initPlotData(numProfileVars,numProfilePts)
-    // this.profileData = initPlotData(2,this.numNodes); // holds data for static profile plots
-    //
-    // // // initialize strip chart data array
-    // // // initPlotData(numStripVars,numStripPts)
-    // // this.stripData = initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
-    //
-    // // initialize local array to hold color-canvas data, e.g., space-time data -
-    // // initColorCanvasArray(numVars,numXpts,numYpts)
-    // this.colorCanvasData = initColorCanvasArray(2,this.numNodes,1);
-    //
-    // var kn = 0;
-    // for (k = 0; k <= this.numNodes; k += 1) {
-    //   kn = k/this.numNodes;
-    //   // x-axis values
-    //   // x-axis values will not change during sim
-    //   // XXX change to get number vars for this plotInfo variable
-    //   //     so can put in repeat - or better yet, a function
-    //   //     and same for y-axis below
-    //   // first index specifies which variable
-    //   this.profileData[0][k][0] = kn;
-    //   this.profileData[1][k][0] = kn;
-    //   // y-axis values
-    //   this.profileData[0][k][1] = this.dataInitial[6]; // [6] is Tin
-    //   this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
-    // }
+    // initialize profile data array
+    // plotter.initPlotData(numProfileVars,numProfilePts)
+    this.profileData = plotter.initPlotData(2,this.numNodes); // holds data for static profile plots
+
+    // // initialize strip chart data array
+    // // plotter.initPlotData(numStripVars,numStripPts)
+    // this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
+
+    // initialize local array to hold color-canvas data, e.g., space-time data -
+    // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
+    this.colorCanvasData = plotter.initColorCanvasArray(2,this.numNodes,1);
+
+    let kn = 0;
+    for (k = 0; k <= this.numNodes; k += 1) {
+      kn = k/this.numNodes;
+      // x-axis values
+      // x-axis values will not change during sim
+      // XXX change to get number vars for this plotInfo variable
+      //     so can put in repeat - or better yet, a function
+      //     and same for y-axis below
+      // first index specifies which variable
+      this.profileData[0][k][0] = kn;
+      this.profileData[1][k][0] = kn;
+      // y-axis values
+      this.profileData[0][k][1] = this.dataInitial[6]; // [6] is Tin
+      this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
+    }
 
   }, // end reset
 
@@ -329,7 +327,7 @@ let puPlugFlowReactor = {
     this.Tjacket = this.dataValues[8] = interface.getInputValue(unum, 8);
 
     // calc adiabatic delta T, positive for negative H (exothermic)
-    var adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
+    let adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
 
     // calc max possible T
     if(this.DelH < 0) {
@@ -390,7 +388,7 @@ let puPlugFlowReactor = {
     //
     // // FIRST, compute spaceTime = residence time between two nodes in hot tube, also
     // //                          = space time of equivalent single mixing cell
-    // var spaceTime = (Length / this.numNodes) / VelocHot; // (s)
+    // let spaceTime = (Length / this.numNodes) / VelocHot; // (s)
     //
     // // SECOND, estimate unitTimeStep
     // // do NOT change simParams.simTimeStep here
@@ -427,32 +425,32 @@ let puPlugFlowReactor = {
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
 
-    var i = 0; // index for step repeats
-    var n = 0; // index for nodes
-    var TrxrN = 0;
-    var dTrxrDT = 0;
-    var CaN = 0;
-    var dCaDT = 0;
+    let i = 0; // index for step repeats
+    let n = 0; // index for nodes
+    let TrxrN = 0;
+    let dTrxrDT = 0;
+    let CaN = 0;
+    let dCaDT = 0;
 
     // CpFluid, densFluid, densCat are properties of puPlugFlowReactor
-    var CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
-    var voidFrac = 0.3; // bed void fraction
-    var densBed = (1 - voidFrac) * this.densCat; // (kg/m3), bed density
+    let CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
+    let voidFrac = 0.3; // bed void fraction
+    let densBed = (1 - voidFrac) * this.densCat; // (kg/m3), bed density
     // assume fluid and catalyst at same T at each position in reactor
-    var CpMean = voidFrac * this.CpFluid + (1 - voidFrac) * CpCat;
+    let CpMean = voidFrac * this.CpFluid + (1 - voidFrac) * CpCat;
 
-    var dW = this.Wcat / this.numNodes;
-    var Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
-    var kT = 0; // will vary with T below
-    var EaOverRg = this.Ea / Rg; // so not compute in loop below
-    var EaOverRg300 = EaOverRg / 300; // so not compute in loop below
+    let dW = this.Wcat / this.numNodes;
+    let Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
+    let kT = 0; // will vary with T below
+    let EaOverRg = this.Ea / Rg; // so not compute in loop below
+    let EaOverRg300 = EaOverRg / 300; // so not compute in loop below
 
-    var flowCoef = this.Flowrate * densBed / voidFrac / dW;
-    var rxnCoef = densBed / voidFrac;
+    let flowCoef = this.Flowrate * densBed / voidFrac / dW;
+    let rxnCoef = densBed / voidFrac;
 
-    var energyFlowCoef = this.Flowrate * this.densFluid * this.CpFluid / CpMean / dW;
-    var energyXferCoef = this.UAcoef / CpMean;
-    var energyRxnCoef = this.DelH / CpMean;
+    let energyFlowCoef = this.Flowrate * this.densFluid * this.CpFluid / CpMean / dW;
+    let energyXferCoef = this.UAcoef / CpMean;
+    let energyRxnCoef = this.DelH / CpMean;
 
     // this unit can take multiple steps within one outer main loop repeat step
     for (i=0; i<this.unitStepRepeats; i+=1) {
@@ -527,7 +525,7 @@ let puPlugFlowReactor = {
 
     // note use .toFixed(n) method of object to round number to n decimal points
 
-    var n = 0; // used as index
+    let n = 0; // used as index
 
     document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
     document.getElementById(this.displayReactorRightT).innerHTML = this.Trxr[this.numNodes].toFixed(1) + ' K';
@@ -575,10 +573,10 @@ let puPlugFlowReactor = {
     // to allow changes to propagate down unit
     //
     let nn = this.numNodes;
-    var hlt = 1.0e5 * processUnits[0]['Trxr'][nn].toFixed(1);
-    var hrt = 1.0e1 * processUnits[0]['Trxr'][0].toFixed(1);
-    var clt = 1.0e-3 * processUnits[0]['Ca'][nn].toFixed(1);
-    var crt = 1.0e-7 * processUnits[0]['Ca'][0].toFixed(1);
+    let hlt = 1.0e5 * processUnits[0]['Trxr'][nn].toFixed(1);
+    let hrt = 1.0e1 * processUnits[0]['Trxr'][0].toFixed(1);
+    let clt = 1.0e-3 * processUnits[0]['Ca'][nn].toFixed(1);
+    let crt = 1.0e-7 * processUnits[0]['Ca'][0].toFixed(1);
     // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
     let newCheckSum = hlt + hrt + clt  + crt;
     let oldSScheckSum = this.ssCheckSum;
@@ -588,4 +586,4 @@ let puPlugFlowReactor = {
     return ssFlag;
   } // END OF checkForSteadyState()
 
-}; // END var puPlugFlowReactor
+}; // END puPlugFlowReactor

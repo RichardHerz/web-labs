@@ -265,33 +265,35 @@ let puPlugFlowReactor = {
       this.CaNew[k] = 0;
     }
 
-    // initialize profile data array - must follow function initPlotData in this file
-    // initPlotData(numProfileVars,numProfilePts)
-    this.profileData = initPlotData(2,this.numNodes); // holds data for static profile plots
-
-    // // initialize strip chart data array
-    // // initPlotData(numStripVars,numStripPts)
-    // this.stripData = initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
-
-    // initialize local array to hold color-canvas data, e.g., space-time data -
-    // initColorCanvasArray(numVars,numXpts,numYpts)
-    this.colorCanvasData = initColorCanvasArray(2,this.numNodes,1);
-
-    var kn = 0;
-    for (k = 0; k <= this.numNodes; k += 1) {
-      kn = k/this.numNodes;
-      // x-axis values
-      // x-axis values will not change during sim
-      // XXX change to get number vars for this plotsObj variable
-      //     so can put in repeat - or better yet, a function
-      //     and same for y-axis below
-      // first index specifies which variable
-      this.profileData[0][k][0] = kn;
-      this.profileData[1][k][0] = kn;
-      // y-axis values
-      this.profileData[0][k][1] = this.dataInitial[6]; // [6] is Tin
-      this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
-    }
+    // XXX PROBLEMS HERE AND WITH FOR BELOW WITH this.profileData
+    //
+    // // initialize profile data array - must follow function initPlotData in this file
+    // // initPlotData(numProfileVars,numProfilePts)
+    // this.profileData = initPlotData(2,this.numNodes); // holds data for static profile plots
+    //
+    // // // initialize strip chart data array
+    // // // initPlotData(numStripVars,numStripPts)
+    // // this.stripData = initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
+    //
+    // // initialize local array to hold color-canvas data, e.g., space-time data -
+    // // initColorCanvasArray(numVars,numXpts,numYpts)
+    // this.colorCanvasData = initColorCanvasArray(2,this.numNodes,1);
+    //
+    // var kn = 0;
+    // for (k = 0; k <= this.numNodes; k += 1) {
+    //   kn = k/this.numNodes;
+    //   // x-axis values
+    //   // x-axis values will not change during sim
+    //   // XXX change to get number vars for this plotInfo variable
+    //   //     so can put in repeat - or better yet, a function
+    //   //     and same for y-axis below
+    //   // first index specifies which variable
+    //   this.profileData[0][k][0] = kn;
+    //   this.profileData[1][k][0] = kn;
+    //   // y-axis values
+    //   this.profileData[0][k][1] = this.dataInitial[6]; // [6] is Tin
+    //   this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
+    // }
 
   }, // end reset
 
@@ -364,16 +366,16 @@ let puPlugFlowReactor = {
     }
 
     // adjust axis of profile plot
-    plotArrays['plotFlag'][0] = 0;  // so axes will refresh
-    plotsObj[0]['yLeftAxisMin'] = this.dataMin[9]; // [9] is Trxr
-    plotsObj[0]['yLeftAxisMax'] = this.dataMax[9];
-    plotsObj[0]['yRightAxisMin'] = 0;
-    plotsObj[0]['yRightAxisMax'] = this.Cain;
+    plotter['plotArrays']['plotFlag'][0] = 0;  // so axes will refresh
+    plotInfo[0]['yLeftAxisMin'] = this.dataMin[9]; // [9] is Trxr
+    plotInfo[0]['yLeftAxisMax'] = this.dataMax[9];
+    plotInfo[0]['yRightAxisMin'] = 0;
+    plotInfo[0]['yRightAxisMax'] = this.Cain;
     // adjust color span of spaceTime, color canvas plots
-    plotsObj[1]['varValueMin'] = this.dataMin[9]; // [9] is Trxr
-    plotsObj[1]['varValueMax'] = this.dataMax[9];
-    plotsObj[2]['varValueMin'] = this.dataMin[9];
-    plotsObj[2]['varValueMax'] = this.dataMax[9];
+    plotInfo[1]['varValueMin'] = this.dataMin[9]; // [9] is Trxr
+    plotInfo[1]['varValueMax'] = this.dataMax[9];
+    plotInfo[2]['varValueMin'] = this.dataMin[9];
+    plotInfo[2]['varValueMax'] = this.dataMax[9];
 
     // also update ONLY inlet values at inlet of reactor in case sim is paused
     // but do not do full updateDisplay
@@ -521,7 +523,7 @@ let puPlugFlowReactor = {
 
   }, // end updateState method
 
-  display : function() {
+  updateDisplay : function() {
 
     // note use .toFixed(n) method of object to round number to n decimal points
 
@@ -559,7 +561,7 @@ let puPlugFlowReactor = {
       this.colorCanvasData[1][n][0] = this.Tjacket; // XXX should only do this once...
     }
 
-  } // end display method
+  }, // end updateDisplay method
 
   checkForSteadyState : function() {
     // required - called by simParams

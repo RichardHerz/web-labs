@@ -21,7 +21,8 @@ let plotter = {
     // input argument plotInfoNum refers to plot number in object plotInfo
     // which is defined in file process_plot_info.js
     //
-    // uses plotInfo and plotArrays objects defined in file process_plot_info.js
+    // uses plotInfo object defined in process_plot_info.js
+    // uses plotArrays object defined in plotter object in this file
 
     let v = 0; // used as index to select the variable
     let p = 0; // used as index to select data point pair

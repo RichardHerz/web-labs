@@ -31,6 +31,12 @@
   <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery.flot.min-0.8.3.js" type="text/javascript"></script>
   <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery.flot.axislabels-20141122.js" type="text/javascript"></script>
 
+  <!-- initialize simulation after loading of this window -->
+  <script language="javascript">
+    // this works as script in html file but not in external js files
+    window.onload = controller.openThisLab; // can NOT use () after openThisLab
+  </script>
+
 </head>
 <body>
   <div id="div_page_header">
@@ -51,8 +57,8 @@
    <!-- canvas element width & height must be specified here in HTML and not in CSS -->
    <canvas id="canvas_CANVAS_reactor" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
    <!-- canvas element width & height must be specified here in HTML and not in CSS -->
-   <input type="button" id="button_runButton" value="Run" onclick="runThisLab()">
-   <input type="button" id="button_resetButton" value="Reset" onclick="resetThisLab()">
+   <input type="button" id="button_runButton" value="Run" onclick="interface.runThisLab()">
+   <input type="button" id="button_resetButton" value="Reset" onclick="interface.resetThisLab()">
    <p id="field_reactor_right_arrow">
       &rarr;
    </p>

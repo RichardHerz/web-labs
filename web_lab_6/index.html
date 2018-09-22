@@ -25,25 +25,27 @@
   <!-- load CSS style sheets for this lab  -->
   <link rel="stylesheet" href="css/index.css">
 
-  <!-- load main JAVASCRIPT for this lab -->
-  <!-- <script language="javascript" src="js/process_main.js" type="text/javascript"></script> -->
+  <!-- load SPECIFIC JAVASCRIPT for this lab -->
+  <script language="javascript" src="js/process_sim_params.js" type="text/javascript"></script>
+  <script language="javascript" src="js/puCoCounterHeatExchanger.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_units.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_plot_info.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_plotter.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_spacetime.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_interface.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_main.js" type="text/javascript"></script>
 
-  <!-- load flot PLOTTING LIBRARY -->
-  <!-- need full jquery.js for flot.js to work -->
+  <!-- load COMMON JAVASCRIPT for Web Labs -->
+  <script language="javascript" src="../web_labs_JS/process_controller.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_interface.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_plotter_flot.js" type="text/javascript"></script>
 
-  <!--<script language="javascript" src="js/jquery/jquery.js" type="text/javascript"></script>-->
-  <!--<script language="javascript" src="js/jquery/jquery.flot.js" type="text/javascript"></script>-->
-  <!--<script language="javascript" src="js/jquery/jquery.flot.axislabels.js" type="text/javascript"></script>-->
+  <!-- load flot.js PLOTTING LIBRARY -->
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery.flot.min-0.8.3.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery.flot.axislabels-20141122.js" type="text/javascript"></script>
 
-  <script language="javascript" src="js/jquery/new_jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
-  <script language="javascript" src="js/jquery/new_jquery/jquery.flot.min-0.8.3.js" type="text/javascript"></script>
-  <script language="javascript" src="js/jquery/new_jquery/jquery.flot.axislabels-20141122.js" type="text/javascript"></script>
+  <!-- initialize simulation after loading of this window -->
+  <script language="javascript">
+    // this works as script in html file but not in external js files
+    window.onload = controller.openThisLab; // can NOT use () after openThisLab
+  </script>
 
 </head>
 <body>
@@ -67,8 +69,8 @@
    <canvas id="canvas_CANVAS_cold" width="201" height="34"></canvas>
    <!-- canvas for colormap graphic -->
    <!-- canvas element width & height must be specified here in HTML and not in CSS -->
-   <input type="button" id="button_runButton" value="Run" onclick="runThisLab()">
-   <input type="button" id="button_resetButton" value="Reset" onclick="resetThisLab()">
+   <input type="button" id="button_runButton" value="Run" onclick="interface.runThisLab()">
+   <input type="button" id="button_resetButton" value="Reset" onclick="interface.resetThisLab()">
    <p id="field_cold_right_arrow">
       &rarr;
    </p>
@@ -93,11 +95,12 @@
    <p id="field_cold_right_T">
       333 K
    </p>
-   <input type="button" id="button_copyData" value="Copy Data" onclick="copyData(0)">
+   <input type="button" id="button_copyData" value="Copy Data" onclick="interface.copyData(0)">
 </div> <!-- end of div div_simFrame -->
 <div id="div_input_fields_group">
    <!-- onchange can send updateUIparams() to process_main.js to update all units *OR* send to specific units -->
    <div id="div_radio_button_group">
+      <!-- for radio group, send updateUIparams() to processUnits[0] -->
       <label id="radio_counter-current_flow_LABEL" name="radio_of_div_radio_button_group">
             <input type="radio" id="radio_counter-current_flow" name="radio_of_div_radio_button_group" checked onchange="processUnits[0].updateUIparams()">
             <span id="radio_counter-current_flow_SPAN">counter-current flow</span>
@@ -110,43 +113,43 @@
    <p id="field_TinHot_label">
       T in hot (300-380 K)
    </p>
-   <input id="input_field_TinHot" value="360" onchange="updateUIparams()">
+   <input id="input_field_TinHot" value="360" onchange="interface.updateUIparams()">
    <p id="field_TinCold_label">
       T in cold (300-380 K)
    </p>
-   <input id="input_field_TinCold" value="310" onchange="updateUIparams()">
+   <input id="input_field_TinCold" value="310" onchange="interface.updateUIparams()">
    <p id="field_FlowHot_label">
       Flow hot (0.15-4 kg/s)
    </p>
-   <input id="input_field_FlowHot" value="0.5" onchange="updateUIparams()">
+   <input id="input_field_FlowHot" value="0.5" onchange="interface.updateUIparams()">
    <p id="field_FlowCold_label">
       Flow cold (0.15-4 kg/s)
    </p>
-   <input id="input_field_FlowCold" value="0.75" onchange="updateUIparams()">
+   <input id="input_field_FlowCold" value="0.75" onchange="interface.updateUIparams()">
    <p id="field_CpHot_label">
       Cp hot (1-10 kJ/kg/K)
    </p>
-   <input id="input_field_CpHot" value="4.2" onchange="updateUIparams()">
+   <input id="input_field_CpHot" value="4.2" onchange="interface.updateUIparams()">
    <p id="field_CpCold_label">
       Cp cold (1-10 kJ/kg/K)
    </p>
-   <input id="input_field_CpCold" value="4.2" onchange="updateUIparams()">
+   <input id="input_field_CpCold" value="4.2" onchange="interface.updateUIparams()">
    <p id="field_Ucoef_label">
       U (0-10 kW/m<sup shift="-4">2</sup>/K)
    </p>
-   <input id="input_field_Ucoef" value="0.6" onchange="updateUIparams()">
+   <input id="input_field_Ucoef" value="0.6" onchange="interface.updateUIparams()">
    <p id="field_Area_label">
       Area (1-10 m<sup shift="-4">2</sup>)
    </p>
-   <input id="input_field_Area" value="4.0" onchange="updateUIparams()">
+   <input id="input_field_Area" value="4.0" onchange="interface.updateUIparams()">
    <p id="field_Diam_label">
       tube diam (0.02-0.20 m)
    </p>
-   <input id="input_field_Diam" value="0.15" onchange="updateUIparams()">
+   <input id="input_field_Diam" value="0.15" onchange="interface.updateUIparams()">
    <p id="field_length">
       L (m) =
    </p>
-   <p id="field_Reynolds" onchange="updateUIparams()">
+   <p id="field_Reynolds" onchange="interface.updateUIparams()">
       Re =
    </p>
 </div> <!-- end of div div_input_fields_group -->

@@ -277,7 +277,7 @@ let puCoCounterHeatExchanger = {
     // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
     this.colorCanvasData = plotter.initColorCanvasArray(2,this.numNodes,1);
 
-    var kn = 0;
+    let kn = 0;
     for (k=0; k<=this.numNodes; k+=1) {
       kn = k/this.numNodes;
       // x-axis values
@@ -312,9 +312,9 @@ let puCoCounterHeatExchanger = {
     // RADIO BUTTONS & CHECK BOX
     // at least for now, do not check existence of UI elements
     // Model radio buttons
-    var m00 = document.querySelector('#' + this.inputModel00);
-    var cra = document.querySelector(this.displayColdRightArrow);
-    var cla = document.querySelector(this.displayColdLeftArrow);
+    let m00 = document.querySelector('#' + this.inputModel00);
+    let cra = document.querySelector(this.displayColdRightArrow);
+    let cla = document.querySelector(this.displayColdLeftArrow);
     if (m00.checked) {
       this.ModelFlag = 0; // co-current flow
       cra.style.color = 'blue';
@@ -364,13 +364,13 @@ let puCoCounterHeatExchanger = {
 
     // from Area and Diam inputs & specify cylindrical tube
     // can compute Length
-    var Length = this.Area / this.Diam / Math.PI;
+    let Length = this.Area / this.Diam / Math.PI;
 
     document.getElementById(this.displayLength).innerHTML = 'L (m) = ' + Length.toFixed(1);
     // note use .toFixed(n) method of object to round number to n decimal points
 
     // note Re is dimensionless Reynolds number in hot flow tube
-    var Re = this.FlowHot / this.FluidDensity / this.FluidKinematicViscosity * 4 / Math.PI / this.Diam;
+    let Re = this.FlowHot / this.FluidDensity / this.FluidKinematicViscosity * 4 / Math.PI / this.Diam;
     document.getElementById(this.displayReynoldsNumber).innerHTML = 'Re<sub> hot-tube</sub> = ' + Re.toFixed(0);
 
     // compute axial dispersion coefficient for turbulent flow
@@ -378,8 +378,8 @@ let puCoCounterHeatExchanger = {
     // https://classes.engineering.wustl.edu/che503/Axial%20Dispersion%20Model%20Figures.pdf
     // and
     // https://classes.engineering.wustl.edu/che503/chapter%205.pdf
-    var Ax = Math.PI * Math.pow(this.Diam, 2) / 4.0; // (m2), cross-sectional area for flow
-    var VelocHot = this.FlowHot / this.FluidDensity / Ax; // (m/s), linear fluid velocity
+    let Ax = Math.PI * Math.pow(this.Diam, 2) / 4.0; // (m2), cross-sectional area for flow
+    let VelocHot = this.FlowHot / this.FluidDensity / Ax; // (m/s), linear fluid velocity
     this.DispCoef = VelocHot * this.Diam * (3.0e7/Math.pow(Re, 2.1) + 1.35/Math.pow(Re, 0.125)); // (m2/s)
 
     // NOTE: to see independent effect of DispCoef = 0, set heat transfer
@@ -392,7 +392,7 @@ let puCoCounterHeatExchanger = {
     // For N nodes and zero dispersion coefficient value specified,
     // the effective dispersion coefficient = effDisp = v*L/2/(N-1)
     // per https://classes.engineering.wustl.edu/che503/chapter%205.pdf
-    // var effDisp = VelocHot * Length / 2 / (this.numNodes + 1 - 1);
+    // let effDisp = VelocHot * Length / 2 / (this.numNodes + 1 - 1);
     // alert('effDisp = ' + effDisp);
     // alert('this.DispCoef = ' + this.DispCoef);
     // for 200 nodes & default conditions as of 20190505, effDisp = 6e-4 (m2/s)
@@ -405,7 +405,7 @@ let puCoCounterHeatExchanger = {
 
     // FIRST, compute spaceTime = residence time between two nodes in hot tube, also
     //                          = space time of equivalent single mixing cell
-    var spaceTime = (Length / this.numNodes) / VelocHot; // (s)
+    let spaceTime = (Length / this.numNodes) / VelocHot; // (s)
 
     // SECOND, estimate unitTimeStep
     // do NOT change simParams.simTimeStep here
@@ -614,14 +614,13 @@ let puCoCounterHeatExchanger = {
     //
     let nn = this.numNodes;
     let unum = 0; // unit number
-    let nn = processUnits[unum]['numNodes'];
     // Thot and Tcold arrays are globals
     let hlt = 1.0e5 * processUnits[unum]['Thot'][nn].toFixed(1);
     let hrt = 1.0e1 * processUnits[unum]['Thot'][0].toFixed(1);
     let clt = 1.0e-3 * processUnits[unum]['Tcold'][nn].toFixed(1);
     let crt = 1.0e-7 * processUnits[unum]['Tcold'][0].toFixed(1);
     let newCheckSum = hlt + hrt + clt  + crt;
-    let newCheckSum = newCheckSum.toFixed(8); // last sum operation may add significant figs
+    newCheckSum = newCheckSum.toFixed(8); // last sum operation may add significant figs
     // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
     let oldSScheckSum = this.ssCheckSum;
     let ssFlag = false;

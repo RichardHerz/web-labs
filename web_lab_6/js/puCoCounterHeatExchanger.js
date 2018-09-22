@@ -594,34 +594,7 @@ let puCoCounterHeatExchanger = {
 
   }, // end updateState method
 
-  checkSSvalues : function() {
-    // WARNING: has alerts - may be called in simParams.checkForSteadyState()
-    // CHECK FOR ENERGY BALANCE ACROSS HEAT EXCHANGER AT STEADY STATE
-    // Q = U*A*(dT2 - dT1)/log(dT2/dT1) FOR dT1 != dT2 (or get log = inf)
-    var nn = this.numNodes;
-    // Thot and Tcold arrays are globals
-    var hlt = this.Thot[nn]; // outlet hot
-    var hrt = this.Thot[0]; // inlet hot
-    var clt = this.Tcold[nn];
-    var crt = this.Tcold[0];
-    var dT1 = hrt - crt;
-    var dT2 = hlt - clt;
-    if (dT1 == dT2) {
-      alert('dT1 == dT2');
-      return;
-    }
-    var UAlogMeanDT = this.Ucoef * this.Area * (dT2 - dT1) / Math.log(dT2/dT1); // kJ/s = kW
-    var Qhot = (hrt - hlt) * this.FlowHot * this.CpHot; // kJ/s = kW
-    var Qcold = Math.abs((crt - clt) * this.FlowCold * this.CpCold); // abs for co- or counter-
-    var discrep = 100*(UAlogMeanDT/Qhot-1);
-    var discrep2 = 100*(UAlogMeanDT/Qcold-1);
-    var discrep3 = 100*(Qcold/Qhot-1);
-    alert('Qhot = UAlogMeanDT: ' + Qhot + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep.toFixed(3) + ' %');
-    alert('Qcold = UAlogMeanDT: ' + Qcold + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep2.toFixed(3) + ' %');
-    alert('Qhot = Qcold: ' + Qhot + ' = '+ Qcold + ', discrepancy = ' + discrep3.toFixed(3) + ' %');
-  },
-
-  display : function() {
+  updateDisplay : function() {
 
     // note use .toFixed(n) method of object to round number to n decimal points
 
@@ -669,6 +642,71 @@ let puCoCounterHeatExchanger = {
     // FOR HEAT EXCHANGER - DO NOT USE STRIP CHART YET
     // HANDLE STRIP CHART DATA
 
-  } // end display method
+  }, // end updateDisplay method
+
+  // checkSSvalues : function() {
+  //   // WARNING: has alerts - may be called in simParams.checkForSteadyState()
+  //   // CHECK FOR ENERGY BALANCE ACROSS HEAT EXCHANGER AT STEADY STATE
+  //   // Q = U*A*(dT2 - dT1)/log(dT2/dT1) FOR dT1 != dT2 (or get log = inf)
+  //   var nn = this.numNodes;
+  //   // Thot and Tcold arrays are globals
+  //   var hlt = this.Thot[nn]; // outlet hot
+  //   var hrt = this.Thot[0]; // inlet hot
+  //   var clt = this.Tcold[nn];
+  //   var crt = this.Tcold[0];
+  //   var dT1 = hrt - crt;
+  //   var dT2 = hlt - clt;
+  //   if (dT1 == dT2) {
+  //     alert('dT1 == dT2');
+  //     return;
+  //   }
+  //   var UAlogMeanDT = this.Ucoef * this.Area * (dT2 - dT1) / Math.log(dT2/dT1); // kJ/s = kW
+  //   var Qhot = (hrt - hlt) * this.FlowHot * this.CpHot; // kJ/s = kW
+  //   var Qcold = Math.abs((crt - clt) * this.FlowCold * this.CpCold); // abs for co- or counter-
+  //   var discrep = 100*(UAlogMeanDT/Qhot-1);
+  //   var discrep2 = 100*(UAlogMeanDT/Qcold-1);
+  //   var discrep3 = 100*(Qcold/Qhot-1);
+  //   alert('Qhot = UAlogMeanDT: ' + Qhot + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep.toFixed(3) + ' %');
+  //   alert('Qcold = UAlogMeanDT: ' + Qcold + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep2.toFixed(3) + ' %');
+  //   alert('Qhot = Qcold: ' + Qhot + ' = '+ Qcold + ', discrepancy = ' + discrep3.toFixed(3) + ' %');
+  // },
+
+  checkForSteadyState : function() {
+    // processUnits[0] is heat exchanger in this web lab
+    // see its method checkSSvalues() for energy balance at SS
+    if (this.simTime >= this.oldSimTime + processUnits[0]['residenceTime']) {
+      // check in order to save CPU time when sim is at steady state
+      // check for steady state by checking for any significant change in end T's
+      // but wait at least one hot flow residence time after the previous check
+      // to allow changes to propagate down tubes
+      // XXX is hot flow residence time a sufficient time constant - or check cold flow?
+      // create SScheck which is a 16-digit number unique to current 4 end T's
+      // NOTE: earlier try of checking for max change in dThotDT & dTcoldDT < criterion
+      // in puHeatExchanger.updateState() was not successful
+      // since those values appeared to settle down to different non-zero values
+      // that didn't appear to change with time for different input values
+      let unum = 0; // unit number
+      var nn = processUnits[unum]['numNodes'];
+      // Thot and Tcold arrays are globals
+      var hlt = 1.0e5 * processUnits[unum]['Thot'][nn].toFixed(1);
+      var hrt = 1.0e1 * processUnits[unum]['Thot'][0].toFixed(1);
+      var clt = 1.0e-3 * processUnits[unum]['Tcold'][nn].toFixed(1);
+      var crt = 1.0e-7 * processUnits[unum]['Tcold'][0].toFixed(1);
+      var SScheck = hlt + hrt + clt  + crt;
+      SScheck = SScheck.toFixed(8); // need because last sum operation adds significant figs
+      // note SScheck = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
+      var oldSScheck = processUnits[unum]['SScheck'];
+      if (SScheck == oldSScheck) {
+        // set ssFlag
+        simParams.ssFlag = true;
+        // processUnits[unum].checkSSvalues(); // WARNING - has alerts - TESTING ONLY
+      } // end if (SScheck == oldSScheck)
+
+      // save current values as the old values
+      processUnits[unum]['SScheck'] = SScheck;
+      simParams.oldSimTime = simParams.simTime;
+    } // END OF if (simParams.simTime >= simParams.oldSimTime + processUnits[unum]['residenceTime'])
+
+  } // END OF checkForSteadyState()
 
 } // END var puHeatExchanger

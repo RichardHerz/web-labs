@@ -112,7 +112,7 @@ let simParams = {
     // to allow changes to propagate down unit
     // open OS Activity Monitor of CPU load to see effect of this
     //
-    // FOR THIS LAB, reactor is processUnits[0] and reactor determines SS
+    // FOR THIS LAB, exchanger is processUnits[0] and exchanger determines SS
     // found that should wait two times residence time between checks in this lab
     let resTime = processUnits[0]['residenceTime'];
     //
@@ -131,6 +131,6 @@ let simParams = {
       // do not save for every call of this function or will never enter IF & check
       this.oldSimTime = this.simTime;
     } // END of if (this.simTime >= this.oldSimTime + 2 * resTime)
-  } // END OF checkForSteadyState()
+  } // END checkForSteadyState method 
 
 }; // END simParams object

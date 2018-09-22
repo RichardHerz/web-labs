@@ -131,6 +131,6 @@ let simParams = {
       // do not save for every call of this function or will never enter IF & check
       this.oldSimTime = this.simTime;
     } // END of if (this.simTime >= this.oldSimTime + 2 * resTime)
-  } // END OF checkForSteadyState()
+  } // END checkForSteadyState method 
 
 }; // END simParams object

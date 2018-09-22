@@ -48,12 +48,10 @@ let puCoCounterHeatExchanger = {
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
-
-  // // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
-  // //   e.g., inputModel01 : "radio_Model_1",
-  // //
-  // inputModel00 : "radio_co-current_flow", // model 0 is co-current flow
-  // inputModel01 : "radio_counter-current_flow", // model 1 is counter-current flow
+  //
+  // HEAT EXCHANGER ALSO HAS RADIO BUTTON INPUTS
+  inputModel00 : "radio_co-current_flow", // model 0 is co-current flow
+  inputModel01 : "radio_counter-current_flow", // model 1 is counter-current flow
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
   displayHotLeftT: 'field_hot_left_T',
@@ -125,15 +123,15 @@ let puCoCounterHeatExchanger = {
   // from array end values with dispersion decreases as number of nodes increases
   // but shows same output field T's to one decimal place for 200-800 nodes
 
+  ssCheckSum : 0, // used to check for steady state
+  residenceTime : 0, // for timing checks for steady state check
+  // residenceTime is set in this unit's updateUIparams()
+
   // for Reynolds number Re, use kinematic viscosity from
   // https://www.engineeringtoolbox.com/water-dynamic-kinematic-viscosity-d_596.html?vA=30&units=C#
   FluidKinematicViscosity : 5.0e-7, // m2/s, for water at mid-T of 330 K for Reynolds number
   FluidDensity : 1000.0, // kg/m3, fluid density specified to be that of water
   DispCoef : 0, // (m2/s), will be updated below, axial dispersion coefficient
-
-  // also see simParams.ssFlag and simParams.SScheck
-  SScheck : 0, // for saving steady state check number
-  residenceTime : 0, // for timing checks for steady state check
 
   initialize : function() {
     //
@@ -258,7 +256,7 @@ let puCoCounterHeatExchanger = {
     // set state variables not set by updateUIparams to initial settings
 
     simParams.ssFlag = false;
-    this.SScheck = 0;
+    this.SScheck = 0; // rest steady state check number of array end values
 
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Thot[k] = this.TinCold;
@@ -301,42 +299,15 @@ let puCoCounterHeatExchanger = {
 
   updateUIparams : function() {
     //
-    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
-    //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
-    //
-    // The following IF structures provide for unit independence
-    // such that when input doesn't exist, you get "initial" value
-    //
-    // // EXAMPLE FOR SETTING VALUE OF AN OBJECT WITH MULTIPLE properties
-    // //   THUS set value of this.setPoint.value
-    // if (document.getElementById(this.inputSetPoint)) {
-    //   let tmpFunc = new Function("return " + this.inputSetPoint + ".value;");
-    //   this.setPoint.value = tmpFunc();
-    // } else {
-    //   this.setPoint.value = this.initialSetPoint;
-    // }
-    //
-    // // EXAMPLE SETTING VALUE OF SIMPLE VARIABLE (no .value = )
-    // if (document.getElementById(this.inputCmax)) {
-    //   let tmpFunc = new Function("return " + this.inputCmax + ".value;");
-    //   this.Cmax = tmpFunc();
-    // } else {
-    //   this.Cmax= this.initialCmax;
-    // }
-    //
-    // // EXAMPLE OF SETTING VALUE FROM RANGE SLIDER
-    // // update the readout field of range slider
-    // if (document.getElementById(this.inputSliderReadout)) {
-    //   document.getElementById(this.inputSliderReadout).innerHTML = this.Cmax;
+    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // change simParams.ssFlag to false if true
-    if (simParams.ssFlag) {
-      // sim was at steady state, switch ssFlag to false
-      simParams.ssFlag = false;
-    }
-    // reset SScheck checksum used to check for ss
-    this.SScheck = 0;
+    // need to directly set simParams.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    simParams.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
 
     // RADIO BUTTONS & CHECK BOX
     // at least for now, do not check existence of UI elements
@@ -360,17 +331,22 @@ let puCoCounterHeatExchanger = {
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
-    // getInputValue(unit index in processUnits, var index in input arrays)
-    var unum = this.unitIndex;
-    this.TinHot = getInputValue(unum, 0);
-    this.TinCold = getInputValue(unum, 1);
-    this.FlowHot = getInputValue(unum, 2);
-    this.FlowCold = getInputValue(unum, 3);
-    this.CpHot = getInputValue(unum, 4);
-    this.CpCold = getInputValue(unum, 5);
-    this.Ucoef = getInputValue(unum, 6);
-    this.Area = getInputValue(unum, 7);
-    this.Diam = getInputValue(unum, 8);
+    // getInputValue(unit index in processUnits, let index in input arrays)
+    // see variable numbers above in initialize()
+    // note: this.dataValues.[pVar]
+    //   is only used in copyData() to report input values
+    //
+    let unum = this.unitIndex;
+    //
+    this.TinHot = this.dataValues[0] = interface.getInputValue(unum, 0);
+    this.TinCold = this.dataValues[1] = interface.getInputValue(unum, 1);
+    this.FlowHot = this.dataValues[2] = interface.getInputValue(unum, 2);
+    this.FlowCold = this.dataValues[3] = interface.getInputValue(unum, 3);
+    this.CpHot = this.dataValues[4] = interface.getInputValue(unum, 4);
+    this.CpCold = this.dataValues[5] = interface.getInputValue(unum, 5);
+    this.Ucoef = this.dataValues[6] = interface.getInputValue(unum, 6);
+    this.Area = this.dataValues[7] = interface.getInputValue(unum, 7);
+    this.Diam = this.dataValues[8] = interface.getInputValue(unum, 8);
 
     // also update ONLY inlet T's on ends of heat exchanger in case sim is paused
     // outlet T's not defined on first entry into page
@@ -447,33 +423,14 @@ let puCoCounterHeatExchanger = {
 
   updateInputs : function() {
     //
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
-    //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    //
+    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
+    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
 
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
-    //
-    // The following TRY-CATCH structures provide for unit independence
-    // such that when input doesn't exist, you get "initial" value
-
-    // try {
-    // //   let tmpFunc = new Function("return " + this.inputPV + ";");
-    // //   this.PV = tmpFunc();
-    // //   // note: can't test for definition of this.inputVAR because any
-    // //   // definition is true BUT WHEN try to get value of bad input
-    // //   // to see if value is undefined then get "uncaught reference" error
-    // //   // that the value of the bad input specified is undefined,
-    // //   // which is why use try-catch structure here
-    // }
-    // catch(err) {
-    // //   this.PV = this.initialPV;
-    // }
-
-  },
+  }, // END of updateInputs()
 
   updateState : function() {
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -483,40 +440,40 @@ let puCoCounterHeatExchanger = {
 
     // from cylindrical outer Area and Diam inputs & specify cylindrical tube for hot flow
     // can compute Length
-    var Length = this.Area / this.Diam / Math.PI;
+    let Length = this.Area / this.Diam / Math.PI;
 
     // XXX check later for different Ax and Veloc for hot and cold
-    var Ax = Math.PI * Math.pow(this.Diam, 2) / 4.0; // (m2), cross-sectional area for flow
-    var VelocHot = this.FlowHot / this.FluidDensity / Ax; // (m/s), linear fluid velocity
+    let Ax = Math.PI * Math.pow(this.Diam, 2) / 4.0; // (m2), cross-sectional area for flow
+    let VelocHot = this.FlowHot / this.FluidDensity / Ax; // (m/s), linear fluid velocity
     // XXX assume cold uses same flow cross-sectional area as hot
-    var VelocCold = this.FlowCold / this.FluidDensity / Ax; // (m/s), linear fluid velocity
+    let VelocCold = this.FlowCold / this.FluidDensity / Ax; // (m/s), linear fluid velocity
 
     // note XferCoefHot = U * (wall area per unit length = pi * diam * L/L) / (rho * Cp * Ax)
-    var XferCoefHot = this.Ucoef * Math.PI * this.Diam / this.FluidDensity / this.CpHot / Ax;
-    var XferCoefCold = this.Ucoef * Math.PI * this.Diam / this.FluidDensity / this.CpCold / Ax;
+    let XferCoefHot = this.Ucoef * Math.PI * this.Diam / this.FluidDensity / this.CpHot / Ax;
+    let XferCoefCold = this.Ucoef * Math.PI * this.Diam / this.FluidDensity / this.CpCold / Ax;
     // Disp (m2/s) is axial dispersion coefficient for turbulent flow
     // this.DispCoef computed in updateUIparams()
-    var DispHot = this.DispCoef; // (m2/s), axial dispersion coefficient for turbulent flow
+    let DispHot = this.DispCoef; // (m2/s), axial dispersion coefficient for turbulent flow
     // DispHot = 0.0 // FOR TESTING
-    var DispCold = DispHot; // XXX check later
-    var dz = Length / this.numNodes; // (m), distance between nodes
-    var VelocHotOverDZ = VelocHot / dz; // precompute to save time in loop
-    var VelocColdOverDZ = VelocCold / dz; // precompute to save time in loop
-    var DispHotOverDZ2 = DispHot / Math.pow(dz, 2);  // precompute to save time in loop
-    var DispColdOverDZ2 = DispCold / Math.pow(dz, 2);  // precompute to save time in loop
+    let DispCold = DispHot; // XXX check later
+    let dz = Length / this.numNodes; // (m), distance between nodes
+    let VelocHotOverDZ = VelocHot / dz; // precompute to save time in loop
+    let VelocColdOverDZ = VelocCold / dz; // precompute to save time in loop
+    let DispHotOverDZ2 = DispHot / Math.pow(dz, 2);  // precompute to save time in loop
+    let DispColdOverDZ2 = DispCold / Math.pow(dz, 2);  // precompute to save time in loop
 
-    var i = 0; // index for step repeats
-    var n = 0; // index for nodes
-    var ThotN = 0.0;
-    var ThotNm1 = 0.0;
-    var ThotNp1 = 0.0;
-    var TcoldN = 0.0;
-    var TcoldNm1 = 0.0;
-    var TcoldNp1 = 0.0;
-    var dThotDT = 0.0;
-    var dTcoldDT = 0.0;
-    var minTinCold = this.dataMin[1];
-    var maxTinHot = this.dataMax[0];
+    let i = 0; // index for step repeats
+    let n = 0; // index for nodes
+    let ThotN = 0.0;
+    let ThotNm1 = 0.0;
+    let ThotNp1 = 0.0;
+    let TcoldN = 0.0;
+    let TcoldNm1 = 0.0;
+    let TcoldNp1 = 0.0;
+    let dThotDT = 0.0;
+    let dTcoldDT = 0.0;
+    let minTinCold = this.dataMin[1];
+    let maxTinHot = this.dataMax[0];
 
     // this unit can take multiple steps within one outer main loop repeat step
     for (i=0; i<this.unitStepRepeats; i+=1) {
@@ -598,7 +555,7 @@ let puCoCounterHeatExchanger = {
 
     // note use .toFixed(n) method of object to round number to n decimal points
 
-    var n = 0; // used as index
+    let n = 0; // used as index
 
     document.getElementById(this.displayHotLeftT).innerHTML = this.Thot[this.numNodes].toFixed(1) + ' K';
     document.getElementById(this.displayHotRightT).innerHTML = this.TinHot.toFixed(1) + ' K';
@@ -644,69 +601,33 @@ let puCoCounterHeatExchanger = {
 
   }, // end updateDisplay method
 
-  // checkSSvalues : function() {
-  //   // WARNING: has alerts - may be called in simParams.checkForSteadyState()
-  //   // CHECK FOR ENERGY BALANCE ACROSS HEAT EXCHANGER AT STEADY STATE
-  //   // Q = U*A*(dT2 - dT1)/log(dT2/dT1) FOR dT1 != dT2 (or get log = inf)
-  //   var nn = this.numNodes;
-  //   // Thot and Tcold arrays are globals
-  //   var hlt = this.Thot[nn]; // outlet hot
-  //   var hrt = this.Thot[0]; // inlet hot
-  //   var clt = this.Tcold[nn];
-  //   var crt = this.Tcold[0];
-  //   var dT1 = hrt - crt;
-  //   var dT2 = hlt - clt;
-  //   if (dT1 == dT2) {
-  //     alert('dT1 == dT2');
-  //     return;
-  //   }
-  //   var UAlogMeanDT = this.Ucoef * this.Area * (dT2 - dT1) / Math.log(dT2/dT1); // kJ/s = kW
-  //   var Qhot = (hrt - hlt) * this.FlowHot * this.CpHot; // kJ/s = kW
-  //   var Qcold = Math.abs((crt - clt) * this.FlowCold * this.CpCold); // abs for co- or counter-
-  //   var discrep = 100*(UAlogMeanDT/Qhot-1);
-  //   var discrep2 = 100*(UAlogMeanDT/Qcold-1);
-  //   var discrep3 = 100*(Qcold/Qhot-1);
-  //   alert('Qhot = UAlogMeanDT: ' + Qhot + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep.toFixed(3) + ' %');
-  //   alert('Qcold = UAlogMeanDT: ' + Qcold + ' = ' + UAlogMeanDT + ', discrepancy = ' + discrep2.toFixed(3) + ' %');
-  //   alert('Qhot = Qcold: ' + Qhot + ' = '+ Qcold + ', discrepancy = ' + discrep3.toFixed(3) + ' %');
-  // },
-
   checkForSteadyState : function() {
-    // processUnits[0] is heat exchanger in this web lab
-    // see its method checkSSvalues() for energy balance at SS
-    if (this.simTime >= this.oldSimTime + processUnits[0]['residenceTime']) {
-      // check in order to save CPU time when sim is at steady state
-      // check for steady state by checking for any significant change in end T's
-      // but wait at least one hot flow residence time after the previous check
-      // to allow changes to propagate down tubes
-      // XXX is hot flow residence time a sufficient time constant - or check cold flow?
-      // create SScheck which is a 16-digit number unique to current 4 end T's
-      // NOTE: earlier try of checking for max change in dThotDT & dTcoldDT < criterion
-      // in puHeatExchanger.updateState() was not successful
-      // since those values appeared to settle down to different non-zero values
-      // that didn't appear to change with time for different input values
-      let unum = 0; // unit number
-      var nn = processUnits[unum]['numNodes'];
-      // Thot and Tcold arrays are globals
-      var hlt = 1.0e5 * processUnits[unum]['Thot'][nn].toFixed(1);
-      var hrt = 1.0e1 * processUnits[unum]['Thot'][0].toFixed(1);
-      var clt = 1.0e-3 * processUnits[unum]['Tcold'][nn].toFixed(1);
-      var crt = 1.0e-7 * processUnits[unum]['Tcold'][0].toFixed(1);
-      var SScheck = hlt + hrt + clt  + crt;
-      SScheck = SScheck.toFixed(8); // need because last sum operation adds significant figs
-      // note SScheck = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
-      var oldSScheck = processUnits[unum]['SScheck'];
-      if (SScheck == oldSScheck) {
-        // set ssFlag
-        simParams.ssFlag = true;
-        // processUnits[unum].checkSSvalues(); // WARNING - has alerts - TESTING ONLY
-      } // end if (SScheck == oldSScheck)
+    // required - called by simParams
+    // if not used to check for SS, return ssFlag = true to calling unit
+    // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    let nn = this.numNodes;
+    let unum = 0; // unit number
+    let nn = processUnits[unum]['numNodes'];
+    // Thot and Tcold arrays are globals
+    let hlt = 1.0e5 * processUnits[unum]['Thot'][nn].toFixed(1);
+    let hrt = 1.0e1 * processUnits[unum]['Thot'][0].toFixed(1);
+    let clt = 1.0e-3 * processUnits[unum]['Tcold'][nn].toFixed(1);
+    let crt = 1.0e-7 * processUnits[unum]['Tcold'][0].toFixed(1);
+    let newCheckSum = hlt + hrt + clt  + crt;
+    let newCheckSum = newCheckSum.toFixed(8); // last sum operation may add significant figs
+    // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
+    let oldSScheckSum = this.ssCheckSum;
+    let ssFlag = false;
+    if (newCheckSum == oldSScheckSum) {ssFlag = true;}
+    this.ssCheckSum = newCheckSum; // save current value for use next time
+    return ssFlag;
+  } // END checkForSteadyState method
 
-      // save current values as the old values
-      processUnits[unum]['SScheck'] = SScheck;
-      simParams.oldSimTime = simParams.simTime;
-    } // END OF if (simParams.simTime >= simParams.oldSimTime + processUnits[unum]['residenceTime'])
-
-  } // END OF checkForSteadyState()
-
-} // END var puHeatExchanger
+}; // END puCoCounterHeatExchanger object

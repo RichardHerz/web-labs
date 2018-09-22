@@ -573,17 +573,19 @@ let puPlugFlowReactor = {
     // to allow changes to propagate down unit
     //
     let nn = this.numNodes;
-    let hlt = 1.0e5 * processUnits[0]['Trxr'][nn].toFixed(1);
-    let hrt = 1.0e1 * processUnits[0]['Trxr'][0].toFixed(1);
-    let clt = 1.0e-3 * processUnits[0]['Ca'][nn].toFixed(1);
-    let crt = 1.0e-7 * processUnits[0]['Ca'][0].toFixed(1);
-    // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
+    let unum = 0; // unit number
+    let hlt = 1.0e5 * processUnits[unum]['Trxr'][nn].toFixed(1);
+    let hrt = 1.0e1 * processUnits[unum]['Trxr'][0].toFixed(1);
+    let clt = 1.0e-3 * processUnits[unum]['Ca'][nn].toFixed(1);
+    let crt = 1.0e-7 * processUnits[unum]['Ca'][0].toFixed(1);
     let newCheckSum = hlt + hrt + clt  + crt;
+    let newCheckSum = newCheckSum.toFixed(8); // need because last sum operation adds significant figs
+    // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
     let oldSScheckSum = this.ssCheckSum;
     let ssFlag = false;
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}
     this.ssCheckSum = newCheckSum; // save current value for use next time
     return ssFlag;
-  } // END OF checkForSteadyState()
+  } // END OF checkForSteadyState method
 
-}; // END puPlugFlowReactor
+}; // END puPlugFlowReactor object

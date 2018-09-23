@@ -26,8 +26,6 @@ let controller = {
   //    getPlotData(), plotPlotData(), plotArrays.initialize(),
   //    plotColorCanvasPlot()
 
-  // ------ START NEW FROM simParams -------------------
-
   runningFlag : false, // set runningFlag to false initially
 
   // simTime is changed in updateSimTime() and resetSimTime()
@@ -40,70 +38,6 @@ let controller = {
   // ssFlag set to false in runThisLab() and resetThisLab() in interface object
   // ssFlag set to false by updateUIparams() in each process unit
   ssFlag : false,
-
-  resetSimTime : function() {
-    this.simTime = 0;
-  },
-
-  updateSimTime : function() {
-    this.simTime = this.simTime + simParams.simTimeStep;
-  },
-
-  // runningFlag value can change by click of RUN-PAUSE or RESET buttons
-  // calling functions toggleRunningFlag and stopRunningFlag
-  toggleRunningFlag : function() {
-    this.runningFlag = !this.runningFlag;
-  },
-
-  stopRunningFlag : function() {
-    this.runningFlag = false;
-  },
-
-  changeSimTimeStep : function(factor) {
-    // WARNING: do not change simTimeStep except immediately before or after a
-    // display update in order to maintain sync between sim time and real time
-    simParams.simTimeStep = factor * simParams.simTimeStep;
-  },
-
-  checkForSteadyState : function() {
-    // uses this.simTime
-    // sets this.ssFlag and this.oldSimTime
-    // requires all units to have a residence time variable
-    // calls each unit's own checkForSteadyState()
-    // check for SS in order to save CPU time when sim is at steady state
-    // check for SS by checking for any significant change in array end values
-    // but wait at least one residence time after the previous check
-    // to allow changes to propagate down unit
-    // open OS Activity Monitor of CPU load to see effect of this
-    //
-    // get longest residence time in all units
-    // if all stay constant this check could be moved out of here
-    // so only done once, but here allows unit residence times to change
-    let numUnits = Object.keys(processUnits).length; // number of units
-    let resTime = 0;
-    for (let n = 0; n < numUnits; n += 1) {
-      if (processUnits[n]['residenceTime'] > resTime) {
-        resTime = processUnits[n]['residenceTime'];
-      }
-    }
-    // check all units to see if any not at steady state
-    if (this.simTime >= this.oldSimTime + 2 * resTime) {
-      // get ssFlag from each unit
-      let thisFlag = true; // changes to false if any unit not at steady state
-      for (let n = 0; n < numUnits; n += 1) {
-        if (!processUnits[n].checkForSteadyState()){
-          // result returned by unit is not true
-          thisFlag = false;
-        }
-      }
-      this.ssFlag = thisFlag;
-      // save sim time of this check
-      // do not save for every call of this function or will never enter IF & check
-      this.oldSimTime = this.simTime;
-    } // END if (this.simTime >= this.oldSimTime + 2 * resTime)
-  }, // END method checkForSteadyState()
-
-// ----------- END NEW FROM SIMPARAMS -------------------
 
   openThisLab : function() {
     // initialize variables in each process unit
@@ -281,6 +215,68 @@ let controller = {
     let thisMs = thisDate.getTime();
     return thisMs;
 
-  }  // END OF function updateDisplay
+  },  // END OF function updateDisplay
+
+  resetSimTime : function() {
+    this.simTime = 0;
+  },
+
+  updateSimTime : function() {
+    this.simTime = this.simTime + simParams.simTimeStep;
+  },
+
+  // runningFlag value can change by click of RUN-PAUSE or RESET buttons
+  // calling functions toggleRunningFlag and stopRunningFlag
+  toggleRunningFlag : function() {
+    this.runningFlag = !this.runningFlag;
+  },
+
+  stopRunningFlag : function() {
+    this.runningFlag = false;
+  },
+
+  changeSimTimeStep : function(factor) {
+    // WARNING: do not change simTimeStep except immediately before or after a
+    // display update in order to maintain sync between sim time and real time
+    simParams.simTimeStep = factor * simParams.simTimeStep;
+  },
+
+  checkForSteadyState : function() {
+    // uses this.simTime
+    // sets this.ssFlag and this.oldSimTime
+    // requires all units to have a residence time variable
+    // calls each unit's own checkForSteadyState()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    // open OS Activity Monitor of CPU load to see effect of this
+    //
+    // get longest residence time in all units
+    // if all stay constant this check could be moved out of here
+    // so only done once, but here allows unit residence times to change
+    let numUnits = Object.keys(processUnits).length; // number of units
+    let resTime = 0;
+    for (let n = 0; n < numUnits; n += 1) {
+      if (processUnits[n]['residenceTime'] > resTime) {
+        resTime = processUnits[n]['residenceTime'];
+      }
+    }
+    // check all units to see if any not at steady state
+    if (this.simTime >= this.oldSimTime + 2 * resTime) {
+      // get ssFlag from each unit
+      let thisFlag = true; // changes to false if any unit not at steady state
+      for (let n = 0; n < numUnits; n += 1) {
+        if (!processUnits[n].checkForSteadyState()){
+          // result returned by unit is not true
+          thisFlag = false;
+        }
+      }
+      this.ssFlag = thisFlag;
+      // save sim time of this check
+      // do not save for every call of this function or will never enter IF & check
+      this.oldSimTime = this.simTime;
+    } // END if (this.simTime >= this.oldSimTime + 2 * resTime)
+  } // END method checkForSteadyState()
 
 } // END OF OBJECT controller

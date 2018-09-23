@@ -5,11 +5,6 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// NOTE: move window.onload to <script> tag in HTML file
-// since object controller not defined when above or below controller{} here
-// // DISPLAY INITIAL STATE ON OPEN WINDOW
-// window.onload = controller.openThisLab; // can NOT use () after openThisLab
-
 let controller = {
 
   // OBJECT controller contains functions that run the simulation time stepping
@@ -22,9 +17,7 @@ let controller = {
   //
   // USES in object simParams the following:
   //    function updateCurrentRunCountDisplay()
-  //    function checkForSteadyState()
-  //    function updateSimTime()
-  //    variables runningFlag, ssFlag, simStepRepeats, processUnits
+  //    variables simStepRepeats
   //    variables updateDisplayTimingMs
   //
   // USES object plotInfo defined in file process_plot_info.js
@@ -32,6 +25,85 @@ let controller = {
   // USES in object plotter the functions
   //    getPlotData(), plotPlotData(), plotArrays.initialize(),
   //    plotColorCanvasPlot()
+
+  // ------ START NEW FROM simParams -------------------
+
+  runningFlag : false, // set runningFlag to false initially
+
+  // simTime is changed in updateSimTime() and resetSimTime()
+  // simTime & oldSimTime are used to in checkForSteadyState()
+  simTime : 0, // (s)
+  oldSimTime : 0, // (s)
+
+  // ssFlag set to true below in checkForSteadyState() when
+  //           sim reaches steady state
+  // ssFlag set to false in runThisLab() and resetThisLab() in interface object
+  // ssFlag set to false by updateUIparams() in each process unit
+  ssFlag : false,
+
+  resetSimTime : function() {
+    this.simTime = 0;
+  },
+
+  updateSimTime : function() {
+    this.simTime = this.simTime + simParams.simTimeStep;
+  },
+
+  // runningFlag value can change by click of RUN-PAUSE or RESET buttons
+  // calling functions toggleRunningFlag and stopRunningFlag
+  toggleRunningFlag : function() {
+    this.runningFlag = !this.runningFlag;
+  },
+
+  stopRunningFlag : function() {
+    this.runningFlag = false;
+  },
+
+  changeSimTimeStep : function(factor) {
+    // WARNING: do not change simTimeStep except immediately before or after a
+    // display update in order to maintain sync between sim time and real time
+    simParams.simTimeStep = factor * simParams.simTimeStep;
+  },
+
+  checkForSteadyState : function() {
+    // uses this.simTime
+    // sets this.ssFlag and this.oldSimTime
+    // requires all units to have a residence time variable
+    // calls each unit's own checkForSteadyState()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    // open OS Activity Monitor of CPU load to see effect of this
+    //
+    // get longest residence time in all units
+    // if all stay constant this check could be moved out of here
+    // so only done once, but here allows unit residence times to change
+    let numUnits = Object.keys(processUnits).length; // number of units
+    let resTime = 0;
+    for (let n = 0; n < numUnits; n += 1) {
+      if (processUnits[n]['residenceTime'] > resTime) {
+        resTime = processUnits[n]['residenceTime'];
+      }
+    }
+    // check all units to see if any not at steady state
+    if (this.simTime >= this.oldSimTime + 2 * resTime) {
+      // get ssFlag from each unit
+      let thisFlag = true; // changes to false if any unit not at steady state
+      for (let n = 0; n < numUnits; n += 1) {
+        if (!processUnits[n].checkForSteadyState()){
+          // result returned by unit is not true
+          thisFlag = false;
+        }
+      }
+      this.ssFlag = thisFlag;
+      // save sim time of this check
+      // do not save for every call of this function or will never enter IF & check
+      this.oldSimTime = this.simTime;
+    } // END if (this.simTime >= this.oldSimTime + 2 * resTime)
+  }, // END method checkForSteadyState()
+
+// ----------- END NEW FROM SIMPARAMS -------------------
 
   openThisLab : function() {
     // initialize variables in each process unit
@@ -43,8 +115,8 @@ let controller = {
     plotInfo.initialize();
     // initialize plot arrays after initialize plotInfo
     plotter.plotArrays.initialize();
-    interface.resetThisLab(); // defined in file process_interface.js
-    simParams.updateCurrentRunCountDisplay();
+    interface.resetThisLab(); // defined in process_interface.js
+    simParams.updateCurrentRunCountDisplay(); // defined in process_sim_params.js
   }, // END OF function openThisLab
 
   runSimulation : function() {
@@ -75,16 +147,18 @@ let controller = {
     setTimeout(updateProcess(), updateMs);
 
     function updateProcess() {
-
-      let runningFlag = simParams.runningFlag;
-      if (!runningFlag) {
+      // need controller.runningFlag not this.runningFlag
+      // because updateProcess is a subfunction of runSimulation
+      if (!controller.runningFlag) {
         // exit if runningFlag is not true
         // runningFlag can become not true by click of RUN-PAUSE, RESET or COPY DATA buttons
         return;
       }
 
       // update simTime = simulation time elapsed
-      simParams.updateSimTime();
+      // need controller.updateSimTime() not this.updateSimTime()
+      // because updateProcess is a subfunction of runSimulation
+      controller.updateSimTime();
 
       // do NOT return here when ssFlag goes true at steady statement
       // because then simTime will not update since this function will not call itself again
@@ -139,9 +213,8 @@ let controller = {
     // DO COMPUTATIONS TO UPDATE STATE OF PROCESS
     // step all units but do not display
 
-    if (simParams.ssFlag) {
-      // exit if simParams.ssFlag true
-      // checkForSteadyState() at end of updateDisplay() in this file
+    if (this.ssFlag) {
+      // exit if ssFlag true
       return;
     }
 
@@ -163,8 +236,8 @@ let controller = {
 
   updateDisplay : function() {
 
-    if (simParams.ssFlag) {
-      // exit if simParams.ssFlag true
+    if (this.ssFlag) {
+      // exit if ssFlag true
       // BUT FIRST MUST DO THIS (also done below at end normal update)
       // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
       // or, if do not do here, simTime will race ahead
@@ -198,10 +271,10 @@ let controller = {
       }
     }
 
-    // check and set simParams.ssFlag to true if at steady state
+    // check and set ssFlag to true if at steady state
     // do this here in updateDisplay rather than each process update
     // so that don't suspend before a final display update of the steady state
-    simParams.checkForSteadyState();
+    this.checkForSteadyState();
 
     // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
     let thisDate = new Date();

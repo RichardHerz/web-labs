@@ -5,6 +5,8 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
+// EACH PROCESS UNIT DEFINITION MUST CONTAIN the variable residenceTime
+//
 // EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
 // initialize, reset, updateUIparams, updateInputs, updateState,
 //   updateDisplay, checkForSteadyState
@@ -19,8 +21,10 @@ let puAdiabaticPackedBedPFR = {
   //
   //  THIS OBJECT HAS MULTIPLE I/O CONNECTIONS TO HTML
   //
-  //  USES FROM OBJECT simParams
-  //    GETS simParams.simTimeStep, SETS simParams.ssFlag
+  //  USES FROM OBJECT simParams the following:
+  //    GETS simParams.simTimeStep
+  //  OBJECT controller USES FROM THIS OBJECT:
+  //    variable residenceTime
   //  USES FROM OBJECT puCounterCurrentHeatExchanger, here as processUnits[1], the following:
   //    Tcold[] - heat exchanger cold outlet T is reactor inlet T
   //  OBJECT plotInfo USES FROM THIS OBJECT:
@@ -34,7 +38,7 @@ let puAdiabaticPackedBedPFR = {
   //    updateInputs() & updateState() sent by updateProcessUnits() in object controller
   //    updateDisplay() sent by updateDisplay() in object controller
   //    updateUIparams() sent by updateUIparams() in object controller
-  //    checkForSteadyState() sent by checkForSteadyState() in simParams object
+  //    checkForSteadyState() sent by checkForSteadyState() in object controller
   //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
   //    copyData() in object interface uses name, varCount, dataHeaders[],
   //        dataUnits[], dataValues[], profileData[], stripData[]
@@ -282,9 +286,9 @@ let puAdiabaticPackedBedPFR = {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set simParams.ssFlag to false to get sim to run
+    // need to directly set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    simParams.ssFlag = false;
+    controller.ssFlag = false;
 
     // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
@@ -510,7 +514,7 @@ let puAdiabaticPackedBedPFR = {
   }, // END of updateDisplay()
 
   checkForSteadyState : function() {
-    // required - called by simParams
+    // required - called by controller object
     // if not used to check for SS, return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
     // uses and sets this.ssCheckSum

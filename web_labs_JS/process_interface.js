@@ -11,15 +11,15 @@ let interface = {
 
   runThisLab : function() {
     // CALLED BY UI RUN BUTTON DEFINED IN HTML
-    // USES OBJECT simParams
+    // USES OBJECTS simParams, controller
     //
     // TOGGLE runningFlag FIRST before doing stuff below
-    simParams.toggleRunningFlag(); // toggle runningFlag true-false
+    controller.toggleRunningFlag(); // toggle runningFlag true-false
     // TOGGLE runningFlag FIRST before doing stuff below
-    let runningFlag = simParams.runningFlag;
+    let runningFlag = controller.runningFlag;
     if (runningFlag) {
       // start sim running again
-      simParams.ssFlag = false; // unit sets true when sim reaches steady state
+      controller.ssFlag = false; // unit sets true when sim reaches steady state
       button_runButton.value = 'Pause'; // REQUIRES run button id="button_runButton"
       controller.runSimulation();
       simParams.updateRunCount();
@@ -32,12 +32,12 @@ let interface = {
 
   resetThisLab : function() {
     // CALLED BY UI RESET BUTTON DEFINED IN HTML
-    // USES OBJECT simParams
+    // USES OBJECTS simParams, controller
     // REQUIRES BELOW that run button id="button_runButton"
     //
-    simParams.stopRunningFlag();
-    simParams.resetSimTime();
-    simParams.ssFlag = false; // unit sets true when sim reaches steady state
+    controller.stopRunningFlag();
+    controller.resetSimTime();
+    controller.ssFlag = false; // unit sets true when sim reaches steady state
     // reset all units
     let numUnits = Object.keys(processUnits).length; // number of units
     for (n = 0; n < numUnits; n += 1) {
@@ -91,7 +91,7 @@ let interface = {
     // CALLED BY UI COPY DATA BUTTONS DEFINED IN HTML
     // copies data from plot to new browser tab or popup window - see below
     //
-    // USES object plotInfo
+    // USES OBJECTS plotInfo, controller, interface, simParams
     // plotIndex is the index in object plotInfo of the desired plot to copy
     // USES internal function formatNum
 
@@ -99,7 +99,7 @@ let interface = {
     // copy grabs what is showing on plot when copy button clicked
     // so want user to be able to take screenshot to compare with data copied
     // this will let last updateDisplay of updateProcess finish before sim pauses
-    let runningFlag = simParams.runningFlag;
+    let runningFlag = controller.runningFlag;
     if (runningFlag) {
       interface.runThisLab(); // toggles running state
     }
@@ -118,7 +118,7 @@ let interface = {
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
     // list current input values
-    tText += '<p>Simulation time of data capture = ' + simParams.simTime + ' s <br>';
+    tText += '<p>Simulation time of data capture = ' + controller.simTime + ' s <br>';
     tText += 'Values of input parameters at time of data capture:<br>';
     // list inputs for all units since, other units may affect these results
     numUnits = Object.keys(processUnits).length;

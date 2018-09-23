@@ -5,6 +5,8 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
+// EACH PROCESS UNIT DEFINITION MUST CONTAIN the variable residenceTime
+//
 // EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
 // initialize, reset, updateUIparams, updateInputs, updateState,
 //   updateDisplay, checkForSteadyState
@@ -20,16 +22,18 @@ let puCoCounterHeatExchanger = {
   //  THIS OBJECT HAS MULTIPLE I/O CONNECTIONS TO HTML
   //
   //  USES FROM OBJECT simParams
-  //    GETS simParams.simTimeStep, SETS simParams.ssFlag
+  //    GETS simParams.simTimeStep
   //  OBJECT plotInfo USES FROM THIS OBJECT:
   //    numNodes, and possibly others
+  //  OBJECT controller USES FROM THIS OBJECT:
+  //    variable residenceTime
   //  CALLS TO FUNCTIONS HERE ARE SENT BY THE FOLLOWING EXTERNAL FUNCTIONS:
   //    initialize() sent by openThisLab() in object controller
   //    reset() sent by resetThisLab() in object controller
   //    updateInputs() & updateState() sent by updateProcessUnits() in object controller
   //    updateDisplay() sent by updateDisplay() in object controller
   //    updateUIparams() sent by updateUIparams() in object controller
-  //    checkForSteadyState() sent by checkForSteadyState() in simParams object
+  //    checkForSteadyState() sent by checkForSteadyState() in object controller
   //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
   //    copyData() in object interface uses name, varCount, dataHeaders[],
   //        dataUnits[], dataValues[], profileData[], stripData[]
@@ -255,8 +259,12 @@ let puCoCounterHeatExchanger = {
     this.updateUIparams(); // this first, then set other values as needed
     // set state variables not set by updateUIparams to initial settings
 
-    simParams.ssFlag = false;
-    this.SScheck = 0; // rest steady state check number of array end values
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
 
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Thot[k] = this.TinCold;
@@ -302,9 +310,9 @@ let puCoCounterHeatExchanger = {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set simParams.ssFlag to false to get sim to run
+    // need to directly set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    simParams.ssFlag = false;
+    controller.ssFlag = false;
 
     // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
@@ -602,7 +610,7 @@ let puCoCounterHeatExchanger = {
   }, // end updateDisplay method
 
   checkForSteadyState : function() {
-    // required - called by simParams
+    // required - called by controller object
     // if not used to check for SS, return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
     // uses and sets this.ssCheckSum

@@ -193,7 +193,11 @@ let puCounterCurrentHeatExchanger = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // set to zero ssCheckSum used to check for steady state
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
 
     this.TinCold = this.Tin;
@@ -247,6 +251,7 @@ let puCounterCurrentHeatExchanger = {
     //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
+
     // need to directly set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
     controller.ssFlag = false;

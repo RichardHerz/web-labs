@@ -239,7 +239,11 @@ let puAdiabaticPackedBedPFR = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // set to zero ssCheckSum used to check for steady state
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
 
     for (k = 0; k <= this.numNodes; k += 1) {

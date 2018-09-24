@@ -16,9 +16,13 @@ let controller = {
   // USES in object interface the function interface.resetThisLab()
   //
   // USES in object simParams the following:
+  //    variables simStepRepeats, simTimeStep, updateDisplayTimingMs
   //    function updateCurrentRunCountDisplay()
-  //    variables simStepRepeats
-  //    variables updateDisplayTimingMs
+  //
+  // USES in each process unit object the following:
+  //    variable residenceTime
+  //    functions initialize(), reset(), updateInputs(), updateState()
+  //    functions updateDisplay(), checkForSteadyState()
   //
   // USES object plotInfo defined in file process_plot_info.js
   //

@@ -290,8 +290,6 @@ let puTEMPLATE = {
     // but wait at least one residence time after the previous check
     // to allow changes to propagate down unit
     //
-    // *** RXR NOT USED TO CHECK FOR SS IN THIS LAB - HX is checked ***
-    //
     let ssFlag = true;
     return ssFlag;
   } // END OF checkForSteadyState()

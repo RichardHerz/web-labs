@@ -30,8 +30,11 @@ let processUnits = new Object();
 // to access them in a repeat with numeric index
 
 processUnits[0] = {
-  //
-  // unit 0 IS REACTOR FEED
+  unitIndex : 0, // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
+  name : 'reactor feed',
+
+  // SUMMARY OF DEPENDENCIES
   //
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
@@ -45,13 +48,13 @@ processUnits[0] = {
 
   // variables defined here are available to all functions inside this unit
 
-  initialRate	: 0, // (m3/s), feed flow rate
+  initialRate : 0, // (m3/s), feed flow rate
   rate      : this.initialRate, // (m3/s), feed flow rate
 
-  initialConc	: 0,
+  initialConc : 0,
   conc      : this.initialConc,
 
-  initialTTemp	: 300, // (K), TTemp = temperature
+  initialTTemp : 300, // (K), TTemp = temperature
   TTemp     : this.initialTTemp,
 
   reset : function(){
@@ -85,15 +88,33 @@ processUnits[0] = {
     //    nothing to do here for this unit
   }, // end updateState method
 
-  display		: function(){
+  updateDisplay : function(){
     // empty
-  } // end display method
+  }, // END of updateDisplay()
+
+  checkForSteadyState : function() {
+    // required - called by controller object
+    // if not used to check for SS, return ssFlag = true to calling unit
+    // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    let ssFlag = true;
+    return ssFlag;
+  } // END OF checkForSteadyState()
 
 }; // END unit 0
 
 processUnits[1] = {
-  //
-  // unit 1 IS REACTOR
+  unitIndex : 1, // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
+  name : 'reactor',
+
+  // SUMMARY OF DEPENDENCIES
   //
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
@@ -180,7 +201,7 @@ processUnits[1] = {
 
   }, // end updateState method
 
-  display : function() {
+  updateDisplay : function() {
 
     // document.getElementById("demo01").innerHTML = "processUnits[0].rate = " + this.rate;
     let el = document.querySelector("#div_PLOTDIV_reactorContents");
@@ -236,13 +257,31 @@ processUnits[1] = {
       }
     }
 
-  } // end display method
+  }, // END of updateDisplay()
+
+  checkForSteadyState : function() {
+    // required - called by controller object
+    // if not used to check for SS, return ssFlag = true to calling unit
+    // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    let ssFlag = true;
+    return ssFlag;
+  } // END OF checkForSteadyState()
 
 }; // END unit 1
 
-processUnits[0] = {
-  //
-  // unit 2 IS FEED TO HEAT TRANSFER JACKET
+processUnits[2] = {
+  unitIndex : 2, // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
+  name : 'feed to heat transfer jacket',
+
+  // SUMMARY OF DEPENDENCIES
   //
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
@@ -295,7 +334,7 @@ processUnits[0] = {
 
   }, // end updateState method
 
-  display : function(){
+  updateDisplay : function(){
     // document.getElementById("demo01").innerHTML = "processUnits[0].rate = " + this.rate;
 
     // HANDLE STRIP CHART DATA
@@ -329,13 +368,31 @@ processUnits[0] = {
       // stripData[v][p][0] = (numStripPoints - p) * timeStep;
     }
 
-  } // end display method
+  }, // END of updateDisplay()
+
+  checkForSteadyState : function() {
+    // required - called by controller object
+    // if not used to check for SS, return ssFlag = true to calling unit
+    // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    let ssFlag = true;
+    return ssFlag;
+  } // END OF checkForSteadyState()
 
 }; // END unit 2
 
 processUnits[3] = {
-  //
-  // unit 3 IS HEAT TRANSFER JACKET
+  unitIndex : 3, // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
+  name : 'heat transfer jacket',
+
+  // SUMMARY OF DEPENDENCIES
   //
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
@@ -398,7 +455,7 @@ processUnits[3] = {
 
   }, // end updateState method
 
-  display		: function(){
+  updateDisplay : function(){
     // document.getElementById("demo01").innerHTML = "processUnits[0].rate = " + this.rate;
 
     // HANDLE STRIP CHART DATA
@@ -431,15 +488,31 @@ processUnits[3] = {
       // want next line for newest data at zero time
       // stripData[v][p][0] = (numStripPoints - p) * timeStep;
     }
+  }, // END of updateDisplay()
 
-  } // end display method
+  checkForSteadyState : function() {
+    // required - called by controller object
+    // if not used to check for SS, return ssFlag = true to calling unit
+    // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    let ssFlag = true;
+    return ssFlag;
+  } // END OF checkForSteadyState()
 
 }; // END unit 3
 
 processUnits[4] = {
-  //
-  // unit 4 IS REACTOR TEMPERATURE CONTORLLER
-  //
+  unitIndex : 4, // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
+  name : 'reactor temperature controller',
+
+  // SUMMARY OF DEPENDENCIES
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
   //   unit 2 USES processUnits[4].command - manipulated variable
@@ -545,8 +618,23 @@ processUnits[4] = {
 
   }, // end updateState method
 
-  display : function(){
+  updateDisplay : function(){
     // document.getElementById("demo05").innerHTML = "processUnits[4].command = " + this.command;
-  } // end display METHOD
+  }, // END of updateDisplay()
+
+  checkForSteadyState : function() {
+    // required - called by controller object
+    // if not used to check for SS, return ssFlag = true to calling unit
+    // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    let ssFlag = true;
+    return ssFlag;
+  } // END OF checkForSteadyState()
 
 }; // END unit 4

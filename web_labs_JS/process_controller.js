@@ -34,7 +34,7 @@ let controller = {
   runningFlag : false, // set runningFlag to false initially
 
   // simTime is changed in updateSimTime() and resetSimTime()
-  // simTime & oldSimTime are used to in checkForSteadyState()
+  // simTime & oldSimTime are used in checkForSteadyState()
   simTime : 0, // (s)
   oldSimTime : 0, // (s)
 

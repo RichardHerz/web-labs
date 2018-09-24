@@ -10,8 +10,11 @@
 // ------------ PROCESS UNIT OBJECT DEFINITIONS ----------------------
 
 // EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
-// initialize, reset, updateUIparams, updateInputs, updateState, updateDisplay, checkForSteadyState
+//  initialize, reset, updateUIparams, updateInputs, updateState,
+//  updateDisplay, checkForSteadyState
 // THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
+//
+// EACH PROCESS UNIT DEFINITION MUST DEFINE the variable residenceTime
 
 // -------------------------------------------------------------------
 

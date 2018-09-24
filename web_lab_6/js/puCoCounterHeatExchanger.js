@@ -5,12 +5,16 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// EACH PROCESS UNIT DEFINITION MUST CONTAIN the variable residenceTime
-//
+// ------------ PROCESS UNIT OBJECT DEFINITIONS ----------------------
+
 // EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
-// initialize, reset, updateUIparams, updateInputs, updateState,
-//   updateDisplay, checkForSteadyState
+//  initialize, reset, updateUIparams, updateInputs, updateState,
+//  updateDisplay, checkForSteadyState
 // THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
+//
+// EACH PROCESS UNIT DEFINITION MUST DEFINE the variable residenceTime
+
+// -------------------------------------------------------------------
 
 let puCoCounterHeatExchanger = {
   unitIndex : 0, // index of this unit as child in processUnits parent object

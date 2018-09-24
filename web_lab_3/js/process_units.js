@@ -65,7 +65,7 @@ processUnits[0] = {
     this.updateUIparams(); // this first, then set other values as needed
     // set state variables not set by updateUIparams to initial settings
     //    no more here
-  },  // << COMMAS ARE REQUIRED AT END OF EACH OBJECT PROPERTY & FUNCTION EXCEPT LAST ONE (NO ;)
+  },
 
   updateUIparams : function(){
     // (1) enterFeedConc, enterFeedTTemp, enterFeedFlowRate

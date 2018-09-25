@@ -30,6 +30,7 @@ let processUnits = new Object();
 // to access them in a repeat with numeric index
 
 processUnits[0] = {
+  //
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor feed',
@@ -151,7 +152,7 @@ processUnits[0] = {
     this.conc = this.dataValues[1] = interface.getInputValue(unum,1);
     this.TTemp = this.dataValues[2] = interface.getInputValue(unum,2);
 
-}, END updateUIparams
+  }, END updateUIparams
 
   updateInputs : function(){
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,

@@ -46,16 +46,62 @@ processUnits[0] = {
   //   none
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
-  // variables defined here are available to all functions inside this unit
+  // define main parameters
+  // values will be set in method intialize()
+  flowRate : 0, // (m3/s), feed flow rate
+  conc : 0, // (mol/m3)
+  TTemp : 300, // (K), TTemp = temperature
 
-  initialRate : 0, // (m3/s), feed flow rate
-  rate      : this.initialRate, // (m3/s), feed flow rate
+  ssCheckSum : 0, // used to check for steady state
+  residenceTime : 0, // for timing checks for steady state check
 
-  initialConc : 0,
-  conc      : this.initialConc,
-
-  initialTTemp : 300, // (K), TTemp = temperature
-  TTemp     : this.initialTTemp,
+  initialize : function() {
+    //
+    let v = 0;
+    this.dataHeaders[v] = 'feedFlowRate';
+    this.dataInputs[v] = 'input_field_enterFeedFlowRate';
+    this.dataUnits[v] = 'm3/s';
+    this.dataMin[v] = 0.0001;
+    this.dataMax[v] = 1;
+    this.dataInitial[v] = 0.005;
+    this.flowRate = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.flowRate; // current input value for reporting
+    //
+    let v = 1;
+    this.dataHeaders[v] = 'feedConc';
+    this.dataInputs[v] = 'input_field_enterFeedConc';
+    this.dataUnits[v] = 'mol/m3';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 1000;
+    this.dataInitial[v] = 400;
+    this.conc = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.conc; // current input value for reporting
+    //
+    let v = 2;
+    this.dataHeaders[v] = 'feedTemp';
+    this.dataInputs[v] = 'input_field_enterFeedTTemp';
+    this.dataUnits[v] = 'K';
+    this.dataMin[v] = 200;
+    this.dataMax[v] = 500;
+    this.dataInitial[v] = 300;
+    this.TTemp = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.TTemp; // current input value for reporting
+    // END OF INPUT VARS
+    // record number of input variables, VarCount
+    // used, e.g., in copy data to table
+    //
+    this.VarCount = v;
+    //
+    // OUTPUT VARS
+    //
+    // v = 7;
+    // this.dataHeaders[v] = 'Trxr';
+    // this.dataUnits[v] =  'K';
+    // // Trxr dataMin & dataMax can be changed in updateUIparams()
+    // this.dataMin[v] = 200;
+    // this.dataMax[v] = 500;
+    //
+  }, // END of initialize()
 
   reset : function(){
     // On 1st load or reload page, the html file fills the fields with html file
@@ -63,16 +109,40 @@ processUnits[0] = {
     // On click reset button but not reload page, unless do something else here,
     // reset function will use whatever last values user has entered.
     this.updateUIparams(); // this first, then set other values as needed
-    // set state variables not set by updateUIparams to initial settings
-    //    no more here
+    // set state variables not set by updateUIparams() to initial settings
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
   },
 
   updateUIparams : function(){
-    // (1) enterFeedConc, enterFeedTTemp, enterFeedFlowRate
-    this.conc = Number(input_field_enterFeedConc.value);
-    this.TTemp = Number(input_field_enterFeedTTemp.value);
-    this.rate = Number(input_field_enterFeedFlowRate.value);
-  },
+    //
+    // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
+    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
+
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
+
+    // check input fields for new values
+    // function getInputValue() is defined in file process_interface.js
+    // getInputValue(unit index in processUnits, let index in input arrays)
+    // see variable numbers above in initialize()
+    // note: this.dataValues.[pVar]
+    //   is only used in copyData() to report input values
+    //
+    let unum = this.unitIndex;
+    //
+    this.flowRate = this.dataValues[0] = interface.getInputValue(unum,0);
+    this.conc = this.dataValues[1] = interface.getInputValue(unum,1);
+    this.TTemp = this.dataValues[2] = interface.getInputValue(unum,2);
+
+}, END updateUIparams
 
   updateInputs : function(){
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
@@ -170,7 +240,7 @@ processUnits[1] = {
   updateInputs : function(){
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    this.flowRate = processUnits[0].rate;
+    this.flowRate = processUnits[0].flowRate;
     this.concIn = processUnits[0].conc;
     this.TTemp1 = processUnits[0].TTemp;
     this.TTemp4 = processUnits[3].TTemp;
@@ -203,7 +273,7 @@ processUnits[1] = {
 
   updateDisplay : function() {
 
-    // document.getElementById("demo01").innerHTML = "processUnits[0].rate = " + this.rate;
+    // document.getElementById("demo01").innerHTML = "processUnits[0].flowRate = " + this.rate;
     let el = document.querySelector("#div_PLOTDIV_reactorContents");
     // reactant is blue, product is red, this.conc is reactant conc
     // xxx assume here max conc is 400 but should make it a variable
@@ -335,7 +405,7 @@ processUnits[2] = {
   }, // end updateState method
 
   updateDisplay : function(){
-    // document.getElementById("demo01").innerHTML = "processUnits[0].rate = " + this.rate;
+    // document.getElementById("demo01").innerHTML = "processUnits[0].flowRate = " + this.rate;
 
     // HANDLE STRIP CHART DATA
 
@@ -456,7 +526,7 @@ processUnits[3] = {
   }, // end updateState method
 
   updateDisplay : function(){
-    // document.getElementById("demo01").innerHTML = "processUnits[0].rate = " + this.rate;
+    // document.getElementById("demo01").innerHTML = "processUnits[0].flowRate = " + this.rate;
 
     // HANDLE STRIP CHART DATA
 

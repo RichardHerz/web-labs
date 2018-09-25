@@ -21,7 +21,7 @@ let puTEMPLATE = {
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
 
-  // define main inputs
+  // define main parameters
   // values will be set in method intialize()
   // *** e.g., Kf300 : 0, // forward rate coefficient value at 300 K
 
@@ -63,8 +63,6 @@ let puTEMPLATE = {
 
   ssCheckSum : 0, // used to check for steady state
   residenceTime : 0, // for timing checks for steady state check
-  // residenceTime is set in this unit's updateUIparams()
-  // residenceTime is an output from this unit to HX unit
 
   initialize : function() {
     //
@@ -94,7 +92,6 @@ let puTEMPLATE = {
     // this.dataMin[v] = 200;
     // this.dataMax[v] = 500;
     //
-
   }, // END of initialize()
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -179,7 +176,7 @@ let puTEMPLATE = {
     //
     // *** e.g., this.Kf300 = this.dataValues[0] = interface.getInputValue(unum, 0);
 
-  }, // END of updateUIparams()
+  }, // END updateUIparams()
 
   updateInputs : function() {
     //

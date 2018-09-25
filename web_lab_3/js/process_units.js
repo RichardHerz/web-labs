@@ -1,4 +1,4 @@
-/*
+plotInfo/*
   Design, text, images and code by Richard K. Herz, 2018
   Copyrights held by Richard K. Herz
   Licensed for use under the GNU General Public License v3.0
@@ -463,7 +463,8 @@ processUnits[1] = {
 
   updateDisplay : function() {
 
-    // document.getElementById("demo01").innerHTML = "processUnits[0].flowRate = " + this.rate;
+    // update color of reactor contents on web page
+    // XXX literal here - want to keep? - if so, then change notice above for this unit
     let el = document.querySelector("#div_PLOTDIV_reactorContents");
     // reactant is blue, product is red, this.Ca is reactant conc
     // xxx assume here max conc is 400 but should make it a variable
@@ -478,22 +479,11 @@ processUnits[1] = {
 
     let v = 0; // used as index
     let p = 0; // used as index
-    let numStripPoints = plotsObj[0]['numberPoints'];
-
-    // XXX see if can make actions below for strip chart into general function
-
-    // handle reactant conc
-    v = 0;
-    tempArray = stripData[v]; // work on one plot variable at a time
-    // delete first and oldest element which is an [x,y] pair array
-    tempArray.shift();
-    // add the new [x.y] pair array at end
-    tempArray.push( [ 0, this.Ca ] );
-    // update the variable being processed
-    stripData[v] = tempArray;
+    let numStripPoints = plotInfo[0]['numberPoints'];
+    let numStripVars = 2; // only the variables from this unit
 
     // handle reactor T
-    v = 1;
+    v = 0;
     tempArray = stripData[v]; // work on one plot variable at a time
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
@@ -502,12 +492,20 @@ processUnits[1] = {
     // update the variable being processed
     stripData[v] = tempArray;
 
+    // handle reactant conc
+    v = 1;
+    tempArray = stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [ 0, this.Ca ] );
+    // update the variable being processed
+    stripData[v] = tempArray;
+
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
-    for (v = 0; v < 2; v += 1) {
-      // only need to do for vars 0 and 1 in this display method
-      // to do all vars, for (v = 0; v < numStripVariables; v += 1)
+    let timeStep = simParams.simTimeStep;
+    for (v = 0; v < numStripVars; v += 1) {
       for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
         // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
         // want next line for newest data at max time
@@ -601,7 +599,7 @@ processUnits[2] = {
 
     let v = 0; // used as index
     let p = 0; // used as index
-    let numStripPoints = plotsObj[0]['numberPoints'];
+    let numStripPoints = plotInfo[0]['numberPoints'];
 
     // XXX see if can make actions below for strip chart into general function
 
@@ -722,7 +720,7 @@ processUnits[3] = {
 
     let v = 0; // used as index
     let p = 0; // used as index
-    let numStripPoints = plotsObj[0]['numberPoints'];
+    let numStripPoints = plotInfo[0]['numberPoints'];
 
     // XXX see if can make actions below for strip chart into general function
 

@@ -558,7 +558,7 @@ processUnits[2] = {
   initialTTemp : 350, // (K), TTemp = temperature
   TTemp : this.initialTTemp,
 
-  command : 0, // get command from unit 5 in updateInputs
+  command : 0, // get command from unit 4 in updateInputs
 
   reset : function(){
     // On 1st load or reload page, the html file fills the fields with html file

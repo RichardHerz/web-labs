@@ -239,6 +239,12 @@ processUnits[1] = {
   Ea : 200, // (kJ/mol), reaction activation energy
   delH : -250, // (kJ/mol), reaction heat of reaction (exothermic < 0)
 
+  // define variables to hold outputs
+  initialTrxr : 300, // (K)
+  Trxr : 300, // (K)
+  initialCa : 400; // (mol/m3)
+  Ca : 400, // (mol/m3), reactant concentration
+
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
   dataHeaders : [], // variable names
@@ -249,17 +255,11 @@ processUnits[1] = {
   dataInitial : [],
   dataValues : [],
 
-  // define arrays to hold output variables
-  // these will be filled with initial values in method reset()
-  // *** e.g., Trxr : [],
-  TTemp : [], // (K), TTemp = temperature in Kelvin
-  conc : [], // (mol/m3), reactant concentration
-
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
-  profileData : [], // for profile plots, plot script requires this name
+  // profileData : [], // for profile plots, plot script requires this name
   stripData : [], // for strip chart plots, plot script requires this name
-  colorCanvasData : [], // for color canvas plots, plot script requires this name
+  // colorCanvasData : [], // for color canvas plots, plot script requires this name
 
   // allow this unit to take more than one step within one main loop step in updateState method
   unitStepRepeats : 1,
@@ -277,9 +277,9 @@ processUnits[1] = {
   vol : 0.1, // (m3), volume of reactor contents = constant with flow rate
 
   flowRate  : 0, // will get flowRate from unit 0 in updateInputs
-  concIn    : 0, // will get concIn from unit 0 in updateInputs
-  TTemp0    : 0, // will get TTemp0 from unit 0 in updateInputs
-  TTemp3    : 0, // will get TTemp3 from unit 3 in updateInputs
+  concIn    : 0, // will get concIn from unit 0 in updateInputs, feed
+  TTemp0    : 0, // will get TTemp0 from unit 0 in updateInputs, feed
+  TTemp3    : 0, // will get TTemp3 from unit 3 in updateInputs, jacket
   UA        : 0, // will get UA from unit 3 in updateInputs
 
   initialize : function() {
@@ -329,7 +329,7 @@ processUnits[1] = {
     this.dataMax[v] = 500;
     //
     v = 4;
-    this.dataHeaders[v] = 'conc';
+    this.dataHeaders[v] = 'Ca';
     this.dataUnits[v] =  'mol/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
@@ -356,12 +356,37 @@ processUnits[1] = {
     // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
 
-    // XXX ??? these are computation inputs as well as outputs
-    // XXX ??? where are arrays filled ??
-    // set state variables not set by updateUIparams to initial settings
-    this.TTemp = this.initialTTemp; // (K), TTemp = temperature in Kelvin
-    this.conc = this.initialConc;
-  },
+    this.Trxr= this.initialTrxr; // (K)
+    this.Ca = this.initialCa; // (mol/m3), reactant conc
+
+    // each unit has its own data arrays for plots and canvases
+
+    // initialize strip chart data array
+    // initPlotData(numStripVars,numStripPts)
+    let numStripVars = 2; // Trxr & Ca here
+    let numStripPts = plotInfo[0]['numberPoints'];
+    this.stripData = plotter.initPlotData(numStripVars,numStripPts);
+
+    let kn = 0;
+    for (k = 0; k <= numStripPts; k += 1) {
+      kn = k * simParams.simTimeStep;
+      // x-axis values
+      // x-axis values will not change during sim
+      // XXX change to get number vars for this plotInfo variable
+      //     so can put in repeat - or better yet, a function
+      //     and same for y-axis below
+      // first index specifies which variable
+      this.profileData[0][k][0] = kn;
+      this.profileData[1][k][0] = kn;
+      // y-axis values
+      this.profileData[0][k][1] = this.dataMin[3];
+      this.profileData[1][k][1] = this.dataMin[4];
+    }
+
+    // update display
+    this.updateDisplay();
+
+  }, // END reset method
 
   updateUIparams : function() {
     //
@@ -399,13 +424,11 @@ processUnits[1] = {
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
-    // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
-    // get array of current input values to this unit from other units
     let inputs = this.getInputs();
-    this.flowRate = inputs[0];
-    this.concIn = inputs[1];
-    this.TTemp0 = inputs[2];
-    this.TTemp3 = inputs[3];
+    this.flowRate = inputs[0]; // feed flow rate
+    this.concIn = inputs[1]; // feed conc
+    this.TTemp0 = inputs[2]; // feed T
+    this.TTemp3 = inputs[3]; // jacket T
     this.UA = inputs[4];
 
   }, // END updateInputs()
@@ -420,21 +443,21 @@ processUnits[1] = {
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
 
-    let krxn = this.k300 * Math.exp(-(this.Ea/this.Rg)*(1/this.TTemp - 1/300));
-    let rate = -krxn * this.conc;
+    let krxn = this.k300 * Math.exp(-(this.Ea/this.Rg)*(1/this.Trxr- 1/300));
+    let rate = -krxn * this.Ca;
     let invTau = this.flowRate / this.vol; // inverse of space time = space velocity
 
-    let dCdt = invTau * (this.concIn - this.conc) + rate;
+    let dCdt = invTau * (this.concIn - this.Ca) + rate;
     let dC = this.unitTimeStep * dCdt;
     // update conc
-    this.conc = this.conc + dC;
-    if (this.conc < 0){this.conc = 0;}
+    this.Ca = this.Ca + dC;
+    if (this.Ca < 0){this.Ca = 0;}
 
     let dTdt = invTau*(this.TTemp0 - this.TTemp) + rate*this.delH/(this.rho*this.Cp) +
                (this.TTemp3 - this.TTemp) * this.UA /(this.vol*this.rho*this.Cp);
     let dTTemp = this.unitTimeStep * dTdt;
     // update TTemp
-    this.TTemp = this.TTemp + dTTemp;
+    this.Trxr= this.Trxr+ dTTemp;
 
   }, // end updateState method
 
@@ -442,9 +465,9 @@ processUnits[1] = {
 
     // document.getElementById("demo01").innerHTML = "processUnits[0].flowRate = " + this.rate;
     let el = document.querySelector("#div_PLOTDIV_reactorContents");
-    // reactant is blue, product is red, this.conc is reactant conc
+    // reactant is blue, product is red, this.Ca is reactant conc
     // xxx assume here max conc is 400 but should make it a variable
-    let concB = Math.round((this.conc)/400 * 255);
+    let concB = Math.round((this.Ca/400 * 255);
     let concR = 255 - concB;
     let concColor = "rgb(" + concR + ", 0, " + concB + ")";
     // alert("concColor = " + concColor); // check results
@@ -465,7 +488,7 @@ processUnits[1] = {
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [ 0, this.conc ] );
+    tempArray.push( [ 0, this.Ca ] );
     // update the variable being processed
     stripData[v] = tempArray;
 
@@ -475,7 +498,7 @@ processUnits[1] = {
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [ 0, this.TTemp ] );
+    tempArray.push( [ 0, this.Trxr] );
     // update the variable being processed
     stripData[v] = tempArray;
 

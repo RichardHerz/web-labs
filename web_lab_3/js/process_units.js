@@ -369,7 +369,7 @@ processUnits[1] = {
 
     let kn = 0;
     for (k = 0; k <= numStripPts; k += 1) {
-      kn = k * simParams.simTimeStep;
+      kn = k * simParams.simTimeStep * simParams.simStepRepeats;
       // x-axis values
       // x-axis values will not change during sim
       // XXX change to get number vars for this plotInfo variable
@@ -504,7 +504,7 @@ processUnits[1] = {
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep;
+    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (v = 0; v < numStripVars; v += 1) {
       for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
         // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
@@ -569,7 +569,34 @@ processUnits[2] = {
     // this.rate set by updateUIparams
     // set state variables not set by updateUIparams to initial settings
     this.TTemp = this.initialTTemp;
-  },  // << COMMAS ARE REQUIRED AT END OF EACH OBJECT PROPERTY & FUNCTION EXCEPT LAST ONE (NO ;)
+
+    // each unit has its own data arrays for plots and canvases
+
+    // initialize strip chart data array
+    // initPlotData(numStripVars,numStripPts)
+    let numStripVars = 1; // jacket inlet T here
+    let numStripPts = plotInfo[0]['numberPoints'];
+    this.stripData = plotter.initPlotData(numStripVars,numStripPts);
+
+    let kn = 0;
+    for (k = 0; k <= numStripPts; k += 1) {
+      kn = k * simParams.simTimeStep * simParams.simStepRepeats;
+      // x-axis values
+      // x-axis values will not change during sim
+      // XXX change to get number vars for this plotInfo variable
+      //     so can put in repeat - or better yet, a function
+      //     and same for y-axis below
+      // first index specifies which variable
+      this.profileData[0][k][0] = kn;
+      this.profileData[1][k][0] = kn;
+      // y-axis values
+      this.profileData[0][k][1] = this.dataMin[0]; // XXX CHECK THIS 0 XXX
+    }
+
+    // update display
+    this.updateDisplay();
+
+  }, // END reset method
 
   updateUIparams : function(){
     this.rate = Number(input_field_enterJacketFlowRate.value);
@@ -601,22 +628,20 @@ processUnits[2] = {
     let p = 0; // used as index
     let numStripPoints = plotInfo[0]['numberPoints'];
 
-    // XXX see if can make actions below for strip chart into general function
-
     // handle jacket inlet T
-    v = 2;
-    tempArray = stripData[v]; // work on one plot variable at a time
+    v = 0;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
     tempArray.push( [ 0, this.TTemp ] );
     // update the variable being processed
-    stripData[v] = tempArray;
+    this.stripData[v] = tempArray;
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
     let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
-    v = 2; // just one var in this display method, so don't need repeat
+    v = 0; // just one var in this display method, so don't need repeat
     // to do all vars, for (v = 0; v < numStripVariables; v += 1)
     for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
       // note want p <= numStripPoints so get # 0 to  # numStripPoints of points

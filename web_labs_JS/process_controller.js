@@ -95,6 +95,8 @@ let controller = {
       }
 
       // update simTime = simulation time elapsed
+      // done before simStepRepeats of all units, so
+      // simTime update each time is simTimeStep * simStepRepeats
       // need controller.updateSimTime() not this.updateSimTime()
       // because updateProcess is a subfunction of runSimulation
       controller.updateSimTime();
@@ -227,7 +229,9 @@ let controller = {
   },
 
   updateSimTime : function() {
-    this.simTime = this.simTime + simParams.simTimeStep;
+    // only updated before simStepRepeats are all executed
+    // and only updated once each displayUpdate
+    this.simTime = this.simTime + simParams.simTimeStep * simParams.simStepRepeats;
   },
 
   // runningFlag value can change by click of RUN-PAUSE or RESET buttons

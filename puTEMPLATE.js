@@ -88,7 +88,6 @@ let puTEMPLATE = {
     // v = 7;
     // this.dataHeaders[v] = 'Trxr';
     // this.dataUnits[v] =  'K';
-    // // Trxr dataMin & dataMax can be changed in updateUIparams()
     // this.dataMin[v] = 200;
     // this.dataMax[v] = 500;
     //

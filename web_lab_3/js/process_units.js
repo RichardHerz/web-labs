@@ -1137,7 +1137,9 @@ processUnits[4] = {
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
     //
-    this.VarCount = v;
+    // special, use v-1 to not report manualCommand in copy data table header
+    // but need manualCommand as input var to get from html input 
+    this.VarCount = v-1;
     //
     // OUTPUT VARS
     //
@@ -1250,11 +1252,11 @@ processUnits[4] = {
 
     // stop integration at command limits
     // to prevent integral windup
-    let vnum = 4; // 4 is command
-    if (this.command > this.dataMax[vnum]){
-      this.command = this.dataMax[vnum];
-    } else if (this.command < this.dataMin[vnum]){
-      this.command = this.dataMin[vnum];
+    let v = 4; // 4 is command
+    if (this.command > this.dataMax[v]){
+      this.command = this.dataMax[v];
+    } else if (this.command < this.dataMin[v]){
+      this.command = this.dataMin[v];
     } else {
       // not at limit, OK to update integral of error
       // update errorIntegral only after it is used above to update this.command
@@ -1269,7 +1271,7 @@ processUnits[4] = {
     } else {
       // in auto mode, use command computed above
     }
-    
+
   }, // end updateState method
 
   updateDisplay : function(){

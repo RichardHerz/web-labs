@@ -205,8 +205,11 @@ let interface = {
            '</body></html>');
     dataWindow.document.close();
 
-    function formatNum(n) {
-      let nn = n;
+    function formatNum(nn) {
+      if (isNaN(nn)) {
+        return nn;
+      }
+      // nn is a number so format with number methods
       if ((nn > 1000) || (nn < -1000)) {
         nn = nn.toExponential(3);
       } else if ((nn > 100) || (nn < -100)) {

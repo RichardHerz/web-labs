@@ -64,7 +64,6 @@ let puTEMPLATE = {
   ssCheckSum : 0, // used to check for steady state
   residenceTime : 0, // for timing checks for steady state check
   // residenceTime is set in this unit's updateUIparams()
-  // residenceTime is an output from this unit to HX unit
 
   initialize : function() {
     //
@@ -100,7 +99,7 @@ let puTEMPLATE = {
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
 
   reset : function() {
-
+    //
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,

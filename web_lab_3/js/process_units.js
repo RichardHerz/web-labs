@@ -811,6 +811,16 @@ processUnits[3] = {
   Trxr    : 0, // will get Trxr from unit 1 in updateInputs
   TjIn    : 0, // will get TjIn from unit 2 in updateInputs
 
+  // define arrays to hold info for variables
+  // these will be filled with values in method initialize()
+  dataHeaders : [], // variable names
+  dataInputs : [], // input field ID's
+  dataUnits : [],
+  dataMin : [],
+  dataMax : [],
+  dataInitial : [],
+  dataValues : [],
+
   // define arrays to hold output variables
   // these will be filled with initial values in method reset()
   // *** e.g., Trxr : [],
@@ -823,19 +833,85 @@ processUnits[3] = {
   unitStepRepeats : 1,
   unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
 
+  ssCheckSum : 0, // used to check for steady state
+  residenceTime : 0, // for timing checks for steady state check
+  // residenceTime is set in this unit's updateUIparams()
+
+  initialize : function() {
+    //
+    // let v = 0;
+    this.dataHeaders[v] = 'UA';
+    this.dataInputs[v] = 'input_field_enterjacketUA';
+    this.dataUnits[v] = 'kJ/s/K';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 100;
+    this.dataInitial[v] = 20;
+    this.UA = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.UA; // current input value for reporting
+    //
+    // END OF INPUT VARS
+    // record number of input variables, VarCount
+    // used, e.g., in copy data to table
+    //
+    this.VarCount = v;
+    //
+    // OUTPUT VARS
+    //
+    v = 1;
+    this.dataHeaders[v] = 'Tj';
+    this.dataUnits[v] =  'K';
+    this.dataMin[v] = 200;
+    this.dataMax[v] = 500;
+    //
+  }, // END initialize()
+
   reset : function(){
+    //
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
     // reset function will use whatever last values user has entered.
+
     this.updateUIparams(); // this first, then set other values as needed
+
+    // set state variables not set by updateUIparams() to initial settings
+
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
+
     // set state variables not set by updateUIparams to initial settings
     this.Tj = this.initialTj;
-  },  // << COMMAS ARE REQUIRED AT END OF EACH OBJECT PROPERTY & FUNCTION EXCEPT LAST ONE (NO ;)
 
-  updateUIparams : function(){
-    this.UA = Number(input_field_enterjacketUA.value); // (kJ/s/K), heat transfer area * coefficient
-  },
+  }, // END reset method
+
+  updateUIparams : function() {
+    //
+    // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
+    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
+
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
+
+    // check input fields for new values
+    // function getInputValue() is defined in file process_interface.js
+    // getInputValue(unit index in processUnits, let index in input arrays)
+    // see variable numbers above in initialize()
+    // note: this.dataValues.[pVar]
+    //   is only used in copyData() to report input values
+    //
+    let unum = this.unitIndex;
+    //
+    this.UA = this.dataValues[0] = interface.getInputValue(unum, 0);
+
+  }, // END updateUIparams method
 
   updateInputs : function() {
     //
@@ -855,6 +931,7 @@ processUnits[3] = {
   }, // END updateInputs method
 
   updateState : function(){
+    //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE -
     // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER

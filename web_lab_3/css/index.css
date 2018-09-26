@@ -56,7 +56,7 @@ canvas {
   margin: 20px;
   width: 790px;
   font-size: 1em;
-} 
+}
 
 #div_simFrame {
   display: block;
@@ -176,7 +176,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_enterdelHLABEL {
+#field_enterdelH_LABEL {
   position: absolute;
   left: 0px;
   top: 70px;
@@ -201,7 +201,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_enterEaLABEL {
+#field_enterEa_LABEL {
   position: absolute;
   left: 0px;
   top: 37px;
@@ -226,7 +226,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_control_5 {
+#field_enterk300_LABEL {
   position: absolute;
   left: 0px;
   top: 3px;
@@ -265,7 +265,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_enterJacketUALABEL {
+#field_enterJacketUA_LABEL {
   position: absolute;
   left: 0px;
   top: 125px;
@@ -290,7 +290,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_enterJacketFlowRateLABEL {
+#field_enterJacketFlowRate_LABEL {
   position: absolute;
   left: 0px;
   top: 95px;
@@ -315,7 +315,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_enterFeedConcLABEL {
+#field_enterFeedConc_LABEL {
   position: absolute;
   left: 0px;
   top: 52px;
@@ -340,7 +340,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_enterFeedTTempLABEL {
+#field_enterFeedTTemp_LABEL {
   position: absolute;
   left: 0px;
   top: 25px;
@@ -365,7 +365,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_enterFeedFlowRateLABEL {
+#field_enterFeedFlowRate_LABEL {
   position: absolute;
   left: 0px;
   top: -6px;
@@ -419,7 +419,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_enterJacketFeedTTempLABEL {
+#field_enterJacketFeedTTemp_LABEL {
   position: absolute;
   left: 31px;
   top: 388px;
@@ -432,7 +432,7 @@ canvas {
   font-size: 16px;
 }
 
-#field_enterResetTimeLABEL {
+#field_enterResetTime_LABEL {
   position: absolute;
   left: 30px;
   top: 322px;
@@ -457,7 +457,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_enterGainLABEL {
+#field_enterGain_LABEL {
   position: absolute;
   left: 29px;
   top: 293px;
@@ -482,7 +482,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-#field_enterSetpointLABEL {
+#field_enterSetpoint_LABEL {
   position: absolute;
   left: 30px;
   top: 265px;

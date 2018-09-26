@@ -1,4 +1,4 @@
-plotInfo/*
+/*
   Design, text, images and code by Richard K. Herz, 2018
   Copyrights held by Richard K. Herz
   Licensed for use under the GNU General Public License v3.0
@@ -60,6 +60,16 @@ processUnits[0] = {
   conc : 0, // (mol/m3)
   TTemp : 300, // (K), TTemp = temperature
 
+  // define arrays to hold info for variables
+  // these will be filled with values in method initialize()
+  dataHeaders : [], // variable names
+  dataInputs : [], // input field ID's
+  dataUnits : [],
+  dataMin : [],
+  dataMax : [],
+  dataInitial : [],
+  dataValues : [],
+
   ssCheckSum : 0, // used to check for steady state
   residenceTime : 0, // for timing checks for steady state check
 
@@ -75,7 +85,7 @@ processUnits[0] = {
     this.flowRate = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.flowRate; // current input value for reporting
     //
-    let v = 1;
+    v = 1;
     this.dataHeaders[v] = 'feedConc';
     this.dataInputs[v] = 'input_field_enterFeedConc';
     this.dataUnits[v] = 'mol/m3';
@@ -85,7 +95,7 @@ processUnits[0] = {
     this.conc = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.conc; // current input value for reporting
     //
-    let v = 2;
+    v = 2;
     this.dataHeaders[v] = 'feedTemp';
     this.dataInputs[v] = 'input_field_enterFeedTTemp';
     this.dataUnits[v] = 'K';
@@ -152,13 +162,13 @@ processUnits[0] = {
     this.conc = this.dataValues[1] = interface.getInputValue(unum,1);
     this.TTemp = this.dataValues[2] = interface.getInputValue(unum,2);
 
-  }, END updateUIparams
+  }, // END updateUIparams
 
   updateInputs : function(){
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     //    none for this unit
-  },
+  }, // END updateInputs
 
   updateState : function() {
     //
@@ -242,7 +252,7 @@ processUnits[1] = {
   // define variables to hold outputs
   initialTrxr : 300, // (K)
   Trxr : 300, // (K)
-  initialCa : 400; // (mol/m3)
+  initialCa : 400, // (mol/m3)
   Ca : 400, // (mol/m3), reactant concentration
 
   // define arrays to hold info for variables
@@ -294,7 +304,7 @@ processUnits[1] = {
     this.k300 = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.k300; // current input value for reporting
     //
-    let v = 1;
+    v = 1;
     this.dataHeaders[v] = 'Ea';
     this.dataInputs[v] = 'input_field_enterEa';
     this.dataUnits[v] = 'kJ/mol';
@@ -304,7 +314,7 @@ processUnits[1] = {
     this.Ea = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Ea; // current input value for reporting
     //
-    let v = 2;
+    v = 2;
     this.dataHeaders[v] = 'delH';
     this.dataInputs[v] = 'input_field_enterdelH';
     this.dataUnits[v] = 'kJ/mol';
@@ -376,11 +386,11 @@ processUnits[1] = {
       //     so can put in repeat - or better yet, a function
       //     and same for y-axis below
       // first index specifies which variable
-      this.profileData[0][k][0] = kn;
-      this.profileData[1][k][0] = kn;
+      this.stripData[0][k][0] = kn;
+      this.stripData[1][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = this.dataMin[3];
-      this.profileData[1][k][1] = this.dataMin[4];
+      this.stripData[0][k][1] = this.dataMin[3];
+      this.stripData[1][k][1] = this.dataMin[4];
     }
 
     // update display
@@ -457,7 +467,7 @@ processUnits[1] = {
                (this.Tj - this.Trxr) * this.UA /(this.vol*this.rho*this.Cp);
     let dTrxr = this.unitTimeStep * dTdt;
     // update TTemp
-    this.Trxr= this.Trxr + dTrxr;
+    this.Trxr = this.Trxr + dTrxr;
 
   }, // end updateState method
 
@@ -468,7 +478,7 @@ processUnits[1] = {
     let el = document.querySelector("#div_PLOTDIV_reactorContents");
     // reactant is blue, product is red, this.Ca is reactant conc
     // xxx assume here max conc is 400 but should make it a variable
-    let concB = Math.round((this.Ca/400 * 255);
+    let concB = Math.round(this.Ca/400 * 255);
     let concR = 255 - concB;
     let concColor = "rgb(" + concR + ", 0, " + concB + ")";
     // alert("concColor = " + concColor); // check results
@@ -484,23 +494,23 @@ processUnits[1] = {
 
     // handle reactor T
     v = 0;
-    tempArray = stripData[v]; // work on one plot variable at a time
+    tempArray = this.stripData[v]; // work on one plot variable at a time
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
     tempArray.push( [ 0, this.Trxr] );
     // update the variable being processed
-    stripData[v] = tempArray;
+    this.stripData[v] = tempArray;
 
     // handle reactant conc
     v = 1;
-    tempArray = stripData[v]; // work on one plot variable at a time
+    tempArray = this.stripData[v]; // work on one plot variable at a time
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
     tempArray.push( [ 0, this.Ca ] );
     // update the variable being processed
-    stripData[v] = tempArray;
+    this.stripData[v] = tempArray;
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
@@ -509,9 +519,9 @@ processUnits[1] = {
       for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
         // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
         // want next line for newest data at max time
-        stripData[v][p][0] = p * timeStep;
+        this.stripData[v][p][0] = p * timeStep;
         // want next line for newest data at zero time
-        // stripData[v][p][0] = (numStripPoints - p) * timeStep;
+        // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
       }
     }
 
@@ -528,7 +538,11 @@ processUnits[1] = {
     // but wait at least one residence time after the previous check
     // to allow changes to propagate down unit
     //
-    let ssFlag = true;
+
+    // XXX set ssFlag to false here so lab will run
+    // XXX but need to do a real check for SS
+    let ssFlag = false;
+
     return ssFlag;
   } // END OF checkForSteadyState()
 
@@ -609,7 +623,7 @@ processUnits[2] = {
     this.TjIn = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.TjIn; // current input value for reporting
     //
-    let v = 1;
+    v = 1;
     this.dataHeaders[v] = 'jacketFlowrate';
     this.dataInputs[v] = 'input_field_enterJacketFlowRate';
     this.dataUnits[v] = 'm3/s';
@@ -617,7 +631,7 @@ processUnits[2] = {
     this.dataMax[v] = 1;
     this.dataInitial[v] = 1;
     this.rate = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = Tthis.rate; // current input value for reporting
+    this.dataValues[v] = this.rate; // current input value for reporting
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -664,10 +678,9 @@ processUnits[2] = {
       //     so can put in repeat - or better yet, a function
       //     and same for y-axis below
       // first index specifies which variable
-      this.profileData[0][k][0] = kn;
-      this.profileData[1][k][0] = kn;
+      this.stripData[0][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = this.dataMin[0];
+      this.stripData[0][k][1] = this.dataMin[0];
     }
 
     // update display
@@ -748,9 +761,9 @@ processUnits[2] = {
     for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
       // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
       // want next line for newest data at max time
-      stripData[v][p][0] = p * timeStep;
+      this.stripData[v][p][0] = p * timeStep;
       // want next line for newest data at zero time
-      // stripData[v][p][0] = (numStripPoints - p) * timeStep;
+      // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
     }
 
   }, // END of updateDisplay()
@@ -839,7 +852,7 @@ processUnits[3] = {
 
   initialize : function() {
     //
-    // let v = 0;
+    let v = 0;
     this.dataHeaders[v] = 'UA';
     this.dataInputs[v] = 'input_field_enterjacketUA';
     this.dataUnits[v] = 'kJ/s/K';
@@ -903,10 +916,9 @@ processUnits[3] = {
       //     so can put in repeat - or better yet, a function
       //     and same for y-axis below
       // first index specifies which variable
-      this.profileData[0][k][0] = kn;
-      this.profileData[1][k][0] = kn;
+      this.stripData[0][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = this.dataMin[1];
+      this.stripData[0][k][1] = this.dataMin[1];
     }
 
     // update display
@@ -1000,9 +1012,9 @@ processUnits[3] = {
     for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
       // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
       // want next line for newest data at max time
-      stripData[v][p][0] = p * timeStep;
+      this.stripData[v][p][0] = p * timeStep;
       // want next line for newest data at zero time
-      // stripData[v][p][0] = (numStripPoints - p) * timeStep;
+      // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
     }
 
   }, // END updateDisplay()
@@ -1072,6 +1084,16 @@ processUnits[4] = {
   Trxr : 0, // will get Trxr from unit 1 in updateInputs
   mode : "manual", // auto or manual, see changeMode() below
 
+  // define arrays to hold info for variables
+  // these will be filled with values in method initialize()
+  dataHeaders : [], // variable names
+  dataInputs : [], // input field ID's
+  dataUnits : [],
+  dataMin : [],
+  dataMax : [],
+  dataInitial : [],
+  dataValues : [],
+
   // allow this unit to take more than one step within one main loop step in updateState method
   unitStepRepeats : 1,
   unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
@@ -1092,7 +1114,7 @@ processUnits[4] = {
     this.resetTime = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.resetTime; // current input value for reporting
     //
-    let v = 1;
+    v = 1;
     this.dataHeaders[v] = 'gain';
     this.dataInputs[v] = 'input_field_enterGain';
     this.dataUnits[v] = '';
@@ -1102,7 +1124,7 @@ processUnits[4] = {
     this.gain = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.gain; // current input value for reporting
     //
-    let v = 2;
+    v = 2;
     this.dataHeaders[v] = 'setPoint';
     this.dataInputs[v] = 'input_field_enterGain';
     this.dataUnits[v] = 'K';
@@ -1112,7 +1134,7 @@ processUnits[4] = {
     this.setPoint = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.setPoint; // current input value for reporting
     //
-    let v = 3;
+    v = 3;
     this.dataHeaders[v] = 'manualCommand';
     this.dataInputs[v] = 'input_field_enterJacketFeedTTemp';
     this.dataUnits[v] = 'K';

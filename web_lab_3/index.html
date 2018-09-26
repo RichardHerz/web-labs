@@ -67,54 +67,54 @@
      <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="interface.resetThisLab()"></input>
      <input type="button" id="button_runButton" value="Run" value="Run" onclick="interface.runThisLab()"></input>
      <div id="div_reactionParams">
-        <p id="field_enterdelHLABEL">
+        <p id="field_enterdelH_LABEL">
               Enter reaction &#8710;H (kJ/mol)
         </p>
-        <input id="input_field_enterdelH" value="-250" onchange="processUnits[1].updateUIparams()" value="-250">
+        <input id="input_field_enterdelH" value="-250" onchange="processUnits[1].updateUIparams()">
 
         </input>
-        <p id="field_enterEaLABEL">
+        <p id="field_enterEa_LABEL">
               Enter reaction &#8710;Ea (kJ/mol)
         </p>
-        <input id="input_field_enterEa" value="200" onchange="processUnits[1].updateUIparams()" value="200">
+        <input id="input_field_enterEa" value="200" onchange="processUnits[1].updateUIparams()">
 
         </input>
-        <p id="field_control_5">
+        <p id="field_enterk300_LABEL">
               Enter reaction k300 (1/s)
         </p>
-        <input id="input_field_enterk300" value="5e-6" onchange="processUnits[1].updateUIparams()" value="5e-6">
+        <input id="input_field_enterk300" value="5e-6" onchange="processUnits[1].updateUIparams()">
 
         </input>
      </div> <!-- end of div div_reactionParams -->
      <div id="div_operatingParams">
-        <p id="field_enterJacketUALABEL">
+        <p id="field_enterJacketUA_LABEL">
               Enter jacket UA (kJ/s/K)
         </p>
-        <input id="input_field_enterjacketUA" value="20" onchange="processUnits[3].updateUIparams()" value="20">
+        <input id="input_field_enterjacketUA" value="20" onchange="processUnits[3].updateUIparams()">
 
         </input>
-        <p id="field_enterJacketFlowRateLABEL">
+        <p id="field_enterJacketFlowRate_LABEL">
               Enter jacket flow rate (m<sup shift="-4">3</sup>/s)
         </p>
-        <input id="input_field_enterJacketFlowRate" value="0.05" onchange="processUnits[2].updateUIparams()" value="0.05">
+        <input id="input_field_enterJacketFlowRate" value="0.05" onchange="processUnits[2].updateUIparams()">
 
         </input>
-        <p id="field_enterFeedConcLABEL">
+        <p id="field_enterFeedConc_LABEL">
               Enter feed conc. (mol/m<sup shift="-4">3</sup>)
         </p>
-        <input id="input_field_enterFeedConc" value="400" onchange="processUnits[0].updateUIparams()" value="400">
+        <input id="input_field_enterFeedConc" value="400" onchange="processUnits[0].updateUIparams()">
 
         </input>
-        <p id="field_enterFeedTTempLABEL">
+        <p id="field_enterFeedTTemp_LABEL">
               Enter feed T (K)
         </p>
-        <input id="input_field_enterFeedTTemp" value="300" onchange="processUnits[0].updateUIparams()" value="300">
+        <input id="input_field_enterFeedTTemp" value="300" onchange="processUnits[0].updateUIparams()">
 
         </input>
-        <p id="field_enterFeedFlowRateLABEL">
+        <p id="field_enterFeedFlowRate_LABEL">
               Enter feed flow rate (m<sup shift="-4">3</sup>/s)
         </p>
-        <input id="input_field_enterFeedFlowRate" value="0.005" onchange="processUnits[0].updateUIparams()" value="0.005">
+        <input id="input_field_enterFeedFlowRate" value="0.005" onchange="processUnits[0].updateUIparams()">
 
         </input>
      </div> <!-- end of div div_operatingParams -->
@@ -122,28 +122,28 @@
         <div id="div_PLOTDIV_plotData">
         </div> <!-- end of div div_PLOTDIV_plotData -->
         <!-- copy data button onclick="copyData(#)" must have index # of plotObj[#] specified in process_plot_info.js -->
-        <input type="button" id="button_copyDataButton" value="Copy data" value="Copy data" onclick="copyData(0)"></input>
-        <!-- <p> id="field_enterJacketFeedTTempLABEL" MAY HAVE css visibility:hidden on open page; changed by processUnits[4].changeMode -->
-        <p id="field_enterJacketFeedTTempLABEL">
+        <input type="button" id="button_copyDataButton" value="Copy data" onclick="interface.copyData(0)"></input>
+        <!-- <p> id="field_enterJacketFeedTTemp_LABEL" MAY HAVE css visibility:hidden on open page; changed by processUnits[4].changeMode -->
+        <p id="field_enterJacketFeedTTemp_LABEL">
               Enter jacket inlet T (K)
         </p>
         <!-- input id="input_field_enterJacketFeedTTemp" MAY BE type="hidden" on open page; changed by processUnits[4].changeMode -->
-        <p id="field_enterResetTimeLABEL">
+        <p id="field_enterResetTime_LABEL">
               Enter reset time (&gt; 0 s)
         </p>
-        <input id="input_field_enterResetTime" value="30" onchange="processUnits[4].updateUIparams()" value="30">
+        <input id="input_field_enterResetTime" value="30" onchange="processUnits[4].updateUIparams()">
 
         </input>
-        <p id="field_enterGainLABEL">
+        <p id="field_enterGain_LABEL">
               Enter controller gain
         </p>
-        <input id="input_field_enterGain" value="2" onchange="processUnits[4].updateUIparams()" value="2">
+        <input id="input_field_enterGain" value="2" onchange="processUnits[4].updateUIparams()">
 
         </input>
-        <p id="field_enterSetpointLABEL">
+        <p id="field_enterSetpoint_LABEL">
               Enter reactor T set point (K)
         </p>
-        <input id="input_field_enterSetpoint" value="340" onchange="processUnits[4].updateUIparams()" value="340">
+        <input id="input_field_enterSetpoint" value="340" onchange="processUnits[4].updateUIparams()">
 
         </input>
         <div id="div_RADIO_group_Controller">
@@ -157,7 +157,7 @@
            </label>
         </div> <!-- end of div div_RADIO_group_Controller -->
         <!-- end "div_RADIO_group_Controller" -->
-        <input id="input_field_enterJacketFeedTTemp" value="348" onchange="processUnits[4].updateUIparams()" value="348">
+        <input id="input_field_enterJacketFeedTTemp" value="348" onchange="processUnits[4].updateUIparams()">
         </input>
      </div> <!-- end of div div_controller -->
   </div> <!-- end of div div_simFrame -->

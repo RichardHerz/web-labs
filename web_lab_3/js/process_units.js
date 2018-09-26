@@ -550,7 +550,23 @@ processUnits[2] = {
   //   unit 2 USES processUnits[4].command
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
-  // variables defined here are available to all functions inside this unit
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  getInputs : function() {
+    let inputs = [];
+    inputs[0] = processUnits[4].command;
+    return inputs;
+  },
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
+  // SEE dataInputs array in initialize() method for input field ID's
+
+  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
+  // *** e.g., displayReactorLeftConc: 'field_reactor_left_conc',
+
+  // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
+  // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
+
+  // define main inputs
+  // values will be set in method intialize()
 
   initialRate : 1, // (m3/s), heat transfer liquid flow rate
   rate : this.initialRate,
@@ -560,13 +576,74 @@ processUnits[2] = {
 
   command : 0, // get command from unit 4 in updateInputs
 
+  // define arrays to hold info for variables
+  // these will be filled with values in method initialize()
+  dataHeaders : [], // variable names
+  dataInputs : [], // input field ID's
+  dataUnits : [],
+  dataMin : [],
+  dataMax : [],
+  dataInitial : [],
+  dataValues : [],
+
+  // define arrays to hold data for plots, color canvas
+  // these will be filled with initial values in method reset()
+  // profileData : [], // for profile plots, plot script requires this name
+  stripData : [], // for strip chart plots, plot script requires this name
+  // colorCanvasData : [], // for color canvas plots, plot script requires this name
+
+  ssCheckSum : 0, // used to check for steady state
+  residenceTime : 0, // for timing checks for steady state check
+  // residenceTime is set in this unit's updateUIparams()
+  // residenceTime is an output from this unit to HX unit
+
+  initialize : function() {
+    //
+    let v = 0;
+    this.dataHeaders[v] = 'jacketInletT';
+    this.dataInputs[v] = '';
+    this.dataUnits[v] = 'K';
+    this.dataMin[v] = 200;
+    this.dataMax[v] = 500;
+    this.dataInitial[v] = 350;
+    this.TTemp = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = TTemp.Kf300; // current input value for reporting
+    //
+    let v = 1;
+    this.dataHeaders[v] = 'jacketFlowrate';
+    this.dataInputs[v] = 'input_field_enterJacketFlowRate';
+    this.dataUnits[v] = 'm3/s';
+    this.dataMin[v] = 1e-7;
+    this.dataMax[v] = 1;
+    this.dataInitial[v] = 1;
+    this.rate = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = Tthis.rate; // current input value for reporting
+    //
+    // END OF INPUT VARS
+    // record number of input variables, VarCount
+    // used, e.g., in copy data to table
+    //
+    this.VarCount = v;
+    //
+    // OUTPUT VARS
+    //
+    // v = 7;
+    // this.dataHeaders[v] = 'Trxr';
+    // this.dataUnits[v] =  'K';
+    // // Trxr dataMin & dataMax can be changed in updateUIparams()
+    // this.dataMin[v] = 200;
+    // this.dataMax[v] = 500;
+    //
+
+  }, // END of initialize()
+
   reset : function(){
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
     // reset function will use whatever last values user has entered.
     this.updateUIparams(); // this first, then set other values as needed
-    // this.rate set by updateUIparams
+
     // set state variables not set by updateUIparams to initial settings
     this.TTemp = this.initialTTemp;
 
@@ -590,7 +667,7 @@ processUnits[2] = {
       this.profileData[0][k][0] = kn;
       this.profileData[1][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = this.dataMin[0]; // XXX CHECK THIS 0 XXX
+      this.profileData[0][k][1] = this.dataMin[0];
     }
 
     // update display
@@ -598,14 +675,37 @@ processUnits[2] = {
 
   }, // END reset method
 
-  updateUIparams : function(){
-    this.rate = Number(input_field_enterJacketFlowRate.value);
-  },
+  updateUIparams : function() {
+    //
+    // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
+    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
+
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
+
+    // check input fields for new values
+    // function getInputValue() is defined in file process_interface.js
+    // getInputValue(unit index in processUnits, let index in input arrays)
+    // see variable numbers above in initialize()
+    // note: this.dataValues.[pVar]
+    //   is only used in copyData() to report input values
+    //
+    let unum = this.unitIndex;
+    //
+    // get jacket inlet T from controller command
+    this.rate = this.dataValues[1] = interface.getInputValue(unum, 1);
+
+  }, // END of updateUIparams()
 
   updateInputs : function(){
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    this.command = processUnits[4].command;
+    let inputs = this.getInputs();
+    this.command = inputs[0];
   },
 
   updateState : function(){

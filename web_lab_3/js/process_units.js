@@ -278,8 +278,8 @@ processUnits[1] = {
 
   flowRate  : 0, // will get flowRate from unit 0 in updateInputs
   concIn    : 0, // will get concIn from unit 0 in updateInputs, feed
-  TTemp0    : 0, // will get TTemp0 from unit 0 in updateInputs, feed
-  TTemp3    : 0, // will get TTemp3 from unit 3 in updateInputs, jacket
+  Tfeed    : 0, // will get TTemp0 from unit 0 in updateInputs, feed
+  Tj   : 0, // will get TTemp3 from unit 3 in updateInputs, jacket
   UA        : 0, // will get UA from unit 3 in updateInputs
 
   initialize : function() {
@@ -427,8 +427,8 @@ processUnits[1] = {
     let inputs = this.getInputs();
     this.flowRate = inputs[0]; // feed flow rate
     this.concIn = inputs[1]; // feed conc
-    this.TTemp0 = inputs[2]; // feed T
-    this.TTemp3 = inputs[3]; // jacket T
+    this.Tfeed = inputs[2]; // feed T
+    this.Tj = inputs[3]; // jacket T
     this.UA = inputs[4];
 
   }, // END updateInputs()
@@ -453,11 +453,11 @@ processUnits[1] = {
     this.Ca = this.Ca + dC;
     if (this.Ca < 0){this.Ca = 0;}
 
-    let dTdt = invTau*(this.TTemp0 - this.TTemp) + rate*this.delH/(this.rho*this.Cp) +
-               (this.TTemp3 - this.TTemp) * this.UA /(this.vol*this.rho*this.Cp);
-    let dTTemp = this.unitTimeStep * dTdt;
+    let dTdt = invTau*(this.Tfeed - this.Trxr) + rate*this.delH/(this.rho*this.Cp) +
+               (this.Tj - this.Trxr) * this.UA /(this.vol*this.rho*this.Cp);
+    let dTrxr = this.unitTimeStep * dTdt;
     // update TTemp
-    this.Trxr= this.Trxr+ dTTemp;
+    this.Trxr= this.Trxr + dTrxr;
 
   }, // end updateState method
 
@@ -571,8 +571,8 @@ processUnits[2] = {
   initialRate : 1, // (m3/s), heat transfer liquid flow rate
   rate : this.initialRate,
 
-  initialTTemp : 350, // (K), TTemp = temperature
-  TTemp : this.initialTTemp,
+  initialTjIn : 350, // (K)
+  TjIn : this.initialTjIn,
 
   command : 0, // get command from unit 4 in updateInputs
 
@@ -606,8 +606,8 @@ processUnits[2] = {
     this.dataMin[v] = 200;
     this.dataMax[v] = 500;
     this.dataInitial[v] = 350;
-    this.TTemp = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = TTemp.Kf300; // current input value for reporting
+    this.TjIn = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.TjIn; // current input value for reporting
     //
     let v = 1;
     this.dataHeaders[v] = 'jacketFlowrate';
@@ -645,7 +645,7 @@ processUnits[2] = {
     this.updateUIparams(); // this first, then set other values as needed
 
     // set state variables not set by updateUIparams to initial settings
-    this.TTemp = this.initialTTemp;
+    this.TjIn = this.initialTjIn;
 
     // each unit has its own data arrays for plots and canvases
 
@@ -715,7 +715,7 @@ processUnits[2] = {
     // STATE VARIABLE
 
     // get feed T from controller command
-    this.TTemp = this.command;
+    this.TjIn = this.command;
 
   }, // end updateState method
 
@@ -736,7 +736,7 @@ processUnits[2] = {
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [ 0, this.TTemp ] );
+    tempArray.push( [ 0, this.TjIn ] );
     // update the variable being processed
     this.stripData[v] = tempArray;
 
@@ -794,7 +794,7 @@ processUnits[3] = {
     let inputs = [];
     inputs[0] = processUnits[2].rate;
     inputs[1] = processUnits[1].Trxr;
-    inputs[2] = processUnits[2].TTemp;
+    inputs[2] = processUnits[2].TjIn;
     return inputs;
   },
 
@@ -885,6 +885,32 @@ processUnits[3] = {
 
     // set state variables not set by updateUIparams to initial settings
     this.Tj = this.initialTj;
+
+    // each unit has its own data arrays for plots and canvases
+
+    // initialize strip chart data array
+    // initPlotData(numStripVars,numStripPts)
+    let numStripVars = 1; // jacket T here
+    let numStripPts = plotInfo[0]['numberPoints'];
+    this.stripData = plotter.initPlotData(numStripVars,numStripPts);
+
+    let kn = 0;
+    for (k = 0; k <= numStripPts; k += 1) {
+      kn = k * simParams.simTimeStep * simParams.simStepRepeats;
+      // x-axis values
+      // x-axis values will not change during sim
+      // XXX change to get number vars for this plotInfo variable
+      //     so can put in repeat - or better yet, a function
+      //     and same for y-axis below
+      // first index specifies which variable
+      this.profileData[0][k][0] = kn;
+      this.profileData[1][k][0] = kn;
+      // y-axis values
+      this.profileData[0][k][1] = this.dataMin[1];
+    }
+
+    // update display
+    this.updateDisplay();
 
   }, // END reset method
 

@@ -1062,16 +1062,13 @@ processUnits[4] = {
 
   // define main inputs
   // values will be set in method intialize()
-  resetTime   : 3, // integral mode reset time
-  gain				: 100, // controller gain
-  setPoint		: 330, // (K) desired reactor temperature
+  resetTime   : 30, // integral mode reset time
+  gain				: 300, // controller gain
+  setPoint		: 340, // (K) desired reactor temperature
   manualCommand : 348, // (K)
-
-  // define variables which will not be plotted nor saved in copy data table
-
   manualBias  : 300, // (K), command at zero error
   initialCommand  : 300, // controller command signal (coef for unit_2)
-  command         : this.initialCommand,
+  command         : 0,
   errorIntegral   : 0, // integral error
   Trxr : 0, // will get Trxr from unit 1 in updateInputs
   mode : "manual", // auto or manual, see changeMode() below
@@ -1102,7 +1099,7 @@ processUnits[4] = {
     this.dataUnits[v] = 's';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 3;
+    this.dataInitial[v] = 30;
     this.resetTime = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.resetTime; // current input value for reporting
     //
@@ -1112,17 +1109,17 @@ processUnits[4] = {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
-    this.dataInitial[v] = 100;
+    this.dataInitial[v] = 300;
     this.gain = this.dataInitial[v];
     this.dataValues[v] = this.gain;
     //
     v = 2;
     this.dataHeaders[v] = 'setPoint';
-    this.dataInputs[v] = 'input_field_enterGain';
+    this.dataInputs[v] = 'input_field_enterSetpoint';
     this.dataUnits[v] = 'K';
-    this.dataMin[v] = 0;
+    this.dataMin[v] = 300;
     this.dataMax[v] = 500;
-    this.dataInitial[v] = 330;
+    this.dataInitial[v] = 340;
     this.setPoint = this.dataInitial[v];
     this.dataValues[v] = this.setPoint;
     //
@@ -1130,8 +1127,8 @@ processUnits[4] = {
     this.dataHeaders[v] = 'manualCommand';
     this.dataInputs[v] = 'input_field_enterJacketFeedTTemp';
     this.dataUnits[v] = 'K';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 500;
+    this.dataMin[v] = 200;
+    this.dataMax[v] = 450;
     this.dataInitial[v] = 348;
     this.manualCommand = this.dataInitial[v];
     this.dataValues[v] = this.manualCommand;
@@ -1144,12 +1141,11 @@ processUnits[4] = {
     //
     // OUTPUT VARS
     //
-    // v = 7;
-    // this.dataHeaders[v] = 'Trxr';
-    // this.dataUnits[v] =  'K';
-    // // Trxr dataMin & dataMax can be changed in updateUIparams()
-    // this.dataMin[v] = 200;
-    // this.dataMax[v] = 500;
+    v = 4;
+    this.dataHeaders[v] = 'command';
+    this.dataUnits[v] =  'K';
+    this.dataMin[v] = 300;
+    this.dataMax[v] = 450;
     //
   }, // END initialize method
 
@@ -1178,8 +1174,6 @@ processUnits[4] = {
   },  // END reset method
 
   changeMode : function(){
-    // below does not work when html input tag id="input.radio_controllerAUTO"
-    // use instead id="radio_controllerAUTO" - same for MANUAL & AUTO
     let el = document.querySelector("#radio_controllerAUTO");
     let el2 = document.querySelector("#enterJacketFeedTTemp");
     if (el.checked){
@@ -1256,10 +1250,11 @@ processUnits[4] = {
 
     // stop integration at command limits
     // to prevent integral windup
-    if (this.command > 450){
-      this.command = 450;
-    } else if (this.command < 200){
-      this.command = 200;
+    let vnum = 4; // 4 is command
+    if (this.command > this.dataMax[vnum]){
+      this.command = this.dataMax[vnum];
+    } else if (this.command < this.dataMin[vnum]){
+      this.command = this.dataMin[vnum];
     } else {
       // not at limit, OK to update integral of error
       // update errorIntegral only after it is used above to update this.command
@@ -1274,7 +1269,7 @@ processUnits[4] = {
     } else {
       // in auto mode, use command computed above
     }
-
+    
   }, // end updateState method
 
   updateDisplay : function(){

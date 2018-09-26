@@ -720,7 +720,9 @@ processUnits[2] = {
   }, // end updateState method
 
   updateDisplay : function(){
-    // document.getElementById("demo01").innerHTML = "processUnits[0].flowRate = " + this.rate;
+    // update display elements which only depend on this process unit
+    // except do all plotting at main controller updateDisplay
+    // since some plots may contain data from more than one process unit
 
     // HANDLE STRIP CHART DATA
 

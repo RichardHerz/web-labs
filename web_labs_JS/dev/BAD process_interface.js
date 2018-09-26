@@ -60,7 +60,11 @@ let interface = {
     if (document.getElementById(varInputID)) {
       // the input exists so get the value and make sure it is within range
       varValue = document.getElementById(varInputID).value;
-      varValue = Number(varValue); // force any number as string to numeric number
+      // force any number as string to numeric number
+      // need this "if (isNaN(varValue))" below so do not affect, e.g., 5.0e-6,
+      // which, if do "Number(varValue)" without check, will result as 0.000005
+      if (isNaN(varValue)) {varValue = Number(varValue);}
+      // check to see if varValue is now a number, and handle if not
       if (isNaN(varValue)) {varValue = varInitial;} // handle e.g., 259x, xxx
       if (varValue < varMin) {varValue = varMin;}
       if (varValue > varMax) {varValue = varMax;}
@@ -205,25 +209,36 @@ let interface = {
            '</body></html>');
     dataWindow.document.close();
 
-    function formatNum(nn) {
+    function formatNum(n) {
+      let nn = n; // use this conversion nn = n for testing different n
       if (isNaN(nn)) {
+        // not a number so return without trying to format
+        return nn;
+      } else {
+        // nn is a number so format with number methods
+        //
+        // next line because was having problems with .toFixed() for number
+        // almost an integer but still double-precision, e.g., 348 vs. 348.001
+        nn = 1.00000000111 * nn; // get off "almost integer" problem
+        // problem turned up after changing "varValue = Number(varValue);"
+        // to "if (isNaN(varValue)) {varValue = Number(varValue);}"
+        // in interface.getInputValue() above
+        //
+        if ((nn > 1000) || (nn < -1000)) {
+          nn = nn.toExponential(3);
+        } else if ((nn > 100) || (nn < -100)) {
+          nn = nn.toFixed(1);
+        } else if ((nn > 10) || (nn < -10)) {
+          nn = nn.toFixed(2);
+        } else if ((nn > 1) || (nn < -1)) {
+         nn = nn.toFixed(3);
+        } else if ((nn > 0.01) || (nn < -0.01)) {
+          nn = nn.toFixed(4);
+        } else {
+          nn = nn.toExponential(3);
+        }
         return nn;
       }
-      // nn is a number so format with number methods
-      if ((nn > 1000) || (nn < -1000)) {
-        nn = nn.toExponential(3);
-      } else if ((nn > 100) || (nn < -100)) {
-       nn = nn.toFixed(1);
-      } else if ((nn > 10) || (nn < -10)) {
-        nn = nn.toFixed(2);
-      } else if ((nn > 1) || (nn < -1)) {
-       nn = nn.toFixed(3);
-      } else if ((nn > 0.01) || (nn < -0.01)) {
-        nn = nn.toFixed(4);
-      } else {
-        nn = nn.toExponential(3);
-      }
-      return nn;
     } // END of function formatNum
 
   } // END of function copyData

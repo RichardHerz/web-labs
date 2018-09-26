@@ -1,0 +1,13 @@
+the process_interface.js in this dev folder has problems - so do not use 
+
+the changes started in getInputValue so 5.0e-6 in html index wasn't getting converted to 0.000005 on the page when getInputValue executed:  
+
+      // force any number as string to numeric number
+      // need this "if (isNaN(varValue))" below so do not affect, e.g., 5.0e-6,
+      // which, if do "Number(varValue)" without check, will result as 0.000005
+      if (isNaN(varValue)) {varValue = Number(varValue);}  
+      
+after this, got a problem in copyData subfunction formatNum with a near integer floating point - 348 - causing nn.toFixed(1) not valid error in copy data table - so made changes to that and posted 
+
+BUT THEN GOT ERRORS in all the other labs about, e.g., Cain.toFixed ?? errors 
+

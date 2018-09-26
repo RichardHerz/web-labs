@@ -40,13 +40,13 @@ processUnits[0] = {
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
   getInputs : function() {
     let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0]; // HX T cold out = RXR Tin
+    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
     return inputs;
   },
 
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 1 USES unit 0 rate
+  //   unit 1 USES unit 0 flowRate
   //   unit 1 USES unit 0 conc
   //   unit 1 USES unit 0 Tfeed
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
@@ -81,7 +81,7 @@ processUnits[0] = {
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0.0001;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0.005;
+    this.dataInitial[v] = 0.05;
     this.flowRate = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.flowRate; // current input value for reporting
     //
@@ -91,9 +91,9 @@ processUnits[0] = {
     this.dataUnits[v] = 'mol/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
-    this.dataInitial[v] = 400;
-    this.conc = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.conc; // current input value for reporting
+    this.dataInitial[v] = 0;
+    this.conc = this.dataInitial[v];
+    this.dataValues[v] = this.conc;
     //
     v = 2;
     this.dataHeaders[v] = 'feedTemp';
@@ -102,8 +102,8 @@ processUnits[0] = {
     this.dataMin[v] = 200;
     this.dataMax[v] = 500;
     this.dataInitial[v] = 300;
-    this.Tfeed = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Tfeed; // current input value for reporting
+    this.Tfeed = this.dataInitial[v];
+    this.dataValues[v] = this.Tfeed;
     // END OF INPUT VARS
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
@@ -185,7 +185,7 @@ processUnits[0] = {
   }, // end updateState method
 
   updateDisplay : function(){
-    // empty
+    // nothing to do here for this unit
   }, // END of updateDisplay()
 
   checkForSteadyState : function() {
@@ -216,7 +216,7 @@ processUnits[1] = {
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
   //   unit 4 USES unit 1 Trxr
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //   unit 1 USES unit 0 rate // flow rate
+  //   unit 1 USES unit 0 flowRate // flow rate
   //   unit 1 USES unit 0 conc
   //   unit 1 USES unit 0 Tfeed
   //   unit 1 USES unit 3 Tj
@@ -252,8 +252,8 @@ processUnits[1] = {
   // define variables to hold outputs
   initialTrxr : 300, // (K)
   Trxr : 300, // (K)
-  initialCa : 400, // (mol/m3)
-  Ca : 400, // (mol/m3), reactant concentration
+  initialCa : 0, // (mol/m3)
+  Ca : 0, // (mol/m3), reactant concentration
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -311,8 +311,8 @@ processUnits[1] = {
     this.dataMin[v] = 0;
     this.dataMax[v] = 500;
     this.dataInitial[v] = 200
-    this.Ea = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Ea; // current input value for reporting
+    this.Ea = this.dataInitial[v];
+    this.dataValues[v] = this.Ea;
     //
     v = 2;
     this.dataHeaders[v] = 'delH';
@@ -321,8 +321,8 @@ processUnits[1] = {
     this.dataMin[v] = -400;
     this.dataMax[v] = 400;
     this.dataInitial[v] = -250
-    this.delH = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.delH; // current input value for reporting
+    this.delH = this.dataInitial[v];
+    this.dataValues[v] = this.delH;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -347,6 +347,7 @@ processUnits[1] = {
   }, // END of initialize()
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
+  // XXX EXCEPT IN updateDisplay - see another web lab for ouput to html....
 
   reset : function() {
 
@@ -392,9 +393,6 @@ processUnits[1] = {
       this.stripData[0][k][1] = this.dataMin[3];
       this.stripData[1][k][1] = this.dataMin[4];
     }
-
-    // update display
-    this.updateDisplay();
 
   }, // END reset method
 
@@ -630,8 +628,8 @@ processUnits[2] = {
     this.dataMin[v] = 1e-7;
     this.dataMax[v] = 1;
     this.dataInitial[v] = 1;
-    this.rate = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.rate; // current input value for reporting
+    this.rate = this.dataInitial[v];
+    this.dataValues[v] = this.rate;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -680,11 +678,8 @@ processUnits[2] = {
       // first index specifies which variable in plot data array
       this.stripData[0][k][0] = kn;
       // y-axis values
-      this.stripData[0][k][1] = this.dataInitial[0];
+      this.stripData[0][k][1] = this.dataMin[0];
     }
-
-    // update display
-    this.updateDisplay();
 
   }, // END reset method
 
@@ -918,11 +913,8 @@ processUnits[3] = {
       // first index specifies which variable in plot data array
       this.stripData[0][k][0] = kn;
       // y-axis values
-      this.stripData[0][k][1] = this.dataInitial[1];
+      this.stripData[0][k][1] = this.dataMin[1];
     }
-
-    // update display
-    this.updateDisplay();
 
   }, // END reset method
 
@@ -1121,8 +1113,8 @@ processUnits[4] = {
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
     this.dataInitial[v] = 100;
-    this.gain = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.gain; // current input value for reporting
+    this.gain = this.dataInitial[v];
+    this.dataValues[v] = this.gain;
     //
     v = 2;
     this.dataHeaders[v] = 'setPoint';
@@ -1131,8 +1123,8 @@ processUnits[4] = {
     this.dataMin[v] = 0;
     this.dataMax[v] = 500;
     this.dataInitial[v] = 330;
-    this.setPoint = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.setPoint; // current input value for reporting
+    this.setPoint = this.dataInitial[v];
+    this.dataValues[v] = this.setPoint;
     //
     v = 3;
     this.dataHeaders[v] = 'manualCommand';
@@ -1141,8 +1133,8 @@ processUnits[4] = {
     this.dataMin[v] = 0;
     this.dataMax[v] = 500;
     this.dataInitial[v] = 348;
-    this.manualCommand = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.manualCommand; // current input value for reporting
+    this.manualCommand = this.dataInitial[v];
+    this.dataValues[v] = this.manualCommand;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount

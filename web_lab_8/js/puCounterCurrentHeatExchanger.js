@@ -495,8 +495,9 @@ let puCounterCurrentHeatExchanger = {
     let hrt = 1.0e1 * this.Thot[0].toFixed(1);
     let clt = 1.0e-3 * this.Tcold[nn].toFixed(1);
     let crt = 1.0e-7 * this.Tcold[0].toFixed(1);
-    // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
     let newCheckSum = hlt + hrt + clt  + crt;
+    newCheckSum = newCheckSum.toFixed(8); // last sum operation may add significant figs
+    // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
     let oldSScheckSum = this.ssCheckSum;
     let ssFlag = false;
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}

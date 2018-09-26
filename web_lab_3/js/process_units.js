@@ -206,6 +206,7 @@ processUnits[0] = {
 }; // END unit 0
 
 processUnits[1] = {
+  //
   unitIndex : 1, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor',
@@ -300,7 +301,7 @@ processUnits[1] = {
     this.dataUnits[v] = '1/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 5e-6;
+    this.dataInitial[v] = 5.0e-6;
     this.k300 = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.k300; // current input value for reporting
     //
@@ -367,7 +368,7 @@ processUnits[1] = {
     // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
 
-    this.Trxr= this.initialTrxr; // (K)
+    this.Trxr = this.initialTrxr; // (K)
     this.Ca = this.initialCa; // (mol/m3), reactant conc
 
     // each unit has its own data arrays for plots and canvases
@@ -438,6 +439,16 @@ processUnits[1] = {
     this.Tfeed = inputs[2]; // feed T
     this.Tj = inputs[3]; // jacket T
     this.UA = inputs[4];
+
+    // residence time used in controller.checkForSteadyState()
+    // this.residenceTime = this.vol / this.flowRate;
+    // BUT use width of strip plot to help ensure plot update does not
+    // suspend in middle when reach steady state for check every 2 times
+    // longest res time BUT NOT foolproof, e.g., with
+    // 1 K up then down changes in manual Tj at certain times
+    let numStripPoints = plotInfo[0]['numberPoints'];
+    this.residenceTime = this.stripData[1][numStripPoints][0];
+    // console.log('rxr res time = ' + this.residenceTime);
 
   }, // END updateInputs()
 
@@ -536,17 +547,35 @@ processUnits[1] = {
     // but wait at least one residence time after the previous check
     // to allow changes to propagate down unit
     //
+    // use reactant conc at oldest time on plot in check
+    // as well as current conc this.Ca in crt check
+    // in order to help ensure strip plot update doesn't stop unless plot flat
+    // AND use width of strip plot for residence time in updateInputs
+    // BUT NOT foolproof, e.g., with
+    // 1 K up then down changes in manual Tj at certain times
 
-    // XXX set ssFlag to false here so lab will run
-    // XXX but need to do a real check for SS
+    let hlt = this.stripData[1][0][1]; // oldest reactant conc in rxr conc plot
+    let hrt = 1.0e1 * this.Tj.toFixed(1);
+    let clt = 1.0e-3 * this.Trxr.toFixed(1);
+    let crt = 1.0e-7 * this.Ca.toFixed(1);
+    // let newCheckSum = hlt + hrt + clt  + crt;
+    let newCheckSum = hlt + hrt + clt  + crt;
+    newCheckSum = newCheckSum.toFixed(8); // last sum operation may add significant figs
+    // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 check's
+    let oldSScheckSum = this.ssCheckSum;
     let ssFlag = false;
+    if (newCheckSum == oldSScheckSum) {ssFlag = true;}
+    this.ssCheckSum = newCheckSum; // save current value for use next time
+
+    // console.log('newCheckSum = ' + newCheckSum + ', ssFlag = ' + ssFlag);
 
     return ssFlag;
-  } // END OF checkForSteadyState()
+  } // END checkForSteadyState method
 
 }; // END unit 1
 
 processUnits[2] = {
+  //
   unitIndex : 2, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'feed to heat transfer jacket',
@@ -607,7 +636,6 @@ processUnits[2] = {
   ssCheckSum : 0, // used to check for steady state
   residenceTime : 0, // for timing checks for steady state check
   // residenceTime is set in this unit's updateUIparams()
-  // residenceTime is an output from this unit to HX unit
 
   initialize : function() {
     //
@@ -781,6 +809,7 @@ processUnits[2] = {
 }; // END unit 2
 
 processUnits[3] = {
+  //
   unitIndex : 3, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'heat transfer jacket',
@@ -958,6 +987,9 @@ processUnits[3] = {
     this.Trxr = inputs[1];
     this.TjIn = inputs[2];
 
+    // residence time used in controller.checkForSteadyState()
+    this.residenceTime = this.vol / this.flowRate;
+
   }, // END updateInputs method
 
   updateState : function(){
@@ -1029,6 +1061,7 @@ processUnits[3] = {
 }; // END unit 3
 
 processUnits[4] = {
+  //
   unitIndex : 4, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor temperature controller',
@@ -1138,7 +1171,7 @@ processUnits[4] = {
     // used, e.g., in copy data to table
     //
     // special, use v-1 to not report manualCommand in copy data table header
-    // but need manualCommand as input var to get from html input 
+    // but need manualCommand as input var to get from html input
     this.VarCount = v-1;
     //
     // OUTPUT VARS
@@ -1191,6 +1224,14 @@ processUnits[4] = {
       //   el2.type = "input";
       //   document.getElementById("enterJacketFeedTTemp_LABEL").style.visibility = "visible";
     }
+
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
+
   }, // end changeMode function
 
   updateUIparams : function() {

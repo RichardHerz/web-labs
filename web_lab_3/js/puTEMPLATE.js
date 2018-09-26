@@ -190,7 +190,6 @@ let puTEMPLATE = {
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
-    // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
     // get array of current input values to this unit from other units
     let inputs = this.getInputs();
     this.Tin = inputs[0]; // RXR Tin = HX T cold out

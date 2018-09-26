@@ -784,10 +784,19 @@ processUnits[3] = {
   //   unit 1 USES unit 3 TTemp // TTemp = temperature
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //   unit 3 USES unit 1 TTemp
+  //   unit 3 USES unit 1 Trxr
   //   unit 3 USES unit 2 rate // flow rate
   //   unit 3 USES unit 2 TTemp
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
+
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  getInputs : function() {
+    let inputs = [];
+    inputs[0] = processUnits[2].rate;
+    inputs[1] = processUnits[1].Trxr;
+    inputs[2] = processUnits[2].TTemp;
+    return inputs;
+  },
 
   // variables defined here are available to all functions inside this unit
 
@@ -795,12 +804,24 @@ processUnits[3] = {
   rho       : 1000, // (kg/m3), heat transfer liquid density
   Cp        : 2.0, // (kJ/kg/K), heat transfer liquid heat capacity
 
-  initialTTemp : 350, // (K), TTemp = temperature
-  TTemp     : this.initialTTemp,
+  initialTj : 350,
+  Tj     : this.initialTj,
 
   flowRate  : 0, // will get flowRate from unit 3 in updateInputs
-  TTemp2    : 0, // will get TTemp2 from unit 2 in updateInputs
-  TTemp3    : 0, // will get TTemp3 from unit 3 in updateInputs
+  Trxr    : 0, // will get Trxr from unit 1 in updateInputs
+  TjIn    : 0, // will get TjIn from unit 2 in updateInputs
+
+  // define arrays to hold output variables
+  // these will be filled with initial values in method reset()
+  // *** e.g., Trxr : [],
+
+  // define arrays to hold data for plots, color canvas
+  // these will be filled with initial values in method reset()
+  stripData : [], // for strip chart plots, plot script requires this name
+
+  // allow this unit to take more than one step within one main loop step in updateState method
+  unitStepRepeats : 1,
+  unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
 
   reset : function(){
     // On 1st load or reload page, the html file fills the fields with html file
@@ -809,20 +830,29 @@ processUnits[3] = {
     // reset function will use whatever last values user has entered.
     this.updateUIparams(); // this first, then set other values as needed
     // set state variables not set by updateUIparams to initial settings
-    this.TTemp = this.initialTTemp;
+    this.Tj = this.initialTj;
   },  // << COMMAS ARE REQUIRED AT END OF EACH OBJECT PROPERTY & FUNCTION EXCEPT LAST ONE (NO ;)
 
   updateUIparams : function(){
     this.UA = Number(input_field_enterjacketUA.value); // (kJ/s/K), heat transfer area * coefficient
   },
 
-  updateInputs : function(){
+  updateInputs : function() {
+    //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    this.flowRate = processUnits[2].rate;
-    this.TTemp2 = processUnits[1].TTemp;
-    this.TTemp3 = processUnits[2].TTemp;
-  },
+    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
+    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+
+    // get array of current input values to this unit from other units
+    let inputs = this.getInputs();
+    this.flowRate = inputs[0];
+    this.Trxr = inputs[1];
+    this.TjIn = inputs[2];
+
+  }, // END updateInputs method
 
   updateState : function(){
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -832,16 +862,16 @@ processUnits[3] = {
 
     let invTau = this.flowRate/ this.vol;
 
-    let dTdt = invTau*(this.TTemp3 - this.TTemp) +
-               (this.TTemp2- this.TTemp) * this.UA/(this.vol*this.rho*this.Cp);
-    let dTTemp = simParams.simTimeStep * dTdt;
-    // update TTemp
-    this.TTemp = this.TTemp + dTTemp;
+    let dTdt = invTau*(this.TjIn - this.Tj) +
+               (this.Trxr- this.Tj) * this.UA/(this.vol*this.rho*this.Cp);
+    this.Tj = this.Tj + this.unitTimeStep * dTdt;
 
-  }, // end updateState method
+  }, // END updateState method
 
   updateDisplay : function(){
-    // document.getElementById("demo01").innerHTML = "processUnits[0].flowRate = " + this.rate;
+    // update display elements which only depend on this process unit
+    // except do all plotting at main controller updateDisplay
+    // since some plots may contain data from more than one process unit
 
     // HANDLE STRIP CHART DATA
 
@@ -849,22 +879,20 @@ processUnits[3] = {
     let p = 0; // used as index
     let numStripPoints = plotInfo[0]['numberPoints'];
 
-    // XXX see if can make actions below for strip chart into general function
-
-    // handle jacket T
-    v = 3;
-    tempArray = stripData[v]; // work on one plot variable at a time
+    // handle Tj
+    v = 0;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [ 0, this.TTemp ] );
+    tempArray.push( [ 0, this.Tj ] );
     // update the variable being processed
-    stripData[v] = tempArray;
+    this.stripData[v] = tempArray;
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
     let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
-    v = 3; // just one var in this display method, so don't need repeat
+    v = 0; // just one var in this display method, so don't need repeat
     // to do all vars, for (v = 0; v < numStripVariables; v += 1)
     for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
       // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
@@ -873,7 +901,8 @@ processUnits[3] = {
       // want next line for newest data at zero time
       // stripData[v][p][0] = (numStripPoints - p) * timeStep;
     }
-  }, // END of updateDisplay()
+
+  }, // END updateDisplay()
 
   checkForSteadyState : function() {
     // required - called by controller object
@@ -888,7 +917,7 @@ processUnits[3] = {
     //
     let ssFlag = true;
     return ssFlag;
-  } // END OF checkForSteadyState()
+  } // END checkForSteadyState()
 
 }; // END unit 3
 

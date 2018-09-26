@@ -94,7 +94,7 @@ let puTEMPLATE = {
     // this.dataMax[v] = 500;
     //
 
-  }, // END of initialize()
+  }, // END initialize method
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
 

@@ -1003,6 +1003,8 @@ processUnits[4] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor temperature controller',
 
+  // NOTE: this unit has a special method: changeMode
+
   // SUMMARY OF DEPENDENCIES
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
@@ -1012,31 +1014,128 @@ processUnits[4] = {
   //   unit 4 USES unit 1 TTemp - controlled variable
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
-  // variables defined here are available to all functions inside this unit
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  getInputs : function() {
+    let inputs = [];
+    inputs[0] = processUnits[1].Trxr;
+    return inputs;
+  },
 
-  setPoint		: 330, // (K) desired reactor temperature
-  gain				: 100, // controller gain
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
+  // SEE dataInputs array in initialize() method for input field ID's
+
+  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
+  // *** e.g., displayReactorLeftConc: 'field_reactor_left_conc',
+
+  // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
+  // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
+
+  // define main inputs
+  // values will be set in method intialize()
   resetTime   : 3, // integral mode reset time
+  gain				: 100, // controller gain
+  setPoint		: 330, // (K) desired reactor temperature
+  manualCommand : 348, // (K)
+
+  // define variables which will not be plotted nor saved in copy data table
+
   manualBias  : 300, // (K), command at zero error
   initialCommand  : 300, // controller command signal (coef for unit_2)
   command         : this.initialCommand,
   errorIntegral   : 0, // integral error
+  Trxr : 0, // will get Trxr from unit 1 in updateInputs
+  mode : "manual", // auto or manual, see changeMode() below
 
-  mode        : "manual", // auto or manual, see changeMode() below
-  manualCommand : 348,
+  // allow this unit to take more than one step within one main loop step in updateState method
+  unitStepRepeats : 1,
+  unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
 
-  TTemp2  : 0, // will get TTemp2 from unit 2 in updateInputs
+  ssCheckSum : 0, // used to check for steady state
+  residenceTime : 0, // for timing checks for steady state check
+  // residenceTime is set in this unit's updateUIparams()
 
-  reset : function(){
+  initialize : function() {
+    //
+    let v = 0;
+    this.dataHeaders[v] = 'resetTime';
+    this.dataInputs[v] = 'input_field_enterResetTime';
+    this.dataUnits[v] = 's';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 100;
+    this.dataInitial[v] = 3;
+    this.resetTime = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.resetTime; // current input value for reporting
+    //
+    let v = 1;
+    this.dataHeaders[v] = 'gain';
+    this.dataInputs[v] = 'input_field_enterGain';
+    this.dataUnits[v] = '';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 1000;
+    this.dataInitial[v] = 100;
+    this.gain = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.gain; // current input value for reporting
+    //
+    let v = 2;
+    this.dataHeaders[v] = 'setPoint';
+    this.dataInputs[v] = 'input_field_enterGain';
+    this.dataUnits[v] = 'K';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 500;
+    this.dataInitial[v] = 330;
+    this.setPoint = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.setPoint; // current input value for reporting
+    //
+    let v = 3;
+    this.dataHeaders[v] = 'manualCommand';
+    this.dataInputs[v] = 'input_field_enterJacketFeedTTemp';
+    this.dataUnits[v] = 'K';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 500;
+    this.dataInitial[v] = 348;
+    this.manualCommand = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.manualCommand; // current input value for reporting
+    //
+    // END OF INPUT VARS
+    // record number of input variables, VarCount
+    // used, e.g., in copy data to table
+    //
+    this.VarCount = v;
+    //
+    // OUTPUT VARS
+    //
+    // v = 7;
+    // this.dataHeaders[v] = 'Trxr';
+    // this.dataUnits[v] =  'K';
+    // // Trxr dataMin & dataMax can be changed in updateUIparams()
+    // this.dataMin[v] = 200;
+    // this.dataMax[v] = 500;
+    //
+  }, // END initialize method
+
+  reset : function() {
+    //
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
     // reset function will use whatever last values user has entered.
+
     this.updateUIparams(); // this first, then set other values as needed
+
+    // set state variables not set by updateUIparams() to initial settings
+
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
+
     // set state variables not set by updateUIparams to initial settings
     this.errorIntegral = 0;
     this.command = this.initialCommand;
-  },  // << COMMAS ARE REQUIRED AT END OF EACH OBJECT PROPERTY & FUNCTION EXCEPT LAST ONE (NO ;)
+
+  },  // END reset method
 
   changeMode : function(){
     // below does not work when html input tag id="input.radio_controllerAUTO"
@@ -1058,31 +1157,60 @@ processUnits[4] = {
     }
   }, // end changeMode function
 
-  updateUIparams : function(){
-    this.resetTime = Number(input_field_enterResetTime.value);
-    this.gain = Number(input_field_enterGain.value);
-    this.setPoint = Number(input_field_enterSetpoint.value);
-    // at least for input below, value returned is not a number, probably text
-    // so convert this and others to numbers
-    // noticed problem in process_units copyData function, .toFixed(2) didn't work
-    // MAYBE RELATED TO HOW INPUT DEFINED IN HTML???
-    this.manualCommand = Number(input_field_enterJacketFeedTTemp.value);
-  },
+  updateUIparams : function() {
+    //
+    // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
+    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-  updateInputs : function(){
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
+
+    // check input fields for new values
+    // function getInputValue() is defined in file process_interface.js
+    // getInputValue(unit index in processUnits, let index in input arrays)
+    // see variable numbers above in initialize()
+    // note: this.dataValues.[pVar]
+    //   is only used in copyData() to report input values
+    //
+    let unum = this.unitIndex;
+    //
+    this.resetTime = this.dataValues[0] = interface.getInputValue(unum, 0);
+    this.gain = this.dataValues[1] = interface.getInputValue(unum, 1);
+    this.setPoint = this.dataValues[2] = interface.getInputValue(unum, 2);
+    this.manualCommand = this.dataValues[3] = interface.getInputValue(unum, 3);
+
+  }, // END updateUIparams method
+
+  updateInputs : function() {
+    //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    this.TTemp2 = processUnits[1].TTemp;
-  },
+    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
+    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+
+    // get array of current input values to this unit from other units
+    let inputs = this.getInputs();
+    this.Trxr = inputs[0];
+  }, // END updateInputs method
 
   updateState : function(){
+    //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
-    // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE -
+    // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
     // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
     // STATE VARIABLE
+    //
+    // WARNING: this method must NOT contain references to other units!
+    //          get info from other units ONLY in updateInputs() method
 
     // compute new value of PI controller command
-    let error = this.setPoint - this.TTemp2;
+    let error = this.setPoint - this.Trxr;
     this.command = this.manualBias + this.gain *
                   (error + (1/this.resetTime) * this.errorIntegral);
 
@@ -1110,7 +1238,7 @@ processUnits[4] = {
   }, // end updateState method
 
   updateDisplay : function(){
-    // document.getElementById("demo05").innerHTML = "processUnits[4].command = " + this.command;
+    // nothing to do here
   }, // END of updateDisplay()
 
   checkForSteadyState : function() {

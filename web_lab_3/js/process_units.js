@@ -48,7 +48,7 @@ processUnits[0] = {
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
   //   unit 1 USES unit 0 rate
   //   unit 1 USES unit 0 conc
-  //   unit 1 USES unit 0 TTemp
+  //   unit 1 USES unit 0 Tfeed
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
   //   none
@@ -58,7 +58,7 @@ processUnits[0] = {
   // values will be set in method intialize()
   flowRate : 0, // (m3/s), feed flow rate
   conc : 0, // (mol/m3)
-  TTemp : 300, // (K), TTemp = temperature
+  Tfeed : 300, // (K)
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -102,8 +102,8 @@ processUnits[0] = {
     this.dataMin[v] = 200;
     this.dataMax[v] = 500;
     this.dataInitial[v] = 300;
-    this.TTemp = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.TTemp; // current input value for reporting
+    this.Tfeed = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.Tfeed; // current input value for reporting
     // END OF INPUT VARS
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
@@ -160,7 +160,7 @@ processUnits[0] = {
     //
     this.flowRate = this.dataValues[0] = interface.getInputValue(unum,0);
     this.conc = this.dataValues[1] = interface.getInputValue(unum,1);
-    this.TTemp = this.dataValues[2] = interface.getInputValue(unum,2);
+    this.Tfeed = this.dataValues[2] = interface.getInputValue(unum,2);
 
   }, // END updateUIparams
 
@@ -214,12 +214,12 @@ processUnits[1] = {
   //
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 4 USES unit 1 TTemp
+  //   unit 4 USES unit 1 Trxr
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
   //   unit 1 USES unit 0 rate // flow rate
   //   unit 1 USES unit 0 conc
-  //   unit 1 USES unit 0 TTemp // TTemp = temperature
-  //   unit 1 USES unit 3 TTemp
+  //   unit 1 USES unit 0 Tfeed
+  //   unit 1 USES unit 3 Tj
   //   unit 1 USES unit 3 UA
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
 
@@ -228,8 +228,8 @@ processUnits[1] = {
     let inputs = [];
     inputs[0] = processUnits[0].flowRate;
     inputs[1] = processUnits[0].conc;
-    inputs[2] = processUnits[0].TTemp;
-    inputs[3] = processUnits[3].TTemp;
+    inputs[2] = processUnits[0].Tfeed;
+    inputs[3] = processUnits[3].Tj;
     inputs[4] = processUnits[3].UA;
     return inputs;
   },
@@ -286,11 +286,11 @@ processUnits[1] = {
   Cp : 2.0, // (kJ/kg/K), reactant liquid heat capacity
   vol : 0.1, // (m3), volume of reactor contents = constant with flow rate
 
-  flowRate  : 0, // will get flowRate from unit 0 in updateInputs
-  concIn    : 0, // will get concIn from unit 0 in updateInputs, feed
-  Tfeed    : 0, // will get TTemp0 from unit 0 in updateInputs, feed
-  Tj   : 0, // will get TTemp3 from unit 3 in updateInputs, jacket
-  UA        : 0, // will get UA from unit 3 in updateInputs
+  flowRate : 0, // will get flowRate from unit 0 in updateInputs
+  concIn : 0, // will get concIn from unit 0 in updateInputs, feed
+  Tfeed : 0, // will get Tfeed from unit 0 in updateInputs, feed
+  Tj : 0, // will get Tj from unit 3 in updateInputs, jacket
+  UA : 0, // will get UA from unit 3 in updateInputs
 
   initialize : function() {
     //
@@ -385,7 +385,7 @@ processUnits[1] = {
       // XXX change to get number vars for this plotInfo variable
       //     so can put in repeat - or better yet, a function
       //     and same for y-axis below
-      // first index specifies which variable
+      // first index specifies which variable in plot data array
       this.stripData[0][k][0] = kn;
       this.stripData[1][k][0] = kn;
       // y-axis values
@@ -466,7 +466,7 @@ processUnits[1] = {
     let dTdt = invTau*(this.Tfeed - this.Trxr) + rate*this.delH/(this.rho*this.Cp) +
                (this.Tj - this.Trxr) * this.UA /(this.vol*this.rho*this.Cp);
     let dTrxr = this.unitTimeStep * dTdt;
-    // update TTemp
+    // update Trxr
     this.Trxr = this.Trxr + dTrxr;
 
   }, // end updateState method
@@ -558,7 +558,7 @@ processUnits[2] = {
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
   //   unit 3 USES unit 2 rate
-  //   unit 3 USES unit 2 TTemp // TTemp = temperature
+  //   unit 3 USES unit 2 TjIn
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
   //   unit 2 USES processUnits[4].command
@@ -619,7 +619,7 @@ processUnits[2] = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 200;
     this.dataMax[v] = 500;
-    this.dataInitial[v] = 350;
+    this.dataInitial[v] = 348;
     this.TjIn = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.TjIn; // current input value for reporting
     //
@@ -677,10 +677,10 @@ processUnits[2] = {
       // XXX change to get number vars for this plotInfo variable
       //     so can put in repeat - or better yet, a function
       //     and same for y-axis below
-      // first index specifies which variable
+      // first index specifies which variable in plot data array
       this.stripData[0][k][0] = kn;
       // y-axis values
-      this.stripData[0][k][1] = this.dataMin[0];
+      this.stripData[0][k][1] = this.dataInitial[0];
     }
 
     // update display
@@ -794,12 +794,12 @@ processUnits[3] = {
   //
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 1 USES unit 3 TTemp // TTemp = temperature
+  //   unit 1 USES unit 3 Tj
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
   //   unit 3 USES unit 1 Trxr
   //   unit 3 USES unit 2 rate // flow rate
-  //   unit 3 USES unit 2 TTemp
+  //   unit 3 USES unit 2 TjIn
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
@@ -915,10 +915,10 @@ processUnits[3] = {
       // XXX change to get number vars for this plotInfo variable
       //     so can put in repeat - or better yet, a function
       //     and same for y-axis below
-      // first index specifies which variable
+      // first index specifies which variable in plot data array
       this.stripData[0][k][0] = kn;
       // y-axis values
-      this.stripData[0][k][1] = this.dataMin[1];
+      this.stripData[0][k][1] = this.dataInitial[1];
     }
 
     // update display
@@ -1049,7 +1049,7 @@ processUnits[4] = {
   //   unit 2 USES processUnits[4].command - manipulated variable
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //   unit 4 USES unit 1 TTemp - controlled variable
+  //   unit 4 USES unit 1 Trxr - controlled variable
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
@@ -1195,13 +1195,13 @@ processUnits[4] = {
       this.mode = "auto"
       // TWO LINES BELOW USED WHEN TOGGLE THIS INPUT HIDDEN-VISIBLE
       //   el2.type = "hidden";
-      //   document.getElementById("enterJacketFeedTTempLABEL").style.visibility = "hidden";
+      //   document.getElementById("enterJacketFeedTTemp_LABEL").style.visibility = "hidden";
     } else {
       // alert("controller in MANUAL mode");
       this.mode = "manual"
       // TWO LINES BELOW USED WHEN TOGGLE THIS INPUT HIDDEN-VISIBLE
       //   el2.type = "input";
-      //   document.getElementById("enterJacketFeedTTempLABEL").style.visibility = "visible";
+      //   document.getElementById("enterJacketFeedTTemp_LABEL").style.visibility = "visible";
     }
   }, // end changeMode function
 

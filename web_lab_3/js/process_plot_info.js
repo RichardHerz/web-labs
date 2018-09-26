@@ -56,7 +56,7 @@ let plotInfo = {
     plotInfo[pnum]['numberPoints'] = 100;
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
-    plotInfo[pnum]['xAxisTableLabel'] = 'Time'; // label for copy data table
+    plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
@@ -95,7 +95,7 @@ let plotInfo = {
     let vnum = 0; // 1st variable
     plotInfo[pnum]['varUnitIndex'][vnum] = 1; // value is index of unit in processUnits object
     plotInfo[pnum]['var'][vnum] = 1; // value is variable index in plot data array
-    plotInfo[pnum]['varLabel'][vnum] = 'Reactant conc.';
+    plotInfo[pnum]['varLabel'][vnum] = 'Reactant';
     // varDataUnits are dimensional units used in copy data table, along with varLabel
     plotInfo[pnum]['varDataUnits'][vnum] = processUnits[1]['dataUnits'][4]; // 1st var
     // varShow values are 'show' to show on plot and legend,

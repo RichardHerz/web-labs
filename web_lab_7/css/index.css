@@ -165,13 +165,13 @@ canvas {
 
 #button_copyData {
   position: absolute;
-  left: 5px;
+  left: 128px;
   top: 346px;
   width: 104px;
   height: 23px;
   visibility: visible;
-  /* border-width: 1px;
-  background-color: rgb(255,255,255);
+  border-width: 2px;
+  /* background-color: rgb(255,255,255);
   border-style: outset;
   opacity: 1; */
   LCthreeD: true;

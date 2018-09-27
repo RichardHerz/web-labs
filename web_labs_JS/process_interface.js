@@ -64,6 +64,13 @@ let interface = {
       if (isNaN(varValue)) {varValue = varInitial;} // handle e.g., 259x, xxx
       if (varValue < varMin) {varValue = varMin;}
       if (varValue > varMax) {varValue = varMax;}
+      //
+      if (Math.abs(varValue) < 1.0e-3) {
+        varValue = varValue.toExponential(2);
+      } else if (Math.abs(varValue) >= 9.999e+3) {
+        varValue = varValue.toExponential(2);
+      }
+      //
       document.getElementById(varInputID).value = varValue;
     } else {
       // this 'else' is in case there is no input on the web page yet in order to

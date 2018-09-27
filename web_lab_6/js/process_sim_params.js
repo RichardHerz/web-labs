@@ -15,7 +15,10 @@ let simParams = {
   // OBJECT controller USES in object simParams the following:
   //    function updateCurrentRunCountDisplay()
   //    function checkForSteadyState()
-  //    variables simStepRepeats, updateDisplayTimingMs
+  //    variables simTimeStep, simStepRepeats, updateDisplayTimingMs
+  //
+  // OBJECT controller CAN CHANGE in object simParams the following:
+  //    variable simTimeStep in method controller.changeSimTimeStep
   //
 
   title : 'Heat Exchanger', // title of simulation

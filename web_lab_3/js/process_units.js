@@ -239,7 +239,7 @@ processUnits[1] = {
   // SEE dataInputs array in initialize() method for input field ID's
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
-  // *** e.g., displayReactorLeftConc: 'field_reactor_left_conc',
+  displayReactorContents: '#div_PLOTDIV_reactorContents',
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
@@ -348,7 +348,6 @@ processUnits[1] = {
   }, // END of initialize()
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
-  // XXX EXCEPT IN updateDisplay - see another web lab for ouput to html....
 
   reset : function() {
 
@@ -483,8 +482,7 @@ processUnits[1] = {
   updateDisplay : function() {
 
     // update color of reactor contents on web page
-    // XXX literal here - want to keep? - if so, then change notice above for this unit
-    let el = document.querySelector("#div_PLOTDIV_reactorContents");
+    let el = document.querySelector(this.displayReactorContents);
     // reactant is blue, product is red, this.Ca is reactant conc
     // xxx assume here max conc is 400 but should make it a variable
     let concB = Math.round(this.Ca/400 * 255);

@@ -303,7 +303,7 @@ let puAdiabaticPackedBedPFR = {
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
-    // getInputValue(unit index in processUnits, let index in input arrays)
+    // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values

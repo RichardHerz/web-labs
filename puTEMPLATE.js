@@ -279,7 +279,8 @@ let puTEMPLATE = {
 
   checkForSteadyState : function() {
     // required - called by controller object
-    // if not used to check for SS, return ssFlag = true to calling unit
+    // *IF* NOT used to check for SS *AND* another unit IS checked,
+    // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
     // uses and sets this.ssCheckSum
     // this.ssCheckSum can be set by reset() and updateUIparams()

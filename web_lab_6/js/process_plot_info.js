@@ -53,7 +53,7 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Heat Exchanger Temperature Profiles';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_T_plot'; // flot.js wants ID with prefix #
-    // numberPoints should not be greater than width of plot in HTML pixels
+    // set numberPoints < = than width of plot in HTML pixels for fast plotting
     plotInfo[pnum]['numberPoints'] = processUnits[unum]['numNodes']; // should match numNodes in process unit
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'Position in Exchanger';

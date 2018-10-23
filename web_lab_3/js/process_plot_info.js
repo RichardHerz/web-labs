@@ -53,6 +53,7 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'strip';
     plotInfo[pnum]['title'] = 'Reactor Conditions';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
+    // numberPoints should not be greater than width of plot in HTML pixels
     plotInfo[pnum]['numberPoints'] = 100;
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';

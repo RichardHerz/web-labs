@@ -53,6 +53,7 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Reactor Profiles';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_PFR_plot'; // flot.js wants ID with prefix #
+    // numberPoints should not be greater than width of plot in HTML pixels
     plotInfo[pnum]['numberPoints'] = processUnits[unum]['numNodes']; // should match numNodes in process unit
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'Position in Reactor';
@@ -134,13 +135,14 @@ let plotInfo = {
     // --------- below are plots for the heat exchanger ----------------
 
     unum = 1; // useful when only one unit in plot, processUnits[unum]
-    
+
     // plot 2 info
     pnum = 2;
     plotInfo[pnum] = new Object();
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Heat Exchanger Temperature Profiles';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_T_plot'; // flot.js wants ID with prefix #
+    // numberPoints should not be greater than width of plot in HTML pixels
     plotInfo[pnum]['numberPoints'] = processUnits[unum]['numNodes'];
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'Position in Heat Exchanger';

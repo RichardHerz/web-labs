@@ -53,6 +53,7 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'PFR Profiles';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_PFR_plot'; // flot.js wants ID with prefix #
+    // numberPoints should not be greater than width of plot in HTML pixelsß
     plotInfo[pnum]['numberPoints'] = processUnits[unum]['numNodes']; // should match numNodes in process unit
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'Position in Reactor';

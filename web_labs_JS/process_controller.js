@@ -136,10 +136,10 @@ let controller = {
       elapsedMs = currentMs - startMs;
       updateMs = updateDisplayTimingMs - elapsedMs;
 
-      // // DISPLAY TIMING DATA DURING DEVELOPMENT
-      // // NEED TO EDIT INDEX.HTML TO ACTIVATE "field_output_field"
-      // let idleMs = Number(updateMs).toPrecision(2);
-      // document.getElementById("field_output_field").innerHTML = "idle time = " + idleMs + "&nbsp;ms";
+      // DISPLAY TIMING DATA DURING DEVELOPMENT
+      // NEED TO EDIT INDEX.HTML TO ACTIVATE "field_output_field"
+      let idleMs = Number(updateMs).toPrecision(2);
+      document.getElementById("field_output_field").innerHTML = "idle time = " + idleMs + "&nbsp;ms";
 
       // END updateProcess WITH CALL TO ITSELF AFTER updateMs WAIT
       setTimeout(updateProcess, updateMs);  // updateMs
@@ -194,6 +194,10 @@ let controller = {
 
     // UPDATE PLOTS HERE AND NOT IN PROCESS UNITS IN ORDER TO ALLOW
     // PLOTS TO CONTAIN DATA FROM MORE THAN ONE PROCESS UNIT
+
+    // NOTE: UNIT COMPUTATION (updateInputs, updateState) AND
+    // GETING PLOT DATA (getPlotData) IS FAST
+    // REDRAW OF THE PLOT (plotPlotData) IS SLOW STEP IN MANY SIMULATIONS
 
     // GET AND PLOT ALL PLOTS defined in object plotInfo
     let numPlots = Object.keys(plotInfo).length;

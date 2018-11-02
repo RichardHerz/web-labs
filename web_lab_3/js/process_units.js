@@ -1168,6 +1168,11 @@ processUnits[4] = {
     this.manualCommand = this.dataInitial[v];
     this.dataValues[v] = this.manualCommand;
     //
+    // SPECIAL - SET CHECKED OF RADIO BUTTONS TO MATCH THIS SETTING
+    // PAGE RELOAD DOES NOT CHANGE CHECKED BUT DOES CALL initialize
+    document.getElementById("radio_controllerAUTO").checked = false;
+    document.getElementById("radio_controllerMANUAL").checked = true;
+    //
     // END OF INPUT VARS
     // record number of input variables, VarCount
     // used, e.g., in copy data to table

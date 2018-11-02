@@ -220,7 +220,7 @@ var puCatalystLayer = {
   Duty : 50, // this.initialDuty, // percent on, duty cycle for square cycling
   Bscale : 1, // this.initialBscale,
 
-  // SET MIN AND MAX VALUES FOR INPUTS SET IN INPUT FIELDS 
+  // SET MIN AND MAX VALUES FOR INPUTS SET IN INPUT FIELDS
   minCmax : 0,
   minKflow : 0.001, // Q/Vp/k-1 = (Q/Vc/k-1) / (Vp/Vc)
   minKads : 0,
@@ -342,25 +342,6 @@ var puCatalystLayer = {
     //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     //
-    // The following IF structures provide for unit independence
-    // such that when input doesn't exist, you get "initial" value
-    //
-    // EXAMPLE FOR SETTING VALUE OF AN OBJECT WITH MULTIPLE properties
-    //   THUS set value of this.setPoint.value
-    // if (document.getElementById(this.inputSetPoint)) {
-    //   let tmpFunc = new Function("return " + this.inputSetPoint + ".value;");
-    //   this.setPoint.value = tmpFunc();
-    // } else {
-    //   this.setPoint.value = this.initialSetPoint;
-    // }
-    //
-    // EXAMPLE SETTING VALUE OF SIMPLE VARIABLE (no .value = )
-    // if (document.getElementById(this.inputCmax)) {
-    //   let tmpFunc = new Function("return " + this.inputCmax + ".value;");
-    //   this.Cmax = tmpFunc();
-    // } else {
-    //   this.Cmax= this.initialCmax;
-    // }
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js

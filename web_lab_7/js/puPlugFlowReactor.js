@@ -585,20 +585,28 @@ let puPlugFlowReactor = {
     // but wait at least one residence time after the previous check
     // to allow changes to propagate down unit
     //
+    // multiply all numbers by a factor to get desired number significant
+    // figures to left decimal point so toFixed() does not return string "0.###"
+    // WARNING: too many sig figs will prevent detecting steady state
+    //
     let nn = this.numNodes;
-    let unum = 0; // unit number
-    let hlt = 1.0e5 * processUnits[unum]['Trxr'][nn].toFixed(1);
-    let hrt = 1.0e1 * processUnits[unum]['Trxr'][0].toFixed(1);
-    let clt = 1.0e-3 * processUnits[unum]['Ca'][nn].toFixed(1);
-    let crt = 1.0e-7 * processUnits[unum]['Ca'][0].toFixed(1);
-    let newCheckSum = hlt + hrt + clt  + crt;
-    newCheckSum = newCheckSum.toFixed(8); // last sum operation may add significant figs
-    // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 end T's
+    let hlt = 1.0e1 * this.Trxr[nn];
+    let hrt = 1.0e1 * this.Trxr[0];
+    let clt = 1.0e1 * this.Ca[nn];
+    let crt = 1.0e1 * this.Ca[0];
+    hlt = hlt.toFixed(0); // string
+    hrt = hrt.toFixed(0);
+    clt = clt.toFixed(0);
+    crt = crt.toFixed(0);
+    // concatenate strings
+    let newCheckSum = hlt +'.'+ hrt +'.'+ clt  +'.'+ crt;
     let oldSScheckSum = this.ssCheckSum;
+    // console.log('OLD CHECKSUM = ' + oldSScheckSum);
+    // console.log('NEW CHECKSUM = ' + newCheckSum);
     let ssFlag = false;
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}
     this.ssCheckSum = newCheckSum; // save current value for use next time
     return ssFlag;
-  } // END OF checkForSteadyState method
+  } // END checkForSteadyState method
 
 }; // END puPlugFlowReactor object

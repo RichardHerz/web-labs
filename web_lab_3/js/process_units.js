@@ -441,13 +441,13 @@ processUnits[1] = {
     this.UA = inputs[4];
 
     // residence time used in controller.checkForSteadyState()
-    // this.residenceTime = this.vol / this.flowRate;
+    this.residenceTime = this.vol / this.flowRate;
     // BUT use width of strip plot to help ensure plot update does not
     // suspend in middle when reach steady state for check every 2 times
     // longest res time BUT NOT foolproof, e.g., with
-    // 1 K up then down changes in manual Tj at certain times
-    let numStripPoints = plotInfo[0]['numberPoints'];
-    this.residenceTime = this.stripData[1][numStripPoints][0];
+    // XXX 1 K up then down changes in manual Tj at certain times
+    // let numStripPoints = plotInfo[0]['numberPoints'];
+    // this.residenceTime = this.stripData[1][numStripPoints][0];
     // console.log('rxr res time = ' + this.residenceTime);
 
   }, // END updateInputs()
@@ -553,21 +553,29 @@ processUnits[1] = {
     // AND use width of strip plot for residence time in updateInputs
     // BUT NOT foolproof, e.g., with
     // 1 K up then down changes in manual Tj at certain times
-
-    let hlt = this.stripData[1][0][1]; // oldest reactant conc in rxr conc plot
-    let hrt = 1.0e1 * this.Tj.toFixed(1);
-    let clt = 1.0e-3 * this.Trxr.toFixed(1);
-    let crt = 1.0e-7 * this.Ca.toFixed(1);
-    // let newCheckSum = hlt + hrt + clt  + crt;
-    let newCheckSum = hlt + hrt + clt  + crt;
-    newCheckSum = newCheckSum.toFixed(8); // last sum operation may add significant figs
-    // NOTE: newCheckSum = hlt0hrt0.clt0crt0 << 16 digits, 4 each for 4 check's
+    //
+    // multiply all numbers by a factor to get desired number significant
+    // figures to left decimal point so toFixed() does not return string "0.###"
+    // WARNING: too many sig figs will prevent detecting steady state
+    //
+    let rc = 1.0e1 * this.stripData[1][0][1]; // oldest reactant conc in rxr conc plot
+    let rt = 1.0e1 * this.Tj;
+    let lt = 1.0e1 * this.Trxr;
+    let lc = 1.0e1 * this.Ca;
+    rc = rc.toFixed(0); // strings
+    rt = rt.toFixed(0);
+    lt = lt.toFixed(0);
+    lc = lc.toFixed(0);
+    // concatenate strings
+    let newCheckSum = rc +'.'+ rt +'.'+ lt +'.'+ lc;
+    //
     let oldSScheckSum = this.ssCheckSum;
     let ssFlag = false;
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}
     this.ssCheckSum = newCheckSum; // save current value for use next time
 
-    // console.log('newCheckSum = ' + newCheckSum + ', ssFlag = ' + ssFlag);
+    console.log('oldSScheckSum = ' + oldSScheckSum);
+    console.log('newCheckSum = ' + newCheckSum + ', ssFlag = ' + ssFlag);
 
     return ssFlag;
   } // END checkForSteadyState method

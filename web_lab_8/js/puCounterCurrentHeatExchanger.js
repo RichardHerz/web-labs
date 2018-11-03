@@ -507,8 +507,8 @@ let puCounterCurrentHeatExchanger = {
     // concatenate strings
     let newCheckSum = hlt +'.'+ hrt +'.'+ clt  +'.'+ crt;
     let oldSScheckSum = this.ssCheckSum;
-    console.log('OLD CHECKSUM = ' + oldSScheckSum);
-    console.log('NEW CHECKSUM = ' + newCheckSum);
+    // console.log('OLD CHECKSUM = ' + oldSScheckSum);
+    // console.log('NEW CHECKSUM = ' + newCheckSum);
     let ssFlag = false;
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}
     this.ssCheckSum = newCheckSum; // save current value for use next time

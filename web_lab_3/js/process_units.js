@@ -574,8 +574,8 @@ processUnits[1] = {
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}
     this.ssCheckSum = newCheckSum; // save current value for use next time
 
-    console.log('oldSScheckSum = ' + oldSScheckSum);
-    console.log('newCheckSum = ' + newCheckSum + ', ssFlag = ' + ssFlag);
+    // console.log('oldSScheckSum = ' + oldSScheckSum);
+    // console.log('newCheckSum = ' + newCheckSum + ', ssFlag = ' + ssFlag);
 
     return ssFlag;
   } // END checkForSteadyState method

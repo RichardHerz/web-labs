@@ -10,3 +10,13 @@ at X = 0.4 for rxr 1, approx cin = 0.32, c = 0.192, r = 0.00128 on a per volume 
 
 looks like first need to work on units in lab 2 before can finish units in lab 9
 
+NOTE: in lab 2 with default conditions, feed = 0.75, conc in cell = 0.738, ave rate = 1.633e-4 = 0.000163, conversion = 0.0163 << note correlation between rate and conversion - coincidence??  
+
+FOR SS CSTR: -r = (Q/V)*X*Cin where Cin is feed conc  
+
+for NOTE, X/-r = 100 = V/Q/Cin >> V/Q = 75 
+
+for rate in volume units (or W/Q for rate in mass units) 
+
+
+

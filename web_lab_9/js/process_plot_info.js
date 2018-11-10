@@ -58,10 +58,11 @@ let plotInfo = {
     let pnum = 0;
     plotInfo[pnum] = new Object();
     plotInfo[pnum]['type'] = 'strip';
-    plotInfo[pnum]['title'] = 'Reactor Conditions';
+    plotInfo[pnum]['title'] = 'Reactant Concentration';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotConcentration'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     plotInfo[pnum]['numberPoints'] = 563; // WARNING: value used below in ['xAxisMax']
+    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time >'; // label for copy data table
     plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
@@ -72,7 +73,7 @@ let plotInfo = {
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = 'Reactant Concentration';
     plotInfo[pnum]['yLeftAxisMin'] = 0;
-    plotInfo[pnum]['yLeftAxisMax'] = 2;
+    plotInfo[pnum]['yLeftAxisMax'] = 1.2;
     plotInfo[pnum]['yRightAxisLabel'] = '';
     plotInfo[pnum]['yRightAxisMin'] = 0;
     plotInfo[pnum]['yRightAxisMax'] = 2;

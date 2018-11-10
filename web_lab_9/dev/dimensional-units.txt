@@ -1,0 +1,12 @@
+working on units for rates in Lab 9 - CSTRs in series 
+
+lab 9 get rate vs. conc use a multiplication factor of 2 times rate shown at bottom of lab 2 
+
+lab 2 now has flow rate Q = 1, V = 100, W/V unspecified, unspecified units
+
+at SS, 0 = Q(Cin - C) + rV 
+
+at X = 0.4 for rxr 1, approx cin = 0.32, c = 0.192, r = 0.00128 on a per volume basis vs. approx 0.128 shown in lab 9 ss rate plot 
+
+looks like first need to work on units in lab 2 before can finish units in lab 9
+

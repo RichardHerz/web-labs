@@ -171,10 +171,10 @@ canvas {
   left: 40px;
   top: 140px;
   width: 630px;
-  height: 248px;
+  height: 268px;
   visibility: visible;
   border-width: 1px;
-  border-style: dotted;
+  border-style: none;
   border-color: DodgerBlue;
   opacity: 1;
   LCvScrollbar: false;
@@ -199,12 +199,12 @@ canvas {
   display: block;
   position: absolute;
   left: 40px;
-  top: 400px;
+  top: 420px;
   width: 510px;
   height: 325px;
   visibility: visible;
   border-width: 1px;
-  border-style: dotted;
+  border-style: none;
   border-color: DodgerBlue;
   opacity: 1;
   LCvScrollbar: false;
@@ -224,7 +224,7 @@ canvas {
   height: 290px;
   visibility: visible;
   border-width: 1px;
-  border-style: dotted;
+  border-style: none;
   border-color: DodgerBlue;
   opacity: 1;
   LCvScrollbar: false;
@@ -239,7 +239,7 @@ canvas {
   height: 290px;
   visibility: visible;
   border-width: 1px;
-  border-style: dotted;
+  border-style: none;
   border-color: DodgerBlue;
   opacity: 1;
   LCvScrollbar: false;

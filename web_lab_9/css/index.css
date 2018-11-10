@@ -83,7 +83,7 @@ canvas {
 #input_setFeedConc_value {
   position: absolute;
   left: 260px;
-  top: 66px;
+  top: 55px;
   width: 70px;
   height: 21px;
   border-width: 2px;
@@ -97,7 +97,7 @@ canvas {
 #field_setFeedConc_label {
   position: absolute;
   left: 20px;
-  top: 53px;
+  top: 45px;
   width: 300px;
   height: 21px;
   border-width: 2px;
@@ -110,7 +110,7 @@ canvas {
 
 #range_setFeedConc_slider {
   left: 27px;
- top: 98px;
+ top: 96px;
   width: 257px;
  height: 24px;
 }

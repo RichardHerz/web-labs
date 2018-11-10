@@ -201,7 +201,7 @@ canvas {
   left: 40px;
   top: 400px;
   width: 510px;
-  height: 340px;
+  height: 325px;
   visibility: visible;
   border-width: 1px;
   border-style: dotted;
@@ -210,11 +210,16 @@ canvas {
   LCvScrollbar: false;
 }
 
+#selectReactor {
+  top: 0px;
+  left: 280px;
+}
+
 #div_PLOTDIV_plotSSconversion {
   display: block;
   position: relative;
   left: 0px;
-  top: 25px;
+  top: 10px;
   width: 500px;
   height: 290px;
   visibility: visible;

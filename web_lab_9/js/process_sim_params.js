@@ -52,7 +52,7 @@ let simParams = {
     // WARNING: NEED LITERAL, e.g., "field_run_counter" below
     //      e.g., this.runCounterFieldID does NOT work
     //
-    $.post(this.runLoggerURL,{webAppNumber: "CSTRs in Series"})
+    $.post(this.runLoggerURL,{webAppNumber: "9, CSTRs in Series"})
       .done(
         function(data) {
           // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>";

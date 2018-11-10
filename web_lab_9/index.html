@@ -54,14 +54,14 @@
     <p>
      Each continuous stirred tank reactor (CSTR)
      contains the catalyst in Reactor Lab, Web Labs, Lab 2, Dynamic
-     diffusion and reaction in a porous catalyst. The conditions here are
+     diffusion and reaction in a porous solid catalyst. The conditions here are
      at the default conditions on entry to that lab with Model 2 kinetics.
     </p>
     <p>
      Each CSTR can exhibit two steady states at the same reactant concentration
      over a range of
      concentration because of the coupling between diffusion resistance
-     in the porous solid catalyst and the
+     in the isothermal porous catalyst and the
      self-inhibiting reaction. This four-reactor system can exhibit more than two
      multiple steady states at some concentrations.
    </p>
@@ -74,7 +74,8 @@
       or by typing a value between 0 and 1
       in the input field, then hit the Enter/Return key or click out of the field.
       The dynamic response is determined only by the fluid space time, with the
-      catalyst specified to be at pseudo-steady-state. Conditions are isothermal.
+      catalyst specified to be at pseudo-steady-state. When a steady state is 
+      reached, points are added to the second and third plots below.
     </p>
     </div> <!-- end of div div_page_header -->
     <div id="div_simFrame">
@@ -95,7 +96,7 @@
       <!-- <div id="div_sizer">
       </div> -->
     <div id='div_SSconversionFrame'>
-      Select reactor to display SS conversion: &nbsp;
+      Select reactor for SS conversion display: &nbsp;
       <select id='selectReactor' onchange="simParams.selectReactor()">
         <option value="1">1</option>
         <option value="2">2</option>

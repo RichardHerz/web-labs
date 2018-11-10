@@ -23,6 +23,10 @@ function runThisLab() {
     simParams.updateRunCount();
     } else {
     eval(runButtonID + '.value = "Run"');
+    // // development to get conc in mixing cell and average rate
+    // // updateRunCount and logger deactivated in simParams, max inlet now 1.1
+    // // format output to be read by matlab
+    // console.log(caNew.toFixed(3) + ' ' + puCatalystLayer.aveRate.toExponential(3) + ' %');
   }
 } // END OF function runThisLab
 

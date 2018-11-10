@@ -186,7 +186,7 @@ var puCatalystLayer = {
   // so that this process unit will run if units that supply inputs and
   // html inputs are not present in order to make units more independent
   //
-  initialCmax : 1,
+  initialCmax : 1.0,
   initialKflow : 2.5, // Q/Vp/k-1 = (Q/Vc/k-1) / (Vp/Vc)
   initialKads : 1,
   initialKdiff : 0.003,
@@ -207,7 +207,7 @@ var puCatalystLayer = {
   //
   // HUH? NEED TO EXPLORE THIS....
   //
-  Cmax : 1, // this.initialCmax,
+  Cmax : 1.0, // this.initialCmax,
   // user will vary Kflow space time based on pellet/layer volume Vp
   Kflow : 2.5, // this.initialKflow, // d'less space time, Q/Vp/k-1 = (Q/Vc/k-1)/(Vp/Vc)
   Kads : 1, // this.initialKads,
@@ -233,7 +233,7 @@ var puCatalystLayer = {
   minDuty : 0, // percent on, duty cycle for square cycling
   minBscale : 0,
 
-  maxCmax : 1,
+  maxCmax : 1.0,
   maxKflow : 100, // Q/Vp/k-1 = (Q/Vc/k-1) / (Vp/Vc)
   maxKads : 100,
   maxKdiff : 1,

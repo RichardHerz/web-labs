@@ -96,16 +96,15 @@
      <div id="div_PLOTDIV_catalyst_gas">
      </div> <!-- end of div div_PLOTDIV_catalyst_gas -->
      <p id="field_setCmax_label">
-        Slide to set inlet A conc:
+        Enter inlet A conc:
      </p>
-     <p id="field_setCmax_value">
-        1
-     </p>
-     <input type="range" id="range_setCmax_slider" min="0" max="1.0" step="0.01" value="1.0"
-     oninput="puCatalystLayer.updateUIparams()" onchange="puCatalystLayer.updateUIparams()">
+     <input id="input_setCmax_value" value="1" onchange="puCatalystLayer.updateUIfeedInput()">
      </input>
-     <!-- note about range slider: need event onchange for Win IE, oninput for others
-     in order to display value as you drag -->
+     <!-- note about range slider: need event onchange for Win IE, oninput for others -->
+     <input type="range" id="range_setCmax_slider" min="0" max="1" step="0.01" value="1"
+       oninput="puCatalystLayer.updateUIfeedSlider()"
+       onchange="puCatalystLayer.updateUIfeedSlider()">
+     </input>
      <p id="field_enterKflow_label">
         Enter Kflow
      </p>

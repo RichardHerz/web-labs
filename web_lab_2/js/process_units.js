@@ -152,7 +152,7 @@ var puCatalystLayer = {
   inputModel01 : "radio_Model_1",
   inputModel02 : "radio_Model_2",
   inputCmax : "range_setCmax_slider",
-  inputSliderReadout : "field_setCmax_value",
+  inputCmaxInput : 'input_setCmax_value',
   inputRadioConstant : "radio_Constant",
   inputCheckBoxFeed : "checkbox_on",
   inputRadioSine : "radio_Sine",
@@ -187,6 +187,7 @@ var puCatalystLayer = {
   // html inputs are not present in order to make units more independent
   //
   initialCmax : 1.0,
+  initialCmaxInput : 1.0,
   initialKflow : 2.5, // Q/Vp/k-1 = (Q/Vc/k-1) / (Vp/Vc)
   initialKads : 1,
   initialKdiff : 0.003,
@@ -208,6 +209,7 @@ var puCatalystLayer = {
   // HUH? NEED TO EXPLORE THIS....
   //
   Cmax : 1.0, // this.initialCmax,
+  CmaxInput : 1.0,
   // user will vary Kflow space time based on pellet/layer volume Vp
   Kflow : 2.5, // this.initialKflow, // d'less space time, Q/Vp/k-1 = (Q/Vc/k-1)/(Vp/Vc)
   Kads : 1, // this.initialKads,
@@ -222,6 +224,7 @@ var puCatalystLayer = {
 
   // SET MIN AND MAX VALUES FOR INPUTS SET IN INPUT FIELDS
   minCmax : 0,
+  minCmaxInput : 0,
   minKflow : 0.001, // Q/Vp/k-1 = (Q/Vc/k-1) / (Vp/Vc)
   minKads : 0,
   minKdiff : 0.0001,
@@ -233,6 +236,7 @@ var puCatalystLayer = {
   minDuty : 0, // percent on, duty cycle for square cycling
   minBscale : 0,
 
+  maxCmax : 1.0,
   maxCmax : 1.0,
   maxKflow : 100, // Q/Vp/k-1 = (Q/Vc/k-1) / (Vp/Vc)
   maxKads : 100,
@@ -345,7 +349,12 @@ var puCatalystLayer = {
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
-    this.Cmax = getInputValue('puCatalystLayer','Cmax');
+    //
+    // updateUIparams gets called on page load but not new range and input
+    // updates, so need to call here
+    this.updateUIfeedInput();
+    // console.log('updateUIparams: this.Cmax = ' + this.Cmax);
+    //
     this.Period = getInputValue('puCatalystLayer','Period');
     this.Duty = getInputValue('puCatalystLayer', 'Duty');
     this.Kflow = getInputValue('puCatalystLayer','Kflow');
@@ -354,11 +363,6 @@ var puCatalystLayer = {
     this.Phi = getInputValue('puCatalystLayer','Phi'); // Phi = Thiele Modulus
     this.Alpha = getInputValue('puCatalystLayer','Alpha');
     this.Bscale = getInputValue('puCatalystLayer','Bscale');
-
-    // update the readout field of range slider
-    if (document.getElementById(this.inputSliderReadout)) {
-      document.getElementById(this.inputSliderReadout).innerHTML = this.Cmax;
-    }
 
     // update cycling frequency
     this.frequency = 2 * Math.PI / this.Period;
@@ -407,7 +411,27 @@ var puCatalystLayer = {
     this.aveRate = 0;
     this.aveConversion = 0;
 
-  }, // end of updateUIparams()
+  }, // END updateUIparams
+
+  updateUIfeedInput : function() {
+    this.Cmax = getInputValue('puCatalystLayer','CmaxInput');
+    // update position of the range slider
+    if (document.getElementById(this.inputCmax)) {
+      // alert('input, slider exists');
+      document.getElementById(this.inputCmax).value = this.Cmax;
+    }
+    // console.log('updateUIfeedInput: this.Cmax = ' + this.Cmax);
+  }, // END method updateUIfeedInput()
+
+  updateUIfeedSlider : function() {
+    this.Cmax = getInputValue('puCatalystLayer','Cmax');
+    // update input field display
+    // alert('slider: this.conc = ' + this.conc);
+    if (document.getElementById(this.inputCmaxInput)) {
+      document.getElementById(this.inputCmaxInput).value = this.Cmax;
+    }
+    // console.log('updateUIfeedSlider: this.Cmax = ' + this.Cmax);
+  }, // END method updateUIfeedSlider()
 
   updateInputs : function() {
     //

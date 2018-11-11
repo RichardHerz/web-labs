@@ -48,7 +48,7 @@ canvas {
   margin: 24px;
   width: 810px;
   font-size: 1em;
-} 
+}
 
 #div_simFrame {
  display: block;
@@ -265,16 +265,15 @@ canvas {
  font-size: 16px;
 }
 
-#field_setCmax_value {
+#input_setCmax_value {
  position: absolute;
-  left: 211px;
- /*top: 193px;*/
- top: 153px;
-  width: 70px;
+ left: 211px;
+ top: 163px;
+ width: 70px;
  height: 21px;
  border-width: 2px;
  visibility: visible;
- border-style: none;
+ border-style: solid;
  opacity: 1;
  LCvScrollbar: false;
  font-size: 16px;
@@ -282,8 +281,7 @@ canvas {
 
 #range_setCmax_slider {
   left: 27px;
- /*top: 223px;*/
- top: 183px;
+  top: 198px;
   width: 257px;
  height: 24px;
 }

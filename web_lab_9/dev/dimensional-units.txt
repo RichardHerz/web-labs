@@ -1,22 +1,22 @@
-working on units for rates in Lab 9 - CSTRs in series 
+working on dimensions for rates in Lab 9 - CSTRs in series
 
-lab 9 get rate vs. conc use a multiplication factor of 2 times rate shown at bottom of lab 2 
+make sure these are consistent with Lab 2 and that results
+for reactor 1 in Lab 9 agree with results for Lab 2
 
-lab 2 now has flow rate Q = 1, V = 100, W/V unspecified, unspecified units
+Kflow needs to be defined in Lab 2 info
 
-at SS, 0 = Q(Cin - C) + rV 
+Kflow = (Q/Vcell)*(Vcell/Vpellet)/k-1
 
-at X = 0.4 for rxr 1, approx cin = 0.32, c = 0.192, r = 0.00128 on a per volume basis vs. approx 0.128 shown in lab 9 ss rate plot 
+where k-1 is normalizing factor and is reactant desorption rate constant
 
-looks like first need to work on units in lab 2 before can finish units in lab 9
+At SS, Kflow*(PSIin - PSI) = -R = - ave d'less turnover freq
 
-NOTE: in lab 2 with default conditions, feed = 0.75, conc in cell = 0.738, ave rate = 1.633e-4 = 0.000163, conversion = 0.0163 << note correlation between rate and conversion - coincidence??  
+R = - Kflow * PSIin * X (conversion) across first mixing cell
 
-FOR SS CSTR: -r = (Q/V)*X*Cin where Cin is feed conc  
+where X = (PSIin - PSI) / PSIin
 
-for NOTE, X/-r = 100 = V/Q/Cin >> V/Q = 75 
+where PSI is d'less reactant conc
 
-for rate in volume units (or W/Q for rate in mass units) 
+R (d'less) = r(mol/m3 pellet/s) / Cgmax (mol/m3) / k-1 (1/s)
 
-
-
+R ?= - Kdiff*(dPSI/dLambda) at pellet (catalyst layer) external surface

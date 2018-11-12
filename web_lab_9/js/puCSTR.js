@@ -272,6 +272,7 @@ function puCSTR(pUnitIndex) {
     //          get info from other units ONLY in updateInputs() method
 
     let Kflow = 0.014; // Kflow in Lab 2 = Q/Vp/k-1 = 0.04 in Lab 2
+    // WARNING: Kflow value may be mentioned in HTML text 
     let Vratio = 2; // Vratio in Lab 2 = Vp/Vc = 2 in Lab 2
     let eps = 0.3; // void fraction in pellet (catalyst layer)
     let alpha = 10; // surface-to-gas capacity ratio = 10 in Lab 2

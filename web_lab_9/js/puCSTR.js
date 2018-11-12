@@ -271,19 +271,25 @@ function puCSTR(pUnitIndex) {
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
 
-    let Kflow = 0.005; // = Kflow in Lab 2 = Q/Vp/k-1 = (Q/Vc)*(Vc/Vp)/k-1
-    // default Kflow in Lab 2 is 0.04
-    
-    // XXX check to make sure SS conversions and rates
-    // XXX in Lab 2 and rxr 1 in lab 9 agree with these Kflow values
+    let Kflow = 0.014; // Kflow in Lab 2 = Q/Vp/k-1 = 0.04 in Lab 2
+    let Vratio = 2; // Vratio in Lab 2 = Vp/Vc = 2 in Lab 2
+    let eps = 0.3; // void fraction in pellet (catalyst layer)
+    let alpha = 10; // surface-to-gas capacity ratio = 10 in Lab 2
+
+    // check for SS on high branch at Kflow = 0.04 and cin = 0.5 appears to give
+    // same results here in Rxr 1 as in Lab 2, where TOF rate = 8.061e-4 and
+    // conv = 0.129 but should double check exact numbers
+    // change feed conc from low conc ss up to 0.5 to get on high branch
 
     // this unit may take multiple steps within one outer main loop repeat step
     for (let i = 0; i < this.unitStepRepeats; i += 1) {
       let conc = this.conc;
       // rate is average d'less turnover frequency in catalyst layer (pellet)
+      // here assumes catalyst at pseudo-steady-state whereas Lab 2 computed
+      // cell and surface dynamics
       this.rxnRate = this.getRxnRate(conc);
       // console.log('updateState, unit = ' + this.unitIndex + ', conc = ' + conc + ', rxnRate = ' + rxnRate + ', branch = ' + this.rateBranchOLD);
-      let dcdt = Kflow * (this.concIn - conc) + this.rxnRate;
+      let dcdt = Kflow * Vratio * (this.concIn - conc) + this.rxnRate * eps * alpha * Vratio;
       // console.log('updateState, unit = ' + this.unitIndex + ', dcdt = ' + dcdt);
       let newConc = conc + dcdt * this.unitTimeStep;
 

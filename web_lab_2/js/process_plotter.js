@@ -227,10 +227,7 @@ function copyData(plotIndex){
   }
   tText += '</p>';
 
-  // XXX BUT NEED TO HANDLE RANGE OF NUMBERS FOR WHICH .toFixed(2) WON'T WORK
-  // maybe write function like RL's sciConv()...
-
-  // data values must be numbers for .toFixed(2) to work, use Number() conversion
+  // data values must be numbers for .toFixed() to work, use Number() conversion
   // when getting values from input fields
   //    index 1 specifies the variable [0 to numVars-1],
   //    index 2 specifies the data point pair [0 to & including numPlotPoints]
@@ -247,10 +244,10 @@ function copyData(plotIndex){
     // for (k = plotsObj[plotIndex]['numberPoints']; k >= 0; k -= 1){
       // get varIndex = value of 'var' VALUE which is variable index in data array
       varIndex = plotsObj[plotIndex]['var'][0];
-      tText += stripData[varIndex][k][0].toFixed(2) + tItemDelimiter // [k][0] is x value
+      tText += stripData[varIndex][k][0].toFixed(3) + tItemDelimiter // [k][0] is x value
         for (v = 0; v < tVarLabelLen; v += 1) {
           varIndex = plotsObj[plotIndex]['var'][v];
-          tText += stripData[varIndex][k][1].toFixed(2); // [k][1] is y value
+          tText += stripData[varIndex][k][1].toFixed(3); // [k][1] is y value
           if (v < (tVarLabelLen - 1)) {
             tText += tItemDelimiter;
           }
@@ -264,10 +261,10 @@ function copyData(plotIndex){
     // for (k = plotsObj[plotIndex]['numberPoints']; k >= 0; k -= 1){
       // get varIndex = value of 'var' VALUE which is variable index in data array
       varIndex = plotsObj[plotIndex]['var'][0];
-      tText += profileData[varIndex][k][0].toFixed(2) + tItemDelimiter // [k][0] is x value
+      tText += profileData[varIndex][k][0].toFixed(3) + tItemDelimiter // [k][0] is x value
         for (v = 0; v < tVarLabelLen; v += 1) {
           varIndex = plotsObj[plotIndex]['var'][v];
-          tText += profileData[varIndex][k][1].toFixed(2); // [k][1] is y value
+          tText += profileData[varIndex][k][1].toFixed(3); // [k][1] is y value
           if (v < (tVarLabelLen - 1)) {
             tText += tItemDelimiter;
           }

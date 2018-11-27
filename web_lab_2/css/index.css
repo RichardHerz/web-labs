@@ -90,12 +90,12 @@ canvas {
  border-style: none;
  opacity: 1;
  LCvScrollbar: false;
- font-size: 14px;
+ font-size: 16px;
 }
 
 #field_Field_1a {
  position: absolute;
-  left: 310px;
+  left: 290px;
  /*top: 70px;*/
  top: 30px;
   width: 518px;
@@ -105,7 +105,7 @@ canvas {
  border-style: none;
  opacity: 1;
  LCvScrollbar: false;
- font-size: 14px;
+ font-size: 16px;
 }
 
 #div_RADIO_group_Model {
@@ -760,7 +760,7 @@ canvas {
  border-style: none;
  opacity: 1;
  LCvScrollbar: false;
- font-size: 14px;
+ font-size: 16px;
 }
 
 #image_reactor_image {

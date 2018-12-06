@@ -68,7 +68,7 @@ let puPlugFlowReactor = {
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
 
   // define main inputs
-  // values will be set in method intialize()
+  // values will be set in method initialize()
   Kf300 : 0,
   Ea : 0,
   DelH : 0,

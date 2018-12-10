@@ -208,10 +208,14 @@ function puCSTR(pUnitIndex) {
     let numProfileVars = 2; // conversion, rate
     let numProfilePts = 0; // 0+1 points will be filled here
     this.profileData = plotter.initPlotData(numProfileVars,numProfilePts);
-    // SPECIAL CASE - move initial [0,0] x,y points of plots
-    this.profileData[0] = [-1,-1];
-    this.profileData[1] = [-1,-1];
-    // console.log('this.profileData[0] = ' + this.profileData[0]);
+    // SPECIAL CASE - move initial [0,0] x,y points off plots
+    // order of 3 indices is var, point, x-y
+    this.profileData[0][0][0] = -1;
+    this.profileData[0][0][1] = -1;
+    this.profileData[1][0][0] = -1;
+    this.profileData[1][0][1] = -1;
+    // console.log('reset, this.profileData[0] = ' + this.profileData[0]);
+    // console.log('reset, this.profileData[1] = ' + this.profileData[1]);
 
     // update display
     this.updateDisplay();
@@ -272,7 +276,7 @@ function puCSTR(pUnitIndex) {
     //          get info from other units ONLY in updateInputs() method
 
     let Kflow = 0.014; // Kflow in Lab 2 = Q/Vp/k-1 = 0.04 in Lab 2
-    // WARNING: Kflow value may be mentioned in HTML text 
+    // WARNING: Kflow value may be mentioned in HTML text
     let Vratio = 2; // Vratio in Lab 2 = Vp/Vc = 2 in Lab 2
     let eps = 0.3; // void fraction in pellet (catalyst layer)
     let alpha = 10; // surface-to-gas capacity ratio = 10 in Lab 2
@@ -427,6 +431,7 @@ function puCSTR(pUnitIndex) {
       }
       // update the variable being processed
       this.profileData[v] = tempArray;
+      // console.log('checkForSteadyState, this.profileData[0] = ' + this.profileData[0]);
 
       // handle SS rate
       //

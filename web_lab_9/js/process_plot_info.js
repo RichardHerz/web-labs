@@ -162,7 +162,7 @@ let plotInfo = {
     plotInfo[pnum]['title'] = 'SS Conversion';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotSSconversion'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    plotInfo[pnum]['numberPoints'] = 100;
+    plotInfo[pnum]['numberPoints'] = 0; // xxx 100;
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'System Feed Reactant Concentration';
     plotInfo[pnum]['xAxisTableLabel'] = 'Feed Conc'; // label for copy data table

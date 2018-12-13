@@ -23,24 +23,28 @@
   <!-- load CSS style sheets for this lab -->
   <link rel="stylesheet" href="css/index.css">
 
-  <!-- load main JAVASCRIPT for this lab -->
-  <script language="javascript" src="js/process_main.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_interface.js" type="text/javascript"></script>
+  <!-- load SPECIFIC JAVASCRIPT for this lab -->
+
+  <script language="javascript" src="js/process_sim_params.js" type="text/javascript"></script>
+  <script language="javascript" src="js/puCatalystLayer.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_units.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_plot_info.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_plotter.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_spacetime.js" type="text/javascript"></script>
 
-  <!-- load flot PLOTTING LIBRARY -->
-  <!-- need full jquery.js for flot.js to work -->
+  <!-- load COMMON JAVASCRIPT for Web Labs -->
+  <script language="javascript" src="../web_labs_JS/process_controller.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_interface.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_plotter_flot.js" type="text/javascript"></script>
 
-  <!--<script language="javascript" src="js/jquery/jquery.js" type="text/javascript"></script>-->
-  <!--<script language="javascript" src="js/jquery/jquery.flot.js" type="text/javascript"></script>-->
-  <!--<script language="javascript" src="js/jquery/jquery.flot.axislabels.js" type="text/javascript"></script>-->
+  <!-- load flot.js PLOTTING LIBRARY -->
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery.flot.min-0.8.3.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery.flot.axislabels-20141122.js" type="text/javascript"></script>
 
-  <script language="javascript" src="js/jquery/new_jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
-  <script language="javascript" src="js/jquery/new_jquery/jquery.flot.min-0.8.3.js" type="text/javascript"></script>
-  <script language="javascript" src="js/jquery/new_jquery/jquery.flot.axislabels-20141122.js" type="text/javascript"></script>
+  <!-- initialize simulation after loading of this window -->
+  <script language="javascript">
+      // this works as script in html file but not in external js files
+      window.onload = controller.openThisLab; // can NOT use () after openThisLab
+  </script>
 
 </head>
 <body>
@@ -74,20 +78,21 @@
      <p id="field_Field_1a">
         <a href="info.html" target="_blank">Click here for more information</a> (opens in new tab)
         <br>
-        <br>    <font color="#FF0000">    <b>See space-time plot of rate, and average rate and conversion at bottom</b>     </font>
+        <br>
+        <font color="#FF0000"><b>See space-time plot of rate, and average rate and conversion at bottom</b>     </font>
      </p>
      <div id="div_RADIO_group_Model">
         <label id="radio_Model_1_LABEL" name="radio_of_group_RADIO_group_Model">
-              <input type="radio" id="radio_Model_1" name="radio_of_group_RADIO_group_Model" onchange="puCatalystLayer.updateUIparams()">
+              <input type="radio" id="radio_Model_1" name="radio_of_group_RADIO_group_Model" onchange="processUnits[0].updateUIparams()">
               <span id="radio_Model_1_SPAN">Model 1: AS &#8640; B + S</span>
         </label>
         <label id="radio_Model_2_LABEL" name="radio_of_group_RADIO_group_Model">
-              <input type="radio" id="radio_Model_2" name="radio_of_group_RADIO_group_Model" checked onchange="puCatalystLayer.updateUIparams()">
+              <input type="radio" id="radio_Model_2" name="radio_of_group_RADIO_group_Model" checked onchange="processUnits[0].updateUIparams()">
               <span id="radio_Model_2_SPAN">Model 2: AS + S &#8640; B + 2S</span>
         </label>
      </div> <!-- end of div div_RADIO_group_Model -->
-     <input type="button" id="button_resetButton" value="Reset" onclick="resetThisLab()"></input>
-     <input type="button" id="button_runButton" value="Run" onclick="runThisLab()"></input>
+     <input type="button" id="button_resetButton" value="Reset" onclick="interface.resetThisLab()"></input>
+     <input type="button" id="button_runButton" value="Run" onclick="interface.runThisLab()"></input>
      <div id="div_PLOTDIV_inlet_gas">
      </div> <!-- end of div div_PLOTDIV_inlet_gas -->
      <div id="div_PLOTDIV_outlet_gas">
@@ -99,12 +104,12 @@
      <p id="field_setCmax_label">
         Enter max inlet A conc:
      </p>
-     <input id="input_setCmax_value" value="1" onchange="puCatalystLayer.updateUIfeedInput()">
+     <input id="input_setCmax_value" value="1" onchange="processUnits[0].updateUIfeedInput()">
      </input>
      <!-- note about range slider: need event onchange for Win IE, oninput for others -->
      <input type="range" id="range_setCmax_slider" min="0" max="1" step="0.01" value="1"
-       oninput="puCatalystLayer.updateUIfeedSlider()"
-       onchange="puCatalystLayer.updateUIfeedSlider()">
+       oninput="processUnits[0].updateUIfeedSlider()"
+       onchange="processUnits[0].updateUIfeedSlider()">
      </input>
      <p id="field_enterKflow_label">
         Enter Kflow
@@ -112,16 +117,16 @@
      <p id="field_enterKads_label">
         Enter Kads
      </p>
-     <input id="input_field_enterKflow" value="0.04" onchange="puCatalystLayer.updateUIparams()">
+     <input id="input_field_enterKflow" value="0.04" onchange="processUnits[0].updateUIparams()">
 
      </input>
-     <input id="input_field_enterKads" value="100" onchange="puCatalystLayer.updateUIparams()">
+     <input id="input_field_enterKads" value="100" onchange="processUnits[0].updateUIparams()">
 
      </input>
      <p id="field_enterKdiff_label">
         Enter Kdiff
      </p>
-     <input id="input_field_enterKdiff" value="0.003" onchange="puCatalystLayer.updateUIparams()">
+     <input id="input_field_enterKdiff" value="0.003" onchange="processUnits[0].updateUIparams()">
 
      </input>
      <p id="field_enterThieleMod_label">
@@ -130,46 +135,46 @@
      <p id="field_enterAlpha_label">
         Enter alpha
      </p>
-     <input id="input_field_enterThieleMod" value="34" onchange="puCatalystLayer.updateUIparams()">
+     <input id="input_field_enterThieleMod" value="34" onchange="processUnits[0].updateUIparams()">
 
      </input>
-     <input id="input_field_enterAlpha" value="10" onchange="puCatalystLayer.updateUIparams()">
+     <input id="input_field_enterAlpha" value="10" onchange="processUnits[0].updateUIparams()">
 
      </input>
      <p id="field_enterBscale_label">
         Enter B out scale factor
      </p>
-     <input id="input_field_enterBscale" value="4" onchange="puCatalystLayer.updateUIparams()">
+     <input id="input_field_enterBscale" value="4" onchange="processUnits[0].updateUIparams()">
 
      </input>
      <div id="div_RADIO_group">
         <label id="radio_Sine_LABEL" name="radio_of_group_RADIO_group">
-              <input type="radio" id="radio_Sine" name="radio_of_group_RADIO_group" checked onchange="puCatalystLayer.updateUIparams()">
+              <input type="radio" id="radio_Sine" name="radio_of_group_RADIO_group" checked onchange="processUnits[0].updateUIparams()">
               <span id="radio_Sine_SPAN">Sine</span>
         </label>
         <label id="radio_Constant_LABEL" name="radio_of_group_RADIO_group">
-              <input type="radio" id="radio_Constant" name="radio_of_group_RADIO_group" onchange="puCatalystLayer.updateUIparams()">
+              <input type="radio" id="radio_Constant" name="radio_of_group_RADIO_group" onchange="processUnits[0].updateUIparams()">
               <span id="radio_Constant_SPAN">Constant</span>
         </label>
         <label id="radio_Square_LABEL" name="radio_of_group_RADIO_group">
-              <input type="radio" id="radio_Square" name="radio_of_group_RADIO_group" onchange="puCatalystLayer.updateUIparams()">
+              <input type="radio" id="radio_Square" name="radio_of_group_RADIO_group" onchange="processUnits[0].updateUIparams()">
               <span id="radio_Square_SPAN">Square</span>
         </label>
         <label id="checkbox_on_LABEL">
-              <input type="checkbox" id="checkbox_on" checked onchange="puCatalystLayer.updateUIparams()">
+              <input type="checkbox" id="checkbox_on" checked onchange="processUnits[0].updateUIparams()">
               <span id="checkbox_on_SPAN">on</span>
         </label>
      </div> <!-- end of div div_RADIO_group -->
      <p id="field_enterCyclePeriod_label">
         Enter cycling period
      </p>
-     <input id="input_field_enterDuty" value="50" onchange="puCatalystLayer.updateUIparams()">
+     <input id="input_field_enterDuty" value="50" onchange="processUnits[0].updateUIparams()">
 
      </input>
      <p id="field_enterDuty_label">
         Enter square duty cycle % on
      </p>
-     <input id="input_field_enterCyclePeriod" value="500" onchange="puCatalystLayer.updateUIparams()">
+     <input id="input_field_enterCyclePeriod" value="500" onchange="processUnits[0].updateUIparams()">
 
      </input>
      <p id="field_Krxn_label">

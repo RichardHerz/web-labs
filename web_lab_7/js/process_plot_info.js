@@ -19,6 +19,9 @@
 // some options may be optional for some plotting packages, such as
 // plotDataSeriesColors for flot.js package, in which case default values will
 // be used by the plotting package
+//
+// plotDataLines default is true (= 1)
+// plotDataPoints default is false (= 0)
 
 // more than one plot can be put one one web page by
 // defining multiple object children, where the first index

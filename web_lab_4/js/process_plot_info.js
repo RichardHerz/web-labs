@@ -5,7 +5,7 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// WARNING: in process units, local data array names for plotting must be
+// WARNING: in process units, local data array names for plotting must
 //          'profileData' for ['type'] = 'profile'
 //          'stripData' for ['type'] = 'strip'
 //          'colorCanvasData' for ['type'] = 'canvas'
@@ -48,40 +48,40 @@ let plotInfo = {
     //
     // --------- below are plots for the reactor ----------------
 
-    let unum = 0; // useful when only one unit in plot, processUnits[unum]
+    // let unum = 0; // useful when only one unit in plot, processUnits[unum]
 
     // plot 0 info
     let pnum = 0;
     plotInfo[pnum] = new Object();
-    plotInfo[pnum]['type'] = 'profile';
-    plotInfo[pnum]['title'] = 'Heat Exchanger Temperature Profiles';
-    plotInfo[pnum]['canvas'] = '#div_PLOTDIV_T_plot'; // flot.js wants ID with prefix #
+    plotInfo[pnum]['type'] = 'strip';
+    plotInfo[pnum]['title'] = 'Reactor Conditions';
+    plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    plotInfo[pnum]['numberPoints'] = processUnits[unum]['numNodes']; // should match numNodes in process unit
+    plotInfo[pnum]['numberPoints'] = 100;
     // plot has numberPoints + 1 pts!
-    plotInfo[pnum]['xAxisLabel'] = 'Position in Exchanger';
-    plotInfo[pnum]['xAxisTableLabel'] = 'Position'; // label for copy data table
+    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
+    plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
     plotInfo[pnum]['xAxisMin'] = 0;
-    plotInfo[pnum]['xAxisMax'] = 1;
+    plotInfo[pnum]['xAxisMax'] = 100 * simParams.simTimeStep * simParams.simStepRepeats; // numberPoints * ...
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
-    plotInfo[pnum]['yLeftAxisLabel'] = 'T (K)'; // or d'less (T - TinCold)/(TinHot - TinCold)
-    plotInfo[pnum]['yLeftAxisMin'] = processUnits[unum]['dataMin'][1]; // 1 is TinCold
-    plotInfo[pnum]['yLeftAxisMax'] = processUnits[unum]['dataMax'][0]; // 0 is TinHot
-    plotInfo[pnum]['yRightAxisLabel'] = 'yRight';
-    plotInfo[pnum]['yRightAxisMin'] = 0;
-    plotInfo[pnum]['yRightAxisMax'] = 1;
+    plotInfo[pnum]['yLeftAxisLabel'] = 'Reactant Concentration';
+    plotInfo[pnum]['yLeftAxisMin'] = 0;
+    plotInfo[pnum]['yLeftAxisMax'] = 400;
+    plotInfo[pnum]['yRightAxisLabel'] = 'Temperature (K)';
+    plotInfo[pnum]['yRightAxisMin'] = 300;
+    plotInfo[pnum]['yRightAxisMax'] = 400;
+    plotInfo[pnum]['plotLegendPosition'] = "ne";
     plotInfo[pnum]['plotLegendShow'] = 1;  // Boolean, '' or 0 for no show, 1 or "show"
-    plotInfo[pnum]['plotLegendPosition'] = 'se';
     plotInfo[pnum]['plotGridBgColor'] = 'white';
     // colors can be specified rgb, rgba, hex, and color names
     // for flot.js colors, only basic color names appear to work, e.g., white, blue, red
     // for all html color names to hex see http://www.color-hex.com
     // for all color names to hex see https://www.w3schools.com/colors/colors_picker.asp
-    plotInfo[pnum]['plotDataSeriesColors'] = ['#ff6347','#1e90ff']; // optional, in variable order 0, 1, etc.
-    // ['#ff6347','#1e90ff'] is Tomato and DodgerBlue
+    plotInfo[pnum]['plotDataSeriesColors'] = ['blue','red','#919191']; // optional, in variable order 0, 1, etc.
+    // ['#1e90ff','#ff6347','#919191'] is DodgerBlue, Tomato, Tin (metal Tin)
     //
     // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
     // WARNING: all below with prefix 'var' must have same number of child objects,
@@ -97,11 +97,11 @@ let plotInfo = {
     // ADD SETTINGS FOR EACH VARIABLE
     //
     let vnum = 0; // 1st variable
-    plotInfo[pnum]['varUnitIndex'][0] = unum; // value is index of unit in processUnits object
-    plotInfo[pnum]['var'][vnum] = 0; // value is variable index in plot data array
-    plotInfo[pnum]['varLabel'][vnum] = 'Thot';
+    plotInfo[pnum]['varUnitIndex'][vnum] = 1; // value is index of unit in processUnits object
+    plotInfo[pnum]['var'][vnum] = 1; // value is variable index in plot data array
+    plotInfo[pnum]['varLabel'][vnum] = 'Reactant conc';
     // varDataUnits are dimensional units used in copy data table, along with varLabel
-    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][0]; // 1st var
+    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[1]['dataUnits'][4]; // 1st var
     // varShow values are 'show' to show on plot and legend,
     // 'tabled' to not show on plot nor legend but list in copy data table
     // and any other value, e.g., 'hide' to not show on plot but do show in legend
@@ -111,46 +111,23 @@ let plotInfo = {
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
     vnum = 1; // 2nd variable
-    plotInfo[pnum]['varUnitIndex'][1] = unum;
-    plotInfo[pnum]['var'][vnum] = 1;
-    plotInfo[pnum]['varLabel'][vnum] = 'Tcold';
-    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][1];
+    plotInfo[pnum]['varUnitIndex'][vnum] = 1;
+    plotInfo[pnum]['var'][vnum] = 0;
+    plotInfo[pnum]['varLabel'][vnum] = 'Reactor T';
+    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[1]['dataUnits'][3];
     plotInfo[pnum]['varShow'][vnum] = 'show';
-    plotInfo[pnum]['varYaxis'][vnum] = 'left';
+    plotInfo[pnum]['varYaxis'][vnum] = 'right';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
-    // plot 1 info
-    pnum = 1;
-    plotInfo[pnum] = new Object();
-    plotInfo[pnum]['type'] = 'canvas';
-    plotInfo[pnum]['title'] = 'hot side color canvas';
-    plotInfo[pnum]['canvas'] = 'canvas_CANVAS_hot'; // without prefix #
-    // for canvas type, all data comes from one process unit and one local array
-    plotInfo[pnum]['varUnitIndex'] = unum; // index of unit in processUnits object
-    plotInfo[pnum]['var'] = 0; // variable number in array spaceTimeData, 0, 1, etc.
-    // varTimePts & varSpacePts must match values used in unit array colorCanvasData
-    plotInfo[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
-    plotInfo[pnum]['varSpacePts'] = 1;
-    plotInfo[pnum]['varValueMin'] = processUnits[unum]['dataMin'][1]; // 1 is TinCold
-    plotInfo[pnum]['varValueMax'] = processUnits[unum]['dataMax'][0]; // 0 is TinHot
-    plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
-
-    // plot 2 info
-    pnum = 2;
-    plotInfo[pnum] = new Object();
-    plotInfo[pnum]['type'] = 'canvas';
-    plotInfo[pnum]['title'] = 'cold side color canvas';
-    plotInfo[pnum]['canvas'] = 'canvas_CANVAS_cold'; // without prefix #
-    // for canvas type, all data comes from one process unit and one local array
-    plotInfo[pnum]['varUnitIndex'] = unum; // index of unit in processUnits object
-    plotInfo[pnum]['var'] = 1; // variable number in array spaceTimeData, 0, 1, etc.
-    // varTimePts & varSpacePts must match values used in unit array colorCanvasData
-    plotInfo[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
-    plotInfo[pnum]['varSpacePts'] = 1;
-    plotInfo[pnum]['varValueMin'] = processUnits[unum]['dataMin'][1]; // 1 is TinCold
-    plotInfo[pnum]['varValueMax'] = processUnits[unum]['dataMax'][0]; // 0 is TinHot
-    plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
-
+    vnum = 2; // 3rd variable
+    plotInfo[pnum]['varUnitIndex'][vnum] = 2;
+    plotInfo[pnum]['var'][vnum] = 0;
+    plotInfo[pnum]['varLabel'][vnum] = 'Jacket T';
+    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[2]['dataUnits'][1];
+    plotInfo[pnum]['varShow'][vnum] = 'show';
+    plotInfo[pnum]['varYaxis'][vnum] = 'right';
+    plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
+    //
   }, // end initialize method of plotInfo
 
 } // end plotInfo

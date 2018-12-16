@@ -5,8 +5,6 @@ function puCSTR(pUnitIndex) {
   // unitIndex used in this object's updateUIparams() method
   this.name = 'process unit CSTR constructor';
 
-  // SUMMARY OF DEPENDENCIES
-
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
   this.getInputs = function() {
     let inputs = [];
@@ -18,41 +16,8 @@ function puCSTR(pUnitIndex) {
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
-  profileData = []; // for profile plots, plot script requires this name
-  stripData = []; // for strip chart plots, plot script requires this name
-
-  // // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
-  // // SEE dataInputs array in initialize() method for input field ID's
-  //
-  // // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
-  // // *** e.g., displayReactorLeftConc: 'field_reactor_left_conc',
-  //
-  // // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
-  // // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
-  //
-  // // define main inputs
-  // // values will be set in method intialize()
-  // // *** e.g., Kf300 : 0, // forward rate coefficient value at 300 K
-  //
-  // // define arrays to hold info for variables
-  // // these will be filled with values in method initialize()
-  // dataHeaders : [], // variable names
-  // dataInputs : [], // input field ID's
-  // dataUnits : [],
-  // dataMin : [],
-  // dataMax : [],
-  // dataInitial : [],
-  // dataValues : [],
-  //
-  // // define arrays to hold output variables
-  // // these will be filled with initial values in method reset()
-  // // *** e.g., Trxr : [],
-  //
-  // // define arrays to hold data for plots, color canvas
-  // // these will be filled with initial values in method reset()
-  // profileData : [], // for profile plots, plot script requires this name
-  // stripData : [], // for strip chart plots, plot script requires this name
-  // colorCanvasData : [], // for color canvas plots, plot script requires this name
+  this.profileData = []; // for profile plots, plot script requires this name
+  this.stripData = []; // for strip chart plots, plot script requires this name
 
   // allow this unit to take more than one step within one main loop step in updateState method
   this.unitStepRepeats = 1;
@@ -139,36 +104,7 @@ function puCSTR(pUnitIndex) {
   } // END getRxnRate() method
 
   this.initialize = function() {
-    //
-    // let v = 0;
-    // this.dataHeaders[v] = 'Kf300';
-    // this.dataInputs[v] = 'input_field_Kf300';
-    // this.dataUnits[v] = 'm3/kg/s';
-    // this.dataMin[v] = 0;
-    // this.dataMax[v] = 1;
-    // this.dataInitial[v] = 1.0e-7;
-    // this.Kf300 = this.dataInitial[v]; // dataInitial used in getInputValue()
-    // this.dataValues[v] = this.Kf300; // current input value for reporting
-    //
-    // END OF INPUT VARS
-    // record number of input variables, VarCount
-    // used, e.g., in copy data to table
-    //
-    // *** use v-1 here since TinHX only used to initialize & reset plots
-
-    // to use this prob have to define this.VarCount above this function first...
-    // this.VarCount = v-1;
-
-    // OUTPUT VARS
-    //
-    // v = 7;
-    // this.dataHeaders[v] = 'Trxr';
-    // this.dataUnits[v] =  'K';
-    // // Trxr dataMin & dataMax can be changed in updateUIparams()
-    // this.dataMin[v] = 200;
-    // this.dataMax[v] = 500;
-    //
-
+    // nothing needed for this unit
   } // END initialize method
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -234,16 +170,7 @@ function puCSTR(pUnitIndex) {
     // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
 
-    // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
-    // getInputValue(unit index in processUnits, let index in input arrays)
-    // see variable numbers above in initialize()
-    // note: this.dataValues.[pVar]
-    //   is only used in copyData() to report input values
-    //
-    let unum = this.unitIndex;
-    //
-    // *** e.g., this.Kf300 = this.dataValues[0] = interface.getInputValue(unum, 0);
+    // no UI params for this unit
 
   } // END of updateUIparams()
 
@@ -260,8 +187,6 @@ function puCSTR(pUnitIndex) {
     let inputs = this.getInputs();
     this.concIn = inputs[0]; // conc from upstream CSTR
     this.feed = inputs[1]; // feed to first CSTR
-
-    // console.log('updateInputs, CSTR = ' + this.unitIndex + ', concIn = ' + this.concIn);
 
   } // END of updateInputs()
 
@@ -315,19 +240,6 @@ function puCSTR(pUnitIndex) {
     if (this.conversion < 0) {
       this.conversion = 0;
     }
-
-    // // simple first-order rate
-    // let krate = 0.04;
-    // let Kads = 1 * 0.0872; // 0.0872 for max conc = 100, Kads * C/2 = 4.36
-    //   // this unit may take multiple steps within one outer main loop repeat step
-    // for (let i = 0; i < this.unitStepRepeats; i += 1) {
-    //   let C = this.conc;
-    //   let rxnRate = - krate * C / Math.pow((1 + Kads * C),2);
-    //   let dcdt = flowrate/volume * (this.concIn - this.conc) + rxnRate;
-    //   this.conc = this.conc + dcdt * this.unitTimeStep;
-    // }
-
-    // console.log('leave updateState, CSTR = ' + this.unitIndex + ', conc = ' + this.conc);
 
   } // END of updateState()
 

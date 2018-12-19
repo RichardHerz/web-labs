@@ -19,21 +19,20 @@
 // -------------------------------------------------------------------
 
 let processUnits = new Object();
-  // contents must be only the process units as child objects
-  // children optionally can be defined in separate script files, which
-  // makes them easier to edit,
-  // then inserted into processUnits, e.g.,
-  // USING CONSTRUCTOR FUNCTION...
-  //   processUnits[0] = new puHeatExchanger(0); // [] and () index # must match
-  // OR USING OBJECT
-  //   processUnits[0] = puHeatExchanger; // puHeatExchanger is an object
-  //   processUnits[0].unitIndex = 0; // assign unitIndex to match processUnits index
-  // then object cleared for garbage collection, e.g.,
-  //   puHeatExchanger = null; // puHeatExchanger is an object
-
-// load process unit objects into this object
-// as indexed objects in order to allow object controller
+// assign process unit objects to this object
+// as indexed child objects in order to allow object controller
 // to access them in a repeat with numeric index
+// contents must be only the process units as child objects
+// child objects optionally can be defined in separate script files, which
+// makes them easier to edit,
+// then inserted into processUnits, e.g.,
+// USING CONSTRUCTOR FUNCTION...
+//   processUnits[0] = new puHeatExchanger(0); // [] and () index # must match
+// OR USING OBJECT
+//   processUnits[0] = puHeatExchanger; // puHeatExchanger is an object
+//   processUnits[0].unitIndex = 0; // assign unitIndex to match processUnits index
+// then object cleared for garbage collection, e.g.,
+//   puHeatExchanger = null; // puHeatExchanger is an object
 
 processUnits[0] = new puWaterFeed(0);
 processUnits[1] = new puWaterTank(1);

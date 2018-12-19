@@ -59,8 +59,6 @@ let puCatalystLayer = {
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
   //
-  // THIS UNIT ALSO HAS A RANGE INPUT SLIDER
-  inputCmaxSlider : "range_setCmax_slider",
   // THIS UNIT ALSO HAS A CHECKBOX INPUT
   inputCheckBoxFeed : 'checkbox_on',
   // THIS UNIT ALSO HAS RADIO BUTTON INPUTS

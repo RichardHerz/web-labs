@@ -59,7 +59,10 @@ let puFEED = {
   // residenceTime is set in this unit's updateUIparams()
 
   conc : 0.00, // FEED CONC
-  // inputSliderDisplay : "field_setFeedConc_value",
+
+  // XXX why need these when have them in initialize method???
+  // XXX but they are used below if want to eliminate
+  // XXX or keep one (input field) in initialize and keep the other here???
   inputFeedSlider : 'range_setFeedConc_slider',
   inputFeedInput : 'input_setFeedConc_value',
 

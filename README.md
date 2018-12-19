@@ -1,8 +1,6 @@
 Web Labs - Interactive simulations for active learning on the web
 
-To use these labs, go to this repository's github.io site https://richardherz.github.io/web-labs/
-
-For more info, go to this repository's wiki.
+To run these labs, go to http://reactorlab.net/web-labs/ 
 
 Screenshot of web lab 7:
 

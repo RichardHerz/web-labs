@@ -1072,7 +1072,7 @@ processUnits[3] = {
     } else {
       // not at limit, OK to update integral of error
       // update errorIntegral only after it is used above to update this.command
-      this.errorIntegral = this.errorIntegral + error * simParams.simTimeStep; // update integral of error
+      this.errorIntegral = this.errorIntegral + error * this.unitTimeStep; // update integral of error
     }
 
     if (this.mode == "manual"){

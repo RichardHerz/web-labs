@@ -37,12 +37,6 @@ function puWaterFeed(pUnitIndex) {
   this.dataInitial = [];
   this.dataValues = [];
 
-  // XXX why need these when have them in initialize method???
-  // XXX but they are used below if want to eliminate
-  // XXX or keep one (input field) in initialize and keep the other here???
-  this.inputFeedSlider = 'range_slider_enterFlowRate',
-  this.inputFeedInput = 'input_field_enterFlowRate',
-
   this.initialize = function() {
     //
     let v = 0;
@@ -156,8 +150,8 @@ function puWaterFeed(pUnitIndex) {
     this.flowRate = this.dataValues[1] = interface.getInputValue(unum, vnum);
     // update input field display
     // console.log('updateUIfeedSlider: this.flowRate = ' + this.flowRate);
-    if (document.getElementById(this.inputFeedInput)) {
-      document.getElementById(this.inputFeedInput).value = this.flowRate;
+    if (document.getElementById(this.dataInputs[0])) {
+      document.getElementById(this.dataInputs[0]).value = this.flowRate;
     }
     // need to directly set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state

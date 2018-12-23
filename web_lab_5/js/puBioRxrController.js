@@ -64,14 +64,14 @@ function puBioRxrController(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
-    this.dataInitial[v] = 0.2;
+    this.dataInitial[v] = 0.1;
     this.gain = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.gain; // current input oalue for reporting
     //
     v = 2;
     this.dataHeaders[v] = 'reset time';
     this.dataInputs[v] = 'input_field_enterResetTime';
-    this.dataUnits[v] = 'hr';
+    this.dataUnits[v] = 'h';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
     this.dataInitial[v] = 5;
@@ -83,8 +83,8 @@ function puBioRxrController(pUnitIndex) {
     this.dataInputs[v] = 'input_field_enterSubstrateFeedConc';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 30;
-    this.dataInitial[v] = 15;
+    this.dataMax[v] = 40;
+    this.dataInitial[v] = 30;
     this.manualCommand = this.dataInitial[v];
     this.dataValues[v] = this.manualCommand;
     //

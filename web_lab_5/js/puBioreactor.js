@@ -56,7 +56,7 @@ function puBioReactor(pUnitIndex) {
     v = 0;
     this.dataHeaders[v] = 'MUmax'; // Wu & Chang 2007, MUmax = 0.3
     this.dataInputs[v] = 'input_field_enter_MUmax';
-    this.dataUnits[v] = 'm3/kg/hr'; // XXX in paper was 1/hr
+    this.dataUnits[v] = 'm3/kg/h'; // XXX in paper was 1/h
     this.dataMin[v] = 0.01;
     this.dataMax[v] = 10;
     this.dataInitial[v] = 0.3;
@@ -99,7 +99,7 @@ function puBioReactor(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
-    this.dataInitial[v] = 0.1;
+    this.dataInitial[v] = 0.5;
     this.gamma = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.gamma; // current input oalue for reporting
     //
@@ -193,6 +193,8 @@ function puBioReactor(pUnitIndex) {
     this.flowRate = inputs[0]; // input flow rate from feed unit
     this.feedConc = inputs[1]; // input substrate conc from feed unit
 
+    // console.log('RXR updateInputs, flowRate = '+this.flowRate);
+
   } // END of updateInputs() method
 
   this.updateState = function() {
@@ -206,13 +208,15 @@ function puBioReactor(pUnitIndex) {
     //          get info from other units ONLY in updateInputs() method
 
      // XXX equations from paper but does NOT seem dimensionlly consistent...
-     // XXX only dimensionally consistent if units of MUmax are m3/kg/hr not 1/hr....
+     // XXX only dimensionally consistent if units of MUmax are m3/kg/h not 1/h....
     let rxrVolume = 1; // (m3)
     let G = this.MUmax * this.conc / (this.ks + this.conc); // biomass growth rate
 
     let Y = (this.alpha + this.beta * this.conc); // partial yield function
     Y = Math.pow(Y,this.gamma); // complete yield function
     let D = this.flowRate / rxrVolume; // dilution rate = space velocity
+
+    // console.log('RXR updateState, flowRate = '+this.flowRate);
 
     let dCdt = D * (this.feedConc - this.conc) - (G / Y) * this.biomass;
     let dC = this.unitTimeStep * dCdt;
@@ -231,17 +235,17 @@ function puBioReactor(pUnitIndex) {
     // // XXX dimensionally consistent here - seems not in paper...
     // // XXX HERE delete this.conc from numerator of G...
     // let rxrVolume = 1; // (m3)
-    // let G = this.MUmax / (this.ks + this.conc); // XXX (1/hr), XXX biomass growth rate
+    // let G = this.MUmax / (this.ks + this.conc); // XXX (1/h), XXX biomass growth rate
     //
     // let Y = (this.alpha + this.beta * this.conc); // (d'less), partial yield function
     // Y = Math.pow(Y,this.gamma); // (d'less), complete yield function
-    // let D = this.flowRate / rxrVolume; // (1/hr), dilution rate = space velocity
+    // let D = this.flowRate / rxrVolume; // (1/h), dilution rate = space velocity
     //
-    // let dCdt = D * (this.feedConc - this.conc) - (G / Y); // (kg/m3/hr)
+    // let dCdt = D * (this.feedConc - this.conc) - (G / Y); // (kg/m3/h)
     // let dC = this.unitTimeStep * dCdt; // (kg/m3)
     // let newConc = this.conc + dC; // (kg/m3)
     //
-    // let dBdt = G - D * this.biomass; // (kg/m3/hr)
+    // let dBdt = G - D * this.biomass; // (kg/m3/h)
     // let dB = this.unitTimeStep * dBdt; // (kg/m3)
     // let newBiomass = this.biomass + dB; // (kg/m3)
     //
@@ -254,17 +258,17 @@ function puBioReactor(pUnitIndex) {
     // // XXX dimensionally consistent here - seems not in paper...
     // // XXX HERE delete biomass times G in terms
     // let rxrVolume = 1; // (m3)
-    // let G = this.MUmax * this.conc / (this.ks + this.conc); // (kg/m3/hr), biomass growth rate
+    // let G = this.MUmax * this.conc / (this.ks + this.conc); // (kg/m3/h), biomass growth rate
     //
     // let Y = (this.alpha + this.beta * this.conc); // (d'less), partial yield function
     // Y = Math.pow(Y,this.gamma); // (d'less), complete yield function
-    // let D = this.flowRate / rxrVolume; // (1/hr), dilution rate = space velocity
+    // let D = this.flowRate / rxrVolume; // (1/h), dilution rate = space velocity
     //
-    // let dCdt = D * (this.feedConc - this.conc) - (G / Y); // (kg/m3/hr)
+    // let dCdt = D * (this.feedConc - this.conc) - (G / Y); // (kg/m3/h)
     // let dC = this.unitTimeStep * dCdt; // (kg/m3)
     // let newConc = this.conc + dC; // (kg/m3)
     //
-    // let dBdt = G - D * this.biomass; // (kg/m3/hr)
+    // let dBdt = G - D * this.biomass; // (kg/m3/h)
     // let dB = this.unitTimeStep * dBdt; // (kg/m3)
     // let newBiomass = this.biomass + dB; // (kg/m3)
     //

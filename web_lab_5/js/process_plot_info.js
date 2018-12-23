@@ -58,8 +58,8 @@ let plotInfo = {
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     let npm = 250;
     plotInfo[pnum]['numberPoints'] = npm; // WARNING: value used below in ['xAxisMax']
-    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (hr) >'; // label for copy data table
-    plotInfo[pnum]['xAxisTableLabel'] = 'Time (hr)'; // label for copy data table
+    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (h) >'; // label for copy data table
+    plotInfo[pnum]['xAxisTableLabel'] = 'Time (h)'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
@@ -69,10 +69,10 @@ let plotInfo = {
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = 'Biomass (kg/m<sup shift=4>3</sup>)';
     plotInfo[pnum]['yLeftAxisMin'] = 0;
-    plotInfo[pnum]['yLeftAxisMax'] = 30;
+    plotInfo[pnum]['yLeftAxisMax'] = 20;
     plotInfo[pnum]['yRightAxisLabel'] = 'Substrate (kg/m<sup shift=4>3</sup>)';
     plotInfo[pnum]['yRightAxisMin'] = 0;
-    plotInfo[pnum]['yRightAxisMax'] = 30;
+    plotInfo[pnum]['yRightAxisMax'] = 40;
     plotInfo[pnum]['plotLegendPosition'] = "nw";
     plotInfo[pnum]['plotLegendShow'] = 1;  // Boolean, '' or 0 for no show, 1 for "show"
     plotInfo[pnum]['plotGridBgColor'] = 'white';

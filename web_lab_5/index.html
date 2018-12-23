@@ -50,10 +50,11 @@
       <!-- <p id="field_output_field"></p> -->
       <p></p>
       <a href="http://reactorlab.net/web-labs/">Back</a> to Web Labs at ReactorLab.net
-      <p><b><i>Biomass growth in continuous stirred tank reactor (CSTR), a bioreactor</i></b></p>
+      <p><b><i>Biomass growth in continuous stirred tank reactor (CSTR), a "chemostat" bioreactor</i></b></p>
       <p>
-        The equations and default parameter values are from
-        <a href="https://pubs.acs.org/doi/abs/10.1021/ie061314j">Wu and Chang (2007)</a>, Table 1, Example 1.
+        This is a simplified model of microbial growth kinetics. For examples, see
+        <a href="https://www.tandfonline.com/doi/abs/10.1080/00986440214998" target="new">Balakrishnan and Yang</a>  (2002) and
+        <a href="https://pubs.acs.org/doi/abs/10.1021/ie061314j" target="new">Wu and Chang</a> (2007).
         <br>The reactor volume is fixed at 1 m<sup>3</sup>.
         </p>
       <p>
@@ -83,7 +84,7 @@
         <p id="field_enter_gamma_LABEL">
               Enter &gamma;
         </p>
-        <input id="input_field_enter_gamma" value="0.1" onchange="processUnits[1].updateUIparams()">
+        <input id="input_field_enter_gamma" value="0.5" onchange="processUnits[1].updateUIparams()">
         <p id="field_enter_alpha_LABEL">
               Enter &alpha;
         </p>
@@ -93,11 +94,11 @@
         </p>
         <input id="input_field_enter_ks" value="1.75" onchange="processUnits[1].updateUIparams()">
         <p id="field_enter_MUmax_LABEL">
-              Enter &mu;<sub shift="4">m</sub> (m<sup shift="-4">3</sup>/kg/hr)
+              Enter &mu;<sub shift="4">m</sub> (m<sup shift="-4">3</sup>/kg/h)
         </p>
         <input id="input_field_enter_MUmax" value="0.3" onchange="processUnits[1].updateUIparams()">
         <p id="field_enterFeedFlowRateLABEL">
-              Enter feed flow rate (m<sup shift="-4">3</sup>/hr)
+              Enter feed flow rate (m<sup shift="-4">3</sup>/h)
         </p>
         <input id="input_field_enterFeedFlowRate" value="0.2" onchange="processUnits[0].updateUIparams()">
      </div> <!-- end of div div_operatingParams -->
@@ -108,15 +109,15 @@
         <p id="field_enterSubstrateFeedConcLABEL">
               Substrate feed conc (kg/m<sup shift="-4">3</sup>)
         </p>
-        <input id="input_field_enterSubstrateFeedConc" value="15" onchange="processUnits[2].updateUIparams()">
+        <input id="input_field_enterSubstrateFeedConc" value="30" onchange="processUnits[2].updateUIparams()">
         <p id="field_enterResetTimeLABEL">
-              Enter reset time (&gt; 0 hr)
+              Enter reset time (&gt; 0 h)
         </p>
         <input id="input_field_enterResetTime" value="5" onchange="processUnits[2].updateUIparams()">
         <p id="field_enterGainLABEL">
               Enter controller gain
         </p>
-        <input id="input_field_enterGain" value="0.2" onchange="processUnits[2].updateUIparams()">
+        <input id="input_field_enterGain" value="0.1" onchange="processUnits[2].updateUIparams()">
         <p id="field_enterSetpointLABEL">
               Biomass set point (kg/m<sup shift="-4">3</sup>)
               <!-- WARNING: make sure set pt variable name here matches controller input -->

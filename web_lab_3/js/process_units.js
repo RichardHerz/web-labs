@@ -1232,20 +1232,15 @@ processUnits[4] = {
 
   changeMode : function(){
     let el = document.querySelector("#radio_controllerAUTO");
-    let el2 = document.querySelector("#enterJacketFeedTTemp");
     if (el.checked){
-      // alert("controller in AUTO mode");
-      this.mode = "auto"
-      // TWO LINES BELOW USED WHEN TOGGLE THIS INPUT HIDDEN-VISIBLE
-      //   el2.type = "hidden";
-      //   document.getElementById("enterJacketFeedTTemp_LABEL").style.visibility = "hidden";
+      this.mode = "auto";
+      this.manualBias = this.command; // for "bumpless transfer"
     } else {
-      // alert("controller in MANUAL mode");
-      this.mode = "manual"
-      // TWO LINES BELOW USED WHEN TOGGLE THIS INPUT HIDDEN-VISIBLE
-      //   el2.type = "input";
-      //   document.getElementById("enterJacketFeedTTemp_LABEL").style.visibility = "visible";
+      this.mode = "manual";
     }
+
+    // zero errorIntegral on all changeModes
+    this.errorIntegral = 0;
 
     // need to directly set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
@@ -1309,6 +1304,7 @@ processUnits[4] = {
     //          get info from other units ONLY in updateInputs() method
 
     // compute new value of PI controller command
+    // manual bias set to current command when switching to auto in changeMode()
     let error = this.setPoint - this.Trxr;
     this.command = this.manualBias + this.gain *
                   (error + (1/this.resetTime) * this.errorIntegral);

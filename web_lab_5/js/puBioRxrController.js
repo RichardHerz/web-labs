@@ -151,18 +151,14 @@ function puBioRxrController(pUnitIndex) {
   this.changeMode = function(){
     let el = document.querySelector("#radio_controllerAUTO");
     if (el.checked){
-      // console.log("switch controller to AUTO mode");
-      this.mode = "auto"
-      // TWO LINES BELOW USED WHEN TOGGLE THIS INPUT HIDDEN-VISIBLE
-      //   el2.type = "hidden";
-      //   document.getElementById("enterJacketFeedTTemp_LABEL").style.visibility = "hidden";
+      this.mode = "auto";
+      this.manualBias = this.command; // for "bumpless transfer"
     } else {
-      // console.log("switch controller to MANUAL mode");
-      this.mode = "manual"
-      // TWO LINES BELOW USED WHEN TOGGLE THIS INPUT HIDDEN-VISIBLE
-      //   el2.type = "input";
-      //   document.getElementById("enterJacketFeedTTemp_LABEL").style.visibility = "visible";
+      this.mode = "manual";
     }
+
+    // zero errorIntegral on all changeModes
+    this.errorIntegral = 0;
 
     // need to directly set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
@@ -228,12 +224,8 @@ function puBioRxrController(pUnitIndex) {
     //          get info from other units ONLY in updateInputs() method
 
     // compute new value of PI controller command
+    // manual bias set to current command when switching to auto in changeMode()
     let error = this.setPoint - this.processVariable;
-
-    // console.log('this.setPoint = '+this.setPoint);
-    // console.log('this.processVariable = '+this.processVariable);
-    // console.log('error = '+error);
-
     this.command = this.manualBias + this.gain *
                   (error + (1/this.resetTime) * this.errorIntegral);
 

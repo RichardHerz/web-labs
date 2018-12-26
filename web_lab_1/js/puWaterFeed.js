@@ -25,6 +25,7 @@ function puWaterFeed(pUnitIndex) {
 
   // define variables
   this.ssCheckSum = 0; // used in checkForSteadyState() method
+  this.residenceTime = 0;  // used in controller.checkForSteadyState() method
   this.flowRate = 0; // feed to water tank
 
   // define arrays to hold info for variables
@@ -126,6 +127,11 @@ function puWaterFeed(pUnitIndex) {
     // SPECIAL for this unit methods updateUIfeedInput and updateUIfeedSlider
     //         below get slider and field value for [0] and [1]
 
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+    this.ssCheckSum = 0;
+
   } // END of updateUIparams() method
 
   this.updateUIfeedInput = function() {
@@ -139,6 +145,11 @@ function puWaterFeed(pUnitIndex) {
     // update slider position
     document.getElementById(this.dataInputs[1]).value = this.flowRate;
     // console.log('updateUIfeedInput: this.flowRate = ' + this.flowRate);
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
   } // END method updateUIfeedInput()
 
   this.updateUIfeedSlider = function() {
@@ -232,7 +243,7 @@ function puWaterFeed(pUnitIndex) {
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
-    let ssFlag = false;
+    let ssFlag = true;
     return ssFlag;
   } // END of checkForSteadyState() method
 

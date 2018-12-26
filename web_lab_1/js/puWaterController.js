@@ -32,6 +32,9 @@ function puWaterController(pUnitIndex) {
   this.command = 0; // controller command from this controller unit
   this.errorIntegral = 0;
 
+  this.ssCheckSum = 0;
+  this.residenceTime = 0;
+
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
@@ -235,7 +238,7 @@ function puWaterController(pUnitIndex) {
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
-    let ssFlag = false;
+    let ssFlag = true;
     return ssFlag;
   } // END of checkForSteadyState() method
 

@@ -25,6 +25,7 @@ function puWaterTank(pUnitIndex) {
 
   // define variables
   this.ssCheckSum = 0; // used in checkForSteadyState() method
+  this.residenceTime = 0;  // used in controller.checkForSteadyState() method
   this.flowRate = 0; // input flow rate from feed unit
   this.level = 0; // water level in this tank
   this.command = 0; // command from controller
@@ -92,6 +93,8 @@ function puWaterTank(pUnitIndex) {
     // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
 
+    this.residenceTime = 10;  // used in controller.checkForSteadyState() method
+
     // each unit has its own data arrays for plots and canvases
 
     // initialize strip chart data array
@@ -115,9 +118,11 @@ function puWaterTank(pUnitIndex) {
     //   is only used in copyData() to report input values
     //
     let unum = this.unitIndex;
-    //
-    // SPECIAL for this unit methods updateUIfeedInput and updateUIfeedSlider
-    //         below get slider and field value for [0] and [1]
+
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+    this.ssCheckSum = 0;
 
   } // END of updateUIparams() method
 
@@ -233,8 +238,36 @@ function puWaterTank(pUnitIndex) {
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    // multiply all numbers by a factor to get desired number significant
+    // figures to left decimal point so toFixed() does not return string "0.###"
+    // WARNING: too many sig figs will prevent detecting steady state
+    //
+    let rc = 1.0e3 * this.flowRate;
+    let rt = 1.0e3 * this.command;
+    let lt = 1.0e3 * this.level;
+    rc = rc.toFixed(0); // strings
+    rt = rt.toFixed(0);
+    lt = lt.toFixed(0);
+    // concatenate strings
+    let newCheckSum = rc +'.'+ rt +'.'+ lt;
+    //
+    let oldSScheckSum = this.ssCheckSum;
     let ssFlag = false;
+    if (newCheckSum == oldSScheckSum) {ssFlag = true;}
+    this.ssCheckSum = newCheckSum; // save current value for use next time
+
+    // console.log('simTime = ' + controller.simTime);
+    // console.log('  oldSScheckSum = ' + oldSScheckSum);
+    // console.log('    newCheckSum = ' + newCheckSum + ', ssFlag = ' + ssFlag);
+
     return ssFlag;
-  } // END of checkForSteadyState() method
+  } // END checkForSteadyState method
 
 } // END of puWaterTank

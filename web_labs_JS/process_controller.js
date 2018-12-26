@@ -186,6 +186,7 @@ let controller = {
 
     if (this.ssFlag) {
       // exit if ssFlag true
+      // ONLY IF DO NOT WANT TO UPDATE DISPLAY - SO MUST BE CONSTANT...
       // BUT FIRST MUST DO THIS (also done below at end normal update)
       // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
       // or, if do not do here, simTime will race ahead

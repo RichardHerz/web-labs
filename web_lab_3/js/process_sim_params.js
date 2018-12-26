@@ -20,7 +20,7 @@ let simParams = {
   // OBJECT controller CAN CHANGE in object simParams the following:
   //    variable simTimeStep in method controller.changeSimTimeStep
   //
-  
+
   title : 'Reactor T control with Tj inlet', // title of simulation
 
   runButtonID : "button_runButton", // for functions to run, reset, copy data
@@ -32,7 +32,7 @@ let simParams = {
   // see method simParams.changeSimTimeStep() below to change simTimeStep value
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
-  simStepRepeats : 40, // integer number of unit updates between display updates
+  simStepRepeats : 20, // integer number of unit updates between display updates
   simTimeStep : 0.1, // time step value, simulation time, of main repeat
 
   // individual units may do more steps in one unit updateState()

@@ -217,17 +217,17 @@ let interface = {
       }
       // nn is a number so format with number methods
       if ((nn > 1000) || (nn < -1000)) {
-        nn = nn.toExponential(3);
+        nn = nn.toExponential(4);
       } else if ((nn > 100) || (nn < -100)) {
-       nn = nn.toFixed(1);
+       nn = nn.toFixed(2);
       } else if ((nn > 10) || (nn < -10)) {
-        nn = nn.toFixed(2);
+        nn = nn.toFixed(3);
       } else if ((nn > 1) || (nn < -1)) {
-       nn = nn.toFixed(3);
+       nn = nn.toFixed(4);
       } else if ((nn > 0.01) || (nn < -0.01)) {
-        nn = nn.toFixed(4);
+        nn = nn.toFixed(5);
       } else {
-        nn = nn.toExponential(3);
+        nn = nn.toExponential(4);
       }
       return nn;
     } // END of function formatNum

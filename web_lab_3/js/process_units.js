@@ -149,12 +149,11 @@ processUnits[0] = {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
@@ -197,17 +196,16 @@ processUnits[0] = {
 
   checkForSteadyState : function() {
     // required - called by controller object
+    // returns ssFlag, true if this unit at SS, false if not
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
-    // returns ssFlag, true if this unit at SS, false if not
-    // uses and sets this.ssCheckSum
-    // this.ssCheckSum can be set by reset() and updateUIparams()
-    // check for SS in order to save CPU time when sim is at steady state
-    // check for SS by checking for any significant change in array end values
-    // but wait at least one residence time after the previous check
-    // to allow changes to propagate down unit
-    //
+    // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
+    // this.ssCheckSum set != 0 on updateUIparams() execution
+    if (this.ssCheckSum != 0) {
+      ssFlag = false;
+    }
+    this.ssCheckSum = 0;
     return ssFlag;
   } // END OF checkForSteadyState()
 
@@ -409,12 +407,11 @@ processUnits[1] = {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
@@ -731,12 +728,11 @@ processUnits[2] = {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
@@ -808,17 +804,16 @@ processUnits[2] = {
 
   checkForSteadyState : function() {
     // required - called by controller object
+    // returns ssFlag, true if this unit at SS, false if not
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
-    // returns ssFlag, true if this unit at SS, false if not
-    // uses and sets this.ssCheckSum
-    // this.ssCheckSum can be set by reset() and updateUIparams()
-    // check for SS in order to save CPU time when sim is at steady state
-    // check for SS by checking for any significant change in array end values
-    // but wait at least one residence time after the previous check
-    // to allow changes to propagate down unit
-    //
+    // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
+    // this.ssCheckSum set != 0 on updateUIparams() execution
+    if (this.ssCheckSum != 0) {
+      ssFlag = false;
+    }
+    this.ssCheckSum = 0;
     return ssFlag;
   } // END OF checkForSteadyState()
 
@@ -968,12 +963,11 @@ processUnits[3] = {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
@@ -1061,17 +1055,16 @@ processUnits[3] = {
 
   checkForSteadyState : function() {
     // required - called by controller object
+    // returns ssFlag, true if this unit at SS, false if not
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
-    // returns ssFlag, true if this unit at SS, false if not
-    // uses and sets this.ssCheckSum
-    // this.ssCheckSum can be set by reset() and updateUIparams()
-    // check for SS in order to save CPU time when sim is at steady state
-    // check for SS by checking for any significant change in array end values
-    // but wait at least one residence time after the previous check
-    // to allow changes to propagate down unit
-    //
+    // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
+    // this.ssCheckSum set != 0 on updateUIparams() execution
+    if (this.ssCheckSum != 0) {
+      ssFlag = false;
+    }
+    this.ssCheckSum = 0;
     return ssFlag;
   } // END checkForSteadyState()
 
@@ -1242,12 +1235,11 @@ processUnits[4] = {
     // zero errorIntegral on all changeModes
     this.errorIntegral = 0;
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 
   }, // end changeMode function
 
@@ -1256,12 +1248,11 @@ processUnits[4] = {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
@@ -1339,17 +1330,16 @@ processUnits[4] = {
 
   checkForSteadyState : function() {
     // required - called by controller object
+    // returns ssFlag, true if this unit at SS, false if not
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
-    // returns ssFlag, true if this unit at SS, false if not
-    // uses and sets this.ssCheckSum
-    // this.ssCheckSum can be set by reset() and updateUIparams()
-    // check for SS in order to save CPU time when sim is at steady state
-    // check for SS by checking for any significant change in array end values
-    // but wait at least one residence time after the previous check
-    // to allow changes to propagate down unit
-    //
+    // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
+    // this.ssCheckSum set != 0 on updateUIparams() execution
+    if (this.ssCheckSum != 0) {
+      ssFlag = false;
+    }
+    this.ssCheckSum = 0;
     return ssFlag;
   } // END OF checkForSteadyState()
 

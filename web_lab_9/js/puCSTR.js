@@ -120,13 +120,6 @@ function puCSTR(pUnitIndex) {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // need to directly set controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
-
     this.conc = 0;
     this.conversion = 0;
 
@@ -163,12 +156,11 @@ function puCSTR(pUnitIndex) {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 
     // no UI params for this unit
 

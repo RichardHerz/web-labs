@@ -131,12 +131,16 @@ processUnits[0] = {
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
 
   reset : function(){
+    //
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
     // reset function will use whatever last values user has entered.
+
     this.updateUIparams(); // this first, then set other values as needed
+
     // set state variables not set by updateUIparams() to initial settings
+
     // need to directly set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
     controller.ssFlag = false;
@@ -356,7 +360,7 @@ processUnits[1] = {
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
 
   reset : function() {
-
+    //
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
@@ -690,13 +694,16 @@ processUnits[2] = {
   }, // END of initialize()
 
   reset : function(){
+    //
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
     // reset function will use whatever last values user has entered.
+
     this.updateUIparams(); // this first, then set other values as needed
 
-    // set state variables not set by updateUIparams to initial settings
+    // set state variables not set by updateUIparams() to initial settings
+
     this.TjIn = this.initialTjIn;
 
     // each unit has its own data arrays for plots and canvases

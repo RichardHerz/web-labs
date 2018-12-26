@@ -36,6 +36,7 @@ let processUnits = new Object();
 
 // ADD PROCESS FEED defined in file puFEED.js
 processUnits[0] = puFEED;
+processUnits[0].unitIndex = 0;
 
 // ADD CSTRs to processUnits USING OBJECT CONSTRUCTOR IN FILE puCSTR.js
 let numRxrs = 4;

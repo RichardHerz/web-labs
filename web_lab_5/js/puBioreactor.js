@@ -164,7 +164,15 @@ function puBioReactor(pUnitIndex) {
 
   this.updateUIparams = function() {
     //
-    // check input fields for new values
+    // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
+    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
+
+    // need to reset controller.ssFlag to false to get sim to run
+     // after change in UI params when previously at steady state
+     controller.resetSSflagsFalse();
+     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+     this.ssCheckSum = 1;
+
     // function getInputValue() is defined in file process_interface.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
@@ -177,7 +185,7 @@ function puBioReactor(pUnitIndex) {
     this.ks = this.dataValues[1] = interface.getInputValue(unum, 1);
     this.alpha = this.dataValues[2] = interface.getInputValue(unum, 2);
     this.beta = this.dataValues[3] = interface.getInputValue(unum, 3);
-    this.gamma = this.dataValues[4] = interface.getInputValue(unum, 4);
+    this.gamma = this.dataValues[4] = interface.getInputValue(unum, 4); 
 
   } // END of updateUIparams() method
 

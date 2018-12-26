@@ -86,6 +86,8 @@ function puWaterFeed(pUnitIndex) {
 
     this.updateUIparams(); // this first, then set other values as needed
 
+    // set state variables not set by updateUIparams to initial settings
+
     // each unit has its own data arrays for plots and canvases
 
     // initialize strip chart data array

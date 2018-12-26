@@ -261,7 +261,9 @@ let puCatalystLayer = {
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
     // reset function will use whatever last values user has entered.
+
     this.updateUIparams(); // this first, then set other values as needed
+    
     // set state variables not set by updateUIparams to initial settings
 
     // XXX constants below should be converted to variables here & in plot info

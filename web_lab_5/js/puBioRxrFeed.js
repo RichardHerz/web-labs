@@ -100,8 +100,16 @@ function puBioRxrFeed(pUnitIndex) {
   } // END of reset() method
 
   this.updateUIparams = function() {
+    //
+    // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
+    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // check input fields for new values
+    // need to reset controller.ssFlag to false to get sim to run
+     // after change in UI params when previously at steady state
+     controller.resetSSflagsFalse();
+     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+     this.ssCheckSum = 1;
+
     // function getInputValue() is defined in file process_interface.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
@@ -194,10 +202,16 @@ function puBioRxrFeed(pUnitIndex) {
 
   this.checkForSteadyState = function() {
     // required - called by controller object
+    // returns ssFlag, true if this unit at SS, false if not
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
-    // returns ssFlag, true if this unit at SS, false if not
+    // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
+    // this.ssCheckSum set != 0 on updateUIparams() execution
+    if (this.ssCheckSum != 0) {
+      ssFlag = false;
+    }
+    this.ssCheckSum = 0;
     return ssFlag;
   } // END of checkForSteadyState() method
 

@@ -35,6 +35,7 @@ let processUnits = new Object();
 //   puHeatExchanger = null; // puHeatExchanger is an object
 
 processUnits[0] = puPlugFlowReactor;
+processUnits[0].unitIndex = 0; 
 
 // clear separate process units for garbage collection
 puPlugFlowReactor = null;

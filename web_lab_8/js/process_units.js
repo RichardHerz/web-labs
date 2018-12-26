@@ -35,7 +35,9 @@ let processUnits = new Object();
 //   puHeatExchanger = null; // puHeatExchanger is an object
 
 processUnits[0] = puAdiabaticPackedBedPFR;
+processUnits[0].unitIndex = 0;
 processUnits[1] = puCounterCurrentHeatExchanger;
+processUnits[1].unitIndex = 1; 
 
 // clear separate process units for garbage collection
 puAdiabaticPackedBedPFR = null;

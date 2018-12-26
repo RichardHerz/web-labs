@@ -106,9 +106,9 @@ function puWaterTank(pUnitIndex) {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
+    controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
     this.ssCheckSum = 1;
 

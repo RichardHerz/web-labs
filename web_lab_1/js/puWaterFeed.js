@@ -104,9 +104,9 @@ function puWaterFeed(pUnitIndex) {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
+    controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
     this.ssCheckSum = 1;
 
@@ -138,10 +138,9 @@ function puWaterFeed(pUnitIndex) {
     this.flowRate = this.dataValues[0] = interface.getInputValue(unum, vnum);
     // update slider position
     document.getElementById(this.dataInputs[1]).value = this.flowRate;
-    // console.log('updateUIfeedInput: this.flowRate = ' + this.flowRate);
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
+    controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
     this.ssCheckSum = 1;
   } // END method updateUIfeedInput()
@@ -154,13 +153,12 @@ function puWaterFeed(pUnitIndex) {
     let vnum = 1; // index for range slider in initialize arrays
     this.flowRate = this.dataValues[1] = interface.getInputValue(unum, vnum);
     // update input field display
-    // console.log('updateUIfeedSlider: this.flowRate = ' + this.flowRate);
     if (document.getElementById(this.dataInputs[0])) {
       document.getElementById(this.dataInputs[0]).value = this.flowRate;
     }
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
+    controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
     this.ssCheckSum = 1;
   } // END method updateUIfeedSlider()

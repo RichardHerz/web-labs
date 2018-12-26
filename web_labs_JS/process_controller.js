@@ -241,11 +241,11 @@ let controller = {
 
   resetSimTime : function() {
     this.simTime = 0;
-    this.resetSSflags();
+    this.resetSSflagsFalse();
   },
 
-  resetSSflags : function() {
-    // console.log('--- ENTER resetSSflags ---');
+  resetSSflagsFalse : function() {
+    // console.log('--- ENTER resetSSflagsFalse ---');
     this.ssStartTime = 0;
     this.oldSimTime = 0;
     this.ssFlag = false; // unit sets true when sim reaches steady state
@@ -289,20 +289,21 @@ let controller = {
   },
 
   checkForSteadyState : function() {
-
-    // console.log('ENTER check, ssFlag = ' + this.ssFlag);
-    // console.log('  simTime = ' + this.simTime + ', oldSimTime = ' + this.oldSimTime + ', ssStartTime = ' + this.ssStartTime)
-
     // uses this.simTime
     // sets this.ssFlag and this.oldSimTime
     // requires all units to have a residence time variable
     // calls each unit's own checkForSteadyState()
+    // see controller's this.resetSSflagsFalse sent by units' updateUIparams
+    //
     // check for SS in order to save CPU time when sim is at steady state
     // check for SS by checking for any significant change in array end values
     // but wait at least one residence time after the previous check
     // to allow changes to propagate down unit
     // open OS Activity Monitor of CPU load to see effect of this
-    //
+
+    // console.log('ENTER check, ssFlag = ' + this.ssFlag);
+    // console.log('  simTime = ' + this.simTime + ', oldSimTime = ' + this.oldSimTime + ', ssStartTime = ' + this.ssStartTime)
+
     // get longest residence time in all units
     // if all stay constant this check could be moved out of here
     // so only done once, but here allows unit residence times to change

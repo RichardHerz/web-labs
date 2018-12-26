@@ -289,12 +289,9 @@ let controller = {
   },
 
   checkForSteadyState : function() {
-    console.log('ENTER checkForSteadyState, ssFlag = ' + this.ssFlag);
-    console.log('  simTime = ' + this.simTime + ', oldSimTime = ' + this.oldSimTime + ', ssStartTime = ' + this.ssStartTime)
 
-    // XXX run into problem when at SS, e.g., in lab 1, when a unit that normally simply
-    // returns true (level controller) but controller.ssFlag set to false on UI
-    // input - here now checks all units and they all return true so no update...
+    // console.log('ENTER check, ssFlag = ' + this.ssFlag);
+    // console.log('  simTime = ' + this.simTime + ', oldSimTime = ' + this.oldSimTime + ', ssStartTime = ' + this.ssStartTime)
 
     // uses this.simTime
     // sets this.ssFlag and this.oldSimTime
@@ -322,13 +319,21 @@ let controller = {
     if (this.simTime >= this.oldSimTime + 2 * resTime) {
 
       // console.log('check all units, (this.simTime >= this.oldSimTime + 2 * resTime) is TRUE');
+
       // get ssFlag from each unit
       let thisFlag = true; // changes to false if any unit not at steady state
+      let thisCheck = true;
       for (let n = 0; n < numUnits; n += 1) {
-        if (!processUnits[n].checkForSteadyState()){
+        thisCheck = processUnits[n].checkForSteadyState();
+
+        // console.log('--- check unit n, result = '+n+', '+thisCheck);
+
+        if (thisCheck == false){
           // result returned by unit is not true
           thisFlag = false;
-          // console.log('thisFlag set to false by unit ' + n);
+
+          // console.log('*** thisFlag set to false by unit ' + n);
+
         }
       }
 
@@ -342,6 +347,7 @@ let controller = {
 
       } else {
         // all units are at steady state
+
         // console.log('ss check, all at steady state and thisFlag is true');
 
         if (this.stripPlotSpan == 0) {
@@ -349,25 +355,33 @@ let controller = {
           // no strip plot in this lab
           // all units at SS
           this.ssFlag = true;
+
           // console.log('ss check, at SS, no strip plots, ssFlag = true');
 
         } else {
 
           // lab has a strip plot
+
           // console.log('ss check, at SS, lab has strip plots');
+
           if (this.ssStartTime == 0) {
             // first time reach SS
             // mark time but keep updating plots
             this.ssStartTime = this.simTime;
+
             // console.log('ss check, first time at SS with strip plots');
+
           } else {
             // has strip plot and has reached SS earlier
             if ((this.simTime - this.ssStartTime) >= this.stripPlotSpan) {
               // has strip plot, reached SS earlier, plot lines should be flat
               this.ssFlag = true;
+
               // console.log('ss check, at SS with FLAT strip plots, ssFlag = true');
+
             } else {
               // has strip plot, reached SS earlier but keep plotting until flat lines
+
               // console.log('ss check, at SS keep plotting with strip plots, ssFlag = false');
             }
           }
@@ -380,10 +394,12 @@ let controller = {
       this.oldSimTime = this.simTime;
 
     } else { // ELSE OF if (this.simTime >= this.oldSimTime + 2 * resTime)
+
       // console.log('do NOT check all units, (this.simTime >= this.oldSimTime + 2 * resTime) is FALSE');
+
     } // END if (this.simTime >= this.oldSimTime + 2 * resTime)
 
-    console.log('LEAVE checkForSteadyState, ssFlag = ' + this.ssFlag);
+    // console.log('LEAVE check, ssFlag = ' + this.ssFlag);
 
   } // END method checkForSteadyState()
 

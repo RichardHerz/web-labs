@@ -125,9 +125,8 @@ function puWaterController(pUnitIndex) {
     // need to directly set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
     controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interface.js
@@ -141,8 +140,6 @@ function puWaterController(pUnitIndex) {
     this.setPoint = this.dataValues[0] = interface.getInputValue(unum, 0);
     this.gain = this.dataValues[1] = interface.getInputValue(unum, 1);
     this.resetTime = this.dataValues[2] = interface.getInputValue(unum, 2);
-
-    console.log('LEAVE updateUIparams in controller, ssFlag = ' + controller.ssFlag);
 
   } // END of updateUIparams() method
 
@@ -237,10 +234,16 @@ function puWaterController(pUnitIndex) {
 
   this.checkForSteadyState = function() {
     // required - called by controller object
+    // returns ssFlag, true if this unit at SS, false if not
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
-    // returns ssFlag, true if this unit at SS, false if not
+    // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
+    // this.ssCheckSum set != 0 on updateUIparams() execution
+    if (this.ssCheckSum != 0) {
+      ssFlag = false;
+    }
+    this.ssCheckSum = 0;
     return ssFlag;
   } // END of checkForSteadyState() method
 

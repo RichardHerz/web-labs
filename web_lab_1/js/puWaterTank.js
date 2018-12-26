@@ -86,13 +86,6 @@ function puWaterTank(pUnitIndex) {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // need to directly set controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
-
     this.residenceTime = 10;  // used in controller.checkForSteadyState() method
 
     // each unit has its own data arrays for plots and canvases
@@ -110,19 +103,14 @@ function puWaterTank(pUnitIndex) {
 
   this.updateUIparams = function() {
     //
-    // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
-    // getInputValue(unit # in processUnits object, variable # in dataInputs array)
-    // see variable numbers above in initialize()
-    // note: this.dataValues.[pVar]
-    //   is only used in copyData() to report input values
-    //
-    let unum = this.unitIndex;
+    // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
+    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
     // need to directly set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
     controller.ssFlag = false;
-    this.ssCheckSum = 0;
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 
   } // END of updateUIparams() method
 
@@ -262,11 +250,7 @@ function puWaterTank(pUnitIndex) {
     let ssFlag = false;
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}
     this.ssCheckSum = newCheckSum; // save current value for use next time
-
-    // console.log('simTime = ' + controller.simTime);
-    // console.log('  oldSScheckSum = ' + oldSScheckSum);
-    // console.log('    newCheckSum = ' + newCheckSum + ', ssFlag = ' + ssFlag);
-
+    //
     return ssFlag;
   } // END checkForSteadyState method
 

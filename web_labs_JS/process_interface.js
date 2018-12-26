@@ -42,6 +42,7 @@ let interface = {
     for (n = 0; n < numUnits; n += 1) {
       processUnits[n].reset();
     }
+    controller.resetSSflagsFalse();
     controller.updateDisplay();
     button_runButton.value = 'Run'; // REQUIRES run button id="button_runButton"
     // do NOT update process nor display again here (will take one step)
@@ -223,9 +224,9 @@ let interface = {
       } else if ((nn > 10) || (nn < -10)) {
         nn = nn.toFixed(3);
       } else if ((nn > 1) || (nn < -1)) {
-       nn = nn.toFixed(4);
+       nn = nn.toFixed(3);
       } else if ((nn > 0.01) || (nn < -0.01)) {
-        nn = nn.toFixed(5);
+        nn = nn.toFixed(4);
       } else {
         nn = nn.toExponential(4);
       }

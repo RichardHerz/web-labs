@@ -205,16 +205,12 @@ processUnits[0] = {
 
     this.updateUIparams(); // this first, then set other values as needed
 
+    // SPECIAL this lab, need to initialize to get different
+    // distribution of ants
+    this.initialize();
+
     // set state variables not set by updateUIparams() to initial settings
-
-    // initialize profile data array
-    // plotter.initPlotData(numProfileVars,numProfilePts)
-    // this.profileData = plotter.initPlotData(2,this.numNodes); // holds data for static profile plots
-
-    // // initialize strip chart data array
-    // // plotter.initPlotData(numStripVars,numStripPts)
-    // this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
-
+    
     // initialize local array to hold color-canvas data, e.g., space-time data -
     // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
     this.colorCanvasData = plotter.initColorCanvasArray(1,this.numNodes,this.numNodes+1);

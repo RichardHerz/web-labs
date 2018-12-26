@@ -57,7 +57,8 @@ let plotInfo = {
     plotInfo[pnum]['title'] = 'Reactor Conditions';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    plotInfo[pnum]['numberPoints'] = 100;
+    let npts = 200; // special so can use value below at xAxisMax
+    plotInfo[pnum]['numberPoints'] = npts;
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
     plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
@@ -65,7 +66,7 @@ let plotInfo = {
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
     plotInfo[pnum]['xAxisMin'] = 0;
-    plotInfo[pnum]['xAxisMax'] = 100 * simParams.simTimeStep * simParams.simStepRepeats; // numberPoints * ...
+    plotInfo[pnum]['xAxisMax'] = npts * simParams.simTimeStep * simParams.simStepRepeats; // numberPoints * ...
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = 'Reactant Concentration';
     plotInfo[pnum]['yLeftAxisMin'] = 0;

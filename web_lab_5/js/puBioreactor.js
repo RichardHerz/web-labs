@@ -34,6 +34,9 @@ function puBioReactor(pUnitIndex) {
   this.beta = 0;
   this.gamma = 0;
 
+  this.ssCheckSum = 0; // used to check for steady state
+  this.residenceTime = 0; // for timing checks for steady state check
+
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
@@ -195,6 +198,16 @@ function puBioReactor(pUnitIndex) {
 
     // console.log('RXR updateInputs, flowRate = '+this.flowRate);
 
+    // residence time used in controller.checkForSteadyState()
+    this.residenceTime = 1 / this.flowRate; // volume fixed at 1 m3
+    // BUT use width of strip plot to help ensure plot update does not
+    // suspend in middle when reach steady state for check every 2 times
+    // longest res time BUT NOT foolproof, e.g., with
+    // XXX 1 K up then down changes in manual Tj at certain times
+    // let numStripPoints = plotInfo[0]['numberPoints'];
+    // this.residenceTime = this.stripData[1][numStripPoints][0];
+    // console.log('rxr res time = ' + this.residenceTime);
+
   } // END of updateInputs() method
 
   this.updateState = function() {
@@ -348,8 +361,46 @@ function puBioReactor(pUnitIndex) {
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    // use conc at oldest time on plot in check
+    // as well as current conc in crt check
+    // in order to help ensure strip plot update doesn't stop unless plot flat
+    // AND use width of strip plot for residence time in updateInputs
+    // BUT NOT foolproof, e.g., with
+    // 1 K up then down changes at certain times
+    //
+    // multiply all numbers by a factor to get desired number significant
+    // figures to left decimal point so toFixed() does not return string "0.###"
+    // WARNING: too many sig figs will prevent detecting steady state
+    //
+    let unum = this.unitIndex;
+    let rc = 1.0e2 * this.stripData[unum][0][1]; // oldest biomass conc in rxr conc plot
+    let rt = 1.0e2 * this.biomass;
+    let lc = 1.0e2 * this.stripData[unum][1][1]; // oldest substrate conc in rxr conc plot
+    let lt = 1.0e2 * this.conc;
+    rc = rc.toFixed(0); // strings
+    rt = rt.toFixed(0);
+    lc = lc.toFixed(0);
+    lt = lt.toFixed(0);
+    // concatenate strings
+    let newCheckSum = rc +'.'+ rt +'.'+ lt +'.'+ lc;
+    //
+    let oldSScheckSum = this.ssCheckSum;
     let ssFlag = false;
+    if (newCheckSum == oldSScheckSum) {ssFlag = true;}
+    this.ssCheckSum = newCheckSum; // save current value for use next time
+
+    console.log('simTime = ' + controller.simTime);
+    console.log('  oldSScheckSum = ' + oldSScheckSum);
+    console.log('    newCheckSum = ' + newCheckSum + ', ssFlag = ' + ssFlag);
+
     return ssFlag;
-  } // END of checkForSteadyState() method
+  } // END checkForSteadyState method
 
 } // END of puBioReactor

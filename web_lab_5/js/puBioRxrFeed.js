@@ -197,7 +197,7 @@ function puBioRxrFeed(pUnitIndex) {
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
-    let ssFlag = false;
+    let ssFlag = true;
     return ssFlag;
   } // END of checkForSteadyState() method
 

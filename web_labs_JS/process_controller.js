@@ -289,8 +289,13 @@ let controller = {
   },
 
   checkForSteadyState : function() {
-    // console.log('ENTER checkForSteadyState, ssFlag = ' + this.ssFlag);
-    // console.log('simTime = ' + this.simTime + ', oldSimTime = ' + this.oldSimTime + ', ssStartTime = ' + this.ssStartTime)
+    console.log('ENTER checkForSteadyState, ssFlag = ' + this.ssFlag);
+    console.log('  simTime = ' + this.simTime + ', oldSimTime = ' + this.oldSimTime + ', ssStartTime = ' + this.ssStartTime)
+
+    // XXX run into problem when at SS, e.g., in lab 1, when a unit that normally simply
+    // returns true (level controller) but controller.ssFlag set to false on UI
+    // input - here now checks all units and they all return true so no update...
+
     // uses this.simTime
     // sets this.ssFlag and this.oldSimTime
     // requires all units to have a residence time variable
@@ -377,6 +382,8 @@ let controller = {
     } else { // ELSE OF if (this.simTime >= this.oldSimTime + 2 * resTime)
       // console.log('do NOT check all units, (this.simTime >= this.oldSimTime + 2 * resTime) is FALSE');
     } // END if (this.simTime >= this.oldSimTime + 2 * resTime)
+
+    console.log('LEAVE checkForSteadyState, ssFlag = ' + this.ssFlag);
 
   } // END method checkForSteadyState()
 

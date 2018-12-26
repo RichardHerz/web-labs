@@ -142,6 +142,8 @@ function puWaterController(pUnitIndex) {
     this.gain = this.dataValues[1] = interface.getInputValue(unum, 1);
     this.resetTime = this.dataValues[2] = interface.getInputValue(unum, 2);
 
+    console.log('LEAVE updateUIparams in controller, ssFlag = ' + controller.ssFlag);
+
   } // END of updateUIparams() method
 
   this.updateInputs = function() {

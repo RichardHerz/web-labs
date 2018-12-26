@@ -316,17 +316,16 @@ let puCatalystLayer = {
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 
     // residenceTime of this unit required to check for steady state in controller object
     // SPECIAL this unit prob never at SS and checkForSteadyState below
     // always returns false so set a large number here
     this.residenceTime = 100;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
 
     // updateUIparams gets called on page load but not new range and input
     // updates, so need to call updateUIfeedInput here
@@ -423,12 +422,11 @@ let puCatalystLayer = {
     this.Cmax = this.dataValues[0] = interface.getInputValue(unum, 0);
       // update slider position
     document.getElementById(this.dataInputs[1]).value = this.Cmax;
-    // console.log('updateUIfeedInput: this.Cmax = ' + this.Cmax);
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
 }, // END method updateUIfeedInput()
 
   updateUIfeedSlider : function() {
@@ -440,12 +438,11 @@ let puCatalystLayer = {
     this.Cmax = this.dataValues[1] = interface.getInputValue(unum, 1);
     // update field display
     document.getElementById(this.dataInputs[0]).value = this.Cmax;
-    // console.log('updateUIfeedSlider: this.Cmax = ' + this.Cmax);
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    this.ssCheckSum = 1;
   }, // END method updateUIfeedSlider()
 
   updateInputs : function() {

@@ -421,10 +421,15 @@ let puCatalystLayer = {
     // get field value
     let unum = 0;
     this.Cmax = this.dataValues[0] = interface.getInputValue(unum, 0);
-    // update slider position
+      // update slider position
     document.getElementById(this.dataInputs[1]).value = this.Cmax;
     // console.log('updateUIfeedInput: this.Cmax = ' + this.Cmax);
-  }, // END method updateUIfeedInput()
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
+}, // END method updateUIfeedInput()
 
   updateUIfeedSlider : function() {
     // SPECIAL FOR THIS UNIT
@@ -436,6 +441,11 @@ let puCatalystLayer = {
     // update field display
     document.getElementById(this.dataInputs[0]).value = this.Cmax;
     // console.log('updateUIfeedSlider: this.Cmax = ' + this.Cmax);
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+    // set to zero ssCheckSum used to check for steady state by this unit
+    this.ssCheckSum = 0;
   }, // END method updateUIfeedSlider()
 
   updateInputs : function() {
@@ -779,7 +789,7 @@ let puCatalystLayer = {
         tempArray[t][s] = tempArray[t+1][s];
       }
     }
-    
+
     // now update the last time
     for (s = 0; s <= this.numNodes; s +=1) { // NOTE <= this.numNodes
       tempArray[numStripPts][s] = tempSpaceData[s];
@@ -791,7 +801,7 @@ let puCatalystLayer = {
 
   checkForSteadyState : function() {
     // required - called by controller object
-    // *IF* this unit NOT used to check for SS *AND* another unit IS checked,
+    // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
     // uses and sets this.ssCheckSum
@@ -805,7 +815,26 @@ let puCatalystLayer = {
     // figures to left decimal point so toFixed() does not return string "0.###"
     // WARNING: too many sig figs will prevent detecting steady state
     //
+    let rc = 1.0e3 * this.y[1]; // reactant at center of layer
+    let rt = 1.0e3 * this.y[this.numNodes]; // reactant at outer surface layer
+    let lt = 1.0e3 * this.y2[0]; // product at center of layer
+    let lc = 1.0e3 * this.y2[this.numNodes]; // product at outer surface layer
+    rc = rc.toFixed(0); // strings
+    rt = rt.toFixed(0);
+    lt = lt.toFixed(0);
+    lc = lc.toFixed(0);
+    // concatenate strings
+    let newCheckSum = rc +'.'+ rt +'.'+ lt +'.'+ lc;
+    //
+    let oldSScheckSum = this.ssCheckSum;
     let ssFlag = false;
+    if (newCheckSum == oldSScheckSum) {ssFlag = true;}
+    this.ssCheckSum = newCheckSum; // save current value for use next time
+
+    console.log('simTime = ' + controller.simTime);
+    console.log('  oldSScheckSum = ' + oldSScheckSum);
+    console.log('    newCheckSum = ' + newCheckSum + ', ssFlag = ' + ssFlag);
+
     return ssFlag;
   } // END checkForSteadyState method
 

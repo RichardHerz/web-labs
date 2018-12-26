@@ -36,6 +36,7 @@ let processUnits = new Object();
 
 // ADD PROCESS FEED defined in file puCatalystLayer.js
 processUnits[0] = puCatalystLayer;
+processUnits[0].unitIndex = 0;
 
 // clear for garbage collection
 puCatalystLayer = null;

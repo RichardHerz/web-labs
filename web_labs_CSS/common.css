@@ -4,6 +4,8 @@
 
 html input[type="button"],
 input[type="range"],
+input[type="radio"],
+input[type="checkbox"],
 input[type="reset"],
 input[type="submit"] {
     cursor: pointer;

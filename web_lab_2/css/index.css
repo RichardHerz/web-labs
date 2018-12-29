@@ -155,12 +155,11 @@ canvas {
   left: 98px;
   top: 134px;
   width: 74px;
- height: 23px;
- visibility: visible;
- background-color: rgb(240,240,240);
- border-width: 2px;
- border-style: outset;
- opacity: 1;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
 }
 
 #button_runButton {
@@ -168,24 +167,11 @@ canvas {
   left: 20px;
   top: 135px;
   width: 74px;
- height: 23px;
- visibility: visible;
- background-color: rgb(240,240,240);
- border-width: 2px;
- border-style: outset;
- opacity: 1;
-}
-
-#button_runButton:hover,
-#button_resetButton:hover {
-  background-color: rgb(180,180,240);
-}
-
-/* active seemed to work only when under hover ? */
-
-#button_runButton:active,
-#button_resetButton:active {
-  background-color: rgb(255,0,0);
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
 }
 
 #div_PLOTDIV_inlet_gas {

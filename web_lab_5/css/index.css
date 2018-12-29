@@ -127,7 +127,6 @@ canvas {
   height: 24px;
   visibility: visible;
   border-width: 2px;
-  background-color: rgb(222,222,222);
   border-style: outset;
   opacity: 1;
   LCthreeD: true;
@@ -142,7 +141,6 @@ canvas {
   height: 24px;
   visibility: visible;
   border-width: 2px;
-  background-color: rgb(222,222,222);
   border-style: outset;
   opacity: 1;
   LCthreeD: true;
@@ -410,7 +408,6 @@ border-style: solid;
   height: 24px;
   visibility: visible;
   border-width: 2px;
-  background-color: rgb(222,222,222);
   border-style: outset;
   opacity: 1;
   LCthreeD: true;

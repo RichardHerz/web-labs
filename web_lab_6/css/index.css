@@ -71,9 +71,7 @@ canvas {
   position: relative;
   border-color: DodgerBlue;
   left: 5px;
-  /* top: 61px; */
   width: 368px;
-  /* height: 375px; */
   height: 370px;
   visibility: visible;
   border-width: 1px;
@@ -144,7 +142,6 @@ canvas {
   height: 23px;
   visibility: visible;
   border-width: 1px;
-  background-color: rgb(255,255,255);
   border-style: outset;
   opacity: 1;
   LCthreeD: true;
@@ -159,7 +156,6 @@ canvas {
   height: 23px;
   visibility: visible;
   border-width: 1px;
-  background-color: rgb(255,255,255);
   border-style: outset;
   opacity: 1;
   LCthreeD: true;
@@ -174,9 +170,6 @@ canvas {
   height: 23px;
   visibility: visible;
   border-width: 2px;
-  /* background-color: rgb(255,255,255);
-  border-style: outset;
-  opacity: 1; */
   LCthreeD: true;
   LCshowBorder: true;
 }

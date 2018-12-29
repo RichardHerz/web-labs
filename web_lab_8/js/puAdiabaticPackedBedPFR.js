@@ -254,7 +254,9 @@ let puAdiabaticPackedBedPFR = {
 
     // // initialize strip chart data array
     // // initPlotData(numStripVars,numStripPts)
-    // this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
+    let numStripVars = 1; // only outlet conc
+    let numStripPts = plotInfo[5]['numberPoints'];
+    this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
 
     // initialize local array to hold color-canvas data, e.g., space-time data -
     // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
@@ -509,6 +511,37 @@ let puAdiabaticPackedBedPFR = {
     // colorCanvasData[v][x][y]
     for (n=0; n<=this.numNodes; n+=1) {
       this.colorCanvasData[0][n][0] = this.Trxr[n];
+    }
+
+    // HANDLE STRIP CHART DATA
+
+    let v = 0; // used as index
+    let p = 0; // used as index
+    let numStripPoints = plotInfo[5]['numberPoints'];
+    let numStripVars = 1; // only the variables from this unit
+    let nn = this.numNodes;
+
+    // handle Rxr Outlet Conc
+    v = 0;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [ 0, this.Ca[nn] ] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // re-number the x-axis values to equal time values
+    // so they stay the same after updating y-axis values
+    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    for (v = 0; v < numStripVars; v += 1) {
+      for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
+        // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
+        // want next line for newest data at max time
+        this.stripData[v][p][0] = p * timeStep;
+        // want next line for newest data at zero time
+        // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
+      }
     }
 
   }, // END of updateDisplay()

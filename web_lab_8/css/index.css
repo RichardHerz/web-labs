@@ -309,10 +309,10 @@ canvas {
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 70px;
+  left: 10px;
   top: 0px;
-  width: 375px;
-  height: 280px;
+  width: 540px;
+  height: 320px;
   visibility: visible;
   border-width: 1px;
   background-color: rgb(255,255,255);
@@ -328,8 +328,8 @@ canvas {
   position: absolute;
   left: 10px;
   top: 10px;
-  width: 355px;
-  height: 224px;
+  width: 508px;
+  height: 260px;
   visibility: visible;
   border-width: 1px;
   background-color: rgb(0,253,255);
@@ -344,8 +344,8 @@ canvas {
 
 #button_copyData_stripchart {
   position: absolute;
-  left: 130px;
-  top: 245px;
+  left: 190px;
+  top: 283px;
   width: 130px;
   height: 23px;
   visibility: visible;
@@ -884,7 +884,7 @@ border-style: solid;
 
   #div_stripchart {
     position: absolute;
-    left: 546px;
-    top: 490px;
+    left: 536px;
+    top: 458px;
   }
 }

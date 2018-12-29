@@ -244,6 +244,7 @@ let plotInfo = {
     // --------- below is the strip chart plot of heat exchanger end T's ----------------
 
     unum = 1; // useful when only one unit in plot, processUnits[unum]
+    // first 4 vars here from HX unit 1, 5th var from reactor unit 0
 
     // plot 5 info
     pnum = 5;
@@ -252,7 +253,7 @@ let plotInfo = {
     plotInfo[pnum]['title'] = 'Temperature history';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_strip_plot'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    let npts = 200; // special so can use value below at xAxisMax
+    let npts = 400; // special so can use value below at xAxisMax
     plotInfo[pnum]['numberPoints'] = npts;
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
@@ -266,9 +267,9 @@ let plotInfo = {
     plotInfo[pnum]['yLeftAxisLabel'] = 'T (K)'; // or d'less (T - TinCold)/(TinHot - TinCold)
     plotInfo[pnum]['yLeftAxisMin'] = 320; // processUnits[unum]['dataMin'][1]; // [1] is TinCold
     plotInfo[pnum]['yLeftAxisMax'] = 450; // processUnits[unum]['dataMax'][0]; // [0] is TinHot
-    plotInfo[pnum]['yRightAxisLabel'] = 'yRight';
+    plotInfo[pnum]['yRightAxisLabel'] = 'Rxr Out Conc (mol/m3)';
     plotInfo[pnum]['yRightAxisMin'] = 0;
-    plotInfo[pnum]['yRightAxisMax'] = 1;
+    plotInfo[pnum]['yRightAxisMax'] = 600;
     plotInfo[pnum]['plotLegendPosition'] = "nw";
     plotInfo[pnum]['plotLegendShow'] = 0;  // Boolean, '' or 0 for no show, 1 or "show"
     plotInfo[pnum]['plotGridBgColor'] = 'white';
@@ -332,6 +333,15 @@ let plotInfo = {
     plotInfo[pnum]['varDataUnits'][vnum] = 'K';
     plotInfo[pnum]['varShow'][vnum] = 'show';
     plotInfo[pnum]['varYaxis'][vnum] = 'left';
+    plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
+
+    vnum = 4; // 5th variable - SPECIAL - UNIT INDEX 0 IS REACTOR
+    plotInfo[pnum]['varUnitIndex'][vnum] = 0; // conc from reactor
+    plotInfo[pnum]['var'][vnum] = 0;
+    plotInfo[pnum]['varLabel'][vnum] = 'Ca-out';
+    plotInfo[pnum]['varDataUnits'][vnum] = 'mol/m3';
+    plotInfo[pnum]['varShow'][vnum] = 'show';
+    plotInfo[pnum]['varYaxis'][vnum] = 'right';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
 
   }, // end initialize method of plotInfo

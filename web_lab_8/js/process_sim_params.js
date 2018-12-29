@@ -20,7 +20,7 @@ let simParams = {
   // OBJECT controller CAN CHANGE in object simParams the following:
   //    variable simTimeStep in method controller.changeSimTimeStep
   //
-  
+
   title : 'Packed Bed PFR + Heat Exchanger', // title of simulation
 
   runButtonID : "button_runButton", // for functions to run, reset, copy data
@@ -33,14 +33,14 @@ let simParams = {
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
   simStepRepeats : 1, // integer number of unit updates between display updates
-  simTimeStep : 0.5, // time step value, simulation time, of main repeat
+  simTimeStep : 0.25, // time step value, simulation time, of main repeat
 
   // individual units may do more steps in one unit updateState()
   // see individual units for any unitTimeStep and unitStepRepeats
 
   // set updateDisplayTimingMs to 50 ms because runs too fast on fast desktop
   // and 50 ms gives about same speed as 0 ms on my laptop
-  updateDisplayTimingMs : 50, // real time milliseconds between display updates
+  updateDisplayTimingMs : 20, // real time milliseconds between display updates
 
   // WARNING: NEED LITERAL, e.g., "field_run_counter" in methods below
   //      e.g., this.runCounterFieldID does NOT work

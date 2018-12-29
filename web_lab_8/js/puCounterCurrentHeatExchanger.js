@@ -211,7 +211,7 @@ let puCounterCurrentHeatExchanger = {
 
     // // initialize strip chart data array
     // // initPlotData(numStripVars,numStripPts)
-    let numStripVars = plotInfo[5]['var'].length; // the 4 end T's of the heat exchanger
+    let numStripVars = 4; // the 4 end T's of the heat exchanger
     let numStripPts = plotInfo[5]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
 

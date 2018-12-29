@@ -283,18 +283,40 @@ canvas {
   LCvScrollbar: false;
 }
 
-#div_stripchart {
+#div_input_fields {
+  /* settings for narrow screen here */
+  /* see @media below for wide screen */
   display: block;
-  position: absolute;
+  position: relative;
   border-color: DodgerBlue;
-  left: 546px;
-  top: 370px;
-  width: 375px;
-  height: 300px;
+  left: 118px;
+  top: 0px;
+  width: 285px;
+  height: 264px;
   visibility: visible;
   border-width: 1px;
   background-color: rgb(255,255,255);
-  border-style: dotted;
+  border-style: none;
+  opacity: 1;
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: false;
+}
+
+#div_stripchart {
+  /* settings for narrow screen here */
+  /* see @media below for wide screen */
+  display: block;
+  position: relative;
+  border-color: DodgerBlue;
+  left: 70px;
+  top: 0px;
+  width: 375px;
+  height: 280px;
+  visibility: visible;
+  border-width: 1px;
+  background-color: rgb(255,255,255);
+  border-style: none;
   opacity: 1;
   LCvScrollbar: false;
   LCthreeD: true;
@@ -313,7 +335,7 @@ canvas {
   background-color: rgb(0,253,255);
   border-style: outset;
   opacity: 1;
-  border-style: dotted;
+  border-style: none;
   border-color: DodgerBlue;
   LCthreeD: true;
   LCshowBorder: true;
@@ -323,7 +345,7 @@ canvas {
 #button_copyData_stripchart {
   position: absolute;
   left: 130px;
-  top: 260px;
+  top: 245px;
   width: 130px;
   height: 23px;
   visibility: visible;
@@ -535,24 +557,6 @@ canvas {
   LCthreeD: true;
   LCshowBorder: false;
   font-size: 16px;
-}
-
-#div_input_fields {
-  display: block;
-  position: relative;
-  border-color: DodgerBlue;
-  left: 108px;
-  top: 0px;
-  width: 285px;
-  height: 264px;
-  visibility: visible;
-  border-width: 1px;
-  background-color: rgb(255,255,255);
-  border-style: none;
-  opacity: 1;
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: false;
 }
 
 #field_Kf300_label {
@@ -868,9 +872,19 @@ border-style: solid;
 /* example @media for responsive design */
 /* requires meta viewport element in HTML head */
 @media(min-width: 640px) {
+  /* change the following when the screen width is > 640px */
+  /* settings for wide screen here with min-width */
+  /* see first entries above for narrow screen */
+
   #div_input_fields {
     position: absolute;
     top: 150px;
     left: 566px;
+  }
+
+  #div_stripchart {
+    position: absolute;
+    left: 546px;
+    top: 490px;
   }
 }

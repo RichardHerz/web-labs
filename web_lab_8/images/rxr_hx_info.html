@@ -64,6 +64,10 @@
     be added later. The residence times of the reactor and heat exchanger are set equal.
   </p>
 
+  <p>Interesting dynamics can be observed. For example, let the system reach steady state
+    at the default input values. Then double the flow rate from 0.005 to 0.01. 
+  </p>
+
   <p>Parameters remaining constant:
     <ul>
       <li>Fluid density = 1000 kg/m<sup>3</sup></li>
@@ -72,18 +76,6 @@
       <li>Pellet heat capacity = 1.24 kJ/kg/K</li>
       <li>Packed bed void fraction = 0.3</li>
     </ul>
-  </p>
-
-  <p>About the web lab code - the following are the top-level Javascript code objects:
-    <ul>
-      <li>interface - handles user interactions with buttons, input fields, etc.</li>
-      <li>controller - runs the simulation by periodically telling the process units to update their inputs and state </li>
-      <li>processUnits - contains the process unit objects, which hold their state and model equations</li>
-      <li>simParams - contains the general state of the simulation</li>
-      <li>plotInfo - contains definitions of the x-y and color canvas plots</li>
-      <li>plotter - plots the x-y and color canvas plots</li>
-    </ul>
-    Three of these will be common to all web labs: interface, controller, plotter. The other three are specific to an individual lab.
   </p>
 
 </body>

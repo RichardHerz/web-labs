@@ -283,6 +283,57 @@ canvas {
   LCvScrollbar: false;
 }
 
+#div_stripchart {
+  display: block;
+  position: absolute;
+  border-color: DodgerBlue;
+  left: 546px;
+  top: 370px;
+  width: 375px;
+  height: 300px;
+  visibility: visible;
+  border-width: 1px;
+  background-color: rgb(255,255,255);
+  border-style: dotted;
+  opacity: 1;
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: false;
+}
+
+#div_PLOTDIV_strip_plot {
+  display: block;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 355px;
+  height: 224px;
+  visibility: visible;
+  border-width: 1px;
+  background-color: rgb(0,253,255);
+  border-style: outset;
+  opacity: 1;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: true;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#button_copyData_stripchart {
+  position: absolute;
+  left: 130px;
+  top: 260px;
+  width: 130px;
+  height: 23px;
+  visibility: visible;
+  border-width: 1px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
 #canvas_CANVAS_hot {
   position: absolute;
   left: 191px;

@@ -241,6 +241,99 @@ let plotInfo = {
     plotInfo[pnum]['varValueMax'] = 450; // processUnits[unum]['dataMax'][0]; // [0] is TinHot
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
 
+    // --------- below is the strip chart plot of heat exchanger end T's ----------------
+
+    unum = 1; // useful when only one unit in plot, processUnits[unum]
+
+    // plot 5 info
+    pnum = 5;
+    plotInfo[pnum] = new Object();
+    plotInfo[pnum]['type'] = 'strip';
+    plotInfo[pnum]['title'] = 'Temperature history';
+    plotInfo[pnum]['canvas'] = '#div_PLOTDIV_strip_plot'; // flot.js wants ID with prefix #
+    // set numberPoints < = than width of plot in HTML pixels for fast plotting
+    let npts = 200; // special so can use value below at xAxisMax
+    plotInfo[pnum]['numberPoints'] = npts;
+    // plot has numberPoints + 1 pts!
+    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
+    plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
+    // xAxisShow false does not show numbers, nor label, nor grid for x-axis
+    // might be better to cover numbers if desire not to show numbers
+    plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
+    plotInfo[pnum]['xAxisMin'] = 0;
+    plotInfo[pnum]['xAxisMax'] = npts * simParams.simTimeStep * simParams.simStepRepeats; // numberPoints * ...
+    plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
+    plotInfo[pnum]['yLeftAxisLabel'] = 'T (K)'; // or d'less (T - TinCold)/(TinHot - TinCold)
+    plotInfo[pnum]['yLeftAxisMin'] = 320; // processUnits[unum]['dataMin'][1]; // [1] is TinCold
+    plotInfo[pnum]['yLeftAxisMax'] = 450; // processUnits[unum]['dataMax'][0]; // [0] is TinHot
+    plotInfo[pnum]['yRightAxisLabel'] = 'yRight';
+    plotInfo[pnum]['yRightAxisMin'] = 0;
+    plotInfo[pnum]['yRightAxisMax'] = 1;
+    plotInfo[pnum]['plotLegendPosition'] = "nw";
+    plotInfo[pnum]['plotLegendShow'] = 0;  // Boolean, '' or 0 for no show, 1 or "show"
+    plotInfo[pnum]['plotGridBgColor'] = 'white';
+    // colors can be specified rgb, rgba, hex, and color names
+    // for flot.js colors, only basic color names appear to work, e.g., white, blue, red
+    // for all html color names to hex see http://www.color-hex.com
+    // for all color names to hex see https://www.w3schools.com/colors/colors_picker.asp
+    // plotInfo[pnum]['plotDataSeriesColors'] = ['#ff6347','#1e90ff']; // optional, in variable order 0, 1, etc.
+    // ['#ff6347','#1e90ff'] is Tomato and DodgerBlue
+    //
+    // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
+    // WARNING: all below with prefix 'var' must have same number of child objects,
+    // one for each variable placed on plot
+    plotInfo[pnum]['varUnitIndex'] = new Array();
+    plotInfo[pnum]['var'] = new Array();
+    plotInfo[pnum]['varLabel'] = new Array();
+    plotInfo[pnum]['varDataUnits'] = new Array();
+    plotInfo[pnum]['varShow'] = new Array();
+    plotInfo[pnum]['varYaxis'] = new Array();
+    plotInfo[pnum]['varYscaleFactor'] = new Array();
+    //
+    // ADD SETTINGS FOR EACH VARIABLE
+    //
+    vnum = 0; // 1st variable
+    plotInfo[pnum]['varUnitIndex'][vnum] = unum; // value is index of unit in processUnits object
+    plotInfo[pnum]['var'][vnum] = 0; // value is variable index in plot data array
+    // varlabel is used in plot legend
+    plotInfo[pnum]['varLabel'][vnum] = 'Sys In'; // 1st var
+    // varDataUnits are dimensional units used in copy data table, along with varLabel
+    plotInfo[pnum]['varDataUnits'][vnum] = 'K';
+    // varShow values are 'show' to show on plot and legend,
+    // 'tabled' to not show on plot nor legend but list in copy data table
+    // and any other value, e.g., 'hide' to not show on plot but do show in legend
+    // varShow value can be changed by javascript if want to show/hide curve with checkbox
+    plotInfo[pnum]['varShow'][vnum] = 'show'; // 1st var
+    plotInfo[pnum]['varYaxis'][vnum] = 'left'; // 1st var
+    plotInfo[pnum]['varYscaleFactor'][vnum] = 1; // 1st var
+    //
+    vnum = 1; // 2nd variable
+    plotInfo[pnum]['varUnitIndex'][vnum] = unum;
+    plotInfo[pnum]['var'][vnum] = 1;
+    plotInfo[pnum]['varLabel'][vnum] = 'Rxr In';
+    plotInfo[pnum]['varDataUnits'][vnum] = 'K';
+    plotInfo[pnum]['varShow'][vnum] = 'show';
+    plotInfo[pnum]['varYaxis'][vnum] = 'left';
+    plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
+    //
+    vnum = 2; // 3rd variable
+    plotInfo[pnum]['varUnitIndex'][vnum] = unum;
+    plotInfo[pnum]['var'][vnum] = 2;
+    plotInfo[pnum]['varLabel'][vnum] = 'Rxr Out';
+    plotInfo[pnum]['varDataUnits'][vnum] = 'K';
+    plotInfo[pnum]['varShow'][vnum] = 'show';
+    plotInfo[pnum]['varYaxis'][vnum] = 'left';
+    plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
+    //
+    vnum = 3; // 4th variable
+    plotInfo[pnum]['varUnitIndex'][vnum] = unum;
+    plotInfo[pnum]['var'][vnum] = 3;
+    plotInfo[pnum]['varLabel'][vnum] = 'Sys Out';
+    plotInfo[pnum]['varDataUnits'][vnum] = 'K';
+    plotInfo[pnum]['varShow'][vnum] = 'show';
+    plotInfo[pnum]['varYaxis'][vnum] = 'left';
+    plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
+
   }, // end initialize method of plotInfo
 
 } // end plotInfo

@@ -211,7 +211,9 @@ let puCounterCurrentHeatExchanger = {
 
     // // initialize strip chart data array
     // // initPlotData(numStripVars,numStripPts)
-    // this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
+    let numStripVars = plotInfo[5]['var'].length; // the 4 end T's of the heat exchanger
+    let numStripPts = plotInfo[5]['numberPoints'];
+    this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
 
     // initialize local array to hold color-canvas data, e.g., space-time data -
     // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
@@ -461,8 +463,66 @@ let puCounterCurrentHeatExchanger = {
       this.colorCanvasData[1][n][0] = this.Tcold[n];
     }
 
-    // FOR HEAT EXCHANGER - DO NOT USE STRIP CHART YET
     // HANDLE STRIP CHART DATA
+
+    let v = 0; // used as index
+    let p = 0; // used as index
+    let numStripPoints = plotInfo[5]['numberPoints'];
+    let numStripVars = 4; // only the variables from this unit
+    let nn = this.numNodes;
+
+    // handle System Inlet T
+    v = 0;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [ 0, this.Tcold[nn] ] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // handle Reactor Inlet T
+    v = 1;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [ 0, this.Tcold[0] ] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // handle Reactor Outlet T
+    v = 2;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [ 0, this.Thot[0] ] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // handle System Outlet T
+    v = 3;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [ 0, this.Thot[nn] ] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // re-number the x-axis values to equal time values
+    // so they stay the same after updating y-axis values
+    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    for (v = 0; v < numStripVars; v += 1) {
+      for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
+        // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
+        // want next line for newest data at max time
+        this.stripData[v][p][0] = p * timeStep;
+        // want next line for newest data at zero time
+        // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
+      }
+    }
 
   }, // END of updateDisplay()
 

@@ -62,6 +62,16 @@
      <img id="rxr-hx-lines" src="images/rxr-hx-lines-alpha.png" alt="rxr-hx lines">
      <div id="div_PLOTDIV_PFR_plot">
      </div> <!-- end of div div_PLOTDIV_PFR_plot -->
+     <div id="div_PLOTDIV_T_plot">
+     </div> <!-- end of div div_PLOTDIV_T_plot -->
+     <div id='div_stripchart'>
+       <div id="div_PLOTDIV_strip_plot">
+       </div> <!-- end of div div_PLOTDIV_strip_plot -->
+       <input type="button" id="button_copyData_stripchart" value="Copy Strip Chart" onclick="interface.copyData(5)">
+     </div>
+     <canvas id="canvas_CANVAS_hot" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
+     <!-- canvas element width & height must be specified here in HTML and not in CSS -->
+     <canvas id="canvas_CANVAS_cold" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
      <!-- canvas element width & height must be specified here in HTML and not in CSS -->
      <canvas id="canvas_CANVAS_reactor" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
      <!-- canvas element width & height must be specified here in HTML and not in CSS -->
@@ -85,12 +95,6 @@
      <p id="field_reactor_right_T">
         325 K
      </p>
-    <div id="div_PLOTDIV_T_plot">
-    </div> <!-- end of div div_PLOTDIV_T_plot -->
-    <canvas id="canvas_CANVAS_hot" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
-    <!-- canvas element width & height must be specified here in HTML and not in CSS -->
-    <canvas id="canvas_CANVAS_cold" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
-    <!-- canvas element width & height must be specified here in HTML and not in CSS -->
      <p id="field_cold_right_arrow">
         &rarr;
      </p>

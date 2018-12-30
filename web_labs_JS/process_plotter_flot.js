@@ -279,13 +279,13 @@ let plotter = {
     // ----- OBJECT USED TO HOLD PLOT DEFINITIONS BETWEEN DISPLAY UPDATES ---
     //
     // DEFINE plot array used to save complete description of plot between updates
-    // plot array used in function plotPlotData
+    // plot array used in function plotPlotData as this.plotArrays['plot'][pNumber]
     plot : [],
 
     // DEFINE plotFlag array so don't have to generate entire plot
     // everytime want to just change data and not axes, etc.
     // for example, for 4 plots on page, this ran in 60% of time for full refresh
-    // plotFlag array used in function plotPlotData
+    // plotFlag array used in function plotPlotData as this.plotArrays['plotFlag'][pNumber]
     //
     plotFlag : [], // tells whether or not to update only curves or complete plot
 

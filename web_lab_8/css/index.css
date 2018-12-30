@@ -833,9 +833,9 @@ border-style: solid;
 
 #button_copyData_reactor {
   position: absolute;
-  left: 154px;
+  left: 147px;
   top: 237px;
-  width: 117px;
+  width: 130px;
   height: 23px;
   visibility: visible;
   border-width: 1px;
@@ -847,9 +847,9 @@ border-style: solid;
 
 #button_copyData_exchanger {
   position: absolute;
-  left: 19px;
+  left: 10px;
   top: 237px;
-  width: 117px;
+  width: 130px;
   height: 23px;
   visibility: visible;
   border-width: 1px;

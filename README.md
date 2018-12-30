@@ -1,6 +1,8 @@
 Web Labs - Interactive simulations for active learning on the web
 
-To run these labs, go to http://reactorlab.net/web-labs/ 
+To run these labs, go to http://reactorlab.net/web-labs/
+
+For information about the structure of the labs, click the link to the "Wiki" tab near the top of this page.
 
 Screenshot of web lab 7:
 

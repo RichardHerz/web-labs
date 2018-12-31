@@ -239,9 +239,31 @@ let controller = {
 
   },  // END OF function updateDisplay
 
+  // runningFlag value can change by click of RUN-PAUSE or RESET buttons
+  // calling functions toggleRunningFlag and stopRunningFlag
+  toggleRunningFlag : function() {
+    this.runningFlag = !this.runningFlag;
+  },
+
+  stopRunningFlag : function() {
+    this.runningFlag = false;
+  },
+
   resetSimTime : function() {
     this.simTime = 0;
     this.resetSSflagsFalse();
+  },
+
+  updateSimTime : function() {
+    // only updated before simStepRepeats are all executed
+    // and only updated once each displayUpdate
+    this.simTime = this.simTime + simParams.simTimeStep * simParams.simStepRepeats;
+  },
+
+  changeSimTimeStep : function(factor) {
+    // WARNING: do not change simTimeStep except immediately before or after a
+    // display update in order to maintain sync between sim time and real time
+    simParams.simTimeStep = factor * simParams.simTimeStep;
   },
 
   resetSSflagsFalse : function() {
@@ -264,28 +286,6 @@ let controller = {
       }
     }
     return span;
-  },
-
-  updateSimTime : function() {
-    // only updated before simStepRepeats are all executed
-    // and only updated once each displayUpdate
-    this.simTime = this.simTime + simParams.simTimeStep * simParams.simStepRepeats;
-  },
-
-  // runningFlag value can change by click of RUN-PAUSE or RESET buttons
-  // calling functions toggleRunningFlag and stopRunningFlag
-  toggleRunningFlag : function() {
-    this.runningFlag = !this.runningFlag;
-  },
-
-  stopRunningFlag : function() {
-    this.runningFlag = false;
-  },
-
-  changeSimTimeStep : function(factor) {
-    // WARNING: do not change simTimeStep except immediately before or after a
-    // display update in order to maintain sync between sim time and real time
-    simParams.simTimeStep = factor * simParams.simTimeStep;
   },
 
   checkForSteadyState : function() {
@@ -386,7 +386,6 @@ let controller = {
               // console.log('ss check, at SS keep plotting with strip plots, ssFlag = false');
             }
           }
-
         }
       }
 

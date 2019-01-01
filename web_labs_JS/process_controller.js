@@ -250,6 +250,7 @@ let controller = {
   },
 
   resetSimTime : function() {
+    // called by method interface.resetThisLab
     this.simTime = 0;
     this.resetSSflagsFalse();
   },

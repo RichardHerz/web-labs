@@ -19,6 +19,36 @@ let plotter = {
   // generates the color canvas plots indpendently of flot.js or other libaries
   // USES OBJECT plotInfo in file process_plot_info.js
 
+  // --------- DEFINE CHILD OBJECT plotArrays ---------------
+
+  plotArrays : {
+    // ----- OBJECT USED TO HOLD PLOT DEFINITIONS BETWEEN DISPLAY UPDATES ---
+    //
+    // DEFINE plot array used to save complete description of plot between updates
+    // plot array used in function plotPlotData as this.plotArrays['plot'][pNumber]
+    plot : [],
+
+    // DEFINE plotFlag array so don't have to generate entire plot
+    // everytime want to just change data and not axes, etc.
+    // for example, for 4 plots on page, this ran in 60% of time for full refresh
+    // plotFlag array used in function plotPlotData as this.plotArrays['plotFlag'][pNumber]
+    //
+    plotFlag : [], // tells whether or not to update only curves or complete plot
+
+    initialize : function() {
+      // called by controller.openThisLab()
+      // uses length of plotInfo so must be called after plotInfo has been initialized
+      let npl = Object.keys(plotInfo).length; // number of plots
+      this.plotFlag = [0];
+      for (p = 1; p < npl; p += 1) {
+        this.plotFlag.push(0);
+      }
+    } // END of method initialize()
+
+  }, // END of object plotArrays
+
+  // --------- DEFINE METHODS ---------------
+
   getPlotData : function(plotInfoNum) {
     //
     // input argument plotInfoNum refers to plot number in object plotInfo
@@ -274,32 +304,6 @@ let plotter = {
     }
 
   }, // END OF function plotPlotData
-
-  plotArrays : {
-    // ----- OBJECT USED TO HOLD PLOT DEFINITIONS BETWEEN DISPLAY UPDATES ---
-    //
-    // DEFINE plot array used to save complete description of plot between updates
-    // plot array used in function plotPlotData as this.plotArrays['plot'][pNumber]
-    plot : [],
-
-    // DEFINE plotFlag array so don't have to generate entire plot
-    // everytime want to just change data and not axes, etc.
-    // for example, for 4 plots on page, this ran in 60% of time for full refresh
-    // plotFlag array used in function plotPlotData as this.plotArrays['plotFlag'][pNumber]
-    //
-    plotFlag : [], // tells whether or not to update only curves or complete plot
-
-    initialize : function() {
-      // called by controller.openThisLab()
-      // uses length of plotInfo so must be called after plotInfo has been initialized
-      let npl = Object.keys(plotInfo).length; // number of plots
-      this.plotFlag = [0];
-      for (p = 1; p < npl; p += 1) {
-        this.plotFlag.push(0);
-      }
-    } // END of method initialize()
-
-  }, // END of object plotArrays
 
   initPlotData : function(numVars,numPlotPoints) {
     // returns 3D array to hold x,y scatter plot data for multiple variables

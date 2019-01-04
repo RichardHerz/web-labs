@@ -117,7 +117,7 @@ function puWaterFeed(pUnitIndex) {
     this.updateUIfeedInput();
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -137,7 +137,7 @@ function puWaterFeed(pUnitIndex) {
     // get field value
     let unum = this.unitIndex;
     let vnum = 0; // index for input field in initialize arrays
-    this.flowRate = this.dataValues[0] = interface.getInputValue(unum, vnum);
+    this.flowRate = this.dataValues[0] = interfacer.getInputValue(unum, vnum);
     // update slider position
     document.getElementById(this.dataInputs[1]).value = this.flowRate;
     // need to reset controller.ssFlag to false to get sim to run
@@ -153,7 +153,7 @@ function puWaterFeed(pUnitIndex) {
     // [0] is field, [1] is slider
     let unum = this.unitIndex;
     let vnum = 1; // index for range slider in initialize arrays
-    this.flowRate = this.dataValues[1] = interface.getInputValue(unum, vnum);
+    this.flowRate = this.dataValues[1] = interfacer.getInputValue(unum, vnum);
     // update input field display
     if (document.getElementById(this.dataInputs[0])) {
       document.getElementById(this.dataInputs[0]).value = this.flowRate;

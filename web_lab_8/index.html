@@ -28,7 +28,7 @@
 
   <!-- load COMMON JAVASCRIPT for Web Labs -->
   <script language="javascript" src="../web_labs_JS/process_controller.js" type="text/javascript"></script>
-  <script language="javascript" src="../web_labs_JS/process_interface.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_interfacer.js" type="text/javascript"></script>
   <script language="javascript" src="../web_labs_JS/process_plotter_flot.js" type="text/javascript"></script>
 
   <!-- load flot.js PLOTTING LIBRARY -->
@@ -70,8 +70,8 @@
      <!-- canvas element width & height must be specified here in HTML and not in CSS -->
      <canvas id="canvas_CANVAS_reactor" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
      <!-- canvas element width & height must be specified here in HTML and not in CSS -->
-     <input type="button" id="button_runButton" value="Run" onclick="interface.runThisLab()">
-     <input type="button" id="button_resetButton" value="Reset" onclick="interface.resetThisLab()">
+     <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
+     <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
      <p id="field_reactor_right_arrow">
         &rarr;
      </p>
@@ -125,48 +125,48 @@
      </p>
   </div> <!-- end of div div_simFrame -->
   <div id="div_input_fields">
-     <!-- onchange can send updateUIparams() to object interface to update all units *OR* send to specific units -->
-     <!-- here, must send updateUIparams() to object interface for Flowrate, Tin, UA since they are used by both units -->
+     <!-- onchange can send updateUIparams() to object interfacer to update all units *OR* send to specific units -->
+     <!-- here, must send updateUIparams() to object interfacer for Flowrate, Tin, UA since they are used by both units -->
      <p id="field_Kf300_label">
         k at 300 K (m<sup shift="-4">3</sup>/kg/s)
      </p>
-     <input id="input_field_Kf300" value="1.0e-7" onchange="interface.updateUIparams()">
+     <input id="input_field_Kf300" value="1.0e-7" onchange="interfacer.updateUIparams()">
      <p id="field_Ea_label">
         Ea (kJ/mol)
      </p>
-     <input id="input_field_Ea" value="100" onchange="interface.updateUIparams()">
+     <input id="input_field_Ea" value="100" onchange="interfacer.updateUIparams()">
      <p id="field_DelH_label">
         &#8710;H (kJ/mol)
      </p>
-     <input id="input_field_DelH" value="-125" onchange="interface.updateUIparams()">
+     <input id="input_field_DelH" value="-125" onchange="interfacer.updateUIparams()">
      <p id="field_Wcat_label">
         Wcat (kg)
      </p>
-     <input id="input_field_Wcat" value="100" onchange="interface.updateUIparams()">
+     <input id="input_field_Wcat" value="100" onchange="interfacer.updateUIparams()">
      <p id="field_Cain_label">
         Ca-in (mol/m<sup shift="-4">3</sup>)
      </p>
-     <input id="input_field_Cain" value="500" onchange="interface.updateUIparams()">
+     <input id="input_field_Cain" value="500" onchange="interfacer.updateUIparams()">
      <p id="field_flowrate_label">
         Flow rate (m<sup shift="-4">3</sup>/s)
      </p>
-     <input id="input_field_Flowrate" value="0.005" onchange="interface.updateUIparams()">
+     <input id="input_field_Flowrate" value="0.005" onchange="interfacer.updateUIparams()">
      <p id="field_Tin_label">
         System inlet T (K)
      </p>
-     <input id="input_field_Tin" value="340" onchange="interface.updateUIparams()">
+     <input id="input_field_Tin" value="340" onchange="interfacer.updateUIparams()">
      <p id="field_UA_label">
         Heat exch. UA (kW/K)
      </p>
-     <input id="input_field_UA" value="10" onchange="interface.updateUIparams()">
+     <input id="input_field_UA" value="10" onchange="interfacer.updateUIparams()">
      <!-- input argument for copyData() is plot index, not unit index -->
-     <input type="button" id="button_copyData_reactor" value="Copy RXR Profile" onclick="interface.copyData(0)">
-     <input type="button" id="button_copyData_exchanger" value="Copy HX Profile" onclick="interface.copyData(2)">
+     <input type="button" id="button_copyData_reactor" value="Copy RXR Profile" onclick="interfacer.copyData(0)">
+     <input type="button" id="button_copyData_exchanger" value="Copy HX Profile" onclick="interfacer.copyData(2)">
   </div> <!-- end of div div_input_fields -->
   <div id='div_stripchart'>
     <div id="div_PLOTDIV_strip_plot">
     </div> <!-- end of div div_PLOTDIV_strip_plot -->
-    <input type="button" id="button_copyData_stripchart" value="Copy Strip Chart" onclick="interface.copyData(5)">
+    <input type="button" id="button_copyData_stripchart" value="Copy Strip Chart" onclick="interfacer.copyData(5)">
   </div> <!-- end of div div_stripchart -->
 </body>
 </html>

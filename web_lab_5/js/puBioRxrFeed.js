@@ -110,7 +110,7 @@ function puBioRxrFeed(pUnitIndex) {
      // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
      this.ssCheckSum = 1;
 
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -118,7 +118,7 @@ function puBioRxrFeed(pUnitIndex) {
     //
     let unum = this.unitIndex;
     //
-    this.flowRate = this.dataValues[0] = interface.getInputValue(unum, 0);
+    this.flowRate = this.dataValues[0] = interfacer.getInputValue(unum, 0);
 
   } // END of updateUIparams() method
 

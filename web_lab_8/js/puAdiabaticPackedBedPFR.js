@@ -44,9 +44,9 @@ let puAdiabaticPackedBedPFR = {
   //    updateUIparams() sent by updateUIparams() in object controller
   //    checkForSteadyState() sent by checkForSteadyState() in object controller
   //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
-  //    copyData() in object interface uses name, varCount, dataHeaders[],
+  //    copyData() in object interfacer uses name, varCount, dataHeaders[],
   //        dataUnits[], dataValues[], profileData[], stripData[]
-  //    getInputValue() in object interface uses dataInputs[], dataInitial[],
+  //    getInputValue() in object interfacer uses dataInputs[], dataInitial[],
   //        dataMin[], dataMax[]
   //    getPlotData() in object plotFlot uses profileData[], stripData[]
   //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
@@ -296,7 +296,7 @@ let puAdiabaticPackedBedPFR = {
     this.ssCheckSum = 1;
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -304,15 +304,15 @@ let puAdiabaticPackedBedPFR = {
     //
     let unum = this.unitIndex;
     //
-    this.Kf300 = this.dataValues[0] = interface.getInputValue(unum, 0);
-    this.Ea = this.dataValues[1] = interface.getInputValue(unum, 1);
-    this.DelH = this.dataValues[2] = interface.getInputValue(unum, 2);
-    this.Wcat = this.dataValues[3] = interface.getInputValue(unum, 3);
-    this.Cain = this.dataValues[4] = interface.getInputValue(unum, 4);
-    this.Flowrate = this.dataValues[5] = interface.getInputValue(unum, 5);
+    this.Kf300 = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    this.Ea = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    this.DelH = this.dataValues[2] = interfacer.getInputValue(unum, 2);
+    this.Wcat = this.dataValues[3] = interfacer.getInputValue(unum, 3);
+    this.Cain = this.dataValues[4] = interfacer.getInputValue(unum, 4);
+    this.Flowrate = this.dataValues[5] = interfacer.getInputValue(unum, 5);
 
     // TinHX only used in reactor on initialization and reset of reactor plot
-    this.TinHX = this.dataValues[6] = interface.getInputValue(unum, 6);
+    this.TinHX = this.dataValues[6] = interfacer.getInputValue(unum, 6);
 
     // update residenceTime, which is needed by HX to match that of RXR
     // in case any change in Wcat or Flowrate

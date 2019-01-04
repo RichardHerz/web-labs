@@ -45,9 +45,9 @@ let puCounterCurrentHeatExchanger = {
   //    updateUIparams() sent by updateUIparams() in object controller
   //    checkForSteadyState() sent by checkForSteadyState() in object controller
   //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
-  //    copyData() in object interface uses name, varCount, dataHeaders[],
+  //    copyData() in object interfacer uses name, varCount, dataHeaders[],
   //        dataUnits[], dataValues[], profileData[], stripData[]
-  //    getInputValue() in object interface uses dataInputs[], dataInitial[],
+  //    getInputValue() in object interfacer uses dataInputs[], dataInitial[],
   //        dataMin[], dataMax[]
   //    getPlotData() in object plotFlot uses profileData[], stripData[]
   //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
@@ -258,7 +258,7 @@ let puCounterCurrentHeatExchanger = {
     this.ssCheckSum = 1;
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: processUnits[pUnitIndex]['dataValues'][pVar]
@@ -266,9 +266,9 @@ let puCounterCurrentHeatExchanger = {
     //
     let unum = this.unitIndex;
     //
-    this.Flowrate = this.dataValues[0] = interface.getInputValue(unum, 0);
-    this.Tin = this.dataValues[1] = interface.getInputValue(unum, 1);
-    this.UAcoef = this.dataValues[2] = interface.getInputValue(unum, 2);
+    this.Flowrate = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    this.Tin = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    this.UAcoef = this.dataValues[2] = interfacer.getInputValue(unum, 2);
 
     // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
     this.FlowHot = this.Flowrate * this.FluidDensity; // (kg/s) = (m3/s) * (kg/m3)

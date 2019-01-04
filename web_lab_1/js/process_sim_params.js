@@ -23,7 +23,7 @@ let simParams = {
 
   title : 'Water Tank Level Control', // title of simulation
 
-  runButtonID : "button_runButton", // required for interface object methods
+  runButtonID : "button_runButton", // required for interfacer object methods
   // URLs for methods updateRunCount and updateCurrentRunCountDisplay below
   runLoggerURL : "../webAppRunLog.lc",
   runCurrrentRunCountURL : "../webAppCurrentCount.lc",

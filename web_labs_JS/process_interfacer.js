@@ -5,8 +5,8 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-let interface = {
-  // OBJECT interface handles UI controls and input fields in HTML
+let interfacer = {
+  // OBJECT interfacer handles UI controls and input fields in HTML
   // unit objects may write directly to output fields or other elements
 
   runThisLab : function() {
@@ -98,7 +98,7 @@ let interface = {
     // CALLED BY UI COPY DATA BUTTONS DEFINED IN HTML
     // copies data from plot to new browser tab or popup window - see below
     //
-    // USES OBJECTS plotInfo, controller, interface, simParams
+    // USES OBJECTS plotInfo, controller, interfacer, simParams
     // plotIndex is the index in object plotInfo of the desired plot to copy
     // USES internal function formatNum
 
@@ -108,7 +108,7 @@ let interface = {
     // this will let last updateDisplay of updateProcess finish before sim pauses
     let runningFlag = controller.runningFlag;
     if (runningFlag) {
-      interface.runThisLab(); // toggles running state
+      interfacer.runThisLab(); // toggles running state
     }
 
     let n; // index
@@ -235,4 +235,4 @@ let interface = {
 
   } // END of function copyData
 
-} // END OF OBJECT interface
+} // END OF OBJECT interfacer

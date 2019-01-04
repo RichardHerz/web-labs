@@ -160,7 +160,7 @@ processUnits[0] = {
     this.ssCheckSum = 1;
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -168,9 +168,9 @@ processUnits[0] = {
     //
     let unum = this.unitIndex;
     //
-    this.flowRate = this.dataValues[0] = interface.getInputValue(unum,0);
-    this.conc = this.dataValues[1] = interface.getInputValue(unum,1);
-    this.Tfeed = this.dataValues[2] = interface.getInputValue(unum,2);
+    this.flowRate = this.dataValues[0] = interfacer.getInputValue(unum,0);
+    this.conc = this.dataValues[1] = interfacer.getInputValue(unum,1);
+    this.Tfeed = this.dataValues[2] = interfacer.getInputValue(unum,2);
 
   }, // END updateUIparams
 
@@ -418,7 +418,7 @@ processUnits[1] = {
     this.ssCheckSum = 1;
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -426,9 +426,9 @@ processUnits[1] = {
     //
     let unum = this.unitIndex;
     //
-    this.k300 = this.dataValues[0] = interface.getInputValue(unum, 0);
-    this.Ea = this.dataValues[1] = interface.getInputValue(unum, 1);
-    this.delH = this.dataValues[2] = interface.getInputValue(unum, 2);
+    this.k300 = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    this.Ea = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    this.delH = this.dataValues[2] = interfacer.getInputValue(unum, 2);
 
   }, // END updateUIparams()
 
@@ -742,7 +742,7 @@ processUnits[2] = {
     this.ssCheckSum = 1;
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -751,7 +751,7 @@ processUnits[2] = {
     let unum = this.unitIndex;
     //
     // get jacket inlet T from controller command
-    this.rate = this.dataValues[1] = interface.getInputValue(unum, 1);
+    this.rate = this.dataValues[1] = interfacer.getInputValue(unum, 1);
 
   }, // END of updateUIparams()
 
@@ -977,7 +977,7 @@ processUnits[3] = {
     this.ssCheckSum = 1;
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -985,7 +985,7 @@ processUnits[3] = {
     //
     let unum = this.unitIndex;
     //
-    this.UA = this.dataValues[0] = interface.getInputValue(unum, 0);
+    this.UA = this.dataValues[0] = interfacer.getInputValue(unum, 0);
 
   }, // END updateUIparams method
 
@@ -1262,7 +1262,7 @@ processUnits[4] = {
     this.ssCheckSum = 1;
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -1270,10 +1270,10 @@ processUnits[4] = {
     //
     let unum = this.unitIndex;
     //
-    this.resetTime = this.dataValues[0] = interface.getInputValue(unum, 0);
-    this.gain = this.dataValues[1] = interface.getInputValue(unum, 1);
-    this.setPoint = this.dataValues[2] = interface.getInputValue(unum, 2);
-    this.manualCommand = this.dataValues[3] = interface.getInputValue(unum, 3);
+    this.resetTime = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    this.gain = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    this.setPoint = this.dataValues[2] = interfacer.getInputValue(unum, 2);
+    this.manualCommand = this.dataValues[3] = interfacer.getInputValue(unum, 3);
 
   }, // END updateUIparams method
 

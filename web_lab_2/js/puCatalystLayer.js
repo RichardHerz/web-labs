@@ -42,9 +42,9 @@ let puCatalystLayer = {
   //    updateUIparams() sent by updateUIparams() in object controller
   //    checkForSteadyState() sent by checkForSteadyState() in object controller
   //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
-  //    copyData() in object interface uses name, varCount, dataHeaders[],
+  //    copyData() in object interfacer uses name, varCount, dataHeaders[],
   //        dataUnits[], dataValues[], profileData[], stripData[]
-  //    getInputValue() in object interface uses dataInputs[], dataInitial[],
+  //    getInputValue() in object interfacer uses dataInputs[], dataInitial[],
   //        dataMin[], dataMax[]
   //    getPlotData() in object plotFlot uses profileData[], stripData[]
   //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
@@ -263,7 +263,7 @@ let puCatalystLayer = {
     // reset function will use whatever last values user has entered.
 
     this.updateUIparams(); // this first, then set other values as needed
-    
+
     // set state variables not set by updateUIparams to initial settings
 
     // XXX constants below should be converted to variables here & in plot info
@@ -336,7 +336,7 @@ let puCatalystLayer = {
     //
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -346,14 +346,14 @@ let puCatalystLayer = {
     //
     // SPECIAL for this unit methods updateUIfeedInput and updateUIfeedSlider
     //         below get Cmax slider and field value for [0] and [1]
-    this.Kflow = this.dataValues[2] = interface.getInputValue(unum, 2);
-    this.Kads = this.dataValues[3] = interface.getInputValue(unum, 3);
-    this.Kdiff = this.dataValues[4] = interface.getInputValue(unum, 4);
-    this.Phi = this.dataValues[5] = interface.getInputValue(unum, 5);
-    this.Alpha = this.dataValues[6] = interface.getInputValue(unum, 6);
-    this.Period = this.dataValues[7] = interface.getInputValue(unum, 7);
-    this.Duty = this.dataValues[8] = interface.getInputValue(unum, 8);
-    this.Bscale = this.dataValues[9] = interface.getInputValue(unum, 9);
+    this.Kflow = this.dataValues[2] = interfacer.getInputValue(unum, 2);
+    this.Kads = this.dataValues[3] = interfacer.getInputValue(unum, 3);
+    this.Kdiff = this.dataValues[4] = interfacer.getInputValue(unum, 4);
+    this.Phi = this.dataValues[5] = interfacer.getInputValue(unum, 5);
+    this.Alpha = this.dataValues[6] = interfacer.getInputValue(unum, 6);
+    this.Period = this.dataValues[7] = interfacer.getInputValue(unum, 7);
+    this.Duty = this.dataValues[8] = interfacer.getInputValue(unum, 8);
+    this.Bscale = this.dataValues[9] = interfacer.getInputValue(unum, 9);
 
     // update cycling frequency
     this.frequency = 2 * Math.PI / this.Period;
@@ -421,7 +421,7 @@ let puCatalystLayer = {
     // [0] is field, [1] is slider
     // get field value
     let unum = 0;
-    this.Cmax = this.dataValues[0] = interface.getInputValue(unum, 0);
+    this.Cmax = this.dataValues[0] = interfacer.getInputValue(unum, 0);
       // update slider position
     document.getElementById(this.dataInputs[1]).value = this.Cmax;
     // need to reset controller.ssFlag to false to get sim to run
@@ -437,7 +437,7 @@ let puCatalystLayer = {
     // [0] is field, [1] is slider
     // get slider value
     let unum = 0;
-    this.Cmax = this.dataValues[1] = interface.getInputValue(unum, 1);
+    this.Cmax = this.dataValues[1] = interfacer.getInputValue(unum, 1);
     // update field display
     document.getElementById(this.dataInputs[0]).value = this.Cmax;
     // need to reset controller.ssFlag to false to get sim to run

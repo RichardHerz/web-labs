@@ -25,7 +25,7 @@
 
   <!-- load COMMON JAVASCRIPT for Web Labs -->
   <script language="javascript" src="../web_labs_JS/process_controller.js" type="text/javascript"></script>
-  <script language="javascript" src="../web_labs_JS/process_interface.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_interfacer.js" type="text/javascript"></script>
   <script language="javascript" src="../web_labs_JS/process_plotter_flot.js" type="text/javascript"></script>
 
   <!-- load JQUERY LIBRARY -->
@@ -50,8 +50,8 @@
     <div id="div_simFrame">
        <canvas id="canvas_CANVAS_arena" width="500" height="500"></canvas> <!-- canvas for colormap graphic -->
        <!-- canvas element width & height must be specified here in HTML and not in CSS -->
-       <input type="button" id="button_runButton" value="Run" onclick="interface.runThisLab()">
-       <input type="button" id="button_resetButton" value="Reset" onclick="interface.resetThisLab()">
+       <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
+       <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
        <!-- ** HIDE INPUTS FOR NOW ** -->
        <!-- <input id="input_field_N" value="20">
        <p id="field_input_N_LABEL">

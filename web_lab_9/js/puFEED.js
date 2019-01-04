@@ -162,7 +162,7 @@ let puFEED = {
 
   updateUIfeedInput : function() {
     let unum = this.unitIndex;
-    this.conc = this.dataValues[1] = interface.getInputValue(unum, 1);
+    this.conc = this.dataValues[1] = interfacer.getInputValue(unum, 1);
     // alert('input: this.conc = ' + this.conc);
     // update position of the range slider
     if (document.getElementById(this.inputFeedSlider)) {
@@ -178,7 +178,7 @@ let puFEED = {
 
   updateUIfeedSlider : function() {
     let unum = this.unitIndex;
-    this.conc = this.dataValues[0] = interface.getInputValue(unum, 0);
+    this.conc = this.dataValues[0] = interfacer.getInputValue(unum, 0);
     // update input field display
     // alert('slider: this.conc = ' + this.conc);
     if (document.getElementById(this.inputFeedInput)) {

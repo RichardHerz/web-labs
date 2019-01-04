@@ -173,7 +173,7 @@ function puBioReactor(pUnitIndex) {
      // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
      this.ssCheckSum = 1;
 
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -181,11 +181,11 @@ function puBioReactor(pUnitIndex) {
     //
     let unum = this.unitIndex;
     //
-    this.MUmax = this.dataValues[0] = interface.getInputValue(unum, 0);
-    this.ks = this.dataValues[1] = interface.getInputValue(unum, 1);
-    this.alpha = this.dataValues[2] = interface.getInputValue(unum, 2);
-    this.beta = this.dataValues[3] = interface.getInputValue(unum, 3);
-    this.gamma = this.dataValues[4] = interface.getInputValue(unum, 4); 
+    this.MUmax = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    this.ks = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    this.alpha = this.dataValues[2] = interfacer.getInputValue(unum, 2);
+    this.beta = this.dataValues[3] = interfacer.getInputValue(unum, 3);
+    this.gamma = this.dataValues[4] = interfacer.getInputValue(unum, 4);
 
   } // END of updateUIparams() method
 

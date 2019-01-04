@@ -102,7 +102,7 @@ function puWaterController(pUnitIndex) {
     this.updateUIparams(); // this first, then set other values as needed
 
     // set state variables not set by updateUIparams to initial settings
-    
+
     this.command = 0;
     this.errorIntegral = 0;
 
@@ -131,7 +131,7 @@ function puWaterController(pUnitIndex) {
     this.ssCheckSum = 1;
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -139,9 +139,9 @@ function puWaterController(pUnitIndex) {
     //
     let unum = this.unitIndex;
     //
-    this.setPoint = this.dataValues[0] = interface.getInputValue(unum, 0);
-    this.gain = this.dataValues[1] = interface.getInputValue(unum, 1);
-    this.resetTime = this.dataValues[2] = interface.getInputValue(unum, 2);
+    this.setPoint = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    this.gain = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    this.resetTime = this.dataValues[2] = interfacer.getInputValue(unum, 2);
 
   } // END of updateUIparams() method
 

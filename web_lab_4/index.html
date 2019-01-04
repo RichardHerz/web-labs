@@ -26,7 +26,7 @@
 
   <!-- load COMMON JAVASCRIPT for Web Labs -->
   <script language="javascript" src="../web_labs_JS/process_controller.js" type="text/javascript"></script>
-  <script language="javascript" src="../web_labs_JS/process_interface.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_interfacer.js" type="text/javascript"></script>
   <script language="javascript" src="../web_labs_JS/process_plotter_flot.js" type="text/javascript"></script>
 
   <!-- load flot.js PLOTTING LIBRARY -->
@@ -67,8 +67,8 @@
         <div id="div_PLOTDIV_reactorContents">
         </div> <!-- end of div div_PLOTDIV_reactorContents -->
      </div> <!-- end of div div_reactor -->
-     <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="interface.resetThisLab()"></input>
-     <input type="button" id="button_runButton" value="Run" value="Run" onclick="interface.runThisLab()"></input>
+     <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="interfacer.resetThisLab()"></input>
+     <input type="button" id="button_runButton" value="Run" value="Run" onclick="interfacer.runThisLab()"></input>
      <div id="div_reactionParams">
         <p id="field_enterdelH_LABEL">
               Enter reaction &#8710;H (kJ/mol)
@@ -112,7 +112,7 @@
         <div id="div_PLOTDIV_plotData">
         </div> <!-- end of div div_PLOTDIV_plotData -->
         <!-- copy data button onclick="copyData(#)" must have index # of plotObj[#] specified in process_plot_info.js -->
-        <input type="button" id="button_copyDataButton" value="Copy data" onclick="interface.copyData(0)"></input>
+        <input type="button" id="button_copyDataButton" value="Copy data" onclick="interfacer.copyData(0)"></input>
         <!-- <p> id="field_enterJacketFeedTTemp_LABEL" MAY HAVE css visibility:hidden on open page; changed by processUnits[3].changeMode -->
         <p id="field_enterJacketFeedTTemp_LABEL">
               Enter jacket T (K)

@@ -210,7 +210,7 @@ processUnits[0] = {
     this.initialize();
 
     // set state variables not set by updateUIparams() to initial settings
-    
+
     // initialize local array to hold color-canvas data, e.g., space-time data -
     // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
     this.colorCanvasData = plotter.initColorCanvasArray(1,this.numNodes,this.numNodes+1);
@@ -274,7 +274,7 @@ processUnits[0] = {
     this.ssCheckSum = 1;
 
     // check input fields for new values
-    // function getInputValue() is defined in file process_interface.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
@@ -282,7 +282,7 @@ processUnits[0] = {
     //
     let unum = this.unitIndex;
     //
-    this.N = this.dataValues[0] = interface.getInputValue(unum,0);
+    this.N = this.dataValues[0] = interfacer.getInputValue(unum,0);
 
   }, // END updateUIparams
 

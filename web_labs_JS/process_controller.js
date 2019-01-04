@@ -11,9 +11,9 @@ let controller = {
 
   // SUMMARY OF DEPENDENCIES
   //
-  // function interface.runThisLab() USES FROM THIS OBJECT function runSimulation()
+  // function interfacer.runThisLab() USES FROM THIS OBJECT function runSimulation()
   //
-  // USES in object interface the function interface.resetThisLab()
+  // USES in object interfacer the function interfacer.resetThisLab()
   //
   // USES in object simParams the following:
   //    variables simStepRepeats, simTimeStep, updateDisplayTimingMs
@@ -40,7 +40,7 @@ let controller = {
 
   // ssFlag set to true below in checkForSteadyState() when
   //           sim reaches steady state
-  // ssFlag set to false in runThisLab() and resetThisLab() in interface object
+  // ssFlag set to false in runThisLab() and resetThisLab() in interfacer object
   // ssFlag set to false by updateUIparams() in each process unit
   ssFlag : false,
   // ssStartTime is time when first reach steady state
@@ -59,7 +59,7 @@ let controller = {
     plotInfo.initialize();
     // initialize plot arrays after initialize plotInfo
     plotter.plotArrays.initialize();
-    interface.resetThisLab(); // defined in process_interface.js
+    interfacer.resetThisLab(); // defined in process_interfacer.js
     simParams.updateCurrentRunCountDisplay(); // defined in process_sim_params.js
   }, // END OF function openThisLab
 
@@ -250,7 +250,7 @@ let controller = {
   },
 
   resetSimTime : function() {
-    // called by method interface.resetThisLab
+    // called by method interfacer.resetThisLab
     this.simTime = 0;
     this.resetSSflagsFalse();
   },

@@ -1,0 +1,26 @@
+Thinking about introducing functional programming concepts -
+JS objects don't get info from other objects by direct reference but
+rather pass info in function arguments and get returned desired info
+
+One advantage is that can add in the "get" function check for existence
+and other checks and return error codes and only have one copy of that
+checking code in project rather than every place in calling units.
+
+ALSO see how many different things are asked from processUnits and
+plotInfo, etc., and see if need separate gets or can check inputs
+and combine in one get...
+
+example of one way it is done now:
+  a = processUnits[varUnitIndex]['profileData'][n][p][0];
+
+way of getting result from function:
+  a = getProcessUnits(varUnitIndex,'profileData',n,p,0)
+
+code in processUnits - BUT THIS THROWS OFF LENGTH IN CONTROLLER...
+
+getProcessUnits(varUnitIndex,plotType,n,p,nn) {
+  // add if for existence and return be able to return an error code?
+  // doing so might be an advantage to doing get function - see above
+  return
+    this.[varUnitIndex][plotType][n][p][nn];
+}

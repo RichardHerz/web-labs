@@ -1,12 +1,32 @@
 function puWaterTank(pUnitIndex) {
   // constructor function for process unit
 
-  this.unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
-  // unitIndex used in this object's updateUIparams() method
-  this.name = 'process unit Water Tank';
+  // *********************************************
+  // define PRIVATE variables >> use "let " before
+  // *********************************************
+
+  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  // unitIndex may be used in this object's updateUIparams() method
+
+  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
+  let theDisplayWaterDivID = "#div_water";
+  // theDisplayWaterDivBtm = SUM orig CSS file specs of top+height pixels for water div
+  let theDisplayWaterDivBtm = 268; // PIXELS, bottom of html water div IN PIXELS
+
+  // allow this unit to take more than one step within one main loop step in updateState method
+  let unitStepRepeats = 1;
+  let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+
+  let ssCheckSum = 0; // used in checkForSteadyState() method
+  let flowRate = 0; // input flow rate from feed unit
+  let command = 0; // input command from controller
+
+  // *******************************************
+  // define PRIVATE methods >> use "let " before
+  // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  this.getInputs = function() {
+  let getInputs = function() {
     let inputs = [];
     // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
     inputs[0] = processUnits[0].flowRate; // input flowRate from feed
@@ -14,23 +34,16 @@ function puWaterTank(pUnitIndex) {
     return inputs;
   }
 
-  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
-  this.displayWaterDiv = "#div_water";
-  // displayWaterDivBottom = SUM orig CSS file specs of top+height pixels for water div
-  this.displayWaterDivBottom = 268; // PIXELS, bottom of html water div IN PIXELS
+  // *******************************************
+  // define PUBLIC variables >> use this. prefix
+  // *******************************************
 
-  // allow this unit to take more than one step within one main loop step in updateState method
-  this.unitStepRepeats = 1;
-  this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
-  // define variables
-  this.ssCheckSum = 0; // used in checkForSteadyState() method
+  this.name = 'process unit Water Tank'; // used by interfacer.copyData()
+  this.level = 0; // water level in this tank used by controller object
   this.residenceTime = 0;  // used in controller.checkForSteadyState() method
-  this.flowRate = 0; // input flow rate from feed unit
-  this.level = 0; // water level in this tank
-  this.command = 0; // command from controller
 
   // define arrays to hold info for variables
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
   // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
   this.dataInputs = []; // input field ID's
@@ -41,37 +54,42 @@ function puWaterTank(pUnitIndex) {
   this.dataValues = [];
 
   // define arrays to hold data for plots, color canvas
+  // these arrays will be used by plotter object
   // these will be filled with initial values in method reset()
   //
   // this.profileData = []; // for profile plots, plot script requires this name
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
+  // *****************************************
+  // define PUBLIC methods >> use this. prefix
+  // *****************************************
+
   this.initialize = function() {
     //
-    v = 0;
-    this.dataHeaders[v] = '';
-    this.dataInputs[v] = '';
-    this.dataUnits[v] = '';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 0;
-    this.dataInitial[v] = 0;
-    this.temp = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.temp; // current input oalue for reporting
-    //
-    // END OF INPUT VARS
-    // record number of input variables, VarCount
-    // used, e.g., in copy data to table
-    //
-    this.VarCount = v;
-    //
-    // OUTPUT VARS
-    //
-    // v = 1;
-    this.dataHeaders[v] = 'Water Level';
-    this.dataUnits[v] =  '';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 2;
+    // v = 0;
+    // this.dataHeaders[v] = '';
+    // this.dataInputs[v] = '';
+    // this.dataUnits[v] = '';
+    // this.dataMin[v] = 0;
+    // this.dataMax[v] = 0;
+    // this.dataInitial[v] = 0;
+    // this.temp = this.dataInitial[v]; // dataInitial used in getInputValue()
+    // this.dataValues[v] = this.temp; // current input oalue for reporting
+    // //
+    // // END OF INPUT VARS
+    // // record number of input variables, VarCount
+    // // used, e.g., in copy data to table
+    // //
+    // this.VarCount = v;
+    // //
+    // // OUTPUT VARS
+    // //
+    // // v = 1;
+    // this.dataHeaders[v] = 'Water Level';
+    // this.dataUnits[v] =  '';
+    // this.dataMin[v] = 0;
+    // this.dataMax[v] = 2;
     //
   } // END of initialize() method
 
@@ -110,7 +128,7 @@ function puWaterTank(pUnitIndex) {
     // after change in UI params when previously at steady state
     controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    this.ssCheckSum = 1;
+    ssCheckSum = 1;
 
   } // END of updateUIparams() method
 
@@ -121,13 +139,13 @@ function puWaterTank(pUnitIndex) {
     // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
 
     // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
     // get array of current input values to this unit from other units
-    let inputs = this.getInputs();
-    this.flowRate = inputs[0]; // input water flow rate from feed unit
-    this.command = inputs[1]; // command from controller unit
+    let inputs = getInputs();
+    flowRate = inputs[0]; // input water flow rate from feed unit
+    command = inputs[1]; // command from controller unit
 
   } // END of updateInputs() method
 
@@ -147,7 +165,7 @@ function puWaterTank(pUnitIndex) {
 
     let Ax = 10; // cross sectional area of tank
     let maxValveCoeff = 3;
-    let newCoef = maxValveCoeff*(1 - this.command);
+    let newCoef = maxValveCoeff*(1 - command);
 
     if (newCoef > maxValveCoeff) {
       newCoef = maxValveCoeff;
@@ -157,7 +175,7 @@ function puWaterTank(pUnitIndex) {
     }
 
     let exprValue = (this.level +
-      this.unitTimeStep / Ax * (this.flowRate - newCoef * Math.pow(this.level,0.5)));
+      unitTimeStep / Ax * (flowRate - newCoef * Math.pow(this.level,0.5)));
 
     // make sure within limits
     // see puWaterController function updateInputs, maxSPvalue, minSPvalue
@@ -183,8 +201,8 @@ function puWaterTank(pUnitIndex) {
     //    constant value from top of browser window
     let pixPerHtUnit = 48; // was 50
     let newHt = pixPerHtUnit * this.level;
-    let origBtm = this.displayWaterDivBottom;
-    let el = document.querySelector(this.displayWaterDiv);
+    let origBtm = theDisplayWaterDivBtm;
+    let el = document.querySelector(theDisplayWaterDivID);
     el.style.height = newHt + "px";
     el.style.top = (origBtm - newHt) + "px";
 
@@ -226,8 +244,8 @@ function puWaterTank(pUnitIndex) {
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
-    // uses and sets this.ssCheckSum
-    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // uses and sets ssCheckSum
+    // ssCheckSum can be set by reset() and updateUIparams()
     // check for SS in order to save CPU time when sim is at steady state
     // check for SS by checking for any significant change in array end values
     // but wait at least one residence time after the previous check
@@ -237,8 +255,8 @@ function puWaterTank(pUnitIndex) {
     // figures to left decimal point so toFixed() does not return string "0.###"
     // WARNING: too many sig figs will prevent detecting steady state
     //
-    let rc = 1.0e3 * this.flowRate;
-    let rt = 1.0e3 * this.command;
+    let rc = 1.0e3 * flowRate;
+    let rt = 1.0e3 * command;
     let lt = 1.0e3 * this.level;
     rc = rc.toFixed(0); // strings
     rt = rt.toFixed(0);
@@ -246,10 +264,10 @@ function puWaterTank(pUnitIndex) {
     // concatenate strings
     let newCheckSum = rc +'.'+ rt +'.'+ lt;
     //
-    let oldSScheckSum = this.ssCheckSum;
+    let oldSScheckSum = ssCheckSum;
     let ssFlag = false;
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}
-    this.ssCheckSum = newCheckSum; // save current value for use next time
+    ssCheckSum = newCheckSum; // save current value for use next time
     //
     return ssFlag;
   } // END checkForSteadyState method

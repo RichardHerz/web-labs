@@ -1,9 +1,10 @@
 function puWaterController(pUnitIndex) {
   // constructor function for process unit
 
-  this.unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
+  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
   // unitIndex used in this object's updateUIparams() method
-  this.name = 'process unit Water Controller';
+
+  this.name = 'process unit Water Controller'; // used by interfacer.copyData()
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
   this.getInputs = function() {
@@ -137,7 +138,7 @@ function puWaterController(pUnitIndex) {
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
-    let unum = this.unitIndex;
+    let unum = unitIndex;
     //
     this.setPoint = this.dataValues[0] = interfacer.getInputValue(unum, 0);
     this.gain = this.dataValues[1] = interfacer.getInputValue(unum, 1);
@@ -177,13 +178,13 @@ function puWaterController(pUnitIndex) {
     let cMax = 1;
     let cMin = 0;
 
-    if (this.command.value > cMax) {
-      this.command.value = cMax;
-    } else if (this.command.value < cMin) {
-      this.command.value = cMin;
+    if (this.command > cMax) {
+      this.command = cMax;
+    } else if (this.command < cMin) {
+      this.command = cMin;
     } else {
       // not at limit, OK to update integral of error
-      // update errorIntegral only after it is used above to update this.command.value
+      // update errorIntegral only after it is used above to update this.command
       this.errorIntegral = this.errorIntegral + error * this.unitTimeStep;
     }
 

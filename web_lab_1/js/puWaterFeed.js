@@ -1,9 +1,10 @@
 function puWaterFeed(pUnitIndex) {
   // constructor function for process unit
 
-  this.unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
-  // unitIndex used in this object's updateUIparams() method
-  this.name = 'process unit Water Feed';
+  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  // unitIndex may be used in this object's updateUIparams() method
+
+  this.name = 'process unit Water Feed'; // used by interfacer.copyData()
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
   this.getInputs = function() {
@@ -46,9 +47,9 @@ function puWaterFeed(pUnitIndex) {
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 3;
-    this.dataInitial[v] = 1;
-    this.flowRate = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.flowRate; // current input oalue for reporting
+    this.dataInitial[v] = 2;
+    this.flowRate = this.dataInitial[v]; // dataInitial used in interfacer.getInputValue()
+    this.dataValues[v] = this.flowRate; // current input value in interfacer.copyData()
     //
     v = 1;
     this.dataHeaders[v] = 'Flow Rate';
@@ -56,9 +57,9 @@ function puWaterFeed(pUnitIndex) {
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 3;
-    this.dataInitial[v] = 1;
-    this.flowRate = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.flowRate; // current input oalue for reporting
+    this.dataInitial[v] = 2;
+    this.flowRate = this.dataInitial[v];
+    this.dataValues[v] = this.flowRate;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -123,7 +124,7 @@ function puWaterFeed(pUnitIndex) {
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
-    let unum = this.unitIndex;
+    let unum = unitIndex;
     //
     // SPECIAL for this unit methods updateUIfeedInput and updateUIfeedSlider
     //         below get slider and field value for [0] and [1]
@@ -135,7 +136,7 @@ function puWaterFeed(pUnitIndex) {
     // called in HTML input element
     // [0] is field, [1] is slider
     // get field value
-    let unum = this.unitIndex;
+    let unum = unitIndex;
     let vnum = 0; // index for input field in initialize arrays
     this.flowRate = this.dataValues[0] = interfacer.getInputValue(unum, vnum);
     // update slider position
@@ -151,7 +152,7 @@ function puWaterFeed(pUnitIndex) {
     // SPECIAL FOR THIS UNIT
     // called in HTML input element
     // [0] is field, [1] is slider
-    let unum = this.unitIndex;
+    let unum = unitIndex;
     let vnum = 1; // index for range slider in initialize arrays
     this.flowRate = this.dataValues[1] = interfacer.getInputValue(unum, vnum);
     // update input field display

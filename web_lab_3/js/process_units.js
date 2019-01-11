@@ -117,15 +117,6 @@ processUnits[0] = {
     //
     this.VarCount = v;
     //
-    // OUTPUT VARS
-    //
-    // v = 7;
-    // this.dataHeaders[v] = 'Trxr';
-    // this.dataUnits[v] =  'K';
-    // // Trxr dataMin & dataMax can be changed in updateUIparams()
-    // this.dataMin[v] = 200;
-    // this.dataMax[v] = 500;
-    //
   }, // END of initialize()
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -681,16 +672,6 @@ processUnits[2] = {
     //
     this.VarCount = v;
     //
-    // OUTPUT VARS
-    //
-    // v = 7;
-    // this.dataHeaders[v] = 'Trxr';
-    // this.dataUnits[v] =  'K';
-    // // Trxr dataMin & dataMax can be changed in updateUIparams()
-    // this.dataMin[v] = 200;
-    // this.dataMax[v] = 500;
-    //
-
   }, // END of initialize()
 
   reset : function(){
@@ -1192,8 +1173,8 @@ processUnits[4] = {
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
     //
-    // special, use v-1 to not report manualCommand in copy data table header
-    // but need manualCommand as input var to get from html input
+    // SPECIAL - use v-1 to not report manualCommand in copy data table header
+    //           but need manualCommand as input var to get from html input
     this.VarCount = v-1;
     //
     // OUTPUT VARS

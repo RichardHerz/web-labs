@@ -65,16 +65,10 @@ function puWaterFeed(pUnitIndex) {
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
     //
-    // this.VarCount = v;
-    //
-    // OUTPUT VARS
-    //
-    // v = 7;
-    // this.dataHeaders[v] = 'Trxr';
-    // this.dataUnits[v] =  'K';
-    // // Trxr dataMin & dataMax can be changed in updateUIparams()
-    // this.dataMin[v] = 200;
-    // this.dataMax[v] = 500;
+    // SPECIAL copyData will not show flowRate as input param but will
+    //         display all readings in a data column from stripData as plot vars
+    //         so set VarCount to -1 so no display as input param
+    this.VarCount = -1;
     //
   } // END of initialize() method
 

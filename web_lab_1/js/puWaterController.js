@@ -84,14 +84,6 @@ function puWaterController(pUnitIndex) {
     //
     this.VarCount = v;
     //
-    // OUTPUT VARS
-    //
-    v = 3;
-    this.dataHeaders[v] = 'command';
-    this.dataUnits[v] =  '';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 1;
-    //
   } // END of initialize() method
 
   this.reset = function() {

@@ -67,29 +67,7 @@ function puWaterTank(pUnitIndex) {
 
   this.initialize = function() {
     //
-    // v = 0;
-    // this.dataHeaders[v] = '';
-    // this.dataInputs[v] = '';
-    // this.dataUnits[v] = '';
-    // this.dataMin[v] = 0;
-    // this.dataMax[v] = 0;
-    // this.dataInitial[v] = 0;
-    // this.temp = this.dataInitial[v]; // dataInitial used in getInputValue()
-    // this.dataValues[v] = this.temp; // current input oalue for reporting
-    // //
-    // // END OF INPUT VARS
-    // // record number of input variables, VarCount
-    // // used, e.g., in copy data to table
-    // //
-    // this.VarCount = v;
-    // //
-    // // OUTPUT VARS
-    // //
-    // // v = 1;
-    // this.dataHeaders[v] = 'Water Level';
-    // this.dataUnits[v] =  '';
-    // this.dataMin[v] = 0;
-    // this.dataMax[v] = 2;
+    // SPECIAL - no UI inputs - inputs only from feed and controller units
     //
   } // END of initialize() method
 
@@ -123,6 +101,8 @@ function puWaterTank(pUnitIndex) {
     //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
+    //
+    // SPECIAL - NONE FOR THIS UNIT
 
     // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state

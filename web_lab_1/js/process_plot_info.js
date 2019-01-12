@@ -100,7 +100,7 @@ let plotInfo = {
     plotInfo[pnum]['var'][vnum] = 0; // value is variable index in plot data array
     plotInfo[pnum]['varLabel'][vnum] = 'Flow Rate';
     // varDataUnits are dimensional units used in copy data table, along with varLabel
-    plotInfo[pnum]['varDataUnits'][vnum] = ''; // processUnits[1]['dataUnits'][4]; // 1st var
+    plotInfo[pnum]['varDataUnits'][vnum] = 'm3/s'; // processUnits[1]['dataUnits'][4]; // 1st var
     // varShow values are 'show' to show on plot and legend,
     // 'tabled' to not show on plot nor legend but list in copy data table
     // and any other value, e.g., 'hide' to not show on plot but do show in legend
@@ -114,7 +114,7 @@ let plotInfo = {
     plotInfo[pnum]['var'][vnum] = 0; // value is variable index in plot data array
     plotInfo[pnum]['varLabel'][vnum] = 'Water Level';
     // varDataUnits are dimensional units used in copy data table, along with varLabel
-    plotInfo[pnum]['varDataUnits'][vnum] = ''; // processUnits[1]['dataUnits'][4]; // 1st var
+    plotInfo[pnum]['varDataUnits'][vnum] = 'm'; // processUnits[1]['dataUnits'][4]; // 1st var
     // varShow values are 'show' to show on plot and legend,
     // 'tabled' to not show on plot nor legend but list in copy data table
     // and any other value, e.g., 'hide' to not show on plot but do show in legend
@@ -127,7 +127,7 @@ let plotInfo = {
     plotInfo[pnum]['varUnitIndex'][vnum] = 2;
     plotInfo[pnum]['var'][vnum] = 0;
     plotInfo[pnum]['varLabel'][vnum] = 'Set Point';
-    plotInfo[pnum]['varDataUnits'][vnum] = '';
+    plotInfo[pnum]['varDataUnits'][vnum] = 'm';
     plotInfo[pnum]['varShow'][vnum] = 'show';
     plotInfo[pnum]['varYaxis'][vnum] = 'right';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
@@ -136,7 +136,7 @@ let plotInfo = {
     plotInfo[pnum]['varUnitIndex'][vnum] = 2;
     plotInfo[pnum]['var'][vnum] = 1;
     plotInfo[pnum]['varLabel'][vnum] = 'Command';
-    plotInfo[pnum]['varDataUnits'][vnum] = '';
+    plotInfo[pnum]['varDataUnits'][vnum] = '0-1';
     plotInfo[pnum]['varShow'][vnum] = 'show';
     plotInfo[pnum]['varYaxis'][vnum] = 'right';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;

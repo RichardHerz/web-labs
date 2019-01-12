@@ -70,7 +70,7 @@ canvas {
  top: -10px;
   width: 124px;
  height: 20px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -85,7 +85,7 @@ canvas {
  top: 0px;
   width: 805px;
  height: 73px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -100,7 +100,7 @@ canvas {
  top: 30px;
   width: 518px;
  height: 64px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -243,7 +243,7 @@ canvas {
  top: 153px;
   width: 186px;
  height: 23px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -258,7 +258,7 @@ canvas {
  width: 70px;
  height: 21px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  border-style: solid;
  opacity: 1;
  LCvScrollbar: false;
@@ -279,7 +279,7 @@ canvas {
  top: 373px;
   width: 205px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -294,7 +294,7 @@ canvas {
  top: 439px;
   width: 205px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -310,7 +310,7 @@ canvas {
   width: 70px;
  height: 21px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  border-style: solid;
  opacity: 1;
  LCvScrollbar: false;
@@ -324,7 +324,7 @@ canvas {
   width: 70px;
  height: 21px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  border-style: solid;
  opacity: 1;
  LCvScrollbar: false;
@@ -337,7 +337,7 @@ canvas {
   top: 406px;
   width: 205px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -353,7 +353,7 @@ canvas {
   width: 70px;
  height: 21px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  border-style: solid;
  opacity: 1;
  LCvScrollbar: false;
@@ -366,7 +366,7 @@ canvas {
   top: 473px;
   width: 205px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -381,7 +381,7 @@ canvas {
   top: 535px;
   width: 205px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -397,7 +397,7 @@ canvas {
   width: 70px;
  height: 21px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  border-style: solid;
  opacity: 1;
  LCvScrollbar: false;
@@ -411,7 +411,7 @@ canvas {
   width: 70px;
  height: 21px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  border-style: solid;
  opacity: 1;
  LCvScrollbar: false;
@@ -424,7 +424,7 @@ canvas {
   top: 568px;
   width: 205px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -440,7 +440,7 @@ canvas {
   width: 70px;
  height: 21px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  border-style: solid;
  opacity: 1;
  LCvScrollbar: false;
@@ -521,7 +521,7 @@ canvas {
   top: 298px;
   width: 205px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -537,7 +537,7 @@ canvas {
   width: 70px;
  height: 21px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  border-style: solid;
  opacity: 1;
  LCvScrollbar: false;
@@ -550,7 +550,7 @@ canvas {
   top: 331px;
   width: 205px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -566,7 +566,7 @@ canvas {
   width: 70px;
  height: 21px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  border-style: solid;
  opacity: 1;
  LCvScrollbar: false;
@@ -579,7 +579,7 @@ canvas {
   top: 506px;
   width: 78px;
  height: 21px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -594,7 +594,7 @@ canvas {
   top: 513px;
   width: 70px;
  height: 21px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -609,7 +609,7 @@ canvas {
   top: 259px;
   width: 116px;
  height: 120px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -624,7 +624,7 @@ canvas {
   top: 386px;
   width: 116px;
  height: 120px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -639,7 +639,7 @@ canvas {
   top: 730px;
   width: 343px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -654,7 +654,7 @@ canvas {
   top: 730px;
   width: 90px;
  height: 21px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -669,7 +669,7 @@ canvas {
   top: 730px;
   width: 78px;
  height: 21px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -684,7 +684,7 @@ canvas {
   top: 730px;
   width: 205px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -698,7 +698,7 @@ canvas {
   top: 638px;
   width: 248px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -712,7 +712,7 @@ canvas {
   top: 670px;
   width: 248px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -726,7 +726,7 @@ canvas {
   top: 705px;
   width: 205px;
  height: 25px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;
@@ -741,7 +741,7 @@ canvas {
   top: 96px;
   width: 576px;
  height: 21px;
- border-width: 2px;
+ border-width: 1px;
  visibility: visible;
  border-style: none;
  opacity: 1;

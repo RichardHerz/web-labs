@@ -170,7 +170,7 @@ function puWaterTank(pUnitIndex) {
 
     // set new value
     this.level = exprValue;
-
+    
   } // END of updateState() method
 
   this.updateDisplay = function() {

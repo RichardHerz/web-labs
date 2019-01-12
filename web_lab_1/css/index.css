@@ -31,6 +31,10 @@ select {
  position: absolute;
 }
 
+::-ms-tooltip {
+  display: none;
+}
+
 #div_simFrame{
  display: block;
  position: relative;
@@ -38,7 +42,7 @@ select {
  width: 798px;
  height: 500px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  border-style: outset;
  opacity: 1;
 }
@@ -51,7 +55,7 @@ select {
  width: 57px;
  height: 0px;
  visibility: visible;
- border-width: 2px;
+ border-width: 1px;
  background-color: rgb(102,102,255);
  border-style: none;
  opacity: 1;
@@ -101,6 +105,8 @@ select {
  width: 68px;
  height: 21px;
  text-align: center;
+ border-width: 1px;
+ border-style: solid;
 }
 
 #image_tank-from-LC_png {
@@ -142,6 +148,8 @@ select {
  width: 68px;
  height: 21px;
  text-align: center;
+ border-width: 1px;
+ border-style: solid;
 }
 
 #field_enterSetPoint_label {
@@ -159,6 +167,8 @@ select {
  width: 68px;
  height: 21px;
  text-align: center;
+ border-width: 1px;
+ border-style: solid;
 }
 
 #field_enterGain_label {
@@ -176,6 +186,8 @@ select {
  width: 68px;
  height: 21px;
  text-align: center;
+ border-width: 1px;
+ border-style: solid;
 }
 
 #div_PLOTDIV_plotData {

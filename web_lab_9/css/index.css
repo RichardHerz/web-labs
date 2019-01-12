@@ -213,7 +213,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-/* #div_sizer {
+/* #div_sizer { 
   // use to get width of plotting area so don't have more pts than pixels
   display: block;
   position: absolute;

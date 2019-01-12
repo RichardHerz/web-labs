@@ -1,42 +1,46 @@
 function puWaterController(pUnitIndex) {
   // constructor function for process unit
 
-  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
-  // unitIndex used in this object's updateUIparams() method
+  // *********************************************
+  // define PRIVATE variables >> use "let " before
+  // *********************************************
 
-  this.name = 'process unit Water Controller'; // used by interfacer.copyData()
+  // unitIndex may be used in this object's updateUIparams() method
+  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  // allow this unit to take more than one step within one main loop step in updateState method
+  let unitStepRepeats = 1;
+  let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+  let ssCheckSum = 0; // used in checkForSteadyState() method
+
+  // internal variables used by controller unit
+  let processVariable = 0;
+  let setPoint = 0;
+  let gain = 0; // controller gain
+  let resetTime = 0; // controller reset time
+  let errorIntegral = 0;
+
+  // *******************************************
+  // define PRIVATE methods >> use "let " before
+  // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  this.getInputs = function() {
+  let getInputs = function() {
     let inputs = [];
     // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
     inputs[0] = processUnits[1].level; // level in water tank unit
     return inputs;
   }
 
-  // allow this unit to take more than one step within one main loop step in updateState method
-  this.unitStepRepeats = 1;
-  this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+  // *******************************************
+  // define PUBLIC variables >> use this. prefix
+  // *******************************************
 
-  // define arrays to hold data for plots, color canvas
-  // these will be filled with initial values in method reset()
-  //
-  // this.profileData = []; // for profile plots, plot script requires this name
-  this.stripData = []; // for strip chart plots, plot script requires this name
-  // this.colorCanvasData = []; // for color canvas, plot script requires this name
-
-  // define variables
-  this.processVariable = 0;
-  this.setPoint = 0;
-  this.gain = 0; // controller gain
-  this.resetTime = 0; // controller reset time
-  this.command = 0; // controller command from this controller unit
-  this.errorIntegral = 0;
-
-  this.ssCheckSum = 0;
-  this.residenceTime = 0;
+  this.name = 'process unit Water Controller'; // used by interfacer.copyData()
+  this.residenceTime = 0; // used by controller.checkForSteadyState() 
+  this.command = 0; // output controller command from this controller unit
 
   // define arrays to hold info for variables
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
   // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
   this.dataInputs = []; // input field ID's
@@ -45,6 +49,18 @@ function puWaterController(pUnitIndex) {
   this.dataMax = [];
   this.dataInitial = [];
   this.dataValues = [];
+
+  // define arrays to hold data for plots, color canvas
+  // these arrays will be used by plotter object
+  // these will be filled with initial values in method reset()
+  //
+  // this.profileData = []; // for profile plots, plot script requires this name
+  this.stripData = []; // for strip chart plots, plot script requires this name
+  // this.colorCanvasData = []; // for color canvas, plot script requires this name
+
+  // *****************************************
+  // define PUBLIC methods >> use this. prefix
+  // *****************************************
 
   this.initialize = function() {
     //
@@ -57,8 +73,8 @@ function puWaterController(pUnitIndex) {
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
     this.dataInitial[v] = 1;
-    this.setPoint = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.setPoint; // current input oalue for reporting
+    setPoint = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = setPoint; // current input oalue for reporting
     //
     v = 1;
     this.dataHeaders[v] = 'gain';
@@ -67,8 +83,8 @@ function puWaterController(pUnitIndex) {
     this.dataMin[v] = 0;
     this.dataMax[v] = 20;
     this.dataInitial[v] = 5;
-    this.gain = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.gain; // current input oalue for reporting
+    gain = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = gain; // current input oalue for reporting
     //
     v = 2;
     this.dataHeaders[v] = 'reset time';
@@ -77,8 +93,8 @@ function puWaterController(pUnitIndex) {
     this.dataMin[v] = 0;
     this.dataMax[v] = 20;
     this.dataInitial[v] = 2;
-    this.resetTime = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.resetTime; // current input oalue for reporting
+    resetTime = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = resetTime; // current input oalue for reporting
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -102,7 +118,7 @@ function puWaterController(pUnitIndex) {
     // set state variables not set by updateUIparams to initial settings
 
     this.command = 0;
-    this.errorIntegral = 0;
+    errorIntegral = 0;
 
     // each unit has its own data arrays for plots and canvases
 
@@ -126,7 +142,7 @@ function puWaterController(pUnitIndex) {
     // after change in UI params when previously at steady state
     controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    this.ssCheckSum = 1;
+    ssCheckSum = 1;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interfacer.js
@@ -137,9 +153,9 @@ function puWaterController(pUnitIndex) {
     //
     let unum = unitIndex;
     //
-    this.setPoint = this.dataValues[0] = interfacer.getInputValue(unum, 0);
-    this.gain = this.dataValues[1] = interfacer.getInputValue(unum, 1);
-    this.resetTime = this.dataValues[2] = interfacer.getInputValue(unum, 2);
+    setPoint = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    gain = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    resetTime = this.dataValues[2] = interfacer.getInputValue(unum, 2);
 
   } // END of updateUIparams() method
 
@@ -150,12 +166,12 @@ function puWaterController(pUnitIndex) {
     // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
 
     // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
     // get array of current input values to this unit from other units
-    let inputs = this.getInputs();
-    this.processVariable = inputs[0]; // level in water tank unit
+    let inputs = getInputs();
+    processVariable = inputs[0]; // level in water tank unit
 
   } // END of updateInputs() method
 
@@ -166,8 +182,8 @@ function puWaterController(pUnitIndex) {
     // STATE VARIABLE
 
     // compute new value of PI controller command
-    let error = this.setPoint - this.processVariable
-    this.command = this.gain * (error + (1/this.resetTime) * this.errorIntegral);
+    let error = setPoint - processVariable
+    this.command = gain * (error + (1/resetTime) * errorIntegral);
 
     // stop integration at command limits
     // to prevent integral windup
@@ -182,7 +198,7 @@ function puWaterController(pUnitIndex) {
     } else {
       // not at limit, OK to update integral of error
       // update errorIntegral only after it is used above to update this.command
-      this.errorIntegral = this.errorIntegral + error * this.unitTimeStep;
+      errorIntegral = errorIntegral + error * unitTimeStep;
     }
 
   } // END of updateState() method
@@ -203,7 +219,7 @@ function puWaterController(pUnitIndex) {
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [0,this.setPoint] );
+    tempArray.push( [0,setPoint] );
     // update the variable being processed
     this.stripData[v] = tempArray;
 
@@ -239,11 +255,11 @@ function puWaterController(pUnitIndex) {
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
-    // this.ssCheckSum set != 0 on updateUIparams() execution
-    if (this.ssCheckSum != 0) {
+    // ssCheckSum set != 0 on updateUIparams() execution
+    if (ssCheckSum != 0) {
       ssFlag = false;
     }
-    this.ssCheckSum = 0;
+    ssCheckSum = 0;
     return ssFlag;
   } // END of checkForSteadyState() method
 

@@ -17,9 +17,9 @@ function puWaterTank(pUnitIndex) {
   let unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-  let ssCheckSum = 0; // used in checkForSteadyState() method
-  let flowRate = 0; // input flow rate from feed unit
-  let command = 0; // input command from controller
+  let ssCheckSum = 0; // used in this.checkForSteadyState() method
+  let flowRate = 0; // input flow rate from feed process unit
+  let command = 0; // input command from controller process unit
 
   // *******************************************
   // define PRIVATE methods >> use "let " before
@@ -29,8 +29,8 @@ function puWaterTank(pUnitIndex) {
   let getInputs = function() {
     let inputs = [];
     // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    inputs[0] = processUnits[0].flowRate; // input flowRate from feed
-    inputs[1] = processUnits[2].command; // command from controller
+    inputs[0] = processUnits[0].flowRate; // input flowRate from feed process unit
+    inputs[1] = processUnits[2].command; // command from controller process unit
     return inputs;
   }
 
@@ -39,8 +39,8 @@ function puWaterTank(pUnitIndex) {
   // *******************************************
 
   this.name = 'process unit Water Tank'; // used by interfacer.copyData()
-  this.level = 0; // water level in this tank used by controller object
-  this.residenceTime = 0;  // used in controller.checkForSteadyState() method
+  this.level = 0; // water level in this tank used by controller process unit
+  this.residenceTime = 0; // used by controller.checkForSteadyState()
 
   // define arrays to hold info for variables
   // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
@@ -170,7 +170,7 @@ function puWaterTank(pUnitIndex) {
 
     // set new value
     this.level = exprValue;
-    
+
   } // END of updateState() method
 
   this.updateDisplay = function() {

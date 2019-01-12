@@ -46,7 +46,7 @@
 
 </head>
 <body>
-  <!-- units: (1) water source, (2) water in tank, (3) controller
+  <!-- units: (1) water source, (2) water in tank, (3) PI controller
   values set by inputs below:
   (1) enterFlowRate
   (3) enterResetTime, enterGain, enterSetpoint
@@ -60,9 +60,10 @@
     <p><b><i>Level Control in Water Tank</i></b></p>
     <p>
       There are three process units: a water source that empties into a tank, a
-      tank with a variable-flow outlet valve, and a feedback controller. The controller
-      controls the water level by sending a command to the valve. Each process unit
-      is defined as a separate Javascript object, so units can be added to a model easily.
+      tank with a variable-flow outlet valve, and a feedback controller.
+      <br> The controller
+      controls the water level by sending a command to the valve. The controller has Proportional
+      and Integral (PI) action with anti-windup.
       <br>
       <br><font color="#0000FF">Click the Run button to start. Hit the enter key or click out of field after changing inputs.</font>
     </p>

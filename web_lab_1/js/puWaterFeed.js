@@ -1,35 +1,38 @@
 function puWaterFeed(pUnitIndex) {
   // constructor function for process unit
 
-  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
-  // unitIndex may be used in this object's updateUIparams() method
+  // *********************************************
+  // define PRIVATE variables >> use "let " before
+  // *********************************************
 
-  this.name = 'process unit Water Feed'; // used by interfacer.copyData()
+  // unitIndex may be used in this object's updateUIparams() method
+  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  // allow this unit to take more than one step within one main loop step in updateState method
+  let unitStepRepeats = 1;
+  let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+  let ssCheckSum = 0; // used in this.checkForSteadyState() method
+
+  // *******************************************
+  // define PRIVATE methods >> use "let " before
+  // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  this.getInputs = function() {
+  let getInputs = function() {
     let inputs = [];
     // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
     return inputs;
   }
 
-  // allow this unit to take more than one step within one main loop step in updateState method
-  this.unitStepRepeats = 1;
-  this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+  // *******************************************
+  // define PUBLIC variables >> use this. prefix
+  // *******************************************
 
-  // define arrays to hold data for plots, color canvas
-  // these will be filled with initial values in method reset()
-  //
-  // this.profileData = []; // for profile plots, plot script requires this name
-  this.stripData = []; // for strip chart plots, plot script requires this name
-  // this.colorCanvasData = []; // for color canvas, plot script requires this name
-
-  // define variables
-  this.ssCheckSum = 0; // used in checkForSteadyState() method
-  this.residenceTime = 0;  // used in controller.checkForSteadyState() method
-  this.flowRate = 0; // feed to water tank
+  this.name = 'process unit Water Feed'; // used by interfacer.copyData()
+  this.flowRate = 0; // output feed to water tank process unit
+  this.residenceTime = 0; // used by controller.checkForSteadyState()
 
   // define arrays to hold info for variables
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
   // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
   this.dataInputs = []; // input field ID's
@@ -38,6 +41,18 @@ function puWaterFeed(pUnitIndex) {
   this.dataMax = [];
   this.dataInitial = [];
   this.dataValues = [];
+
+  // define arrays to hold data for plots, color canvas
+  // these arrays will be used by plotter object
+  // these will be filled with initial values in method reset()
+  //
+  // this.profileData = []; // for profile plots, plot script requires this name
+  this.stripData = []; // for strip chart plots, plot script requires this name
+  // this.colorCanvasData = []; // for color canvas, plot script requires this name
+
+  // *****************************************
+  // define PUBLIC methods >> use this. prefix
+  // *****************************************
 
   this.initialize = function() {
     //
@@ -110,7 +125,7 @@ function puWaterFeed(pUnitIndex) {
     // after change in UI params when previously at steady state
     controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    this.ssCheckSum = 1;
+    ssCheckSum = 1;
 
     // updateUIparams gets called on page load but not new range and input
     // updates, so need to call updateUIfeedInput here
@@ -144,7 +159,7 @@ function puWaterFeed(pUnitIndex) {
     // after change in UI params when previously at steady state
     controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    this.ssCheckSum = 1;
+    ssCheckSum = 1;
   } // END method updateUIfeedInput()
 
   this.updateUIfeedSlider = function() {
@@ -162,7 +177,7 @@ function puWaterFeed(pUnitIndex) {
     // after change in UI params when previously at steady state
     controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    this.ssCheckSum = 1;
+    ssCheckSum = 1;
   } // END method updateUIfeedSlider()
 
   this.updateInputs = function() {
@@ -172,7 +187,7 @@ function puWaterFeed(pUnitIndex) {
     // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
 
     // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // no inputs from other units for this unit
     // updates handled by updateUIparams
@@ -239,11 +254,11 @@ function puWaterFeed(pUnitIndex) {
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
-    // this.ssCheckSum set != 0 on updateUIparams() execution
-    if (this.ssCheckSum != 0) {
+    // ssCheckSum set != 0 on updateUIparams() execution
+    if (ssCheckSum != 0) {
       ssFlag = false;
     }
-    this.ssCheckSum = 0;
+    ssCheckSum = 0;
     return ssFlag;
   } // END of checkForSteadyState() method
 

@@ -290,7 +290,7 @@ let plotter = {
     // this.plotArrays['plotFlag'] array tells whether or not to redraw axes & labels
     //
     // for example, for 4 plots on page, this ran in 60% of time for full refresh
-    // see object plotArrays below for intialization of plot and plotFlag arrays
+    // see plotter.plotArrays.initialize() for intialization of plot and plotFlag arrays
 
     if (this.plotArrays['plotFlag'][pNumber] == 0) {
       this.plotArrays['plotFlag'][pNumber] = 1;

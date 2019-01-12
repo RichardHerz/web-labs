@@ -155,8 +155,6 @@ let plotter = {
     // input pData holds the data to plot
     // input pNumber is number of plot as 1st index in plotInfo
 
-    // let plot = [];
-
     // get info about the variables
 
     let plotList = plotInfo[pNumber]['var'];
@@ -287,11 +285,12 @@ let plotter = {
 
     // only draw plot with axes and all options the first time
     // after that just setData and re-draw
-    // plot[] must save data between display updates
-    // plot[pNumber] saves data for each plot between display updates
-    // plotFlag[pNumber] telling whether or not to redraw axes & labels
+    //
+    // this.plotArrays['plot'] array saves data for each plot between display updates
+    // this.plotArrays['plotFlag'] array tells whether or not to redraw axes & labels
+    //
     // for example, for 4 plots on page, this ran in 60% of time for full refresh
-    // see object plotArrays below for intialization of plot[] and plotFlag[]
+    // see object plotArrays below for intialization of plot and plotFlag arrays
 
     if (this.plotArrays['plotFlag'][pNumber] == 0) {
       this.plotArrays['plotFlag'][pNumber] = 1;

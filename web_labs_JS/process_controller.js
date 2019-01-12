@@ -56,6 +56,8 @@ let controller = {
       processUnits[n].initialize();
     }
     // initialize plotInfo to define plots after initialize units
+    //    in order to allow plotInfo to use values from units,
+    //    e.g., dataUnits of output vars 
     plotInfo.initialize();
     // initialize plot arrays after initialize plotInfo
     plotter.plotArrays.initialize();

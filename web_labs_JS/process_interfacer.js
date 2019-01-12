@@ -125,7 +125,8 @@ let interfacer = {
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
     // list current input values
-    tText += '<p>Simulation time of data capture = ' + controller.simTime + ' s <br>';
+    let timeTOround = controller.simTime;
+    tText += '<p>Simulation time of data capture = ' + timeTOround.toFixed(3) + ' s <br>';
     tText += 'Values of input parameters at time of data capture:<br>';
     // list inputs for all units since, other units may affect these results
     numUnits = Object.keys(processUnits).length;
@@ -223,7 +224,7 @@ let interfacer = {
        nn = nn.toFixed(2);
       } else if ((nn > 10) || (nn < -10)) {
         nn = nn.toFixed(3);
-      } else if ((nn > 1) || (nn < -1)) {
+      } else if ((nn >= 1) || (nn < -1)) {
        nn = nn.toFixed(3);
       } else if ((nn > 0.01) || (nn < -0.01)) {
         nn = nn.toFixed(4);

@@ -67,7 +67,13 @@ function puWaterTank(pUnitIndex) {
 
   this.initialize = function() {
     //
-    // SPECIAL - no UI inputs - inputs only from feed and controller units
+    // OPTIONAL - add entries for output variables if want to use info
+    //            to constrain data in updateState or units in plotInfo
+    //
+    // SPECIAL - in this unit no UI inputs - input only from feed & controller
+    //
+    // OPTIONAL - add entries for output variables if want to use min-max to
+    //            constrain values in updateState or dimensional units in plotInfo
     //
   } // END of initialize() method
 

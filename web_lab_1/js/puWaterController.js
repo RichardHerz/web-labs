@@ -48,6 +48,8 @@ function puWaterController(pUnitIndex) {
 
   this.initialize = function() {
     //
+    // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
+    //
     let v = 0;
     this.dataHeaders[v] = 'set point';
     this.dataInputs[v] = 'input_field_enterSetpoint';
@@ -83,6 +85,9 @@ function puWaterController(pUnitIndex) {
     // used, e.g., in copy data to table
     //
     this.VarCount = v;
+    //
+    // OPTIONAL - add entries for output variables if want to use min-max to
+    //            constrain values in updateState or dimensional units in plotInfo
     //
   } // END of initialize() method
 

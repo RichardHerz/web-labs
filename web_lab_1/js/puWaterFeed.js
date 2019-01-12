@@ -41,6 +41,8 @@ function puWaterFeed(pUnitIndex) {
 
   this.initialize = function() {
     //
+    // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
+    //
     let v = 0;
     this.dataHeaders[v] = 'Flow Rate';
     this.dataInputs[v] = 'input_field_enterFlowRate';
@@ -65,10 +67,13 @@ function puWaterFeed(pUnitIndex) {
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
     //
-    // SPECIAL copyData will not show flowRate as input param but will
-    //         display all readings in a data column from stripData as plot vars
-    //         so set VarCount to -1 so no display as input param
+    // SPECIAL - copyData will not show flowRate as input param but will
+    //           display all readings in a data column from stripData as plot
+    //           vars so set VarCount to -1 so no display as input param
     this.VarCount = -1;
+    //
+    // OPTIONAL - add entries for output variables if want to use min-max to
+    //            constrain values in updateState or dimensional units in plotInfo
     //
   } // END of initialize() method
 

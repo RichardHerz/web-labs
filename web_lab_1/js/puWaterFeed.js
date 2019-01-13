@@ -2,6 +2,25 @@ function puWaterFeed(pUnitIndex) {
   // constructor function for process unit
 
   // *********************************************
+  //       DEPENDENCIES
+  // *********************************************
+
+  // see private method getInputs for input connections to this unit
+  //   from other units
+  // see public variables for info shared with other units and methods
+
+  // *******************************************
+  // define PRIVATE methods >> use "let " before
+  // *******************************************
+
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs method
+  let getInputs = function() {
+    let inputs = [];
+    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
+    return inputs;
+  }
+
+  // *********************************************
   // define PRIVATE variables >> use "let " before
   // *********************************************
 
@@ -11,17 +30,6 @@ function puWaterFeed(pUnitIndex) {
   let unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in this.checkForSteadyState() method
-
-  // *******************************************
-  // define PRIVATE methods >> use "let " before
-  // *******************************************
-
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  let getInputs = function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    return inputs;
-  }
 
   // *******************************************
   // define PUBLIC variables >> use this. prefix
@@ -35,7 +43,7 @@ function puWaterFeed(pUnitIndex) {
   // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
   // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
-  this.dataInputs = []; // input field ID's
+  this.dataInputs = []; // HTML field ID's of input parameters
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];

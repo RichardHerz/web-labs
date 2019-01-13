@@ -2,11 +2,32 @@ function puWaterTank(pUnitIndex) {
   // constructor function for process unit
 
   // *********************************************
+  //       DEPENDENCIES
+  // *********************************************
+
+  // see private method getInputs for input connections to this unit
+  //   from other units
+  // see public variables for info shared with other units and methods
+
+  // *******************************************
+  // define PRIVATE methods >> use "let " before
+  // *******************************************
+
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs method
+  let getInputs = function() {
+    let inputs = [];
+    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
+    inputs[0] = processUnits[0].flowRate; // input flowRate from feed process unit
+    inputs[1] = processUnits[2].command; // command from controller process unit
+    return inputs;
+  }
+
+  // *********************************************
   // define PRIVATE variables >> use "let " before
   // *********************************************
 
   let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
-  // unitIndex may be used in this object's updateUIparams() method
+  // unitIndex may be used in this object's updateUIparams method
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
   let theDisplayWaterDivID = "#div_water";
@@ -22,19 +43,6 @@ function puWaterTank(pUnitIndex) {
   let command = 0; // input command from controller process unit
 
   // *******************************************
-  // define PRIVATE methods >> use "let " before
-  // *******************************************
-
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  let getInputs = function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    inputs[0] = processUnits[0].flowRate; // input flowRate from feed process unit
-    inputs[1] = processUnits[2].command; // command from controller process unit
-    return inputs;
-  }
-
-  // *******************************************
   // define PUBLIC variables >> use this. prefix
   // *******************************************
 
@@ -46,7 +54,7 @@ function puWaterTank(pUnitIndex) {
   // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
   // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
-  this.dataInputs = []; // input field ID's
+  this.dataInputs = []; // HTML field ID's of input parameters
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];

@@ -11,7 +11,6 @@ function puBioRxrController(pUnitIndex) {
     // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
     // WARNING: make sure html field text for set point var name matches this input!
     inputs[0] = processUnits[1].biomass; // biomass in bioreactor
-    // inputs[0] = processUnits[1].conc; // substrate conc in bioreactor
     return inputs;
   }
 

@@ -1,12 +1,20 @@
 function puBioReactor(pUnitIndex) {
   // constructor function for process unit
 
-  this.unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
-  // unitIndex used in this object's updateUIparams() method
-  this.name = 'process unit Bioreactor';
+  // *********************************************
+  //       DEPENDENCIES
+  // *********************************************
+
+  // see private method getInputs for input connections to this unit
+  //   from other units
+  // see public variables for info shared with other units and methods
+
+  // *******************************************
+  // define PRIVATE methods >> use "let " before
+  // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  this.getInputs = function() {
+  let getInputs = function() {
     let inputs = [];
     // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
     inputs[0] = processUnits[0].flowRate; // input flowRate from feed
@@ -14,33 +22,46 @@ function puBioReactor(pUnitIndex) {
     return inputs;
   }
 
-  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
-  this.displayReactorContents = "#div_PLOTDIV_reactorContents";
+  // *********************************************
+  // define PRIVATE variables >> use "let " before
+  // *********************************************
 
+  // unitIndex may be used in this object's updateUIparams method
+  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
   // allow this unit to take more than one step within one main loop step in updateState method
-  this.unitStepRepeats = 1;
-  this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+  let unitStepRepeats = 1;
+  let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+  let ssCheckSum = 0; // used in checkForSteadyState method
 
-  // define variables
-  this.ssCheckSum = 0; // used in checkForSteadyState() method
-  this.flowRate = 0; // input flow rate from feed unit
-  this.feedConc = 0; // input substrate conc from feed unit
-  this.conc = 0; // substrate conc in reactor
-  this.biomass = 1; // biomass in reactor, need > 0 initially or no growth
+  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
+  let theDisplayReactorContentsID = "#div_PLOTDIV_reactorContents";
+
+  // define internal variables
+  let flowRate = 0; // input flow rate from feed unit
+  let feedConc = 0; // input substrate conc from feed unit
+  let conc = 0; // substrate conc in reactor
   // rate parameters
-  this.MUmax = 0;
-  this.ks = 0;
-  this.alpha = 0;
-  this.beta = 0;
-  this.gamma = 0;
+  let muMax = 0;
+  let ks = 0;
+  let alpha = 0;
+  let beta = 0;
+  let gamma = 0;
 
-  this.ssCheckSum = 0; // used to check for steady state
-  this.residenceTime = 0; // for timing checks for steady state check
+  // *******************************************
+  // define PUBLIC variables >> use this. prefix
+  // *******************************************
+
+  this.name = 'process unit Bioreactor'; // used by interfacer.copyData()
+  this.residenceTime = 0; // used by controller.checkForSteadyState()
+
+  // biomass in reactor, need > 0 initially or no growth
+  this.biomass = 1; // output biomass to process unit puBioRxrController
 
   // define arrays to hold info for variables
-  // these will be filled with values in method initialize()
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
+  // these will be filled with values in method initialize
   this.dataHeaders = []; // variable names
-  this.dataInputs = []; // input field ID's
+  this.dataInputs = []; // HTML field ID's of input parameters
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
@@ -48,23 +69,28 @@ function puBioReactor(pUnitIndex) {
   this.dataValues = [];
 
   // define arrays to hold data for plots, color canvas
-  // these will be filled with initial values in method reset()
+  // these arrays will be used by plotter object
+  // these will be filled with initial values in method reset
   //
   // this.profileData = []; // for profile plots, plot script requires this name
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
+  // *****************************************
+  // define PUBLIC methods >> use this. prefix
+  // *****************************************
+
   this.initialize = function() {
     //
     v = 0;
-    this.dataHeaders[v] = 'MUmax'; // Wu & Chang 2007, MUmax = 0.3
+    this.dataHeaders[v] = 'muMax'; // Wu & Chang 2007, MUmax = 0.3
     this.dataInputs[v] = 'input_field_enter_MUmax';
     this.dataUnits[v] = 'm3/kg/h'; // XXX in paper was 1/h
     this.dataMin[v] = 0.01;
     this.dataMax[v] = 10;
     this.dataInitial[v] = 0.3;
-    this.MUmax = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.MUmax; // current input oalue for reporting
+    muMax = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = muMax; // current input oalue for reporting
     //
     v = 1;
     this.dataHeaders[v] = 'ks';  // Wu & Chang 2007, ks = 1.75
@@ -73,8 +99,8 @@ function puBioReactor(pUnitIndex) {
     this.dataMin[v] = 0.01;
     this.dataMax[v] = 10;
     this.dataInitial[v] = 1.75;
-    this.ks = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.ks; // current input oalue for reporting
+    ks = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = ks; // current input oalue for reporting
     //
     v = 2;
     this.dataHeaders[v] = 'alpha';  // Wu & Chang 2007, alpha = 0.01
@@ -83,8 +109,8 @@ function puBioReactor(pUnitIndex) {
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
     this.dataInitial[v] = 0.01;
-    this.alpha = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.alpha; // current input oalue for reporting
+    alpha = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = alpha; // current input oalue for reporting
     //
     v = 3;
     this.dataHeaders[v] = 'beta';  // Wu & Chang 2007, beta = 0.03
@@ -93,8 +119,8 @@ function puBioReactor(pUnitIndex) {
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
     this.dataInitial[v] = 0.03;
-    this.beta = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.beta; // current input oalue for reporting
+    beta = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = beta; // current input oalue for reporting
     //
     v = 4;
     this.dataHeaders[v] = 'gamma'; // Wu & Chang 2007, gamma = 0.1
@@ -103,8 +129,8 @@ function puBioReactor(pUnitIndex) {
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
     this.dataInitial[v] = 0.5;
-    this.gamma = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.gamma; // current input oalue for reporting
+    gamma = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = gamma; // current input oalue for reporting
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -144,10 +170,10 @@ function puBioReactor(pUnitIndex) {
     controller.ssFlag = false;
 
     // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    ssCheckSum = 0;
 
     this.biomass = 1.322; // biomass in reactor, need > 0 initially or no growth
-    this.conc = 0.3;
+    conc = 0.3;
 
     // each unit has its own data arrays for plots and canvases
 
@@ -171,7 +197,7 @@ function puBioReactor(pUnitIndex) {
      // after change in UI params when previously at steady state
      controller.resetSSflagsFalse();
      // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-     this.ssCheckSum = 1;
+     ssCheckSum = 1;
 
     // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
@@ -179,13 +205,13 @@ function puBioReactor(pUnitIndex) {
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
-    let unum = this.unitIndex;
+    let unum = unitIndex;
     //
-    this.MUmax = this.dataValues[0] = interfacer.getInputValue(unum, 0);
-    this.ks = this.dataValues[1] = interfacer.getInputValue(unum, 1);
-    this.alpha = this.dataValues[2] = interfacer.getInputValue(unum, 2);
-    this.beta = this.dataValues[3] = interfacer.getInputValue(unum, 3);
-    this.gamma = this.dataValues[4] = interfacer.getInputValue(unum, 4);
+    muMax = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    ks = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    alpha = this.dataValues[2] = interfacer.getInputValue(unum, 2);
+    beta = this.dataValues[3] = interfacer.getInputValue(unum, 3);
+    gamma = this.dataValues[4] = interfacer.getInputValue(unum, 4);
 
   } // END of updateUIparams() method
 
@@ -196,18 +222,18 @@ function puBioReactor(pUnitIndex) {
     // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
 
     // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
     // get array of current input values to this unit from other units
-    let inputs = this.getInputs();
-    this.flowRate = inputs[0]; // input flow rate from feed unit
-    this.feedConc = inputs[1]; // input substrate conc from feed unit
+    let inputs = getInputs();
+    flowRate = inputs[0]; // input flow rate from feed unit
+    feedConc = inputs[1]; // input substrate conc from feed unit
 
-    // console.log('RXR updateInputs, flowRate = '+this.flowRate);
+    // console.log('RXR updateInputs, flowRate = '+flowRate);
 
     // residence time used in controller.checkForSteadyState()
-    this.residenceTime = 1 / this.flowRate; // volume fixed at 1 m3
+    this.residenceTime = 1 / flowRate; // volume fixed at 1 m3
     // BUT use width of strip plot to help ensure plot update does not
     // suspend in middle when reach steady state for check every 2 times
     // longest res time BUT NOT foolproof, e.g., with
@@ -231,72 +257,72 @@ function puBioReactor(pUnitIndex) {
      // XXX equations from paper but does NOT seem dimensionlly consistent...
      // XXX only dimensionally consistent if units of MUmax are m3/kg/h not 1/h....
     let rxrVolume = 1; // (m3)
-    let G = this.MUmax * this.conc / (this.ks + this.conc); // biomass growth rate
+    let G = muMax * conc / (ks + conc); // biomass growth rate
 
-    let Y = (this.alpha + this.beta * this.conc); // partial yield function
-    Y = Math.pow(Y,this.gamma); // complete yield function
-    let D = this.flowRate / rxrVolume; // dilution rate = space velocity
+    let Y = (alpha + beta * conc); // partial yield function
+    Y = Math.pow(Y,gamma); // complete yield function
+    let D = flowRate / rxrVolume; // dilution rate = space velocity
 
-    // console.log('RXR updateState, flowRate = '+this.flowRate);
+    // console.log('RXR updateState, flowRate = '+flowRate);
 
-    let dCdt = D * (this.feedConc - this.conc) - (G / Y) * this.biomass;
-    let dC = this.unitTimeStep * dCdt;
-    let newConc = this.conc + dC;
+    let dCdt = D * (feedConc - conc) - (G / Y) * this.biomass;
+    let dC = unitTimeStep * dCdt;
+    let newConc = conc + dC;
 
     let dBdt = (G - D) * this.biomass;
-    let dB = this.unitTimeStep * dBdt;
+    let dB = unitTimeStep * dBdt;
     let newBiomass = this.biomass + dB;
 
     if (newConc < 0){newConc = 0;}
     if (newBiomass < 0){newBiomass = 0;}
 
-    this.conc = newConc;
+    conc = newConc;
     this.biomass = newBiomass;
 
     // // XXX dimensionally consistent here - seems not in paper...
-    // // XXX HERE delete this.conc from numerator of G...
+    // // XXX HERE delete conc from numerator of G...
     // let rxrVolume = 1; // (m3)
-    // let G = this.MUmax / (this.ks + this.conc); // XXX (1/h), XXX biomass growth rate
+    // let G = muMax / (ks + conc); // XXX (1/h), XXX biomass growth rate
     //
-    // let Y = (this.alpha + this.beta * this.conc); // (d'less), partial yield function
-    // Y = Math.pow(Y,this.gamma); // (d'less), complete yield function
-    // let D = this.flowRate / rxrVolume; // (1/h), dilution rate = space velocity
+    // let Y = (alpha + beta * conc); // (d'less), partial yield function
+    // Y = Math.pow(Y,gamma); // (d'less), complete yield function
+    // let D = flowRate / rxrVolume; // (1/h), dilution rate = space velocity
     //
-    // let dCdt = D * (this.feedConc - this.conc) - (G / Y); // (kg/m3/h)
-    // let dC = this.unitTimeStep * dCdt; // (kg/m3)
-    // let newConc = this.conc + dC; // (kg/m3)
+    // let dCdt = D * (feedConc - conc) - (G / Y); // (kg/m3/h)
+    // let dC = unitTimeStep * dCdt; // (kg/m3)
+    // let newConc = conc + dC; // (kg/m3)
     //
     // let dBdt = G - D * this.biomass; // (kg/m3/h)
-    // let dB = this.unitTimeStep * dBdt; // (kg/m3)
+    // let dB = unitTimeStep * dBdt; // (kg/m3)
     // let newBiomass = this.biomass + dB; // (kg/m3)
     //
     // if (newConc < 0){newConc = 0;}
     // if (newBiomass < 0){newBiomass = 0;}
     //
-    // this.conc = newConc;
+    // conc = newConc;
     // this.biomass = newBiomass;
 
     // // XXX dimensionally consistent here - seems not in paper...
     // // XXX HERE delete biomass times G in terms
     // let rxrVolume = 1; // (m3)
-    // let G = this.MUmax * this.conc / (this.ks + this.conc); // (kg/m3/h), biomass growth rate
+    // let G = muMax * conc / (ks + conc); // (kg/m3/h), biomass growth rate
     //
-    // let Y = (this.alpha + this.beta * this.conc); // (d'less), partial yield function
-    // Y = Math.pow(Y,this.gamma); // (d'less), complete yield function
-    // let D = this.flowRate / rxrVolume; // (1/h), dilution rate = space velocity
+    // let Y = (alpha + beta * conc); // (d'less), partial yield function
+    // Y = Math.pow(Y,gamma); // (d'less), complete yield function
+    // let D = flowRate / rxrVolume; // (1/h), dilution rate = space velocity
     //
-    // let dCdt = D * (this.feedConc - this.conc) - (G / Y); // (kg/m3/h)
-    // let dC = this.unitTimeStep * dCdt; // (kg/m3)
-    // let newConc = this.conc + dC; // (kg/m3)
+    // let dCdt = D * (feedConc - conc) - (G / Y); // (kg/m3/h)
+    // let dC = unitTimeStep * dCdt; // (kg/m3)
+    // let newConc = conc + dC; // (kg/m3)
     //
     // let dBdt = G - D * this.biomass; // (kg/m3/h)
-    // let dB = this.unitTimeStep * dBdt; // (kg/m3)
+    // let dB = unitTimeStep * dBdt; // (kg/m3)
     // let newBiomass = this.biomass + dB; // (kg/m3)
     //
     // if (newConc < 0){newConc = 0;}
     // if (newBiomass < 0){newBiomass = 0;}
     //
-    // this.conc = newConc;
+    // conc = newConc;
     // this.biomass = newBiomass;
 
   } // END of updateState() method
@@ -306,7 +332,7 @@ function puBioReactor(pUnitIndex) {
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
-    let el = document.querySelector(this.displayReactorContents);
+    let el = document.querySelector(theDisplayReactorContentsID);
 
     let colorMax = 240;
     let biomassMax = this.dataMax[5];
@@ -345,7 +371,7 @@ function puBioReactor(pUnitIndex) {
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [0,this.conc] );
+    tempArray.push( [0,conc] );
     // update the variable being processed
     this.stripData[v] = tempArray;
 
@@ -369,8 +395,8 @@ function puBioReactor(pUnitIndex) {
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // returns ssFlag, true if this unit at SS, false if not
-    // uses and sets this.ssCheckSum
-    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // uses and sets ssCheckSum
+    // ssCheckSum can be set by reset() and updateUIparams()
     // check for SS in order to save CPU time when sim is at steady state
     // check for SS by checking for any significant change in array end values
     // but wait at least one residence time after the previous check
@@ -387,11 +413,11 @@ function puBioReactor(pUnitIndex) {
     // figures to left decimal point so toFixed() does not return string "0.###"
     // WARNING: too many sig figs will prevent detecting steady state
     //
-    let unum = this.unitIndex;
+    let unum = unitIndex;
     let rc = 1.0e2 * this.stripData[unum][0][1]; // oldest biomass conc in rxr conc plot
     let rt = 1.0e2 * this.biomass;
     let lc = 1.0e2 * this.stripData[unum][1][1]; // oldest substrate conc in rxr conc plot
-    let lt = 1.0e2 * this.conc;
+    let lt = 1.0e2 * conc;
     rc = rc.toFixed(0); // strings
     rt = rt.toFixed(0);
     lc = lc.toFixed(0);
@@ -399,10 +425,10 @@ function puBioReactor(pUnitIndex) {
     // concatenate strings
     let newCheckSum = rc +'.'+ rt +'.'+ lt +'.'+ lc;
     //
-    let oldSScheckSum = this.ssCheckSum;
+    let oldSScheckSum = ssCheckSum;
     let ssFlag = false;
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}
-    this.ssCheckSum = newCheckSum; // save current value for use next time
+    ssCheckSum = newCheckSum; // save current value for use next time
 
     // console.log('simTime = ' + controller.simTime);
     // console.log('  oldSScheckSum = ' + oldSScheckSum);

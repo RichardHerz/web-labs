@@ -33,6 +33,8 @@ let processUnits = new Object();
 //   processUnits[0].unitIndex = 0; // assign unitIndex to match processUnits index
 // then object cleared for garbage collection, e.g.,
 //   puHeatExchanger = null; // puHeatExchanger is an object
+// WARNING: if reorder unit index numbers, then need to edit
+//   those numbers in each unit's getInputs method
 
 processUnits[0] = new puWaterFeed(0);
 processUnits[1] = new puWaterTank(1);

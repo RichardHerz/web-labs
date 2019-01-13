@@ -51,13 +51,14 @@ let controller = {
 
   openThisLab : function() {
     // initialize variables in each process unit
+    // the order of the numeric index of process units does not affect the simulation
     let numUnits = Object.keys(processUnits).length; // number of units
     for (n = 0; n < numUnits; n += 1) {
       processUnits[n].initialize();
     }
     // initialize plotInfo to define plots after initialize units
     //    in order to allow plotInfo to use values from units,
-    //    e.g., dataUnits of output vars 
+    //    e.g., dataUnits of output vars
     plotInfo.initialize();
     // initialize plot arrays after initialize plotInfo
     plotter.plotArrays.initialize();

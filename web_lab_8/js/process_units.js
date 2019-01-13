@@ -22,6 +22,7 @@ let processUnits = new Object();
 // assign process unit objects to this object
 // as indexed child objects in order to allow object controller
 // to access them in a repeat with numeric index
+// the numeric order of process units does not affect the simulation
 // contents must be only the process units as child objects
 // child objects optionally can be defined in separate script files, which
 // makes them easier to edit,

@@ -1,16 +1,16 @@
 function puWaterTank(pUnitIndex) {
   // constructor function for process unit
 
-  // *********************************************
-  //       DEPENDENCIES
-  // *********************************************
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
 
-  // see private method getInputs for input connections to this unit
+  // see private function getInputs for input connections to this unit
   //   from other units
-  // see public variables for info shared with other units and methods
+  // see public properties for info shared with other units and methods
 
   // *******************************************
-  // define PRIVATE methods >> use "let " before
+  //         define PRIVATE functions
   // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs method
@@ -22,20 +22,20 @@ function puWaterTank(pUnitIndex) {
     return inputs;
   }
 
-  // *********************************************
-  // define PRIVATE variables >> use "let " before
-  // *********************************************
+  // *******************************************
+  //        define PRIVATE properties
+  // *******************************************
 
-  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
   // unitIndex may be used in this object's updateUIparams method
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
-  let theDisplayWaterDivID = "#div_water";
+  const theDisplayWaterDivID = "#div_water";
   // theDisplayWaterDivBtm = SUM orig CSS file specs of top+height pixels for water div
-  let theDisplayWaterDivBtm = 268; // PIXELS, bottom of html water div IN PIXELS
+  const theDisplayWaterDivBtm = 268; // PIXELS, bottom of html water div IN PIXELS
 
   // allow this unit to take more than one step within one main loop step in updateState method
-  let unitStepRepeats = 1;
+  const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
   let ssCheckSum = 0; // used in this.checkForSteadyState() method
@@ -43,12 +43,13 @@ function puWaterTank(pUnitIndex) {
   let command = 0; // input command from controller process unit
 
   // *******************************************
-  // define PUBLIC variables >> use this. prefix
+  //         define PUBLIC properties
   // *******************************************
 
   this.name = 'process unit Water Tank'; // used by interfacer.copyData()
-  this.level = 0; // water level in this tank used by controller process unit
   this.residenceTime = 0; // used by controller.checkForSteadyState()
+
+  this.level = 0; // water level in this tank used by controller process unit
 
   // define arrays to hold info for variables
   // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
@@ -70,13 +71,12 @@ function puWaterTank(pUnitIndex) {
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
   // *****************************************
-  // define PUBLIC methods >> use this. prefix
+  //        define PRIVILEGED methods
   // *****************************************
 
   this.initialize = function() {
     //
-    // OPTIONAL - add entries for output variables if want to use info
-    //            to constrain data in updateState or units in plotInfo
+    // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
     //
     // SPECIAL - in this unit no UI inputs - input only from feed & controller
     //
@@ -157,8 +157,8 @@ function puWaterTank(pUnitIndex) {
     // here have normally open valve
     // increasing command to valve results in decreasing valve coefficient
 
-    let Ax = 10; // cross sectional area of tank
-    let maxValveCoeff = 3;
+    const Ax = 10; // cross sectional area of tank
+    const maxValveCoeff = 3;
     let newCoef = maxValveCoeff*(1 - command);
 
     if (newCoef > maxValveCoeff) {
@@ -193,7 +193,7 @@ function puWaterTank(pUnitIndex) {
     //    and bottom of browser window can be moved by user,
     //    so must compute new top value to keep bottom of water rect
     //    constant value from top of browser window
-    let pixPerHtUnit = 48; // was 50
+    const pixPerHtUnit = 48; // was 50
     let newHt = pixPerHtUnit * this.level;
     let origBtm = theDisplayWaterDivBtm;
     let el = document.querySelector(theDisplayWaterDivID);
@@ -206,7 +206,7 @@ function puWaterTank(pUnitIndex) {
     let p = 0; // used as index
     let tempArray = [];
     let numStripPoints = plotInfo[0]['numberPoints'];
-    let numStripVars = 1; // only the variables from this unit
+    const numStripVars = 1; // only the variables from this unit
 
     // handle level
     v = 0;

@@ -1,16 +1,16 @@
 function puWaterController(pUnitIndex) {
   // constructor function for process unit
 
-  // *********************************************
-  //       DEPENDENCIES
-  // *********************************************
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
 
-  // see private method getInputs for input connections to this unit
+  // see private function getInputs for input connections to this unit
   //   from other units
-  // see public variables for info shared with other units and methods
+  // see public properties for info shared with other units and methods
 
   // *******************************************
-  // define PRIVATE methods >> use "let " before
+  //         define PRIVATE functions
   // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs method
@@ -21,14 +21,14 @@ function puWaterController(pUnitIndex) {
     return inputs;
   }
 
-  // *********************************************
-  // define PRIVATE variables >> use "let " before
-  // *********************************************
+  // *******************************************
+  //        define PRIVATE properties
+  // *******************************************
 
   // unitIndex may be used in this object's updateUIparams method
-  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
   // allow this unit to take more than one step within one main loop step in updateState method
-  let unitStepRepeats = 1;
+  const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in checkForSteadyState method
 
@@ -40,7 +40,7 @@ function puWaterController(pUnitIndex) {
   let errorIntegral = 0;
 
   // *******************************************
-  // define PUBLIC variables >> use this. prefix
+  //         define PUBLIC properties
   // *******************************************
 
   this.name = 'process unit Water Controller'; // used by interfacer.copyData()
@@ -67,7 +67,7 @@ function puWaterController(pUnitIndex) {
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
   // *****************************************
-  // define PUBLIC methods >> use this. prefix
+  //        define PRIVILEGED methods
   // *****************************************
 
   this.initialize = function() {
@@ -196,8 +196,8 @@ function puWaterController(pUnitIndex) {
     // stop integration at command limits
     // to prevent integral windup
 
-    let cMax = 1;
-    let cMin = 0;
+    const cMax = 1;
+    const cMin = 0;
 
     if (this.command > cMax) {
       this.command = cMax;
@@ -218,8 +218,8 @@ function puWaterController(pUnitIndex) {
     let v = 0; // used as index
     let p = 0; // used as index
     let tempArray = [];
-    let numStripPoints = plotInfo[0]['numberPoints'];
-    let numStripVars = 2; // only the variables from this unit
+    const numStripPoints = plotInfo[0]['numberPoints'];
+    const numStripVars = 2; // only the variables from this unit
 
     // handle setPoint
     v = 0;

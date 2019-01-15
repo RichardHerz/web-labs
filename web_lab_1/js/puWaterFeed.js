@@ -1,16 +1,16 @@
 function puWaterFeed(pUnitIndex) {
   // constructor function for process unit
 
-  // *********************************************
-  //       DEPENDENCIES
-  // *********************************************
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
 
-  // see private method getInputs for input connections to this unit
+  // see private function getInputs for input connections to this unit
   //   from other units
-  // see public variables for info shared with other units and methods
+  // see public properties for info shared with other units and methods
 
   // *******************************************
-  // define PRIVATE methods >> use "let " before
+  //         define PRIVATE functions
   // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs method
@@ -20,19 +20,19 @@ function puWaterFeed(pUnitIndex) {
     return inputs;
   }
 
-  // *********************************************
-  // define PRIVATE variables >> use "let " before
-  // *********************************************
+  // *******************************************
+  //        define PRIVATE properties
+  // *******************************************
 
   // unitIndex may be used in this object's updateUIparams() method
-  let unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
   // allow this unit to take more than one step within one main loop step in updateState method
-  let unitStepRepeats = 1;
+  const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in this.checkForSteadyState() method
 
   // *******************************************
-  // define PUBLIC variables >> use this. prefix
+  //         define PUBLIC properties
   // *******************************************
 
   this.name = 'process unit Water Feed'; // used by interfacer.copyData()
@@ -59,7 +59,7 @@ function puWaterFeed(pUnitIndex) {
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
   // *****************************************
-  // define PUBLIC methods >> use this. prefix
+  //        define PRIVILEGED methods
   // *****************************************
 
   this.initialize = function() {
@@ -115,8 +115,8 @@ function puWaterFeed(pUnitIndex) {
 
     // initialize strip chart data array
     // initPlotData(numStripVars,numStripPts)
-    let numStripVars = 1; // flowRate
-    let numStripPts = plotInfo[0]['numberPoints'];
+    const numStripVars = 1; // flowRate
+    const numStripPts = plotInfo[0]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts);
 
     // update display
@@ -146,7 +146,7 @@ function puWaterFeed(pUnitIndex) {
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
-    let unum = unitIndex;
+    // let unum = unitIndex;
     //
     // SPECIAL for this unit methods updateUIfeedInput and updateUIfeedSlider
     //         below get slider and field value for [0] and [1]
@@ -158,8 +158,8 @@ function puWaterFeed(pUnitIndex) {
     // called in HTML input element
     // [0] is field, [1] is slider
     // get field value
-    let unum = unitIndex;
-    let vnum = 0; // index for input field in initialize arrays
+    const unum = unitIndex;
+    const vnum = 0; // index for input field in initialize arrays
     this.flowRate = this.dataValues[0] = interfacer.getInputValue(unum, vnum);
     // update slider position
     document.getElementById(this.dataInputs[1]).value = this.flowRate;
@@ -174,8 +174,8 @@ function puWaterFeed(pUnitIndex) {
     // SPECIAL FOR THIS UNIT
     // called in HTML input element
     // [0] is field, [1] is slider
-    let unum = unitIndex;
-    let vnum = 1; // index for range slider in initialize arrays
+    const unum = unitIndex;
+    const vnum = 1; // index for range slider in initialize arrays
     this.flowRate = this.dataValues[1] = interfacer.getInputValue(unum, vnum);
     // update input field display
     if (document.getElementById(this.dataInputs[0])) {
@@ -227,8 +227,8 @@ function puWaterFeed(pUnitIndex) {
     let v = 0; // used as index
     let p = 0; // used as index
     let tempArray = [];
-    let numStripPoints = plotInfo[0]['numberPoints'];
-    let numStripVars = 1; // only the variables from this unit
+    const numStripPoints = plotInfo[0]['numberPoints'];
+    const numStripVars = 1; // only the variables from this unit
 
     // handle flowRate
     v = 0;

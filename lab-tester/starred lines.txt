@@ -1,0 +1,65 @@
+  // constructor function for process unit
+
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
+
+  // see private function getInputs for input connections to this unit
+  //   from other units
+  // see public properties for info shared with other units and methods
+
+  // *******************************************
+  //         define PRIVATE functions
+  // *******************************************
+
+
+  // *******************************************
+  //        define PRIVATE properties
+  // *******************************************
+
+  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
+  const theDisplayReactorContentsID = "#div_PLOTDIV_reactorContents";
+  
+
+  // *******************************************
+  //         define PUBLIC properties
+  // *******************************************
+
+  this.name = 'process unit Water Tank'; // used by interfacer.copyData()
+  this.residenceTime = 0; // used by controller.checkForSteadyState()
+
+
+  // define arrays to hold info for variables
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
+  // these will be filled with values in method initialize()
+  this.dataHeaders = []; // variable names
+  this.dataInputs = []; // HTML field ID's of input parameters
+  this.dataUnits = [];
+  this.dataMin = [];
+  this.dataMax = [];
+  this.dataInitial = [];
+  this.dataValues = [];
+
+  // *****************************************
+  //        define PRIVILEGED methods
+  // *****************************************
+
+  this.initialize = function() {
+    //
+    // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
+    //
+
+    //
+    // END OF INPUT VARS
+    // record number of input variables, VarCount
+    // used, e.g., in copy data to table
+    //
+    this.VarCount = v;
+    //
+    // OPTIONAL - add entries for output variables if want to use min-max to
+    //            constrain values in updateState or dimensional units in plotInfo
+    //
+    
+  } // END of initialize() method
+  
+  

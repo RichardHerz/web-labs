@@ -1,12 +1,20 @@
 function puBioRxrController(pUnitIndex) {
   // constructor function for process unit
 
-  this.unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
-  // unitIndex used in this object's updateUIparams() method
-  this.name = 'process unit Bioreactor Controller';
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
+
+  // see private function getInputs for input connections to this unit
+  //   from other units
+  // see public properties for info shared with other units and methods
+
+  // *******************************************
+  //         define PRIVATE functions
+  // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  this.getInputs = function() {
+  let getInputs = function() {
     let inputs = [];
     // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
     // WARNING: make sure html field text for set point var name matches this input!
@@ -14,9 +22,35 @@ function puBioRxrController(pUnitIndex) {
     return inputs;
   }
 
+  // *******************************************
+  //        define PRIVATE properties
+  // *******************************************
+
+  // unitIndex may be used in this object's updateUIparams method
+  const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
   // allow this unit to take more than one step within one main loop step in updateState method
-  this.unitStepRepeats = 1;
-  this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+  const unitStepRepeats = 1;
+  let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+  let ssCheckSum = 0; // used in checkForSteadyState method
+
+  // local variables used by controller process unit
+  let processVariable = 0;
+  let setPoint = 0;
+  let gain = 0; // controller gain
+  let resetTime = 0; // controller reset time
+  let manualBias = 0;
+  let manualCommand = 0;
+  let errorIntegral = 0;
+  let mode = "manual"; // auto or manual, see changeMode() below
+
+  // *******************************************
+  //         define PUBLIC properties
+  // *******************************************
+
+  this.name = 'process unit Bioreactor Controller'; // used by interfacer.copyData()
+  this.residenceTime = 0; // used by controller.checkForSteadyState()
+
+  this.command = 0; // output command from this controller unit
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -25,17 +59,8 @@ function puBioRxrController(pUnitIndex) {
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
-  // define variables
-  this.processVariable = 0;
-  this.setPoint = 0;
-  this.gain = 0; // controller gain
-  this.resetTime = 0; // controller reset time
-  this.manualBias = 0;
-  this.command = 0; // controller command from this controller unit
-  this.errorIntegral = 0;
-  this.mode = "manual"; // auto or manual, see changeMode() below
-
   // define arrays to hold info for variables
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
   // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
   this.dataInputs = []; // input field ID's
@@ -45,17 +70,23 @@ function puBioRxrController(pUnitIndex) {
   this.dataInitial = [];
   this.dataValues = [];
 
+  // *****************************************
+  //        define PRIVILEGED methods
+  // *****************************************
+
   this.initialize = function() {
+    //
+    // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
     //
     let v = 0;
     this.dataHeaders[v] = 'set point';
     this.dataInputs[v] = 'input_field_enterSetpoint';
-    this.dataUnits[v] = '';
+    this.dataUnits[v] = 'kg/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 30;
     this.dataInitial[v] = 5;
-    this.setPoint = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.setPoint; // current input oalue for reporting
+    setPoint = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = setPoint; // current input oalue for reporting
     //
     v = 1;
     this.dataHeaders[v] = 'gain';
@@ -64,8 +95,8 @@ function puBioRxrController(pUnitIndex) {
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
     this.dataInitial[v] = 0.1;
-    this.gain = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.gain; // current input oalue for reporting
+    gain = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = gain; // current input oalue for reporting
     //
     v = 2;
     this.dataHeaders[v] = 'reset time';
@@ -74,18 +105,18 @@ function puBioRxrController(pUnitIndex) {
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
     this.dataInitial[v] = 5;
-    this.resetTime = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.resetTime; // current input oalue for reporting
+    resetTime = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = resetTime; // current input oalue for reporting
     //
     v = 3;
     this.dataHeaders[v] = 'manualCommand';
     this.dataInputs[v] = 'input_field_enterSubstrateFeedConc';
-    this.dataUnits[v] = '';
+    this.dataUnits[v] = 'kg/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 40;
     this.dataInitial[v] = 30;
-    this.manualCommand = this.dataInitial[v];
-    this.dataValues[v] = this.manualCommand;
+    manualCommand = this.dataInitial[v];
+    this.dataValues[v] = manualCommand;
     //
     // SPECIAL - SET CHECKED OF RADIO BUTTONS TO MATCH THIS SETTING
     // PAGE RELOAD DOES NOT CHANGE CHECKED BUT DOES CALL initialize
@@ -100,14 +131,15 @@ function puBioRxrController(pUnitIndex) {
     // but need manualCommand as input var to get from html input
     this.VarCount = v-1;
     //
-    // OUTPUT VARS
+    // OPTIONAL - add entries for output variables if want to use min-max to
+    //            constrain values in updateState or dimensional units in plotInfo
     //
     v = 4;
     this.dataHeaders[v] = 'command';
-    this.dataUnits[v] =  '';
+    this.dataUnits[v] =  'kg/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = this.dataMax[3];
-    //
+
   } // END of initialize() method
 
   this.reset = function() {
@@ -126,10 +158,10 @@ function puBioRxrController(pUnitIndex) {
     controller.ssFlag = false;
 
     // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    ssCheckSum = 0;
 
     // set state variables not set by updateUIparams to initial settings
-    this.errorIntegral = 0;
+    errorIntegral = 0;
     this.command = this.dataInitial[3]; // initial manual command
 
     // XXX should this reset mode to manual?
@@ -138,8 +170,8 @@ function puBioRxrController(pUnitIndex) {
 
     // initialize strip chart data array
     // initPlotData(numStripVars,numStripPts)
-    let numStripVars = 2; // setPoint, command
-    let numStripPts = plotInfo[0]['numberPoints'];
+    const numStripVars = 2; // setPoint, command
+    const numStripPts = plotInfo[0]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts);
 
     // update display
@@ -150,20 +182,20 @@ function puBioRxrController(pUnitIndex) {
   this.changeMode = function(){
     let el = document.querySelector("#radio_controllerAUTO");
     if (el.checked){
-      this.mode = "auto";
-      this.manualBias = this.command; // for "bumpless transfer"
+      mode = "auto";
+      manualBias = this.command; // for "bumpless transfer"
     } else {
-      this.mode = "manual";
+      mode = "manual";
     }
 
     // zero errorIntegral on all changeModes
-    this.errorIntegral = 0;
+    errorIntegral = 0;
 
     // need to reset controller.ssFlag to false to get sim to run
      // after change in UI params when previously at steady state
      controller.resetSSflagsFalse();
      // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-     this.ssCheckSum = 1;
+     ssCheckSum = 1;
 
   } // END of changeMode() method
 
@@ -176,7 +208,7 @@ function puBioRxrController(pUnitIndex) {
      // after change in UI params when previously at steady state
      controller.resetSSflagsFalse();
      // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-     this.ssCheckSum = 1;
+     ssCheckSum = 1;
 
     // check input fields for new values
     // function getInputValue() is defined in file process_interfacer.js
@@ -185,12 +217,12 @@ function puBioRxrController(pUnitIndex) {
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
-    let unum = this.unitIndex;
+    let unum = unitIndex;
     //
-    this.setPoint = this.dataValues[0] = interfacer.getInputValue(unum, 0);
-    this.gain = this.dataValues[1] = interfacer.getInputValue(unum, 1);
-    this.resetTime = this.dataValues[2] = interfacer.getInputValue(unum, 2);
-    this.manualCommand = this.dataValues[3] = interfacer.getInputValue(unum, 3);
+    setPoint = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    gain = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    resetTime = this.dataValues[2] = interfacer.getInputValue(unum, 2);
+    manualCommand = this.dataValues[3] = interfacer.getInputValue(unum, 3);
 
   } // END of updateUIparams() method
 
@@ -201,12 +233,12 @@ function puBioRxrController(pUnitIndex) {
     // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
 
     // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
     // get array of current input values to this unit from other units
-    let inputs = this.getInputs();
-    this.processVariable = inputs[0]; // biomass in bioreactor
+    let inputs = getInputs();
+    processVariable = inputs[0]; // biomass in bioreactor
 
   } // END of updateInputs() method
 
@@ -222,9 +254,9 @@ function puBioRxrController(pUnitIndex) {
 
     // compute new value of PI controller command
     // manual bias set to current command when switching to auto in changeMode()
-    let error = this.setPoint - this.processVariable;
-    this.command = this.manualBias + this.gain *
-                  (error + (1/this.resetTime) * this.errorIntegral);
+    let error = setPoint - processVariable;
+    this.command = manualBias + gain *
+                  (error + (1/resetTime) * errorIntegral);
 
     // stop integration at command limits
     // to prevent integral windup
@@ -236,19 +268,19 @@ function puBioRxrController(pUnitIndex) {
     } else {
       // not at limit, OK to update integral of error
       // update errorIntegral only after it is used above to update this.command
-      this.errorIntegral = this.errorIntegral + error * this.unitTimeStep; // update integral of error
+      errorIntegral = errorIntegral + error * unitTimeStep; // update integral of error
     }
 
-    if (this.mode == "manual"){
+    if (mode == "manual"){
       // replace command with value entered in input in page
       // let el = document.querySelector("#enterJacketFeedTTemp");
       // this.command = el.value;
-      this.command = this.manualCommand;
+      this.command = manualCommand;
     } else {
       // in auto mode, use command computed above
     }
 
-    // console.log('this.errorIntegral = '+this.errorIntegral);
+    // console.log('errorIntegral = '+errorIntegral);
     // console.log('this.command = '+this.command);
 
   } // END of updateState() method
@@ -260,8 +292,8 @@ function puBioRxrController(pUnitIndex) {
     let v = 0; // used as index
     let p = 0; // used as index
     let tempArray = [];
-    let numStripPoints = plotInfo[0]['numberPoints'];
-    let numStripVars = 2; // only the variables from this unit
+    const numStripPoints = plotInfo[0]['numberPoints'];
+    const numStripVars = 2; // only the variables from this unit
 
     // handle setPoint
     v = 0;
@@ -269,7 +301,7 @@ function puBioRxrController(pUnitIndex) {
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [0,this.setPoint] );
+    tempArray.push( [0,setPoint] );
     // update the variable being processed
     this.stripData[v] = tempArray;
 
@@ -305,11 +337,11 @@ function puBioRxrController(pUnitIndex) {
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
-    // this.ssCheckSum set != 0 on updateUIparams() execution
-    if (this.ssCheckSum != 0) {
+    // ssCheckSum set != 0 on updateUIparams() execution
+    if (ssCheckSum != 0) {
       ssFlag = false;
     }
-    this.ssCheckSum = 0;
+    ssCheckSum = 0;
     return ssFlag;
   } // END of checkForSteadyState() method
 

@@ -1,21 +1,48 @@
 function puBioRxrFeed(pUnitIndex) {
   // constructor function for process unit
 
-  this.unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
-  // unitIndex used in this object's updateUIparams() method
-  this.name = 'process unit Bioreactor Feed';
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
+
+  // see private function getInputs for input connections to this unit
+  //   from other units
+  // see public properties for info shared with other units and methods
+
+  // *******************************************
+  //         define PRIVATE functions
+  // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  this.getInputs = function() {
+  let getInputs = function() {
     let inputs = [];
     // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
     inputs[0] = processUnits[2].command; // controller command
     return inputs;
   }
 
+  // *******************************************
+  //        define PRIVATE properties
+  // *******************************************
+
+  let unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
+
   // allow this unit to take more than one step within one main loop step in updateState method
-  this.unitStepRepeats = 1;
-  this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+  const unitStepRepeats = 1;
+  let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+  let ssCheckSum = 0; // used in checkForSteadyState() method
+
+  // *******************************************
+  //         define PUBLIC properties
+  // *******************************************
+
+  this.name = 'process unit Bioreactor Feed';
+  this.residenceTime = 0; // used by controller.checkForSteadyState()
+
+  // define variables
+  this.flowRate = 0; // ouput feed flow rate to puBioReactor unit
+  this.conc = 0; // output substrate (reactant) feed conc to puBioReactor unit
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -24,12 +51,8 @@ function puBioRxrFeed(pUnitIndex) {
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
-  // define variables
-  this.ssCheckSum = 0; // used in checkForSteadyState() method
-  this.flowRate = 0; // feed flow rate
-  this.conc = 0; // substrate (reactant) concentration in feed
-
   // define arrays to hold info for variables
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
   // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
   this.dataInputs = []; // input field ID's
@@ -39,7 +62,13 @@ function puBioRxrFeed(pUnitIndex) {
   this.dataInitial = [];
   this.dataValues = [];
 
+  // *****************************************
+  //        define PRIVILEGED methods
+  // *****************************************
+
   this.initialize = function() {
+    //
+    // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
     //
     let v = 0;
     this.dataHeaders[v] = 'Flow Rate';
@@ -55,17 +84,12 @@ function puBioRxrFeed(pUnitIndex) {
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
     //
-    // this.VarCount = v;
+    this.VarCount = v;
     //
-    // OUTPUT VARS
+    // OPTIONAL - add entries for output variables if want to use min-max to
+    //            constrain values in updateState or dimensional units in plotInfo
     //
-    // v = 7;
-    // this.dataHeaders[v] = 'Trxr';
-    // this.dataUnits[v] =  'K';
-    // // Trxr dataMin & dataMax can be changed in updateUIparams()
-    // this.dataMin[v] = 200;
-    // this.dataMax[v] = 500;
-    //
+
   } // END of initialize() method
 
   this.reset = function() {
@@ -84,14 +108,14 @@ function puBioRxrFeed(pUnitIndex) {
     controller.ssFlag = false;
 
     // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    ssCheckSum = 0;
 
     // each unit has its own data arrays for plots and canvases
 
     // initialize strip chart data array
     // initPlotData(numStripVars,numStripPts)
-    let numStripVars = 2; // flowRate, conc
-    let numStripPts = plotInfo[0]['numberPoints'];
+    const numStripVars = 2; // flowRate, conc
+    const numStripPts = plotInfo[0]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts);
 
     // update display
@@ -108,7 +132,7 @@ function puBioRxrFeed(pUnitIndex) {
      // after change in UI params when previously at steady state
      controller.resetSSflagsFalse();
      // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-     this.ssCheckSum = 1;
+     ssCheckSum = 1;
 
     // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
@@ -116,7 +140,7 @@ function puBioRxrFeed(pUnitIndex) {
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
-    let unum = this.unitIndex;
+    let unum = unitIndex;
     //
     this.flowRate = this.dataValues[0] = interfacer.getInputValue(unum, 0);
 
@@ -129,11 +153,12 @@ function puBioRxrFeed(pUnitIndex) {
     // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
 
     // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // get array of current input values to this unit from other units
-    let inputs = this.getInputs();
+    let inputs = getInputs();
     this.conc = inputs[0]; // get substrate conc from controller
+    // will output conc from this unit to puBioReactor unit 
 
   } // END of updateInputs() method
 
@@ -162,8 +187,8 @@ function puBioRxrFeed(pUnitIndex) {
     let v = 0; // used as index
     let p = 0; // used as index
     let tempArray = [];
-    let numStripPoints = plotInfo[0]['numberPoints'];
-    let numStripVars = 2; // only the variables from this unit
+    const numStripPoints = plotInfo[0]['numberPoints'];
+    const numStripVars = 2; // only the variables from this unit
 
     // handle flowRate
     v = 0;
@@ -207,11 +232,11 @@ function puBioRxrFeed(pUnitIndex) {
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
-    // this.ssCheckSum set != 0 on updateUIparams() execution
-    if (this.ssCheckSum != 0) {
+    // ssCheckSum set != 0 on updateUIparams() execution
+    if (ssCheckSum != 0) {
       ssFlag = false;
     }
-    this.ssCheckSum = 0;
+    ssCheckSum = 0;
     return ssFlag;
   } // END of checkForSteadyState() method
 

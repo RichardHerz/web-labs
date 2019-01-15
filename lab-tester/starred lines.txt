@@ -29,11 +29,18 @@
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
 
+  // define arrays to hold data for plots, color canvas
+  // these will be filled with initial values in method reset()
+  //
+  // this.profileData = []; // for profile plots, plot script requires this name
+  this.stripData = []; // for strip chart plots, plot script requires this name
+  // this.colorCanvasData = []; // for color canvas, plot script requires this name
+
   // define arrays to hold info for variables
   // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
   // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
-  this.dataInputs = []; // HTML field ID's of input parameters
+  this.dataInputs = []; // input field ID's
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];

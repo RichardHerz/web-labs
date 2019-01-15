@@ -81,7 +81,7 @@ function puBioRxrController(pUnitIndex) {
     let v = 0;
     this.dataHeaders[v] = 'set point';
     this.dataInputs[v] = 'input_field_enterSetpoint';
-    this.dataUnits[v] = '';
+    this.dataUnits[v] = 'kg/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 30;
     this.dataInitial[v] = 5;
@@ -111,7 +111,7 @@ function puBioRxrController(pUnitIndex) {
     v = 3;
     this.dataHeaders[v] = 'manualCommand';
     this.dataInputs[v] = 'input_field_enterSubstrateFeedConc';
-    this.dataUnits[v] = '';
+    this.dataUnits[v] = 'kg/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 40;
     this.dataInitial[v] = 30;
@@ -136,7 +136,7 @@ function puBioRxrController(pUnitIndex) {
     //
     v = 4;
     this.dataHeaders[v] = 'command';
-    this.dataUnits[v] =  '';
+    this.dataUnits[v] =  'kg/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = this.dataMax[3];
 

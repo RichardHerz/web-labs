@@ -11,11 +11,20 @@
   // *******************************************
   //         define PRIVATE functions
   // *******************************************
-
+  
+  let getInputs = 
 
   // *******************************************
   //        define PRIVATE properties
   // *******************************************
+  
+  // unitIndex may be used in this object's updateUIparams method
+  const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  // allow this unit to take more than one step within one main loop step in updateState method
+  const unitStepRepeats = 1;
+  let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+  let ssCheckSum = 0; // used in checkForSteadyState method
+
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
   const theDisplayReactorContentsID = "#div_PLOTDIV_reactorContents";

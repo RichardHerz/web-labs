@@ -37,15 +37,11 @@ let processUnits = new Object();
 // WARNING: if reorder unit index numbers, then need to edit
 //   those numbers in each unit's getInputs method
 
-// ADD PROCESS FEED defined in file puFEED.js
-processUnits[0] = puFEED;
-processUnits[0].unitIndex = 0;
+// ADD PROCESS FEED USING OBJECT CONSTRUCTOR IN FILE puFEED.js
+processUnits[0] = new puFEED(0);
 
-// ADD CSTRs to processUnits USING OBJECT CONSTRUCTOR IN FILE puCSTR.js
+// ADD CSTRs USING OBJECT CONSTRUCTOR IN FILE puCSTR.js
 let numRxrs = 4;
 for (let i = 1; i <= numRxrs; i += 1) {
   processUnits[i] = new puCSTR(i);
 }
-
-// clear for garbage collection
-puFEED = null;

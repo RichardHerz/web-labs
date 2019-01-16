@@ -1,72 +1,76 @@
-let puFEED = {
-  //
-  unitIndex : 0, // index of this unit as child in processUnits parent object
-  // unitIndex used in this object's updateUIparams() method
-  name : 'feed',
+function puFEED(pUnitIndex) {
+  // constructor function for process unit
 
-  // SUMMARY OF DEPENDENCIES
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
 
-  // define arrays to hold data for plots, color canvas
-  // these will be filled with initial values in method reset()
-  // profileData : [], // for profile plots, plot script requires this name
-  stripData : [], // for strip chart plots, plot script requires this name
+  // see private function getInputs for input connections to this unit
+  //   from other units
+  // see public properties for info shared with other units and methods
+
+  // *******************************************
+  //         define PRIVATE functions
+  // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
+  let getInputs = function() {
     let inputs = [];
     // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
     return inputs;
-  },
+  }
 
-  // USES OBJECT simParams
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   none
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //   none
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
+  // *******************************************
+  //        define PRIVATE properties
+  // *******************************************
 
-  // define main parameters
-  // values will be set in method initialize()
+  // unitIndex may be used in this object's updateUIparams method
+  const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  // allow this unit to take more than one step within one main loop step in updateState method
+  const unitStepRepeats = 1;
+  let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+  let ssCheckSum = 0; // used in checkForSteadyState method
+
+  // CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS
+  // **** currently use these but also see IDs in initialize method, where
+  // **** they are not currently used - which is best?
+  let thisConcSliderID = 'range_setFeedConc_slider';
+  let thisConcFieldID = 'input_setFeedConc_value';
+
+  // *******************************************
+  //         define PUBLIC properties
+  // *******************************************
+
+  this.name = 'feed';
+  this.residenceTime = 0; // used by controller.checkForSteadyState()
+
+  this.conc = 0; // output feed conc to first CSTR
+
+  // define arrays to hold data for plots, color canvas
+  // these will be filled with initial values in method reset()
+  //
+  // this.profileData = []; // for profile plots, plot script requires this name
+  this.stripData = []; // for strip chart plots, plot script requires this name
+  // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
   // define arrays to hold info for variables
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
   // these will be filled with values in method initialize()
-  dataHeaders : [], // variable names
-  dataInputs : [], // input field ID's
-  dataUnits : [],
-  dataMin : [],
-  dataMax : [],
-  dataInitial : [],
-  dataValues : [],
+  this.dataHeaders = []; // variable names
+  this.dataInputs = []; // input field ID's
+  this.dataUnits = [];
+  this.dataMin = [];
+  this.dataMax = [];
+  this.dataInitial = [];
+  this.dataValues = [];
 
-  // define arrays to hold output variables
-  // these will be filled with initial values in method reset()
+  // *****************************************
+  //        define PRIVILEGED methods
+  // *****************************************
 
-  // allow this unit to take more than one step within one main loop step in updateState method
-  // WARNING: see special handling for time step in this unit's updateInputs method
-  unitStepRepeats : 1,
-  unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
-
-  // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
-  // REDUCE size of time steps FOR NUMERICAL STABILITY BY SQUARE OF THE FACTOR
-  // AND INCREASE step repeats BY SAME FACTOR IF WANT SAME SIM TIME BETWEEN
-  // DISPLAY UPDATES
-
-  // define variables which will not be plotted nor saved in copy data table
-  //   none here
-
-  ssCheckSum : 0, // used to check for steady state
-  residenceTime : 0, // for timing checks for steady state check
-  // residenceTime is set in this unit's updateUIparams()
-
-  conc : 0.00, // FEED CONC
-
-  // XXX why need these when have them in initialize method???
-  // XXX but they are used below if want to eliminate
-  // XXX or keep one (input field) in initialize and keep the other here???
-  inputFeedSlider : 'range_setFeedConc_slider',
-  inputFeedInput : 'input_setFeedConc_value',
-
-  initialize : function() {
+  this.initialize = function() {
+    //
+    // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
     //
     let v = 0;
     this.dataHeaders[v] = 'Feed Conc';
@@ -88,27 +92,20 @@ let puFEED = {
     this.conc = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.conc; // current input oalue for reporting
     //
+    //
     // END OF INPUT VARS
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
     //
-    // this.VarCount = v;
+    this.VarCount = v;
     //
-    // OUTPUT VARS
-    //
-    // v = 7;
-    // this.dataHeaders[v] = 'Trxr';
-    // this.dataUnits[v] =  'K';
-    // // Trxr dataMin & dataMax can be changed in updateUIparams()
-    // this.dataMin[v] = 200;
-    // this.dataMax[v] = 500;
+    // OPTIONAL - add entries for output variables if want to use min-max to
+    //            constrain values in updateState or dimensional units in plotInfo
     //
 
-  }, // END of initialize()
+  } // END of initialize()
 
-  // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
-
-  reset : function(){
+  this.reset = function(){
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
@@ -122,8 +119,8 @@ let puFEED = {
 
     // initialize strip chart data array
     // initPlotData(numStripVars,numStripPts)
-    let numStripVars = 1; // conc
-    let numStripPts = plotInfo[0]['numberPoints'];
+    const numStripVars = 1; // conc
+    const numStripPts = plotInfo[0]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts);
 
     let kn = 0;
@@ -143,9 +140,9 @@ let puFEED = {
     // update display
     this.updateDisplay();
 
-  }, // end reset() method
+  } // end reset() method
 
-  updateUIparams : function(){
+  this.updateUIparams = function(){
     //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
@@ -154,50 +151,50 @@ let puFEED = {
     // after change in UI params when previously at steady state
     controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    this.ssCheckSum = 1;
+    ssCheckSum = 1;
 
     this.updateUIfeedInput();
 
-  }, // END updateUIparams
+  } // END updateUIparams
 
-  updateUIfeedInput : function() {
-    let unum = this.unitIndex;
+  this.updateUIfeedInput = function() {
+    let unum = unitIndex;
     this.conc = this.dataValues[1] = interfacer.getInputValue(unum, 1);
     // alert('input: this.conc = ' + this.conc);
     // update position of the range slider
-    if (document.getElementById(this.inputFeedSlider)) {
+    if (document.getElementById(thisConcSliderID)) {
       // alert('input, slider exists');
-      document.getElementById(this.inputFeedSlider).value = this.conc;
+      document.getElementById(thisConcSliderID).value = this.conc;
     }
     // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
     controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    this.ssCheckSum = 1;
+    ssCheckSum = 1;
   }, // END method updateUIfeedInput()
 
-  updateUIfeedSlider : function() {
-    let unum = this.unitIndex;
+  this.updateUIfeedSlider = function() {
+    let unum = unitIndex;
     this.conc = this.dataValues[0] = interfacer.getInputValue(unum, 0);
     // update input field display
     // alert('slider: this.conc = ' + this.conc);
-    if (document.getElementById(this.inputFeedInput)) {
-      document.getElementById(this.inputFeedInput).value = this.conc;
+    if (document.getElementById(thisConcFieldID)) {
+      document.getElementById(thisConcFieldID).value = this.conc;
     }
     // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
     controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    this.ssCheckSum = 1;
-  }, // END method updateUIfeedSlider()
+    ssCheckSum = 1;
+  } // END method updateUIfeedSlider()
 
-  updateInputs : function(){
+  this.updateInputs = function(){
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     //    none for this unit
-  }, // END updateInputs
+  } // END updateInputs
 
-  updateState : function() {
+  this.updateState = function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
@@ -208,23 +205,11 @@ let puFEED = {
     //          get info from other units ONLY in updateInputs() method
     //
 
-    let ttime = controller.simTime;
+    // SPECIAL - FEED UNIT - state set by html inputs - no actions here
 
-    // if (ttime <= 1700) {
-    //   this.conc = 1.00;
-    // } else if  ((ttime > 1700) && (ttime <= 3400)) {
-    //   this.conc = 0.60;
-    // } else if ((ttime > 3400) && (ttime <= 4400)){
-    //   this.conc = 0.50;
-    // } else if ((ttime > 4400) && (ttime <= 5400)) {
-    //   this.conc = 0.60;
-    // } else if ((ttime > 5400)) {
-    //   this.conc = 0.50;
-    // }
+  } // end updateState method
 
-  }, // end updateState method
-
-  updateDisplay : function() {
+  this.updateDisplay = function() {
     // update display elements which only depend on this process unit
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
@@ -233,8 +218,8 @@ let puFEED = {
 
     let v = 0; // used as index
     let p = 0; // used as index
-    let numStripPoints = plotInfo[0]['numberPoints'];
-    let numStripVars = 1; // only the variables from this unit
+    const numStripPoints = plotInfo[0]['numberPoints'];
+    const numStripVars = 1; // only the variables from this unit
 
     // handle feed conc
     v = 0;
@@ -259,21 +244,21 @@ let puFEED = {
       }
     }
 
-  }, // END of updateDisplay()
+  } // END of updateDisplay()
 
-  checkForSteadyState : function() {
+  this.checkForSteadyState = function() {
     // required - called by controller object
     // returns ssFlag, true if this unit at SS, false if not
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
-    // this.ssCheckSum set != 0 on updateUIparams() execution
-    if (this.ssCheckSum != 0) {
+    // ssCheckSum set != 0 on updateUIparams() execution
+    if (ssCheckSum != 0) {
       ssFlag = false;
     }
-    this.ssCheckSum = 0;
+    ssCheckSum = 0;
     return ssFlag;
   } // END OF checkForSteadyState()
 
-}; // END unit FEED
+} // END unit FEED

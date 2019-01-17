@@ -36,7 +36,7 @@ function puWaterController(pUnitIndex) {
   let processVariable = 0;
   let setPoint = 0;
   let gain = 0; // controller gain
-  let resetTime = 0; // controller reset time
+  let resetTime = 0; // controller reset time for integral action 
   let errorIntegral = 0;
 
   // *******************************************

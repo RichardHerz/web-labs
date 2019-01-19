@@ -40,7 +40,7 @@ let plotter = {
       // uses length of plotInfo so must be called after plotInfo has been initialized
       let npl = Object.keys(plotInfo).length; // number of plots
       this.plotFlag = [0];
-      for (p = 1; p < npl; p += 1) {
+      for (let p = 1; p < npl; p += 1) {
         this.plotFlag.push(0);
       }
     } // END of method initialize()

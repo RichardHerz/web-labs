@@ -39,7 +39,7 @@ let interfacer = {
     controller.resetSimTime();
     // reset all units
     let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       processUnits[n].reset();
     }
     controller.resetSSflagsFalse();
@@ -88,7 +88,7 @@ let interfacer = {
     // specific unit involved in that input.
 
     let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       processUnits[n].updateUIparams();
     }
 

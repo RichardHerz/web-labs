@@ -1,0 +1,93 @@
+Thoughts on messaging 
+
+* have a collection of objects
+* each object has one or more state variables
+* any object can get one or more state variables from any one of all the other objects 
+* currently, updateInputs() in each object gets the input state variables in needs 
+* currently, code each of these interactions is coded separately in getInputs() 
+
+Could this be generalized in some way?  
+* Could each unit object contain a child connection array/object that lists the connections? - check earlier versions of web labs to see if I did this in some manner... See bottom this doc. 
+* Do I need to separately set outputs in all objects (now done implicitly in updateState) as well as update inputs? 
+
+What does a unit need to know for current updateInputs?
+* needs the connections now in getInputs, e.g., processUnits[1].conc  
+* needs to which of the units variables get set to the connection in updateInputs 
+* so needs for each of possibly many inputs:
+  - input unit index (or could rename output...)
+  - input unit variable name
+  - this unit's variable name
+
+For any unit, the inputs it needs are critical to its operation. If any input missing, this unit's variable will probably get a default value, currently, so updateState will compute. 
+
+Since particular inputs are critical to a unit, seems like the list of connections should be owned by the unit and not owned by an object outside of the unit... 
+
+Let's say I have a connection in this format: input unit index, input unit var name, this unit var name. Then also have an array of these for all inputs to this unit. Can the unit handle this connection format? If not, what format could it handle?
+
+This works in Firefox scratchpad: 
+	//
+	pu = {feed: 99}; // only need one unit to test now 
+	connection = [1,'feed','conc']; // [pInputIndex, pInputVarName, pThisVarName] 
+	iv = connection[1]; // iv = input variable
+	tempConc = pu[iv]; // pu.iv does not work 
+	console.log('tempConc = ' + tempConc);
+	//
+	tu = {conc: 0};
+	console.log('b4 input tu conc = ' + tu.conc);
+	tv = connection[2]; // tv = this variable
+	tu[tv] = tempConc; // tu.tv does not work
+	console.log('after input tu conc = ' + tu.conc); 
+
+So each unit can have a child object/array with list of inputs. Then updateInputs could just process this list. Similar to what I have now with getInputs but better because inputs (in getInputs) and connections (now in updateInputs) are in same place. 
+
+===========================================================
+FROM web_app_1 of about Nov 2016 
+
+IN process_units.js
+
+IN var simParams = {... 
+
+  // SET PLOT PARAMETERS for use in file process_plotter.js
+
+  // LIST PROCESS VARIABLES TO PLOT AND COPY-SAVE DATA
+  // these variables must be defined in units as variable objects
+  // [process unit object name, variable object name, left or right plot y axis, and "show" or "hide"],
+  // list plot variables in order you want to appear in save-copy data columns
+  // e.g. ["puWaterSource", "flowRate", "left", "show"] >> show puWaterSource.flowRate on left y axis
+  // "hide" variables will still be listed in copy-save data
+
+  plotVariables: [
+    ["puWaterSource", "flowRate", "left", "show"],
+    ["puWaterTank", "level", "right", "show"],
+    ["puController", "setPoint", "right", "hide"],
+    ["puController", "command", "right", "show"]
+  ], 
+  
+ IN var puWaterSource = { ...
+
+  // variables to be plotted are defined as objects
+  // with the properties: value, name, label, symbol, dimensional units
+  // name used for copy-save data column headers, label for plot legend
+  flowRate : {
+    value  : this.initialFlowRate,
+    name   : "flow rate",
+    label  : "flow rate",
+    symbol : "v0",
+    units  : "(m<sup>3</sup>/s)"
+  },
+
+IN process_plotter.js 
+
+  var plotList = simParams.plotVariables;
+...
+
+  // get current values of process variables
+  plotList.forEach(fGetData);
+  function fGetData(pv,p) {  // p is index of "pv" array in plotVariables array
+	  // pv = entire individual array element of plotList array
+  	let puName = pv[0]; // get process unit name
+  	let varName = pv[1]; // get variable object name
+    // now need to get var value, units, etc. from puName.varName object
+    tmpFunc = new Function("return " + puName + "." + varName + ".value;");
+    currentVarValues[p] = tmpFunc();
+  }

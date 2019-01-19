@@ -5,9 +5,9 @@ function puWaterTank(pUnitIndex) {
   //           DEPENDENCIES
   // *******************************************
 
-  // see private function getInputs for input connections to this unit
-  //   from other units
+  // see private array inputs for input connections to this unit from other units
   // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
   //         define PRIVATE functions
@@ -30,8 +30,8 @@ function puWaterTank(pUnitIndex) {
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
   //        'privateVarName' for private var, and
   //        'this.publicVarName' for public var
-  //        = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
   const inputs = [];
+  //        = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
   inputs[0] = [0,'flowRate','flowRate'];
   inputs[1] = [2,'command','command'];
 
@@ -133,10 +133,7 @@ function puWaterTank(pUnitIndex) {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
-
-    // check for change in overall main time step simTimeStep
-    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
 
     for (i = 0; i < inputs.length; i++) {
       let connection = inputs[i];
@@ -146,6 +143,9 @@ function puWaterTank(pUnitIndex) {
       let sourceValue = processUnits[sourceUnit][sourceVar];
       eval(thisVar + ' = ' + sourceValue);
     }
+
+    // check for change in overall main time step simTimeStep
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
   } // END of updateInputs() method
 

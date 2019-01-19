@@ -5,27 +5,35 @@ function puWaterFeed(pUnitIndex) {
   //           DEPENDENCIES
   // *******************************************
 
-  // see private function getInputs for input connections to this unit
-  //   from other units
+  // see private array inputs for input connections to this unit from other units
   // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
   //         define PRIVATE functions
   // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs method
-  let getInputs = function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    return inputs;
-  }
-
   // *******************************************
   //        define PRIVATE properties
   // *******************************************
 
-  // unitIndex may be used in this object's updateUIparams() method
   const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  // unitIndex may be used in this unit's updateUIparams method
+
+  // define this unit's variables that are to receive input values from other units
+  // SPECIAL - none for this unit
+
+  // define INPUT CONNECTIONS from other units to this unit
+  // where inputs array is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  const inputs = [];
+  //        = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs[0] = [0,'flowRate','flowRate'];
+  // SPECIAL - none for this unit
+
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
@@ -192,13 +200,19 @@ function puWaterFeed(pUnitIndex) {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (i = 0; i < inputs.length; i++) {
+      let connection = inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+    }
 
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-
-    // no inputs from other units for this unit
-    // updates handled by updateUIparams
 
   } // END of updateInputs() method
 

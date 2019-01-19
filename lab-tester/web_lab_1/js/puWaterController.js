@@ -5,9 +5,9 @@ function puWaterController(pUnitIndex) {
   //           DEPENDENCIES
   // *******************************************
 
-  // see private function getInputs for input connections to this unit
-  //   from other units
+  // see private array inputs for input connections to this unit from other units
   // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
   //         define PRIVATE functions
@@ -22,21 +22,38 @@ function puWaterController(pUnitIndex) {
   }
 
   // *******************************************
+  //         define PRIVATE functions
+  // *******************************************
+
+  // *******************************************
   //        define PRIVATE properties
   // *******************************************
 
-  // unitIndex may be used in this object's updateUIparams method
   const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
+  // unitIndex may be used in this unit's updateUIparams method
+
+  // define this unit's variables that are to receive input values from other units
+  let processVariable = 0;
+
+  // define INPUT CONNECTIONS from other units to this unit
+  // where inputs array is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  const inputs = [];
+  //        = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs[0] = [1,'level','processVariable']; // input water tank unit level
+
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in checkForSteadyState method
 
-  // internal variables used by controller unit
-  let processVariable = 0;
+  // variables used by controller unit
   let setPoint = 0;
   let gain = 0; // controller gain
-  let resetTime = 0; // controller reset time for integral action 
+  let resetTime = 0; // controller reset time for integral action
   let errorIntegral = 0;
 
   // *******************************************
@@ -171,17 +188,21 @@ function puWaterController(pUnitIndex) {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (i = 0; i < inputs.length; i++) {
+      let connection = inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+    }
 
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-    // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
-    // get array of current input values to this unit from other units
-    let inputs = getInputs();
-    processVariable = inputs[0]; // level in water tank unit
-
-  } // END of updateInputs method
+  } // END of updateInputs() method
 
   this.updateState = function() {
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE

@@ -1,87 +1,74 @@
-function puWaterController(pUnitIndex) {
+function puBioRxrController(pUnitIndex) {
   // constructor function for process unit
 
   // *******************************************
   //           DEPENDENCIES
   // *******************************************
 
-  // see private array inputs for input connections to this unit from other units
+  // see private function getInputs for input connections to this unit
+  //   from other units
   // see public properties for info shared with other units and methods
-  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
   //         define PRIVATE functions
   // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs method
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
   let getInputs = function() {
     let inputs = [];
     // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    inputs[0] = processUnits[1].level; // level in water tank unit
+    // WARNING: make sure html field text for set point var name matches this input!
+    inputs[0] = processUnits[1].biomass; // biomass in bioreactor
     return inputs;
   }
-
-  // *******************************************
-  //         define PRIVATE functions
-  // *******************************************
 
   // *******************************************
   //        define PRIVATE properties
   // *******************************************
 
+  // unitIndex may be used in this object's updateUIparams method
   const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
-  // unitIndex may be used in this unit's updateUIparams method
-
-  // define this unit's variables that are to receive input values from other units
-  let processVariable = 0;
-
-  // define INPUT CONNECTIONS from other units to this unit
-  // where inputs array is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  const inputs = [];
-  //        = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs[0] = [1,'level','processVariable']; // input water tank unit level
-
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in checkForSteadyState method
 
-  // variables used by controller unit
+  // local variables used by controller process unit
+  let processVariable = 0;
   let setPoint = 0;
   let gain = 0; // controller gain
-  let resetTime = 0; // controller reset time for integral action
+  let resetTime = 0; // controller reset time
+  let manualBias = 0;
+  let manualCommand = 0;
   let errorIntegral = 0;
+  let mode = "manual"; // auto or manual, see changeMode() below
 
   // *******************************************
   //         define PUBLIC properties
   // *******************************************
 
-  this.name = 'process unit Water Controller'; // used by interfacer.copyData()
+  this.name = 'process unit Bioreactor Controller'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
-  this.command = 0; // output controller command from this controller unit
+
+  this.command = 0; // output command from this controller unit
+
+  // define arrays to hold data for plots, color canvas
+  // these will be filled with initial values in method reset()
+  //
+  // this.profileData = []; // for profile plots, plot script requires this name
+  this.stripData = []; // for strip chart plots, plot script requires this name
+  // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
   // define arrays to hold info for variables
   // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
-  // these will be filled with values in method initialize
+  // these will be filled with values in method initialize()
   this.dataHeaders = []; // variable names
-  this.dataInputs = []; // HTML field ID's of input parameters
+  this.dataInputs = []; // input field ID's
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
   this.dataInitial = [];
   this.dataValues = [];
-
-  // define arrays to hold data for plots, color canvas
-  // these arrays will be used by plotter object
-  // these will be filled with initial values in method reset
-  //
-  // this.profileData = []; // for profile plots, plot script requires this name
-  this.stripData = []; // for strip chart plots, plot script requires this name
-  // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
   // *****************************************
   //        define PRIVILEGED methods
@@ -94,11 +81,11 @@ function puWaterController(pUnitIndex) {
     let v = 0;
     this.dataHeaders[v] = 'set point';
     this.dataInputs[v] = 'input_field_enterSetpoint';
-    this.dataUnits[v] = '';
+    this.dataUnits[v] = 'kg/m3';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 2;
-    this.dataInitial[v] = 1;
-    setPoint = this.dataInitial[v]; // dataInitial used in getInputValue
+    this.dataMax[v] = 30;
+    this.dataInitial[v] = 5;
+    setPoint = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = setPoint; // current input oalue for reporting
     //
     v = 1;
@@ -106,33 +93,57 @@ function puWaterController(pUnitIndex) {
     this.dataInputs[v] = 'input_field_enterGain';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 20;
-    this.dataInitial[v] = 5;
-    gain = this.dataInitial[v]; // dataInitial used in getInputValue
+    this.dataMax[v] = 2;
+    this.dataInitial[v] = 0.1;
+    gain = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = gain; // current input oalue for reporting
     //
     v = 2;
     this.dataHeaders[v] = 'reset time';
     this.dataInputs[v] = 'input_field_enterResetTime';
-    this.dataUnits[v] = '';
+    this.dataUnits[v] = 'h';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 20;
-    this.dataInitial[v] = 2;
-    resetTime = this.dataInitial[v]; // dataInitial used in getInputValue
+    this.dataMax[v] = 100;
+    this.dataInitial[v] = 5;
+    resetTime = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = resetTime; // current input oalue for reporting
+    //
+    v = 3;
+    this.dataHeaders[v] = 'manualCommand';
+    this.dataInputs[v] = 'input_field_enterSubstrateFeedConc';
+    this.dataUnits[v] = 'kg/m3';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 40;
+    this.dataInitial[v] = 30;
+    manualCommand = this.dataInitial[v];
+    this.dataValues[v] = manualCommand;
+    //
+    // SPECIAL - SET CHECKED OF RADIO BUTTONS TO MATCH THIS SETTING
+    // PAGE RELOAD DOES NOT CHANGE CHECKED BUT DOES CALL initialize
+    document.getElementById("radio_controllerAUTO").checked = false;
+    document.getElementById("radio_controllerMANUAL").checked = true;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
     //
-    this.VarCount = v;
+    // special, use v-1 to not report manualCommand in copy data table header
+    // but need manualCommand as input var to get from html input
+    this.VarCount = v-1;
     //
     // OPTIONAL - add entries for output variables if want to use min-max to
     //            constrain values in updateState or dimensional units in plotInfo
     //
-  } // END of initialize method
+    v = 4;
+    this.dataHeaders[v] = 'command';
+    this.dataUnits[v] =  'kg/m3';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = this.dataMax[3];
+
+  } // END of initialize() method
 
   this.reset = function() {
+    //
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
@@ -140,23 +151,53 @@ function puWaterController(pUnitIndex) {
 
     this.updateUIparams(); // this first, then set other values as needed
 
-    // set state variables not set by updateUIparams to initial settings
+    // set state variables not set by updateUIparams() to initial settings
 
-    this.command = 0;
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    ssCheckSum = 0;
+
+    // set state variables not set by updateUIparams to initial settings
     errorIntegral = 0;
+    this.command = this.dataInitial[3]; // initial manual command
+
+    // XXX should this reset mode to manual?
 
     // each unit has its own data arrays for plots and canvases
 
     // initialize strip chart data array
     // initPlotData(numStripVars,numStripPts)
-    let numStripVars = 2; // setPoint, command
-    let numStripPts = plotInfo[0]['numberPoints'];
+    const numStripVars = 2; // setPoint, command
+    const numStripPts = plotInfo[0]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts);
 
     // update display
     this.updateDisplay();
 
-  } // END of reset method
+  } // END of reset() method
+
+  this.changeMode = function(){
+    let el = document.querySelector("#radio_controllerAUTO");
+    if (el.checked){
+      mode = "auto";
+      manualBias = this.command; // for "bumpless transfer"
+    } else {
+      mode = "manual";
+    }
+
+    // zero errorIntegral on all changeModes
+    errorIntegral = 0;
+
+    // need to reset controller.ssFlag to false to get sim to run
+     // after change in UI params when previously at steady state
+     controller.resetSSflagsFalse();
+     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+     ssCheckSum = 1;
+
+  } // END of changeMode() method
 
   this.updateUIparams = function() {
     //
@@ -164,73 +205,85 @@ function puWaterController(pUnitIndex) {
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
     // need to reset controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.resetSSflagsFalse();
-    // set ssCheckSum != 0 used in checkForSteadyState method to check for SS
-    ssCheckSum = 1;
+     // after change in UI params when previously at steady state
+     controller.resetSSflagsFalse();
+     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+     ssCheckSum = 1;
 
     // check input fields for new values
-    // function getInputValue is defined in file process_interfacer.js
+    // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
-    // see variable numbers above in initialize
+    // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
-    //   is only used in copyData to report input values
+    //   is only used in copyData() to report input values
     //
     let unum = unitIndex;
     //
     setPoint = this.dataValues[0] = interfacer.getInputValue(unum, 0);
     gain = this.dataValues[1] = interfacer.getInputValue(unum, 1);
     resetTime = this.dataValues[2] = interfacer.getInputValue(unum, 2);
+    manualCommand = this.dataValues[3] = interfacer.getInputValue(unum, 3);
 
-  } // END of updateUIparams method
+  } // END of updateUIparams() method
 
   this.updateInputs = function() {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-
-    for (i = 0; i < inputs.length; i++) {
-      let connection = inputs[i];
-      let sourceUnit = connection[0];
-      let sourceVar = connection[1];
-      let thisVar = connection[2];
-      let sourceValue = processUnits[sourceUnit][sourceVar];
-      eval(thisVar + ' = ' + sourceValue);
-    }
+    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
 
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
+    // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
+    // get array of current input values to this unit from other units
+    let inputs = getInputs();
+    processVariable = inputs[0]; // biomass in bioreactor
+
   } // END of updateInputs() method
 
   this.updateState = function() {
+    //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
     // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
     // STATE VARIABLE
+    //
+    // WARNING: this method must NOT contain references to other units!
+    //          get info from other units ONLY in updateInputs() method
 
     // compute new value of PI controller command
-    let error = setPoint - processVariable
-    this.command = gain * (error + (1/resetTime) * errorIntegral);
+    // manual bias set to current command when switching to auto in changeMode()
+    let error = setPoint - processVariable;
+    this.command = manualBias + gain *
+                  (error + (1/resetTime) * errorIntegral);
 
     // stop integration at command limits
     // to prevent integral windup
-
-    const cMax = 1;
-    const cMin = 0;
-
-    if (this.command > cMax) {
-      this.command = cMax;
-    } else if (this.command < cMin) {
-      this.command = cMin;
+    let v = 4; // 4 is command
+    if (this.command > this.dataMax[v]){
+      this.command = this.dataMax[v];
+    } else if (this.command < this.dataMin[v]){
+      this.command = this.dataMin[v];
     } else {
       // not at limit, OK to update integral of error
       // update errorIntegral only after it is used above to update this.command
-      errorIntegral = errorIntegral + error * unitTimeStep;
+      errorIntegral = errorIntegral + error * unitTimeStep; // update integral of error
     }
 
-  } // END of updateState method
+    if (mode == "manual"){
+      // replace command with value entered in input in page
+      // let el = document.querySelector("#enterJacketFeedTTemp");
+      // this.command = el.value;
+      this.command = manualCommand;
+    } else {
+      // in auto mode, use command computed above
+    }
+
+    // console.log('errorIntegral = '+errorIntegral);
+    // console.log('this.command = '+this.command);
+
+  } // END of updateState() method
 
   this.updateDisplay = function() {
 
@@ -275,7 +328,7 @@ function puWaterController(pUnitIndex) {
       }
     }
 
-  } // END of updateDisplay method
+  } // END of updateDisplay() method
 
   this.checkForSteadyState = function() {
     // required - called by controller object
@@ -284,12 +337,12 @@ function puWaterController(pUnitIndex) {
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
-    // ssCheckSum set != 0 on updateUIparams execution
+    // ssCheckSum set != 0 on updateUIparams() execution
     if (ssCheckSum != 0) {
       ssFlag = false;
     }
     ssCheckSum = 0;
     return ssFlag;
-  } // END of checkForSteadyState method
+  } // END of checkForSteadyState() method
 
-} // END of puWaterController
+} // END of puBioRxrController

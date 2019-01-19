@@ -1,70 +1,66 @@
-function puWaterFeed(pUnitIndex) {
+function puBioRxrFeed(pUnitIndex) {
   // constructor function for process unit
 
   // *******************************************
   //           DEPENDENCIES
   // *******************************************
 
-  // see private array inputs for input connections to this unit from other units
+  // see private function getInputs for input connections to this unit
+  //   from other units
   // see public properties for info shared with other units and methods
-  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
   //         define PRIVATE functions
   // *******************************************
 
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  let getInputs = function() {
+    let inputs = [];
+    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
+    inputs[0] = processUnits[2].command; // controller command
+    return inputs;
+  }
+
   // *******************************************
   //        define PRIVATE properties
   // *******************************************
 
-  const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
-  // unitIndex may be used in this unit's updateUIparams method
-
-  // define this unit's variables that are to receive input values from other units
-  // SPECIAL - none for this unit
-
-  // define INPUT CONNECTIONS from other units to this unit
-  // where inputs array is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  const inputs = [];
-  //        = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs[0] = [0,'flowRate','flowRate'];
-  // SPECIAL - none for this unit
+  let unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
 
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-  let ssCheckSum = 0; // used in this.checkForSteadyState() method
+  let ssCheckSum = 0; // used in checkForSteadyState() method
 
   // *******************************************
   //         define PUBLIC properties
   // *******************************************
 
-  this.name = 'process unit Water Feed'; // used by interfacer.copyData()
-  this.flowRate = 0; // output feed to water tank process unit
+  this.name = 'process unit Bioreactor Feed';
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
-  // define arrays to hold info for variables
-  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
-  // these will be filled with values in method initialize()
-  this.dataHeaders = []; // variable names
-  this.dataInputs = []; // HTML field ID's of input parameters
-  this.dataUnits = [];
-  this.dataMin = [];
-  this.dataMax = [];
-  this.dataInitial = [];
-  this.dataValues = [];
+  // define variables
+  this.flowRate = 0; // ouput feed flow rate to puBioReactor unit
+  this.conc = 0; // output substrate (reactant) feed conc to puBioReactor unit
 
   // define arrays to hold data for plots, color canvas
-  // these arrays will be used by plotter object
   // these will be filled with initial values in method reset()
   //
   // this.profileData = []; // for profile plots, plot script requires this name
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
+
+  // define arrays to hold info for variables
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
+  // these will be filled with values in method initialize()
+  this.dataHeaders = []; // variable names
+  this.dataInputs = []; // input field ID's
+  this.dataUnits = [];
+  this.dataMin = [];
+  this.dataMax = [];
+  this.dataInitial = [];
+  this.dataValues = [];
 
   // *****************************************
   //        define PRIVILEGED methods
@@ -76,36 +72,24 @@ function puWaterFeed(pUnitIndex) {
     //
     let v = 0;
     this.dataHeaders[v] = 'Flow Rate';
-    this.dataInputs[v] = 'input_field_enterFlowRate';
-    this.dataUnits[v] = 'm3/s';
+    this.dataInputs[v] = 'input_field_enterFeedFlowRate';
+    this.dataUnits[v] = 'm3/h';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 3;
-    this.dataInitial[v] = 2;
-    this.flowRate = this.dataInitial[v]; // dataInitial used in interfacer.getInputValue()
-    this.dataValues[v] = this.flowRate; // current input value in interfacer.copyData()
-    //
-    v = 1;
-    this.dataHeaders[v] = 'Flow Rate';
-    this.dataInputs[v] = 'range_slider_enterFlowRate';
-    this.dataUnits[v] = 'm3/s';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 3;
-    this.dataInitial[v] = 2;
-    this.flowRate = this.dataInitial[v];
-    this.dataValues[v] = this.flowRate;
+    this.dataMax[v] = 1;
+    this.dataInitial[v] = 0.2;
+    this.flowRate = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.flowRate; // current input oalue for reporting
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
     //
-    // SPECIAL - copyData will not show flowRate as input param but will
-    //           display all readings in a data column from stripData as plot
-    //           vars so set VarCount to -1 so no display as input param
-    this.VarCount = -1;
+    this.VarCount = v;
     //
     // OPTIONAL - add entries for output variables if want to use min-max to
     //            constrain values in updateState or dimensional units in plotInfo
     //
+
   } // END of initialize() method
 
   this.reset = function() {
@@ -117,13 +101,20 @@ function puWaterFeed(pUnitIndex) {
 
     this.updateUIparams(); // this first, then set other values as needed
 
-    // set state variables not set by updateUIparams to initial settings
+    // set state variables not set by updateUIparams() to initial settings
+
+    // need to directly set controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.ssFlag = false;
+
+    // set to zero ssCheckSum used to check for steady state by this unit
+    ssCheckSum = 0;
 
     // each unit has its own data arrays for plots and canvases
 
     // initialize strip chart data array
     // initPlotData(numStripVars,numStripPts)
-    const numStripVars = 1; // flowRate
+    const numStripVars = 2; // flowRate, conc
     const numStripPts = plotInfo[0]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts);
 
@@ -138,81 +129,36 @@ function puWaterFeed(pUnitIndex) {
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
 
     // need to reset controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.resetSSflagsFalse();
-    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    ssCheckSum = 1;
+     // after change in UI params when previously at steady state
+     controller.resetSSflagsFalse();
+     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+     ssCheckSum = 1;
 
-    // updateUIparams gets called on page load but not new range and input
-    // updates, so need to call updateUIfeedInput here
-    this.updateUIfeedInput();
-
-    // check input fields for new values
     // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
     // see variable numbers above in initialize()
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
-    // let unum = unitIndex;
+    let unum = unitIndex;
     //
-    // SPECIAL for this unit methods updateUIfeedInput and updateUIfeedSlider
-    //         below get slider and field value for [0] and [1]
+    this.flowRate = this.dataValues[0] = interfacer.getInputValue(unum, 0);
 
   } // END of updateUIparams() method
-
-  this.updateUIfeedInput = function() {
-    // SPECIAL FOR THIS UNIT
-    // called in HTML input element
-    // [0] is field, [1] is slider
-    // get field value
-    const unum = unitIndex;
-    const vnum = 0; // index for input field in initialize arrays
-    this.flowRate = this.dataValues[0] = interfacer.getInputValue(unum, vnum);
-    // update slider position
-    document.getElementById(this.dataInputs[1]).value = this.flowRate;
-    // need to reset controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.resetSSflagsFalse();
-    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    ssCheckSum = 1;
-  } // END method updateUIfeedInput()
-
-  this.updateUIfeedSlider = function() {
-    // SPECIAL FOR THIS UNIT
-    // called in HTML input element
-    // [0] is field, [1] is slider
-    const unum = unitIndex;
-    const vnum = 1; // index for range slider in initialize arrays
-    this.flowRate = this.dataValues[1] = interfacer.getInputValue(unum, vnum);
-    // update input field display
-    if (document.getElementById(this.dataInputs[0])) {
-      document.getElementById(this.dataInputs[0]).value = this.flowRate;
-    }
-    // need to reset controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.resetSSflagsFalse();
-    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    ssCheckSum = 1;
-  } // END method updateUIfeedSlider()
 
   this.updateInputs = function() {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-
-    for (i = 0; i < inputs.length; i++) {
-      let connection = inputs[i];
-      let sourceUnit = connection[0];
-      let sourceVar = connection[1];
-      let thisVar = connection[2];
-      let sourceValue = processUnits[sourceUnit][sourceVar];
-      eval(thisVar + ' = ' + sourceValue);
-    }
+    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
 
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+
+    // get array of current input values to this unit from other units
+    let inputs = getInputs();
+    this.conc = inputs[0]; // get substrate conc from controller
+    // will output conc from this unit to puBioReactor unit 
 
   } // END of updateInputs() method
 
@@ -227,7 +173,7 @@ function puWaterFeed(pUnitIndex) {
     //          get info from other units ONLY in updateInputs() method
 
     // nothing to do for this this feed unit
-    // updates handled by updateUIparams
+    // updates handled by updateUIparams and updateInputs
 
   } // END of updateState() method
 
@@ -242,7 +188,7 @@ function puWaterFeed(pUnitIndex) {
     let p = 0; // used as index
     let tempArray = [];
     const numStripPoints = plotInfo[0]['numberPoints'];
-    const numStripVars = 1; // only the variables from this unit
+    const numStripVars = 2; // only the variables from this unit
 
     // handle flowRate
     v = 0;
@@ -251,6 +197,16 @@ function puWaterFeed(pUnitIndex) {
     tempArray.shift();
     // add the new [x.y] pair array at end
     tempArray.push( [0,this.flowRate] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // handle conc
+    v = 1;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [0,this.conc] );
     // update the variable being processed
     this.stripData[v] = tempArray;
 
@@ -284,4 +240,4 @@ function puWaterFeed(pUnitIndex) {
     return ssFlag;
   } // END of checkForSteadyState() method
 
-} // END of puWaterFeed
+} // END of puBioRxrFeed

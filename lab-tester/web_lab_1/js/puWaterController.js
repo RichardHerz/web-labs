@@ -10,20 +10,20 @@ function puWaterController(pUnitIndex) {
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
-  //         define PRIVATE functions
+  //      define INPUT CONNECTIONS
   // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs method
-  let getInputs = function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    inputs[0] = processUnits[1].level; // level in water tank unit
-    return inputs;
-  }
+  // define this unit's variables that are to receive input values from other units
+  let processVariable = 0;
 
-  // *******************************************
-  //         define PRIVATE functions
-  // *******************************************
+  // inputs array is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  const inputs = [];
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs[0] = [1,'level','processVariable']; // input water tank unit level
 
   // *******************************************
   //        define PRIVATE properties
@@ -31,20 +31,6 @@ function puWaterController(pUnitIndex) {
 
   const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
   // unitIndex may be used in this unit's updateUIparams method
-
-  // define this unit's variables that are to receive input values from other units
-  let processVariable = 0;
-
-  // define INPUT CONNECTIONS from other units to this unit
-  // where inputs array is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  const inputs = [];
-  //        = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs[0] = [1,'level','processVariable']; // input water tank unit level
-
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
@@ -82,6 +68,10 @@ function puWaterController(pUnitIndex) {
   // this.profileData = []; // for profile plots, plot script requires this name
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
+
+  // *******************************************
+  //         define PRIVATE functions
+  // *******************************************
 
   // *****************************************
   //        define PRIVILEGED methods
@@ -197,6 +187,9 @@ function puWaterController(pUnitIndex) {
       let thisVar = connection[2];
       let sourceValue = processUnits[sourceUnit][sourceVar];
       eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
     }
 
     // check for change in overall main time step simTimeStep

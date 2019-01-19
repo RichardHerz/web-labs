@@ -35,7 +35,7 @@ let processUnits = new Object();
 // then object cleared for garbage collection, e.g.,
 //   puHeatExchanger = null; // puHeatExchanger is an object
 // WARNING: if reorder unit index numbers, then need to edit
-//   those numbers in each unit's getInputs method
+//   those numbers in each unit's private inputs array 
 
 processUnits[0] = new puWaterFeed(0);
 processUnits[1] = new puWaterTank(1);

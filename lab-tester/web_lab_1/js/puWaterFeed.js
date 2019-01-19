@@ -10,8 +10,20 @@ function puWaterFeed(pUnitIndex) {
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
-  //         define PRIVATE functions
+  //      define INPUT CONNECTIONS
   // *******************************************
+
+  // define this unit's variables that are to receive input values from other units
+  // SPECIAL - none for this unit
+
+  // SPECIAL - no inputs to this unit from other units - only from HTML
+  // inputs array is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // const inputs = [];
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
 
   // *******************************************
   //        define PRIVATE properties
@@ -19,20 +31,6 @@ function puWaterFeed(pUnitIndex) {
 
   const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
   // unitIndex may be used in this unit's updateUIparams method
-
-  // define this unit's variables that are to receive input values from other units
-  // SPECIAL - none for this unit
-
-  // define INPUT CONNECTIONS from other units to this unit
-  // where inputs array is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  const inputs = [];
-  //        = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs[0] = [0,'flowRate','flowRate'];
-  // SPECIAL - none for this unit
 
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
@@ -65,6 +63,10 @@ function puWaterFeed(pUnitIndex) {
   // this.profileData = []; // for profile plots, plot script requires this name
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
+
+  // *******************************************
+  //         define PRIVATE functions
+  // *******************************************
 
   // *****************************************
   //        define PRIVILEGED methods
@@ -163,8 +165,8 @@ function puWaterFeed(pUnitIndex) {
 
   this.updateUIfeedInput = function() {
     // SPECIAL FOR THIS UNIT
-    // called in HTML input element
-    // [0] is field, [1] is slider
+    // called in HTML input element so must be a publc method
+    // [0] is field, [1] is slider in initialize arrays
     // get field value
     const unum = unitIndex;
     const vnum = 0; // index for input field in initialize arrays
@@ -176,12 +178,12 @@ function puWaterFeed(pUnitIndex) {
     controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
     ssCheckSum = 1;
-  } // END method updateUIfeedInput()
+  } // END method updateUIfeedInput
 
   this.updateUIfeedSlider = function() {
     // SPECIAL FOR THIS UNIT
-    // called in HTML input element
-    // [0] is field, [1] is slider
+    // called in HTML input element so must be a publc method
+    // [0] is field, [1] is slider in initialize arrays
     const unum = unitIndex;
     const vnum = 1; // index for range slider in initialize arrays
     this.flowRate = this.dataValues[1] = interfacer.getInputValue(unum, vnum);
@@ -194,7 +196,7 @@ function puWaterFeed(pUnitIndex) {
     controller.resetSSflagsFalse();
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
     ssCheckSum = 1;
-  } // END method updateUIfeedSlider()
+  } // END method updateUIfeedSlider
 
   this.updateInputs = function() {
     //
@@ -202,14 +204,18 @@ function puWaterFeed(pUnitIndex) {
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
 
-    for (i = 0; i < inputs.length; i++) {
-      let connection = inputs[i];
-      let sourceUnit = connection[0];
-      let sourceVar = connection[1];
-      let thisVar = connection[2];
-      let sourceValue = processUnits[sourceUnit][sourceVar];
-      eval(thisVar + ' = ' + sourceValue);
-    }
+    // // SPECIAL - no inputs to this unit from other units - only from HTML
+    // for (i = 0; i < inputs.length; i++) {
+    //   let connection = inputs[i];
+    //   let sourceUnit = connection[0];
+    //   let sourceVar = connection[1];
+    //   let thisVar = connection[2];
+    //   let sourceValue = processUnits[sourceUnit][sourceVar];
+    //   eval(thisVar + ' = ' + sourceValue);
+    // //   NOTE: line above works for private AND public thisVar, where public has 'this.'
+    // //    line below works only for public thisVar, where thisVar has no 'this.'
+    // //    processUnits[unitIndex][thisVar] = sourceValue;
+    // }
 
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;

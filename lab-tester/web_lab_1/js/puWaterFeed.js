@@ -5,7 +5,7 @@ function puWaterFeed(pUnitIndex) {
   //           DEPENDENCIES
   // *******************************************
 
-  // see private array inputs for input connections to this unit from other units
+  // see const inputs array for input connections to this unit from other units
   // see public properties for info shared with other units and methods
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
@@ -17,7 +17,7 @@ function puWaterFeed(pUnitIndex) {
   // SPECIAL - none for this unit
 
   // SPECIAL - no inputs to this unit from other units - only from HTML
-  // inputs array is processed in this unit's updateInputs method
+  // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
   //        'privateVarName' for private var, and

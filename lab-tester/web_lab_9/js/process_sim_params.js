@@ -32,7 +32,7 @@ let simParams = {
   // see method simParams.changeSimTimeStep() below to change simTimeStep value
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
-  simStepRepeats : 10, // integer number of unit updates between display updates
+  simStepRepeats : 3, // xxx was 10 // integer number of unit updates between display updates
   simTimeStep : 8, // time step value, simulation time, of main repeat
 
   // individual units may do more steps in one unit updateState()

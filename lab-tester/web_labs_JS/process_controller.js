@@ -64,9 +64,15 @@ let controller = {
     plotter.plotArrays.initialize();
     interfacer.resetThisLab(); // defined in process_interfacer.js
     simParams.updateCurrentRunCountDisplay(); // defined in process_sim_params.js
+
+    alert('in controller openThisLab, simParams.simStepRepeats = ' + simParams.simStepRepeats);
+    // console.log('at end controller openThisLab'); // xxx
+
   }, // END OF function openThisLab
 
   runSimulation : function() {
+
+    // console.log('enter controller runSimulation'); // xxx
 
     // CALLED BY function runThisLab ON CLICK OF RUN-PAUSE BUTTON
 
@@ -94,6 +100,9 @@ let controller = {
     setTimeout(updateProcess(), updateMs);
 
     function updateProcess() {
+
+      // console.log('enter controller updateProcess'); // xxx
+
       // need controller.runningFlag not this.runningFlag
       // because updateProcess is a subfunction of runSimulation
       if (!controller.runningFlag) {
@@ -129,6 +138,9 @@ let controller = {
       // which calls them, so need controller. prefix
       // controller.updateProcessUnits() & controller.updateDisplay()
 
+      // console.log('in controller, simParams.simStepRepeats = ' + simParams.simStepRepeats); // xxx
+
+// xxx DEACTIVATE FOR TESTING
       for (i = 0; i < simParams.simStepRepeats; i += 1) {
         controller.updateProcessUnits();
       }
@@ -153,13 +165,21 @@ let controller = {
       // }
 
       // END updateProcess WITH CALL TO ITSELF AFTER updateMs WAIT
+
+      // xxx DEACTIVATE FOR TESTING
       setTimeout(updateProcess, updateMs);  // updateMs
+
+      // xxx also change simParams.simStepRepeats from 10 to 1 in lab 9
+
+      // console.log('at end controller updateProcess'); // xxx
 
     } // END OF function updateProcess (inside function runSimulation)
 
   }, // END OF function runSimulation
 
   updateProcessUnits : function() {
+
+    // console.log('enter controller updateProcessUnits'); // xxx
 
     // DO COMPUTATIONS TO UPDATE STATE OF PROCESS
     // step all units but do not display
@@ -182,6 +202,8 @@ let controller = {
     for (n = 0; n < numUnits; n += 1) {
         processUnits[n].updateState();
     }
+
+    // console.log('at end controller updateProcessUnits'); // xxx
 
   }, // END OF function updateProcessUnits
 

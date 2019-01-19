@@ -17,7 +17,7 @@ let processUnits = new Object();
 // WARNING: if reorder unit index numbers, then need to edit
 //   those numbers in each unit's private inputs array
 
-SEE LAST LINE 
+SEE LAST LINE
 
 this.updateUIfeedInput = function() {
   // SPECIAL FOR THIS UNIT
@@ -32,7 +32,7 @@ function puWaterTank(pUnitIndex) {
   //           DEPENDENCIES
   // *******************************************
 
-  // see private array inputs for input connections to this unit from other units
+  // see const inputs array for input connections to this unit from other units
   // see public properties for info shared with other units and methods
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
@@ -44,7 +44,7 @@ function puWaterTank(pUnitIndex) {
   let flowRate = 0; // input flow rate from feed process unit
   let command = 0; // input command from controller process unit
 
-  // inputs array is processed in this unit's updateInputs method
+  // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
   //        'privateVarName' for private var, and

@@ -235,21 +235,13 @@ let plotter = {
     let plotDataLines = true;
     if (typeof plotInfo[pNumber]['plotDataPoints'] == 'undefined') {
       plotDataPoints = false; // default is false
-      // console.log('plot ' +pNumber+ ', plotDataPoints undefined');
-      // console.log('plot ' +pNumber+ ',     plotDataPoints = ' + plotDataPoints);
     } else {
       plotDataPoints = plotInfo[pNumber]['plotDataPoints'];
-      // console.log('plot ' +pNumber+ ', plotDataPoints exists');
-      // console.log('plot ' +pNumber+ ',     plotDataPoints = ' + plotDataPoints);
     }
     if (typeof plotInfo[pNumber]['plotDataLines'] == 'undefined') {
       plotDataLines = true; // default is true
-      // console.log('plot ' +pNumber+ ', plotDataLines undefined');
-      // console.log('plot ' +pNumber+ ',     plotDataLines = ' + plotDataLines);
     } else {
       plotDataLines = plotInfo[pNumber]['plotDataLines'];
-      // console.log('plot ' +pNumber+ ', plotDataLines exists');
-      // console.log('plot ' +pNumber+ ',     plotDataLines = ' + plotDataLines);
     }
 
     let options = {
@@ -294,10 +286,8 @@ let plotter = {
 
     if (this.plotArrays['plotFlag'][pNumber] == 0) {
       this.plotArrays['plotFlag'][pNumber] = 1;
-      // console.log('redraw entire plot, axes, labels');
       this.plotArrays['plot'][pNumber] = $.plot($(plotCanvasHtmlID), dataToPlot, options);
     } else {
-      // console.log('plotter.plotPlotData - redraw only data, pNumber = ' + pNumber);
       this.plotArrays['plot'][pNumber].setData(dataToPlot);
       this.plotArrays['plot'][pNumber].draw();
     }

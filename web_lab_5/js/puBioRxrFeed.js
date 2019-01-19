@@ -1,25 +1,29 @@
 function puBioRxrFeed(pUnitIndex) {
   // constructor function for process unit
 
-  // *******************************************
+  // *****************************************
   //           DEPENDENCIES
-  // *******************************************
+  // *****************************************
 
-  // see private function getInputs for input connections to this unit
-  //   from other units
+  // see const inputs array for input connections to this unit from other units
   // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // *******************************************
-  //         define PRIVATE functions
-  // *******************************************
+  // *****************************************
+  //       define INPUT CONNECTIONS
+  // *****************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  let getInputs = function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    inputs[0] = processUnits[2].command; // controller command
-    return inputs;
-  }
+  // define this unit's variables that are to receive input values from other units
+  let concCommand = 0; // input command from controller process unit
+
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  const inputs = [];
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs[0] = [2,'command','concCommand'];
 
   // *******************************************
   //        define PRIVATE properties
@@ -40,9 +44,9 @@ function puBioRxrFeed(pUnitIndex) {
   this.name = 'process unit Bioreactor Feed';
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
-  // define variables
-  this.flowRate = 0; // ouput feed flow rate to puBioReactor unit
-  this.conc = 0; // output substrate (reactant) feed conc to puBioReactor unit
+  // define internal unit variables
+  this.conc = 0; // output feed conc to puBioReactor unit
+  this.flowRate = 0; // output feed flow rate to puBioReactor unit
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -61,6 +65,10 @@ function puBioRxrFeed(pUnitIndex) {
   this.dataMax = [];
   this.dataInitial = [];
   this.dataValues = [];
+
+  // *****************************************
+  //         define PRIVATE functions
+  // *****************************************
 
   // *****************************************
   //        define PRIVILEGED methods
@@ -150,15 +158,22 @@ function puBioRxrFeed(pUnitIndex) {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (let i = 0; i < inputs.length; i++) {
+      let connection = inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
+    }
 
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-
-    // get array of current input values to this unit from other units
-    let inputs = getInputs();
-    this.conc = inputs[0]; // get substrate conc from controller
-    // will output conc from this unit to puBioReactor unit 
 
   } // END of updateInputs() method
 
@@ -172,8 +187,7 @@ function puBioRxrFeed(pUnitIndex) {
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
 
-    // nothing to do for this this feed unit
-    // updates handled by updateUIparams and updateInputs
+    this.conc = concCommand;
 
   } // END of updateState() method
 

@@ -1,30 +1,35 @@
 function puBioReactor(pUnitIndex) {
   // constructor function for process unit
 
-  // *********************************************
-  //       DEPENDENCIES
-  // *********************************************
+  // *****************************************
+  //           DEPENDENCIES
+  // *****************************************
 
-  // see private function getInputs for input connections to this unit
-  //   from other units
+  // see const inputs array for input connections to this unit from other units
   // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // *******************************************
-  //         define PRIVATE functions
-  // *******************************************
+  // *****************************************
+  //       define INPUT CONNECTIONS
+  // *****************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  let getInputs = function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    inputs[0] = processUnits[0].flowRate; // input flowRate from feed
-    inputs[1] = processUnits[0].conc; // input conc from feed
-    return inputs;
-  }
+  // define this unit's variables that are to receive input values from other units
+  let flowRate = 0; // input flow rate from feed process unit
+  let feedConc = 0; // input conc from feed process unit
 
-  // *******************************************
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  const inputs = [];
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs[0] = [0,'flowRate','flowRate'];
+  inputs[1] = [0,'conc','feedConc'];
+
+  // *****************************************
   //        define PRIVATE properties
-  // *******************************************
+  // *****************************************
 
   // unitIndex may be used in this object's updateUIparams method
   const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
@@ -36,9 +41,7 @@ function puBioReactor(pUnitIndex) {
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
   const theDisplayReactorContentsID = "#div_PLOTDIV_reactorContents";
 
-  // define internal variables
-  let flowRate = 0; // input flow rate from feed unit
-  let feedConc = 0; // input substrate conc from feed unit
+  // define additional internal variables
   let conc = 0; // substrate conc in reactor
   // rate parameters
   let muMax = 0;
@@ -47,9 +50,9 @@ function puBioReactor(pUnitIndex) {
   let beta = 0;
   let gamma = 0;
 
-  // *******************************************
+  // *****************************************
   //         define PUBLIC properties
-  // *******************************************
+  // *****************************************
 
   this.name = 'process unit Bioreactor'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
@@ -77,8 +80,12 @@ function puBioReactor(pUnitIndex) {
   this.dataValues = [];
 
   // *****************************************
-  //        define PRIVILEGED methods
+  //         define PRIVATE functions
   // *****************************************
+
+  // *****************************************
+  //        define PRIVILEGED methods
+  // ******************************************
 
   this.initialize = function() {
     //
@@ -222,28 +229,25 @@ function puBioReactor(pUnitIndex) {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (let i = 0; i < inputs.length; i++) {
+      let connection = inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
+    }
 
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-    // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
-    // get array of current input values to this unit from other units
-    let inputs = getInputs();
-    flowRate = inputs[0]; // input flow rate from feed unit
-    feedConc = inputs[1]; // input substrate conc from feed unit
-
-    // console.log('RXR updateInputs, flowRate = '+flowRate);
-
     // residence time used in controller.checkForSteadyState()
     this.residenceTime = 1 / flowRate; // volume fixed at 1 m3
-    // BUT use width of strip plot to help ensure plot update does not
-    // suspend in middle when reach steady state for check every 2 times
-    // longest res time BUT NOT foolproof, e.g., with
-    // XXX 1 K up then down changes in manual Tj at certain times
-    // let numStripPoints = plotInfo[0]['numberPoints'];
-    // this.residenceTime = this.stripData[1][numStripPoints][0];
-    // console.log('rxr res time = ' + this.residenceTime);
 
   } // END of updateInputs() method
 

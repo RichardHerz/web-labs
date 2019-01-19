@@ -17,7 +17,7 @@ let processUnits = new Object();
 // WARNING: if reorder unit index numbers, then need to edit
 //   those numbers in each unit's private inputs array
 
-SEE LAST LINE 
+SEE LAST LINE
 
 this.updateUIfeedInput = function() {
   // SPECIAL FOR THIS UNIT
@@ -25,26 +25,28 @@ this.updateUIfeedInput = function() {
 
 ALSO SEE updateUIfeedSlider
 
+----------------------------------------------------
+
 function puWaterTank(pUnitIndex) {
   // constructor function for process unit
 
-  // *******************************************
+  // *****************************************
   //           DEPENDENCIES
-  // *******************************************
+  // *****************************************
 
   // see const inputs array for input connections to this unit from other units
   // see public properties for info shared with other units and methods
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // *******************************************
-  //      define INPUT CONNECTIONS
-  // *******************************************
+  // *****************************************
+  //       define INPUT CONNECTIONS
+  // *****************************************
 
   // define this unit's variables that are to receive input values from other units
   let flowRate = 0; // input flow rate from feed process unit
   let command = 0; // input command from controller process unit
 
-  // inputs array is processed in this unit's updateInputs method
+  // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
   //        'privateVarName' for private var, and
@@ -54,9 +56,9 @@ function puWaterTank(pUnitIndex) {
   inputs[0] = [0,'flowRate','flowRate'];
   inputs[1] = [2,'command','command'];
 
-  // *******************************************
+  // *****************************************
   //        define PRIVATE properties
-  // *******************************************
+  // *****************************************
 
   const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
   // unitIndex may be used in this unit's updateUIparams method
@@ -71,9 +73,9 @@ function puWaterTank(pUnitIndex) {
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in this.checkForSteadyState() method
 
-  // *******************************************
+  // *****************************************
   //         define PUBLIC properties
-  // *******************************************
+  // *****************************************
 
   this.name = 'process unit Water Tank'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
@@ -99,9 +101,9 @@ function puWaterTank(pUnitIndex) {
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
-  // *******************************************
+  // *****************************************
   //         define PRIVATE functions
-  // *******************************************
+  // *****************************************
 
   // *****************************************
   //        define PRIVILEGED methods
@@ -165,7 +167,7 @@ function puWaterTank(pUnitIndex) {
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
 
-    for (i = 0; i < inputs.length; i++) {
+    for (let i = 0; i < inputs.length; i++) {
       let connection = inputs[i];
       let sourceUnit = connection[0];
       let sourceVar = connection[1];
@@ -180,7 +182,7 @@ function puWaterTank(pUnitIndex) {
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-  } // END of updateInputs method
+  } // END of updateInputs() method
 
   this.updateState = function() {
     //

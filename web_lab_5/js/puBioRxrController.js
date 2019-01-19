@@ -1,26 +1,29 @@
 function puBioRxrController(pUnitIndex) {
   // constructor function for process unit
 
-  // *******************************************
+  // *****************************************
   //           DEPENDENCIES
-  // *******************************************
+  // *****************************************
 
-  // see private function getInputs for input connections to this unit
-  //   from other units
+  // see const inputs array for input connections to this unit from other units
   // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // *******************************************
-  //         define PRIVATE functions
-  // *******************************************
+  // *****************************************
+  //       define INPUT CONNECTIONS
+  // *****************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  let getInputs = function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    // WARNING: make sure html field text for set point var name matches this input!
-    inputs[0] = processUnits[1].biomass; // biomass in bioreactor
-    return inputs;
-  }
+  // define this unit's variables that are to receive input values from other units
+  let processVariable = 0; // input process variable to be controlled
+
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  const inputs = [];
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs[0] = [1,'biomass','processVariable'];
 
   // *******************************************
   //        define PRIVATE properties
@@ -34,7 +37,6 @@ function puBioRxrController(pUnitIndex) {
   let ssCheckSum = 0; // used in checkForSteadyState method
 
   // local variables used by controller process unit
-  let processVariable = 0;
   let setPoint = 0;
   let gain = 0; // controller gain
   let resetTime = 0; // controller reset time
@@ -230,15 +232,22 @@ function puBioRxrController(pUnitIndex) {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (let i = 0; i < inputs.length; i++) {
+      let connection = inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
+    }
 
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-
-    // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
-    // get array of current input values to this unit from other units
-    let inputs = getInputs();
-    processVariable = inputs[0]; // biomass in bioreactor
 
   } // END of updateInputs() method
 

@@ -53,7 +53,7 @@ let controller = {
     // initialize variables in each process unit
     // the order of the numeric index of process units does not affect the simulation
     let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       processUnits[n].initialize();
     }
     // initialize plotInfo to define plots after initialize units
@@ -64,15 +64,9 @@ let controller = {
     plotter.plotArrays.initialize();
     interfacer.resetThisLab(); // defined in process_interfacer.js
     simParams.updateCurrentRunCountDisplay(); // defined in process_sim_params.js
-
-    // alert('in controller openThisLab, simParams.simStepRepeats = ' + simParams.simStepRepeats);
-    // console.log('at end controller openThisLab'); // xxx
-
   }, // END OF function openThisLab
 
   runSimulation : function() {
-
-    // console.log('enter controller runSimulation'); // xxx
 
     // CALLED BY function runThisLab ON CLICK OF RUN-PAUSE BUTTON
 
@@ -100,9 +94,6 @@ let controller = {
     setTimeout(updateProcess(), updateMs);
 
     function updateProcess() {
-
-      // console.log('enter controller updateProcess'); // xxx
-
       // need controller.runningFlag not this.runningFlag
       // because updateProcess is a subfunction of runSimulation
       if (!controller.runningFlag) {
@@ -138,16 +129,9 @@ let controller = {
       // which calls them, so need controller. prefix
       // controller.updateProcessUnits() & controller.updateDisplay()
 
-      // console.log('in controller BEFORE loop, simParams.simStepRepeats = ' + simParams.simStepRepeats); // xxx
-
-      // xxx lab hangs with for (i = 0; ... vs. for (let i = 0; ...
-      // xxx maybe because i is global without let, then interferes with other methods?
-
       for (let i = 0; i < simParams.simStepRepeats; i += 1) {
-        // console.log('in controller loop before updateProcessUnits, i = ' + i); // xxx
         controller.updateProcessUnits();
       }
-      // console.log('in controller AFTER loop: for (i = 0; i < ... '); // xxx
 
       // get time at end of repeating updateProcessUnits and call
       // to updateDisplay from updateDisplay function return value
@@ -171,15 +155,11 @@ let controller = {
       // END updateProcess WITH CALL TO ITSELF AFTER updateMs WAIT
       setTimeout(updateProcess, updateMs);  // updateMs
 
-      // console.log('at end controller updateProcess'); // xxx
-
     } // END OF function updateProcess (inside function runSimulation)
 
   }, // END OF function runSimulation
 
   updateProcessUnits : function() {
-
-    // console.log('enter controller updateProcessUnits'); // xxx
 
     // DO COMPUTATIONS TO UPDATE STATE OF PROCESS
     // step all units but do not display
@@ -192,24 +172,20 @@ let controller = {
     let numUnits = Object.keys(processUnits).length; // number of units
 
     // FIRST, have all units update their unit input connections
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       processUnits[n].updateInputs();
     }
 
     // NOTE: UI params are updated whenever UI changes by HTML input actions
 
     // SECOND, have all units update their state
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
         processUnits[n].updateState();
     }
-
-    // console.log('at end controller updateProcessUnits'); // xxx
 
   }, // END OF function updateProcessUnits
 
   updateDisplay : function() {
-
-    // console.log('enter controller updateDisplay'); // xxx
 
     if (this.ssFlag) {
       // exit if ssFlag true
@@ -224,7 +200,7 @@ let controller = {
 
     // DISPLAY ALL UNITS BUT DO NOT STEP
     let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       processUnits[n].updateDisplay();
     }
 
@@ -246,7 +222,6 @@ let controller = {
       } else if ((ptype == 'profile') || (ptype == 'strip')) {
         // profile (static x,y) or strip chart (scolling x,y)
         let data = plotter.getPlotData(p);
-        // console.log('controller, p = ' +p+', data ='+data);
         plotter.plotPlotData(data,p);
       } else {
         // plotting must be handled by a unit's updateDisplay
@@ -262,9 +237,6 @@ let controller = {
     // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
     let thisDate = new Date();
     let thisMs = thisDate.getTime();
-
-    // console.log('at end controller updateDisplay'); // xxx
-
     return thisMs;
 
   },  // END OF function updateDisplay
@@ -298,7 +270,6 @@ let controller = {
   },
 
   resetSSflagsFalse : function() {
-    // console.log('--- ENTER resetSSflagsFalse ---');
     this.ssStartTime = 0;
     this.oldSimTime = 0;
     this.ssFlag = false; // unit sets true when sim reaches steady state
@@ -311,7 +282,6 @@ let controller = {
     let span = 0;
     for (let p = 0; p < numPlots; p += 1) {
       if (plotInfo[p]['type'] == 'strip') {
-        // console.log('in getStripPlotSpan, p = ' + p + ', plot type is STRIP');
         let xMax = plotInfo[p]['xAxisMax'];
         if (xMax > span) {span = xMax}
       }
@@ -332,9 +302,6 @@ let controller = {
     // to allow changes to propagate down unit
     // open OS Activity Monitor of CPU load to see effect of this
 
-    // console.log('ENTER check, ssFlag = ' + this.ssFlag);
-    // console.log('  simTime = ' + this.simTime + ', oldSimTime = ' + this.oldSimTime + ', ssStartTime = ' + this.ssStartTime)
-
     // get longest residence time in all units
     // if all stay constant this check could be moved out of here
     // so only done once, but here allows unit residence times to change
@@ -345,76 +312,44 @@ let controller = {
         resTime = processUnits[n]['residenceTime'];
       }
     }
-    // console.log('before check all units, this.simTime = ' + this.simTime + ', this.oldSimTime = ' + this.oldSimTime + ', resTime = ' + resTime);
 
     // check all units to see if any not at steady state
     if (this.simTime >= this.oldSimTime + 2 * resTime) {
-
-      // console.log('check all units, (this.simTime >= this.oldSimTime + 2 * resTime) is TRUE');
 
       // get ssFlag from each unit
       let thisFlag = true; // changes to false if any unit not at steady state
       let thisCheck = true;
       for (let n = 0; n < numUnits; n += 1) {
         thisCheck = processUnits[n].checkForSteadyState();
-
-        // console.log('--- check unit n, result = '+n+', '+thisCheck);
-
         if (thisCheck == false){
           // result returned by unit is not true
           thisFlag = false;
-
-          // console.log('*** thisFlag set to false by unit ' + n);
-
         }
       }
 
-      // console.log('after check all units, thisFlag = ' + thisFlag + ', stripPlotSpan = ' + this.stripPlotSpan);
-
       if (thisFlag == false) {
-
         this.ssFlag = false;
         this.oldSimTime = this.simTime;
         this.ssStartTime = 0;
-
       } else {
         // all units are at steady state
-
-        // console.log('ss check, all at steady state and thisFlag is true');
-
         if (this.stripPlotSpan == 0) {
-
           // no strip plot in this lab
           // all units at SS
           this.ssFlag = true;
-
-          // console.log('ss check, at SS, no strip plots, ssFlag = true');
-
         } else {
-
           // lab has a strip plot
-
-          // console.log('ss check, at SS, lab has strip plots');
-
           if (this.ssStartTime == 0) {
             // first time reach SS
             // mark time but keep updating plots
             this.ssStartTime = this.simTime;
-
-            // console.log('ss check, first time at SS with strip plots');
-
           } else {
             // has strip plot and has reached SS earlier
             if ((this.simTime - this.ssStartTime) >= this.stripPlotSpan) {
               // has strip plot, reached SS earlier, plot lines should be flat
               this.ssFlag = true;
-
-              // console.log('ss check, at SS with FLAT strip plots, ssFlag = true');
-
             } else {
               // has strip plot, reached SS earlier but keep plotting until flat lines
-
-              // console.log('ss check, at SS keep plotting with strip plots, ssFlag = false');
             }
           }
         }
@@ -425,12 +360,8 @@ let controller = {
       this.oldSimTime = this.simTime;
 
     } else { // ELSE OF if (this.simTime >= this.oldSimTime + 2 * resTime)
-
-      // console.log('do NOT check all units, (this.simTime >= this.oldSimTime + 2 * resTime) is FALSE');
-
+      // keep running
     } // END if (this.simTime >= this.oldSimTime + 2 * resTime)
-
-    // console.log('LEAVE check, ssFlag = ' + this.ssFlag);
 
   } // END method checkForSteadyState()
 

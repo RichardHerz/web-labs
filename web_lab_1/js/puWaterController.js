@@ -5,7 +5,7 @@ function puWaterController(pUnitIndex) {
   //           DEPENDENCIES
   // *******************************************
 
-  // see private array inputs for input connections to this unit from other units
+  // see const inputs array for input connections to this unit from other units
   // see public properties for info shared with other units and methods
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
@@ -16,7 +16,7 @@ function puWaterController(pUnitIndex) {
   // define this unit's variables that are to receive input values from other units
   let processVariable = 0;
 
-  // inputs array is processed in this unit's updateInputs method
+  // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
   //        'privateVarName' for private var, and
@@ -180,7 +180,7 @@ function puWaterController(pUnitIndex) {
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
 
-    for (i = 0; i < inputs.length; i++) {
+    for (let i = 0; i < inputs.length; i++) {
       let connection = inputs[i];
       let sourceUnit = connection[0];
       let sourceVar = connection[1];

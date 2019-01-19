@@ -65,7 +65,7 @@ let controller = {
     interfacer.resetThisLab(); // defined in process_interfacer.js
     simParams.updateCurrentRunCountDisplay(); // defined in process_sim_params.js
 
-    alert('in controller openThisLab, simParams.simStepRepeats = ' + simParams.simStepRepeats);
+    // alert('in controller openThisLab, simParams.simStepRepeats = ' + simParams.simStepRepeats);
     // console.log('at end controller openThisLab'); // xxx
 
   }, // END OF function openThisLab
@@ -138,12 +138,16 @@ let controller = {
       // which calls them, so need controller. prefix
       // controller.updateProcessUnits() & controller.updateDisplay()
 
-      // console.log('in controller, simParams.simStepRepeats = ' + simParams.simStepRepeats); // xxx
+      // console.log('in controller BEFORE loop, simParams.simStepRepeats = ' + simParams.simStepRepeats); // xxx
 
-// xxx DEACTIVATE FOR TESTING
-      for (i = 0; i < simParams.simStepRepeats; i += 1) {
+      // xxx lab hangs with for (i = 0; ... vs. for (let i = 0; ...
+      // xxx maybe because i is global without let, then interferes with other methods?
+
+      for (let i = 0; i < simParams.simStepRepeats; i += 1) {
+        // console.log('in controller loop before updateProcessUnits, i = ' + i); // xxx
         controller.updateProcessUnits();
       }
+      // console.log('in controller AFTER loop: for (i = 0; i < ... '); // xxx
 
       // get time at end of repeating updateProcessUnits and call
       // to updateDisplay from updateDisplay function return value
@@ -165,11 +169,7 @@ let controller = {
       // }
 
       // END updateProcess WITH CALL TO ITSELF AFTER updateMs WAIT
-
-      // xxx DEACTIVATE FOR TESTING
       setTimeout(updateProcess, updateMs);  // updateMs
-
-      // xxx also change simParams.simStepRepeats from 10 to 1 in lab 9
 
       // console.log('at end controller updateProcess'); // xxx
 
@@ -208,6 +208,8 @@ let controller = {
   }, // END OF function updateProcessUnits
 
   updateDisplay : function() {
+
+    // console.log('enter controller updateDisplay'); // xxx
 
     if (this.ssFlag) {
       // exit if ssFlag true
@@ -260,6 +262,9 @@ let controller = {
     // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
     let thisDate = new Date();
     let thisMs = thisDate.getTime();
+
+    // console.log('at end controller updateDisplay'); // xxx
+
     return thisMs;
 
   },  // END OF function updateDisplay

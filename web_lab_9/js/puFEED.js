@@ -5,20 +5,25 @@ function puFEED(pUnitIndex) {
   //           DEPENDENCIES
   // *******************************************
 
-  // see private function getInputs for input connections to this unit
-  //   from other units
+  // see const inputs array for input connections to this unit from other units
   // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
-  //         define PRIVATE functions
+  //      define INPUT CONNECTIONS
   // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  let getInputs = function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    return inputs;
-  }
+  // define this unit's variables that are to receive input values from other units
+  // SPECIAL - none for this unit
+
+  // SPECIAL - no inputs to this unit from other units - only from HTML
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // const inputs = [];
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
 
   // *******************************************
   //        define PRIVATE properties
@@ -64,11 +69,18 @@ function puFEED(pUnitIndex) {
   this.dataInitial = [];
   this.dataValues = [];
 
+  // *******************************************
+  //         define PRIVATE functions
+  // *******************************************
+
   // *****************************************
   //        define PRIVILEGED methods
   // *****************************************
 
   this.initialize = function() {
+
+    // console.log('enter this.initialize, this unitIndex = ' + unitIndex); // xxx
+
     //
     // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
     //
@@ -106,6 +118,9 @@ function puFEED(pUnitIndex) {
   } // END of initialize()
 
   this.reset = function(){
+
+    // console.log('enter this.reset, this unitIndex = ' + unitIndex); // xxx
+
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
     // On click reset button but not reload page, unless do something else here,
@@ -143,6 +158,9 @@ function puFEED(pUnitIndex) {
   } // end reset() method
 
   this.updateUIparams = function(){
+
+  // console.log('enter this.updateUIparams, this unitIndex = ' + unitIndex); // xxx
+
     //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
@@ -158,6 +176,8 @@ function puFEED(pUnitIndex) {
   } // END updateUIparams
 
   this.updateUIfeedInput = function() {
+    // SPECIAL FOR THIS UNIT
+    // called in HTML input element so must be a publc method
     let unum = unitIndex;
     this.conc = this.dataValues[1] = interfacer.getInputValue(unum, 1);
     // alert('input: this.conc = ' + this.conc);
@@ -174,6 +194,8 @@ function puFEED(pUnitIndex) {
   }, // END method updateUIfeedInput()
 
   this.updateUIfeedSlider = function() {
+    // SPECIAL FOR THIS UNIT
+    // called in HTML input element so must be a publc method
     let unum = unitIndex;
     this.conc = this.dataValues[0] = interfacer.getInputValue(unum, 0);
     // update input field display
@@ -188,13 +210,37 @@ function puFEED(pUnitIndex) {
     ssCheckSum = 1;
   } // END method updateUIfeedSlider()
 
-  this.updateInputs = function(){
+  this.updateInputs = function() {
+
+  // console.log('enter this.updateInputs, this unitIndex = ' + unitIndex); // xxx
+
+    //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    //    none for this unit
-  } // END updateInputs
+    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    // // SPECIAL - no inputs to this unit from other units - only from HTML
+    // for (let i = 0; i < inputs.length; i++) {
+    //   let connection = inputs[i];
+    //   let sourceUnit = connection[0];
+    //   let sourceVar = connection[1];
+    //   let thisVar = connection[2];
+    //   let sourceValue = processUnits[sourceUnit][sourceVar];
+    //   eval(thisVar + ' = ' + sourceValue);
+    // //   NOTE: line above works for private AND public thisVar, where public has 'this.'
+    // //    line below works only for public thisVar, where thisVar has no 'this.'
+    // //    processUnits[unitIndex][thisVar] = sourceValue;
+    // }
+
+    // check for change in overall main time step simTimeStep
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+
+  } // END of updateInputs() method
 
   this.updateState = function() {
+
+  // console.log('enter this.updateState, this unitIndex = ' + unitIndex); // xxx
+
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
@@ -205,11 +251,14 @@ function puFEED(pUnitIndex) {
     //          get info from other units ONLY in updateInputs() method
     //
 
-    // SPECIAL - FEED UNIT - state set by html inputs - no actions here
+    // SPECIAL - FEED UNIT - state set by HTML inputs - no actions here
 
   } // end updateState method
 
   this.updateDisplay = function() {
+
+  // console.log('enter this.updateDisplay, this unitIndex = ' + unitIndex); // xxx
+
     // update display elements which only depend on this process unit
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
@@ -247,6 +296,9 @@ function puFEED(pUnitIndex) {
   } // END of updateDisplay()
 
   this.checkForSteadyState = function() {
+
+  // console.log('enter this.checkForSteadyState, this unitIndex = ' + unitIndex); // xxx
+
     // required - called by controller object
     // returns ssFlag, true if this unit at SS, false if not
     // *IF* NOT used to check for SS *AND* another unit IS checked,

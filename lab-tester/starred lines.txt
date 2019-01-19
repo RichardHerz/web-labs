@@ -17,7 +17,7 @@ let processUnits = new Object();
 // WARNING: if reorder unit index numbers, then need to edit
 //   those numbers in each unit's private inputs array
 
-SEE LAST LINE
+SEE LAST LINE 
 
 this.updateUIfeedInput = function() {
   // SPECIAL FOR THIS UNIT
@@ -44,7 +44,7 @@ function puWaterTank(pUnitIndex) {
   let flowRate = 0; // input flow rate from feed process unit
   let command = 0; // input command from controller process unit
 
-  // define inputs array, which is processed in this unit's updateInputs method
+  // inputs array is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
   //        'privateVarName' for private var, and
@@ -180,7 +180,7 @@ function puWaterTank(pUnitIndex) {
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-  } // END of updateInputs() method
+  } // END of updateInputs method
 
   this.updateState = function() {
     //

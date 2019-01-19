@@ -53,7 +53,7 @@ let controller = {
     // initialize variables in each process unit
     // the order of the numeric index of process units does not affect the simulation
     let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       processUnits[n].initialize();
     }
     // initialize plotInfo to define plots after initialize units
@@ -129,7 +129,7 @@ let controller = {
       // which calls them, so need controller. prefix
       // controller.updateProcessUnits() & controller.updateDisplay()
 
-      for (i = 0; i < simParams.simStepRepeats; i += 1) {
+      for (let i = 0; i < simParams.simStepRepeats; i += 1) {
         controller.updateProcessUnits();
       }
 
@@ -172,14 +172,14 @@ let controller = {
     let numUnits = Object.keys(processUnits).length; // number of units
 
     // FIRST, have all units update their unit input connections
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       processUnits[n].updateInputs();
     }
 
     // NOTE: UI params are updated whenever UI changes by HTML input actions
 
     // SECOND, have all units update their state
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
         processUnits[n].updateState();
     }
 
@@ -200,7 +200,7 @@ let controller = {
 
     // DISPLAY ALL UNITS BUT DO NOT STEP
     let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       processUnits[n].updateDisplay();
     }
 

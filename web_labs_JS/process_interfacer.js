@@ -39,7 +39,7 @@ let interfacer = {
     controller.resetSimTime();
     // reset all units
     let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       processUnits[n].reset();
     }
     controller.resetSSflagsFalse();
@@ -88,7 +88,7 @@ let interfacer = {
     // specific unit involved in that input.
 
     let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       processUnits[n].updateUIparams();
     }
 
@@ -111,9 +111,6 @@ let interfacer = {
       interfacer.runThisLab(); // toggles running state
     }
 
-    let n; // index
-    let v; // variable index
-    let k; // points index
     let numUnits;
     let numVar;
     let varIndex; // index of selected variable in unit local data array
@@ -130,10 +127,10 @@ let interfacer = {
     tText += 'Values of input parameters at time of data capture:<br>';
     // list inputs for all units since, other units may affect these results
     numUnits = Object.keys(processUnits).length;
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n = 0; n < numUnits; n += 1) {
       tText += '* ' + processUnits[n]['name'] + '<br>';
       numVar = processUnits[n]['VarCount'];
-      for (v = 0; v <= numVar; v += 1) { // NOTE: <=
+      for (let v = 0; v <= numVar; v += 1) { // NOTE: <=
         tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
                 + processUnits[n]['dataValues'][v] + '&nbsp;'
                 + processUnits[n]['dataUnits'][v] + '<br>';
@@ -148,7 +145,7 @@ let interfacer = {
     // first, x-axis variable name for table
     tText += plotInfo[plotIndex]['xAxisTableLabel'] + tItemDelimiter;
     // then other column names for y-axis variables
-    for (v = 0; v < tVarLabelLen; v += 1) {
+    for (let v = 0; v < tVarLabelLen; v += 1) {
       tText += plotInfo[plotIndex]['varLabel'][v];
       tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
       if (v < (tVarLabelLen - 1)) {
@@ -170,14 +167,14 @@ let interfacer = {
     let dataName = plotType + 'Data'; // profileData or stripData
     if ((plotType == 'profile') || (plotType == 'strip')) {
       // repeat to make each line in table for each data point
-      for (k = 0; k <= plotInfo[plotIndex]['numberPoints']; k += 1) {
+      for (let k = 0; k <= plotInfo[plotIndex]['numberPoints']; k += 1) {
         // first get x value in [k][0], get it from ['var'][0]
         // x values should be same for all units for this plot
         varIndex = plotInfo[plotIndex]['var'][0];
         varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
         tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][0]) + tItemDelimiter;
           // get y value for each variable in [k][1]
-          for (v = 0; v < tVarLabelLen; v += 1) {
+          for (let v = 0; v < tVarLabelLen; v += 1) {
             varIndex = plotInfo[plotIndex]['var'][v];
             varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
             tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][1]); // [k][1] is y value

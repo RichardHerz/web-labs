@@ -180,7 +180,7 @@ function puWaterController(pUnitIndex) {
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
 
-    for (i = 0; i < inputs.length; i++) {
+    for (let i = 0; i < inputs.length; i++) {
       let connection = inputs[i];
       let sourceUnit = connection[0];
       let sourceVar = connection[1];

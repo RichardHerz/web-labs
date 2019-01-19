@@ -33,6 +33,7 @@ let simParams = {
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
   simStepRepeats : 10, // integer number of unit updates between display updates
+  // SPECIAL - this lab use simStepRepeats = 10, with smaller get probs with SS conversion plot...
   simTimeStep : 8, // time step value, simulation time, of main repeat
 
   // individual units may do more steps in one unit updateState()

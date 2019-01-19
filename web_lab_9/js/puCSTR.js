@@ -5,22 +5,27 @@ function puCSTR(pUnitIndex) {
   //           DEPENDENCIES
   // *******************************************
 
-  // see private function getInputs for input connections to this unit
-  //   from other units
+  // see const inputs array for input connections to this unit from other units
   // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
-  //         define PRIVATE functions
+  //      define INPUT CONNECTIONS
   // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  let getInputs = function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0]; // HX T cold out = RXR Tin
-    inputs[0] = processUnits[unitIndex - 1]['conc'];
-    inputs[1] = processUnits[0]['conc']; // feed conc
-    return inputs;
-  }
+  // define this unit's variables that are to receive input values from other units
+  let concIn = 0; // conc from upstream CSTR
+  let feed = 0; // feed to first CSTR to calc this unit's conversion
+
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  const inputs = [];
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs[0] = [pUnitIndex - 1,'conc','concIn']; // upstream cstr conc to this unit
+  inputs[1] = [0,'conc','feed']; // feed unit 0 conc to calc this unit's conversion
 
   // *******************************************
   //        define PRIVATE properties
@@ -33,8 +38,6 @@ function puCSTR(pUnitIndex) {
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in checkForSteadyState method
 
-  let feed = 0; // feed to first reactor
-  let concIn = 0; // conc entering this reactor
   let conversion = 0;
   let rxnRate = 0;
   let rateBranchOLD = 1; // 1 for high, 0 for low
@@ -75,7 +78,7 @@ function puCSTR(pUnitIndex) {
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
-  // **** SPECIAL - THESE ARE NOT USED IN CSTR UNITS - NO DIRECT INPUTS FROM HTML
+  // SPECIAL - THESE ARE NOT USED IN CSTR UNITS - NO DIRECT INPUTS FROM HTML
   // // define arrays to hold info for variables
   // // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
   // // these will be filled with values in method initialize()
@@ -87,37 +90,22 @@ function puCSTR(pUnitIndex) {
   // this.dataInitial = [];
   // this.dataValues = [];
 
-  // *****************************************
-  //        define PRIVILEGED methods
-  // *****************************************
+  // *******************************************
+  //         define PRIVATE functions
+  // *******************************************
 
-  this.initialize = function() {
-    //
-    // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
-    //
-    // **** SPECIAL - nothing needed for this unit
-    //
-    // END OF INPUT VARS
-    // record number of input variables, VarCount
-    // used, e.g., in copy data to table
-    //
-    // **** SPECIAL - not used this unit: this.VarCount = v;
-    //
-    // OPTIONAL - add entries for output variables if want to use min-max to
-    //            constrain values in updateState or dimensional units in plotInfo
-    //
-  } // END initialize method
+  let getRxnRate = function(conc) {
 
-  this.getRxnRate = function(conc) {
+        // console.log('enter getRxnRate, this unitIndex = ' + unitIndex); // xxx
+
+    // USES private properties rateBranchOLD, rateLOW, rateHIGH
     // getRxnRate provides rate of formation of reactant from Reactor Lab
     // Web Labs, Lab 2, reaction-diffusion at default lab entry conditions, model 2,
     // as the average dimensionless turnover frequency in the catalyst layer
     // vs. dimensionless reactant concentration in the mixing cell over the layer
-    // USES rateBranchOLD, rateLOW, rateHIGH
     // convert from conc 0-1 to c = 0 to 100
     //    for use of c in array indexes
     // return rate as negative value for reactant conversion
-
     // for 0.001 conc resolution
     let c = Math.round(1000*conc); // 0 to 100
     if (c < 0) {
@@ -125,7 +113,6 @@ function puCSTR(pUnitIndex) {
     } else if (c > 1000) {
       c = 1000;
     }
-
     // determine rate branch, high vs. low
     let rate = 0;
     const cLowBreak = 431; // for 0.001 conc resolution
@@ -153,13 +140,39 @@ function puCSTR(pUnitIndex) {
       rate = 0.0;
       rateBranchOLD = 1;
     }
-
-    // console.log('getRxnRate, unit = ' + unitIndex + ', c = ' + c + ', rate = ' + rate + ', branch = ' + rateBranchOLD);
+    // console.log('getRxnRate, unit = ' + unitIndex + ', c = ' + c + ', rate = ' + rate + ', branch = ' + rateBranchOLD); // xxx
     // return rate as negative value for reactant conversion
     return -rate;
   } // END getRxnRate() method
 
+  // *****************************************
+  //        define PRIVILEGED methods
+  // *****************************************
+
+  this.initialize = function() {
+
+            // console.log('enter this.initialize, this unitIndex = ' + unitIndex); // xxx
+
+    //
+    // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
+    //
+    // SPECIAL - nothing needed for this unit
+    //
+    // END OF INPUT VARS
+    // record number of input variables, VarCount
+    // used, e.g., in copy data to table
+    //
+    // SPECIAL - not used this unit: this.VarCount = v;
+    //
+    // OPTIONAL - add entries for output variables if want to use min-max to
+    //            constrain values in updateState or dimensional units in plotInfo
+    //
+  } // END initialize method
+
   this.reset = function() {
+
+    // console.log('enter this.reset, this unitIndex = ' + unitIndex); // xxx
+
     //
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
@@ -202,6 +215,9 @@ function puCSTR(pUnitIndex) {
   } // end reset
 
   this.updateUIparams = function() {
+
+    // console.log('enter this.updateUIparams, this unitIndex = ' + unitIndex); // xxx
+
     //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
@@ -212,27 +228,45 @@ function puCSTR(pUnitIndex) {
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
     ssCheckSum = 1;
 
-    // **** SPECIAL - no UI params for this unit
+    // SPECIAL - no UI params for this unit
 
   } // END of updateUIparams()
 
   this.updateInputs = function() {
+
+    // console.log('enter this.updateInputs, this unitIndex = ' + unitIndex); // xxx
+
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    // console.log('in updateInput, inputs.length = ' + inputs.length); // xxx
+
+    for (let i = 0; i < inputs.length; i++) {
+      let connection = inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
+
+      // eval("console.log('" + thisVar + " = " + sourceValue + "')"); // xxx
+
+    }
 
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-    // get array of current input values to this unit from other units
-    let inputs = getInputs();
-    concIn = inputs[0]; // conc from upstream CSTR
-    feed = inputs[1]; // feed to first CSTR
-
-  } // END of updateInputs()
+  } // END of updateInputs method
 
   this.updateState = function() {
+
+    // console.log('enter this.updateState, this unitIndex = ' + unitIndex); // xxx
+
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
@@ -259,8 +293,8 @@ function puCSTR(pUnitIndex) {
       // rate is average d'less turnover frequency in catalyst layer (pellet)
       // here assumes catalyst at pseudo-steady-state whereas Lab 2 computed
       // cell and surface dynamics
-      rxnRate = this.getRxnRate(conc);
-      // console.log('updateState, unit = ' + unitIndex + ', conc = ' + conc + ', rxnRate = ' + rxnRate + ', branch = ' + rateBranchOLD);
+      rxnRate = getRxnRate(conc);
+      // console.log('updateState, unit = ' + unitIndex + ', conc = ' + conc + ', rxnRate = ' + rxnRate + ', branch = ' + rateBranchOLD); // xxx
       let dcdt = Kflow * Vratio * (concIn - conc) + rxnRate * eps * alpha * Vratio;
       // console.log('updateState, unit = ' + unitIndex + ', dcdt = ' + dcdt);
       let newConc = conc + dcdt * unitTimeStep;
@@ -282,15 +316,21 @@ function puCSTR(pUnitIndex) {
     if (conversion < 0) {
       conversion = 0;
     }
+    if (conversion > 1) {
+      conversion = 1;
+    }
 
   } // END of updateState()
 
   this.updateDisplay = function() {
+
+    // console.log('enter this.updateDisplay, this unitIndex = ' + unitIndex); // xxx
+
     // update display elements which only depend on this process unit
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
-    // **** SPECIAL - see profileData updates in checkForSteadyState()
+    // SPECIAL - see profileData updates in checkForSteadyState()
 
     // HANDLE STRIP CHART DATA
 
@@ -339,6 +379,9 @@ function puCSTR(pUnitIndex) {
   } // END of updateDisplay()
 
   this.checkForSteadyState = function() {
+
+    // console.log('enter this.checkForSteadyState, this unitIndex = ' + unitIndex); // xxx
+
     // required - called by controller object
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
@@ -367,42 +410,44 @@ function puCSTR(pUnitIndex) {
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}
     ssCheckSum = newCheckSum; // save current value for use next time
 
-    // **** SPECIAL - update profileData here and not in updateDisplay()
+    // SPECIAL - update profileData here and not in updateDisplay()
     if ((ssFlag == true) && (controller.ssStartTime == 0)) {
       // this unit at steady state && first time all units are at steady state
       // note ssStartTime will be changed != 0 after this check
 
-      // handle SS conversion
-      v = 0;
-      tempArray = this.profileData[v]; // work on one plot variable at a time
-      if (tempArray[0][0] <= 0) {
-        // shift deletes 1st [x,y] pair created on array initialization
-        tempArray.shift();
-      }
-      // add the new [x,y] pair array at end
-      // feed conc to first CSTR, this CSTR's conversion
-      if (processUnits[0].conc > 0) {
-        // only add conversion when feed conc > 0
-        tempArray.push( [processUnits[0].conc,conversion] );
-      }
-      // update the variable being processed
-      this.profileData[v] = tempArray;
-      // console.log('checkForSteadyState, this.profileData[0] = ' + this.profileData[0]);
+      if (feed > 0) {
+        // only add SS values when feed conc > 0
 
-      // handle SS rate
-      //
-      v = 1;
-      tempArray = this.profileData[v]; // work on one plot variable at a time
-      if (tempArray[0][0] <= 0) {
-        // shift deletes 1st [x,y] pair created on array initialization
-        tempArray.shift();
-      }
-      // add the new [x,y] pair array at end
-      // feed conc to first CSTR, this CSTR's conversion
-      let thisRate = -rxnRate;
-      tempArray.push( [this.conc,thisRate] );
-      // update the variable being processed
-      this.profileData[v] = tempArray;
+        // handle SS conversion
+        v = 0;
+        tempArray = this.profileData[v]; // work on one plot variable at a time
+        if (tempArray[0][0] <= 0) {
+          // shift deletes 1st [x,y] pair created on array initialization
+          tempArray.shift();
+        }
+        // add the new [x,y] pair array at end
+        // feed conc to first CSTR, this CSTR's conversion
+        tempArray.push( [feed,conversion] );
+        // update the variable being processed
+        this.profileData[v] = tempArray;
+        // console.log('checkForSteadyState, this.profileData[0] = ' + this.profileData[0]);
+
+        // handle SS rate
+        //
+        v = 1;
+        tempArray = this.profileData[v]; // work on one plot variable at a time
+        if (tempArray[0][0] <= 0) {
+          // shift deletes 1st [x,y] pair created on array initialization
+          tempArray.shift();
+        }
+        // add the new [x,y] pair array at end
+        // feed conc to first CSTR, this CSTR's conversion
+        let thisRate = -rxnRate;
+        tempArray.push( [this.conc,thisRate] );
+        // update the variable being processed
+        this.profileData[v] = tempArray;
+
+      } // END OF if (feed > 0)
 
     } // END OF if ((ssFlag == true) && (controller.ssStartTime == 0))
 

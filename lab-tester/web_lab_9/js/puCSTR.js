@@ -243,7 +243,7 @@ function puCSTR(pUnitIndex) {
 
     // console.log('in updateInput, inputs.length = ' + inputs.length); // xxx
 
-    for (i = 0; i < inputs.length; i++) {
+    for (let i = 0; i < inputs.length; i++) {
       let connection = inputs[i];
       let sourceUnit = connection[0];
       let sourceVar = connection[1];
@@ -415,9 +415,10 @@ function puCSTR(pUnitIndex) {
       // this unit at steady state && first time all units are at steady state
       // note ssStartTime will be changed != 0 after this check
 
-      // handle SS conversion
       if (feed > 0) {
-        // only add conversion when feed conc > 0
+        // only add SS values when feed conc > 0
+
+        // handle SS conversion
         v = 0;
         tempArray = this.profileData[v]; // work on one plot variable at a time
         if (tempArray[0][0] <= 0) {
@@ -430,22 +431,23 @@ function puCSTR(pUnitIndex) {
         // update the variable being processed
         this.profileData[v] = tempArray;
         // console.log('checkForSteadyState, this.profileData[0] = ' + this.profileData[0]);
-      }
 
-      // handle SS rate
-      //
-      v = 1;
-      tempArray = this.profileData[v]; // work on one plot variable at a time
-      if (tempArray[0][0] <= 0) {
-        // shift deletes 1st [x,y] pair created on array initialization
-        tempArray.shift();
-      }
-      // add the new [x,y] pair array at end
-      // feed conc to first CSTR, this CSTR's conversion
-      let thisRate = -rxnRate;
-      tempArray.push( [this.conc,thisRate] );
-      // update the variable being processed
-      this.profileData[v] = tempArray;
+        // handle SS rate
+        //
+        v = 1;
+        tempArray = this.profileData[v]; // work on one plot variable at a time
+        if (tempArray[0][0] <= 0) {
+          // shift deletes 1st [x,y] pair created on array initialization
+          tempArray.shift();
+        }
+        // add the new [x,y] pair array at end
+        // feed conc to first CSTR, this CSTR's conversion
+        let thisRate = -rxnRate;
+        tempArray.push( [this.conc,thisRate] );
+        // update the variable being processed
+        this.profileData[v] = tempArray;
+
+      } // END OF if (feed > 0)
 
     } // END OF if ((ssFlag == true) && (controller.ssStartTime == 0))
 

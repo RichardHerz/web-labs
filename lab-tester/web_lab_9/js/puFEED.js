@@ -220,7 +220,7 @@ function puFEED(pUnitIndex) {
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
 
     // // SPECIAL - no inputs to this unit from other units - only from HTML
-    // for (i = 0; i < inputs.length; i++) {
+    // for (let i = 0; i < inputs.length; i++) {
     //   let connection = inputs[i];
     //   let sourceUnit = connection[0];
     //   let sourceVar = connection[1];

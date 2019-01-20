@@ -53,11 +53,11 @@ processUnits[0] = {
   //   unit 1 USES unit 0 conc
   //   unit 1 USES unit 0 Tfeed
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
+  
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
   //   none
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
   //   none
 
   // define main parameters

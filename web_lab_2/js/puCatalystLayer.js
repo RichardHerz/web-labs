@@ -16,13 +16,15 @@
 
 let puCatalystLayer = {
   //
-  unitIndex : 0, // index of this unit as child in processUnits parent object
-  // unitIndex used in this object's updateUIparams() method
-  name : 'catalyst layer',
-
+  // ************************************************************
   // NOTE: this single unit could have been split into 3 units:
   //       feed, mixing cell, catalyst layer
   //       but choose to keep as one unit here
+  // ************************************************************
+
+  unitIndex : 0, // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
+  name : 'catalyst layer',
 
   // SUMMARY OF DEPENDENCIES
   //

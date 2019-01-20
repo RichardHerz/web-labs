@@ -47,13 +47,6 @@ processUnits[0] = {
 
   // SUMMARY OF DEPENDENCIES
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    return inputs;
-  },
-
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
   //   unit 1 USES unit 0 flowRate
@@ -63,6 +56,9 @@ processUnits[0] = {
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
   //   none
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
+
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  //   none
 
   // define main parameters
   // values will be set in method intialize()
@@ -168,11 +164,17 @@ processUnits[0] = {
 
   }, // END updateUIparams
 
-  updateInputs : function(){
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    //    none for this unit
-  }, // END updateInputs
+  updateInputs : function() {
+      //
+      // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
+      //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
+      // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+      //   none
+
+      // check for change in overall main time step simTimeStep
+      this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+
+  }, // END of updateInputs() method
 
   updateState : function() {
     //
@@ -229,15 +231,19 @@ processUnits[1] = {
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
-    let inputs = [];
-    inputs[0] = processUnits[0].flowRate;
-    inputs[1] = processUnits[0].conc;
-    inputs[2] = processUnits[0].Tfeed;
-    inputs[3] = processUnits[3].Tj;
-    inputs[4] = processUnits[3].UA;
-    return inputs;
-  },
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs : [
+    [0,'flowRate','this.flowRate'],
+    [0,'conc','this.concIn'],
+    [0,'Tfeed','this.Tfeed'],
+    [3,'Tj','this.Tj'],
+    [3,'UA','this.UA']
+  ],
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -430,17 +436,22 @@ processUnits[1] = {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (let i = 0; i < this.inputs.length; i++) {
+      let connection = this.inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
+    }
 
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
-    let inputs = this.getInputs();
-    this.flowRate = inputs[0]; // feed flow rate
-    this.concIn = inputs[1]; // feed conc
-    this.Tfeed = inputs[2]; // feed T
-    this.Tj = inputs[3]; // jacket T
-    this.UA = inputs[4];
 
     // residence time used in controller.checkForSteadyState()
     this.residenceTime = this.vol / this.flowRate;
@@ -602,11 +613,16 @@ processUnits[2] = {
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
-    let inputs = [];
-    inputs[0] = processUnits[4].command;
-    return inputs;
-  },
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs : [
+    [4,'command','this.command']
+  ],
+
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
 
@@ -619,8 +635,8 @@ processUnits[2] = {
   // define main inputs
   // values will be set in method intialize()
 
-  initialRate : 1, // (m3/s), heat transfer liquid flow rate
-  rate : this.initialRate,
+  initialFlowRate : 1, // (m3/s), heat transfer liquid flow rate
+  flowRate : this.initialFlowRate,
 
   initialTjIn : 350, // (K)
   TjIn : this.initialTjIn,
@@ -666,8 +682,8 @@ processUnits[2] = {
     this.dataMin[v] = 1e-7;
     this.dataMax[v] = 1;
     this.dataInitial[v] = 1;
-    this.rate = this.dataInitial[v];
-    this.dataValues[v] = this.rate;
+    this.flowRate = this.dataInitial[v];
+    this.dataValues[v] = this.flowRate;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -735,16 +751,32 @@ processUnits[2] = {
     let unum = this.unitIndex;
     //
     // get jacket inlet T from controller command
-    this.rate = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    this.flowRate = this.dataValues[1] = interfacer.getInputValue(unum, 1);
 
   }, // END of updateUIparams()
 
   updateInputs : function(){
+    //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    let inputs = this.getInputs();
-    this.command = inputs[0];
-  },
+    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (let i = 0; i < this.inputs.length; i++) {
+      let connection = this.inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
+    }
+
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+
+  }, // END of updateInputs method
 
   updateState : function(){
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -829,13 +861,17 @@ processUnits[3] = {
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
-    let inputs = [];
-    inputs[0] = processUnits[2].rate;
-    inputs[1] = processUnits[1].Trxr;
-    inputs[2] = processUnits[2].TjIn;
-    return inputs;
-  },
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs : [
+    [1,'Trxr','this.Trxr'],
+    [2,'TjIn','this.TjIn'],
+    [2,'flowRate','this.flowRate'],
+  ],
 
   // variables defined here are available to all functions inside this unit
 
@@ -977,16 +1013,22 @@ processUnits[3] = {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (let i = 0; i < this.inputs.length; i++) {
+      let connection = this.inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
+    }
 
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
-    // get array of current input values to this unit from other units
-    let inputs = this.getInputs();
-    this.flowRate = inputs[0];
-    this.Trxr = inputs[1];
-    this.TjIn = inputs[2];
 
     // residence time used in controller.checkForSteadyState()
     this.residenceTime = this.vol / this.flowRate;
@@ -1079,11 +1121,15 @@ processUnits[4] = {
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
-    let inputs = [];
-    inputs[0] = processUnits[1].Trxr;
-    return inputs;
-  },
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs : [
+    [1,'Trxr','this.Trxr']
+  ],
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -1265,14 +1311,23 @@ processUnits[4] = {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (let i = 0; i < this.inputs.length; i++) {
+      let connection = this.inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
+    }
 
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
-    // get array of current input values to this unit from other units
-    let inputs = this.getInputs();
-    this.Trxr = inputs[0];
   }, // END updateInputs method
 
   updateState : function(){

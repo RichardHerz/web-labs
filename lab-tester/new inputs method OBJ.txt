@@ -1,8 +1,16 @@
 
 
-***** VERSION FOR OBJECT DEFINITION - *NOT* CONSTRUCTOR ********           
+***** VERSION FOR OBJECT DEFINITION - *NOT* CONSTRUCTOR ********
 
-   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+// see const inputs array for input connections to this unit from other units
+// search for controller. & interfacer. & plotter. & simParams. & plotInfo
+
+// WARNING: if reorder unit index numbers, then need to edit
+//   those numbers in each unit's inputs array
+
+
+
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
   // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
@@ -37,4 +45,11 @@
 
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    
+    
+    
+    
+    
+      
+    
 

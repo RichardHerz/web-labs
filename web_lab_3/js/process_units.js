@@ -53,7 +53,7 @@ processUnits[0] = {
   //   unit 1 USES unit 0 conc
   //   unit 1 USES unit 0 Tfeed
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
-  
+
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
   //   none
 
@@ -219,18 +219,13 @@ processUnits[1] = {
 
   // SUMMARY OF DEPENDENCIES
   //
-  // USES OBJECT simParams
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 4 USES unit 1 Trxr
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //   unit 1 USES unit 0 flowRate // flow rate
-  //   unit 1 USES unit 0 conc
-  //   unit 1 USES unit 0 Tfeed
-  //   unit 1 USES unit 3 Tj
-  //   unit 1 USES unit 3 UA
-  //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
+  // [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
+  //
+  // see const inputs array for input connections to this unit from other units
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  //
   // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
@@ -244,6 +239,9 @@ processUnits[1] = {
     [3,'Tj','this.Tj'],
     [3,'UA','this.UA']
   ],
+
+  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
+  //   unit 4 USES unit 1 Trxr
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -608,11 +606,10 @@ processUnits[2] = {
   //   unit 3 USES unit 2 rate
   //   unit 3 USES unit 2 TjIn
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //   unit 2 USES processUnits[4].command
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  //
   // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
@@ -854,13 +851,10 @@ processUnits[3] = {
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
   //   unit 1 USES unit 3 Tj
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //   unit 3 USES unit 1 Trxr
-  //   unit 3 USES unit 2 rate // flow rate
-  //   unit 3 USES unit 2 TjIn
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  //
   // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
@@ -1116,11 +1110,10 @@ processUnits[4] = {
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
   //   unit 2 USES processUnits[4].command - manipulated variable
   //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //   unit 4 USES unit 1 Trxr - controlled variable
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  //
   // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,

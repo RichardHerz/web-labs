@@ -35,7 +35,7 @@ let processUnits = new Object();
 // then object cleared for garbage collection, e.g.,
 //   puHeatExchanger = null; // puHeatExchanger is an object
 // WARNING: if reorder unit index numbers, then need to edit
-//   those numbers in each unit's getInputs method
+//   those numbers in each unit's inputs array
 
 processUnits[0] = {
   //
@@ -44,14 +44,7 @@ processUnits[0] = {
   name : 'arena',
 
   // SUMMARY OF DEPENDENCIES
-
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
-    let inputs = [];
-    // *** e.g., inputs[0] = processUnits[1]['Tcold'][0];
-    return inputs;
-  },
-
+  //
   // USES OBJECT simParams
   // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
   //   none
@@ -103,7 +96,7 @@ processUnits[0] = {
   residenceTime : 0, // for timing checks for steady state check
   // residenceTime is set in this unit's updateUIparams()
 
-  ants : [],
+  ants : [], // the little dot objects swarming around the arena
 
   initialize : function() {
     //

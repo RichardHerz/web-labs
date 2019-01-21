@@ -47,12 +47,7 @@ let puPlugFlowReactor = {
   //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
-    let inputs = [];
-    // example not used here:
-    //   inputs[0] = processUnits[1]['Tcold'][0]; // HX T cold out = RXR Tin
-    return inputs;
-  },
+  //   none
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -412,10 +407,9 @@ let puPlugFlowReactor = {
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
-
+    //   none
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
   }, // END of updateInputs()
 
   updateState : function() {

@@ -53,14 +53,18 @@ let puCounterCurrentHeatExchanger = {
   //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
-    let inputs = [];
-    let nn = processUnits[0].numNodes; // numNodes my differ from this unit's
-    inputs[0] = processUnits[0]['Trxr'][nn]; // nn from above, RXR T out = HX TinHot
-    inputs[1] = processUnits[0].residenceTime; // match RXR time to HX time
-    return inputs;
-  },
-
+  //
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs : [
+    [0,'Tout','this.TinHot'],
+    [0,'residenceTime','this.residenceTime']
+  ],
+  
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
 
@@ -79,6 +83,7 @@ let puCounterCurrentHeatExchanger = {
   // values will be set in method intialize()
   TinHot : 0,
   TinCold : 0,
+  ToutCold : 0,
   Flowrate : 0,
   FlowHot : 0,
   FlowCold : 0,
@@ -133,7 +138,6 @@ let puCounterCurrentHeatExchanger = {
   // residenceTime is an input to this unit from RXR & is set in updateInputs()
   // residenceTime is used in this unit's updateState()
 
-
   initialize : function() {
     //
     let v = 0;
@@ -153,7 +157,7 @@ let puCounterCurrentHeatExchanger = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 320;
     this.dataMax[v] = 380;
-    this.dataInitial[v] = this.dataMin[v];
+    this.dataInitial[v] = 340;
     this.Tin = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Tin; // current input value for reporting
     //
@@ -197,8 +201,11 @@ let puCounterCurrentHeatExchanger = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    this.TinCold = this.Tin;
-    this.TinHot = this.Tin;
+    // this.dataMin[1] is, e.g., 320
+    // this.dataInitial[1] is, e.g., 340
+    this.TinCold = this.dataInitial[1]; // bottom left of HX
+    this.TinHot = this.dataMin[1]; // top right of HX
+    this.ToutCold = this.dataMin[1]; // btm right of HX output to RXR inlet
 
     this.FlowHot = this.Flowrate; // input field is (m3/s)
     // *** input field reactor flow is m3/s, whereas heat exchanger flow is kg/s ***
@@ -219,10 +226,11 @@ let puCounterCurrentHeatExchanger = {
     // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
     this.colorCanvasData = plotter.initColorCanvasArray(2,this.numNodes,1);
 
-    let tInit = 320; // this.Tin; // initial system inlet T
+    // this.dataMin[1] is, e.g., 320
+    // this.dataInitial[1] is, e.g., 340
     for (k = 0; k <= this.numNodes; k += 1) {
-      this.Thot[k] = tInit;
-      this.Tcold[k] = tInit;
+      this.Thot[k] = this.dataMin[1];
+      this.Tcold[k] = this.dataMin[1];
     }
 
     let kn = 0;
@@ -237,8 +245,31 @@ let puCounterCurrentHeatExchanger = {
       this.profileData[0][k][0] = kn;
       this.profileData[1][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = 320; // this.Tin;
-      this.profileData[1][k][1] = 320; // this.Tin;
+      // this.dataMin[1] is, e.g., 320
+      // this.dataInitial[1] is, e.g., 340
+      this.profileData[0][k][1] = this.dataMin[1];
+      this.profileData[1][k][1] = this.dataMin[1];
+    }
+
+    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    for (k=0; k<=numStripPts; k+=1) {
+      // x-axis values
+      // x-axis values will not change during sim
+      // XXX change to get number vars for this array
+      //     so can put in repeat - or better yet, a function
+      //     and same for y-axis below
+      // first index specifies which variable
+      this.stripData[0][k][0] = k * timeStep;
+      this.stripData[1][k][0] = k * timeStep;
+      this.stripData[2][k][0] = k * timeStep;
+      this.stripData[3][k][0] = k * timeStep;
+      // y-axis values
+      // this.dataMin[1] is, e.g., 320
+      // this.dataInitial[1] is, e.g., 340
+      this.stripData[0][k][1] = this.dataMin[1];
+      this.stripData[1][k][1] = this.dataMin[1];
+      this.stripData[2][k][1] = this.dataMin[1];
+      this.stripData[3][k][1] = this.dataMin[1];
     }
 
      // update display
@@ -288,16 +319,22 @@ let puCounterCurrentHeatExchanger = {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (let i = 0; i < this.inputs.length; i++) {
+      let connection = this.inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
+    }
 
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
-    // *** GET INFO FROM REACTOR ***
-    // get array of current input values to this unit from other units
-    let inputs = this.getInputs();
-    this.TinHot = inputs[0]; // HX TinHot = RXR T out
-    this.residenceTime = inputs[1]; // match RXR time to HX time
 
   }, // END of updateInputs()
 
@@ -363,7 +400,7 @@ let puCounterCurrentHeatExchanger = {
     let TcoldNew = [];
 
     // this unit can take multiple steps within one outer main loop repeat step
-    for (i=0; i<this.unitStepRepeats; i+=1) {
+    for (i = 0; i < this.unitStepRepeats; i++) {
 
       // do node at hot inlet end
       n = 0;
@@ -372,7 +409,7 @@ let puCounterCurrentHeatExchanger = {
       TcoldNew[0] = this.Tcold[1];
 
       // internal nodes
-      for (n = 1; n < this.numNodes; n += 1) {
+      for (n = 1; n < this.numNodes; n++) {
 
         // internal nodes include dispersion terms
 
@@ -412,6 +449,8 @@ let puCounterCurrentHeatExchanger = {
       this.Tcold = TcoldNew;
 
     } // END of FOR REPEAT for (i=0; i<this.unitStepRepeats; i+=1)
+
+    this.ToutCold = this.Tcold[0]; // to use as inlet T to reactor
 
   }, // END of updateState()
 

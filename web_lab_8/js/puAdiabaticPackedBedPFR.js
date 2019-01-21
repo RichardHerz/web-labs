@@ -52,11 +52,16 @@ let puAdiabaticPackedBedPFR = {
   //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
 
   // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
-    let inputs = [];
-    inputs[0] = processUnits[1]['Tcold'][0]; // HX T cold out = RXR Tin
-    return inputs;
-  },
+  //
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs : [
+    [1,'ToutCold','this.Tin']
+  ],
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -85,6 +90,9 @@ let puAdiabaticPackedBedPFR = {
 
   // *** WHEN RXR COUPLED TO HX, Tin IS RXR INLET T ***
   Tin : 0, // inlet T to reactor - to be obtained from HX cold outlet
+
+  // *** WHEN RXR COUPLED TO HX, Tout IS RXR OUTLET T ***
+  Tout : 0, // Tout from reactor will be input to hot side of HX
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -243,6 +251,8 @@ let puAdiabaticPackedBedPFR = {
 
     // set state variables not set by updateUIparams() to initial settings
 
+    this.Tout = this.dataInitial[6]; // [6] is TinHX
+
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Ca[k] = this.dataInitial[4]; // [4] is Cain
       this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
@@ -277,6 +287,19 @@ let puAdiabaticPackedBedPFR = {
       // y-axis values
       this.profileData[0][k][1] = this.dataInitial[6]; // [6] is TinHX
       this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
+    }
+
+    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    for (k = 0; k <= numStripPts; k += 1) {
+      // x-axis values
+      // x-axis values will not change during sim
+      // XXX change to get number vars for this plotInfo variable
+      //     so can put in repeat - or better yet, a function
+      //     and same for y-axis below
+      // first index specifies which variable
+      this.stripData[0][k][0] = k * timeStep;
+      // y-axis values
+      this.stripData[0][k][1] = this.dataInitial[4]; // [4] is Cain
     }
 
     // update display
@@ -325,15 +348,22 @@ let puAdiabaticPackedBedPFR = {
     //
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
+
+    for (let i = 0; i < this.inputs.length; i++) {
+      let connection = this.inputs[i];
+      let sourceUnit = connection[0];
+      let sourceVar = connection[1];
+      let thisVar = connection[2];
+      let sourceValue = processUnits[sourceUnit][sourceVar];
+      eval(thisVar + ' = ' + sourceValue);
+      // NOTE: line above works for private AND public thisVar, where public has 'this.'
+      //  line below works only for public thisVar, where thisVar has no 'this.'
+      //  processUnits[unitIndex][thisVar] = sourceValue;
+    }
 
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
-    // *** GET REACTOR INLET T FROM COLD OUT OF HEAT EXCHANGER ***
-    // get array of current input values to this unit from other units
-    let inputs = this.getInputs();
-    this.Tin = inputs[0]; // RXR Tin = HX T cold out
 
     // *** UPDATE MIN-MAX T FOR ADIABATIC REACTOR ***
     // calc adiabatic delta T, positive for negative H (exothermic)
@@ -464,6 +494,8 @@ let puAdiabaticPackedBedPFR = {
 
     } // END NEW FOR REPEAT for (i=0; i<this.unitStepRepeats; i+=1)
 
+    this.Tout = this.Trxr[this.numNodes];
+
   }, // END of updateState()
 
   updateDisplay : function() {
@@ -477,7 +509,7 @@ let puAdiabaticPackedBedPFR = {
 
     // document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
     document.getElementById(this.displayReactorLeftT).innerHTML = this.Trxr[0].toFixed(1) + ' K';
-    document.getElementById(this.displayReactorRightT).innerHTML = this.Trxr[this.numNodes].toFixed(1) + ' K';
+    document.getElementById(this.displayReactorRightT).innerHTML = this.Tout.toFixed(1) + ' K';
 
     // NOTE: HX cold out T (right) and RXR T in will not agree except at SS
     // and HX hot in T (right) and RXR T out with not agree except at SS

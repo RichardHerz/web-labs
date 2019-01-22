@@ -230,20 +230,13 @@ function puBioRxrController(pUnitIndex) {
 
   this.updateInputs = function() {
     //
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
+    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-
+    //
     for (let i = 0; i < inputs.length; i++) {
-      let connection = inputs[i];
-      let sourceUnit = connection[0];
-      let sourceVar = connection[1];
-      let thisVar = connection[2];
-      let sourceValue = processUnits[sourceUnit][sourceVar];
+      let sourceValue = processUnits[inputs[i][0]][inputs[i][1]]; // string
+      let thisVar = inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
-      // NOTE: line above works for private AND public thisVar, where public has 'this.'
-      //  line below works only for public thisVar, where thisVar has no 'this.'
-      //  processUnits[unitIndex][thisVar] = sourceValue;
     }
 
     // check for change in overall main time step simTimeStep

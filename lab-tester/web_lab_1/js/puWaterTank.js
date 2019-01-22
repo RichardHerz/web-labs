@@ -1,46 +1,17 @@
-let processUnits = new Object();
-// assign process unit objects to this object
-// as indexed child objects in order to allow object controller
-// to access them in a repeat with numeric index
-// the numeric order of process units does not affect the simulation
-// contents must be only the process units as child objects
-// child objects optionally can be defined in separate script files, which
-// makes them easier to edit,
-// then inserted into processUnits, e.g.,
-// USING CONSTRUCTOR FUNCTION...
-//   processUnits[0] = new puHeatExchanger(0); // [] and () index # must match
-// OR USING OBJECT
-//   processUnits[0] = puHeatExchanger; // puHeatExchanger is an object
-//   processUnits[0].unitIndex = 0; // assign unitIndex to match processUnits index
-// then object cleared for garbage collection, e.g.,
-//   puHeatExchanger = null; // puHeatExchanger is an object
-// WARNING: if reorder unit index numbers, then need to edit
-//   those numbers in each unit's private inputs array
-
-SEE LAST LINE
-
-this.updateUIfeedInput = function() {
-  // SPECIAL FOR THIS UNIT
-  // called in HTML input element so must be a publc method
-
-ALSO SEE updateUIfeedSlider
-
-----------------------------------------------------
-
 function puWaterTank(pUnitIndex) {
   // constructor function for process unit
 
-  // *****************************************
+  // *******************************************
   //           DEPENDENCIES
-  // *****************************************
+  // *******************************************
 
   // see const inputs array for input connections to this unit from other units
   // see public properties for info shared with other units and methods
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // *****************************************
-  //       define INPUT CONNECTIONS
-  // *****************************************
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
 
   // define this unit's variables that are to receive input values from other units
   let flowRate = 0; // input flow rate from feed process unit
@@ -53,12 +24,18 @@ function puWaterTank(pUnitIndex) {
   //        'this.publicVarName' for public var
   const inputs = [];
   // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs[0] = [0,'flowRate','flowRate'];
-  inputs[1] = [2,'command','command'];
+  inputs[0] = [0,'flowRate','flowRate']; // input feed process unit flowRate
+  inputs[1] = [2,'command','command']; // input controller process unit command
 
-  // *****************************************
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  this.level = 0; // output water level to controller process unit
+
+  // *******************************************
   //        define PRIVATE properties
-  // *****************************************
+  // *******************************************
 
   const unitIndex = pUnitIndex; // index of this unit as child in parent object processUnits
   // unitIndex may be used in this unit's updateUIparams method
@@ -73,14 +50,12 @@ function puWaterTank(pUnitIndex) {
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in this.checkForSteadyState() method
 
-  // *****************************************
+  // *******************************************
   //         define PUBLIC properties
-  // *****************************************
+  // *******************************************
 
   this.name = 'process unit Water Tank'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
-
-  this.level = 0; // output water level in this tank to controller process unit
 
   // define arrays to hold info for variables
   // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
@@ -101,9 +76,9 @@ function puWaterTank(pUnitIndex) {
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
 
-  // *****************************************
+  // *******************************************
   //         define PRIVATE functions
-  // *****************************************
+  // *******************************************
 
   // *****************************************
   //        define PRIVILEGED methods

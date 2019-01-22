@@ -51,14 +51,21 @@ let puCatalystLayer = {
   //    getPlotData() in object plotFlot uses profileData[], stripData[]
   //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  getInputs : function() {
-    let inputs = [];
-    // inputs[0] = processUnits[1]['Tcold'][0]; // HX T cold out = RXR Tin
-    return inputs;
-  },
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
+  // SPECIAL - none for this unit
+
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  // SPECIAL - none for this unit
+
+  // *******************************************
+
+    // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
   //
   // THIS UNIT ALSO HAS A CHECKBOX INPUT
@@ -454,6 +461,8 @@ let puCatalystLayer = {
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
+    //
+    // SPECIAL - none for this unit
 
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;

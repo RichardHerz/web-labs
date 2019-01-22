@@ -45,26 +45,32 @@ processUnits[0] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor feed',
 
-  // SUMMARY OF DEPENDENCIES
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
 
-  // USES OBJECT simParams
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 1 USES unit 0 flowRate
-  //   unit 1 USES unit 0 conc
-  //   unit 1 USES unit 0 Tfeed
-  //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
+  // see const inputs array for input connections to this unit from other units
+  // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //   none
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
-  //   none
+  // SPECIAL - none for this unit
 
-  // define main parameters
-  // values will be set in method intialize()
-  flowRate : 0, // (m3/s), feed flow rate
-  conc : 0, // (mol/m3)
-  Tfeed : 300, // (K)
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  flowRate : 0, // (m3/s), feed flow rate, output to unit 1
+  conc : 0, // (mol/m3), feed conc, output to unit 1
+  Tfeed : 300, // (K), feed T, output to unit 1
+
+  // *******************************************
+
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
+  // SEE dataInputs array in initialize() method for input field ID's
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -209,7 +215,7 @@ processUnits[0] = {
     return ssFlag;
   } // END OF checkForSteadyState()
 
-}; // END unit 0
+}; // END unit 0, reactor feed
 
 processUnits[1] = {
   //
@@ -217,15 +223,26 @@ processUnits[1] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor',
 
-  // SUMMARY OF DEPENDENCIES
-  //
-  // [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
-  //
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
+
   // see const inputs array for input connections to this unit from other units
+  // see public properties for info shared with other units and methods
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
+
+  // define this unit's variables that are to receive input values from other units
+
+  flowRate : 0, // will get flowRate from unit 0 in updateInputs
+  concIn : 0, // will get concIn from unit 0 in updateInputs, feed
+  Tfeed : 0, // will get Tfeed from unit 0 in updateInputs, feed
+  Tj : 0, // will get Tj from unit 3 in updateInputs, jacket
+  UA : 0, // will get UA from unit 3 in updateInputs
+
   // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
@@ -240,8 +257,13 @@ processUnits[1] = {
     [3,'UA','this.UA']
   ],
 
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 4 USES unit 1 Trxr
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  Trxr : 300, // (K), output to unit 4
+
+  // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -260,7 +282,6 @@ processUnits[1] = {
 
   // define variables to hold outputs
   initialTrxr : 300, // (K)
-  Trxr : 300, // (K)
   initialCa : 0, // (mol/m3)
   Ca : 0, // (mol/m3), reactant concentration
 
@@ -294,12 +315,6 @@ processUnits[1] = {
   rho : 1000, // (kg/m3), reactant liquid density
   Cp : 2.0, // (kJ/kg/K), reactant liquid heat capacity
   vol : 0.1, // (m3), volume of reactor contents = constant with flow rate
-
-  flowRate : 0, // will get flowRate from unit 0 in updateInputs
-  concIn : 0, // will get concIn from unit 0 in updateInputs, feed
-  Tfeed : 0, // will get Tfeed from unit 0 in updateInputs, feed
-  Tj : 0, // will get Tj from unit 3 in updateInputs, jacket
-  UA : 0, // will get UA from unit 3 in updateInputs
 
   initialize : function() {
     //
@@ -432,20 +447,13 @@ processUnits[1] = {
 
   updateInputs : function() {
     //
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-
+    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
+    //
     for (let i = 0; i < this.inputs.length; i++) {
-      let connection = this.inputs[i];
-      let sourceUnit = connection[0];
-      let sourceVar = connection[1];
-      let thisVar = connection[2];
-      let sourceValue = processUnits[sourceUnit][sourceVar];
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // string
+      let thisVar = this.inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
-      // NOTE: line above works for private AND public thisVar, where public has 'this.'
-      //  line below works only for public thisVar, where thisVar has no 'this.'
-      //  processUnits[unitIndex][thisVar] = sourceValue;
     }
 
     // check for change in overall main time step simTimeStep
@@ -591,7 +599,7 @@ processUnits[1] = {
     return ssFlag;
   } // END checkForSteadyState method
 
-}; // END unit 1
+}; // END unit 1, reactor
 
 processUnits[2] = {
   //
@@ -599,17 +607,22 @@ processUnits[2] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'feed to heat transfer jacket',
 
-  // SUMMARY OF DEPENDENCIES
-  //
-  // USES OBJECT simParams
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 3 USES unit 2 rate
-  //   unit 3 USES unit 2 TjIn
-  //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //
+  // see const inputs array for input connections to this unit from other units
+  // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
+
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
+
+  // define this unit's variables that are to receive input values from other units
+
+  command : 0, // get command from unit 4 in updateInputs
+
   // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
@@ -620,6 +633,18 @@ processUnits[2] = {
     [4,'command','this.command']
   ],
 
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  initialFlowRate : 1, // (m3/s), heat transfer liquid flow rate
+  flowRate : this.initialFlowRate,
+
+  initialTjIn : 350, // (K)
+  TjIn : this.initialTjIn,
+
+  // *******************************************
+
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
 
@@ -628,17 +653,6 @@ processUnits[2] = {
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
-
-  // define main inputs
-  // values will be set in method intialize()
-
-  initialFlowRate : 1, // (m3/s), heat transfer liquid flow rate
-  flowRate : this.initialFlowRate,
-
-  initialTjIn : 350, // (K)
-  TjIn : this.initialTjIn,
-
-  command : 0, // get command from unit 4 in updateInputs
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -754,20 +768,13 @@ processUnits[2] = {
 
   updateInputs : function(){
     //
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-
+    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
+    //
     for (let i = 0; i < this.inputs.length; i++) {
-      let connection = this.inputs[i];
-      let sourceUnit = connection[0];
-      let sourceVar = connection[1];
-      let thisVar = connection[2];
-      let sourceValue = processUnits[sourceUnit][sourceVar];
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // string
+      let thisVar = this.inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
-      // NOTE: line above works for private AND public thisVar, where public has 'this.'
-      //  line below works only for public thisVar, where thisVar has no 'this.'
-      //  processUnits[unitIndex][thisVar] = sourceValue;
     }
 
     // check for change in overall main time step simTimeStep
@@ -837,7 +844,7 @@ processUnits[2] = {
     return ssFlag;
   } // END OF checkForSteadyState()
 
-}; // END unit 2
+}; // END unit 2, feed to jacket
 
 processUnits[3] = {
   //
@@ -845,16 +852,24 @@ processUnits[3] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'heat transfer jacket',
 
-  // SUMMARY OF DEPENDENCIES
-  //
-  // USES OBJECT simParams
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 1 USES unit 3 Tj
-  //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //
+  // see const inputs array for input connections to this unit from other units
+  // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
+
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
+
+  // define this unit's variables that are to receive input values from other units
+
+  Trxr    : 0, // will get Trxr from unit 1 in updateInputs
+  TjIn    : 0, // will get TjIn from unit 2 in updateInputs
+  flowRate  : 0, // will get flowRate from unit 3 in updateInputs
+
   // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
@@ -867,18 +882,23 @@ processUnits[3] = {
     [2,'flowRate','this.flowRate'],
   ],
 
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  initialTj : 350,
+  Tj : this.initialTj, // output to unit 1
+
+  // *******************************************
+
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
+  // SEE dataInputs array in initialize() method for input field ID's
+
   // variables defined here are available to all functions inside this unit
 
   vol       : 0.02, // (m3), heat transfer jacket volume
   rho       : 1000, // (kg/m3), heat transfer liquid density
   Cp        : 2.0, // (kJ/kg/K), heat transfer liquid heat capacity
-
-  initialTj : 350,
-  Tj     : this.initialTj,
-
-  flowRate  : 0, // will get flowRate from unit 3 in updateInputs
-  Trxr    : 0, // will get Trxr from unit 1 in updateInputs
-  TjIn    : 0, // will get TjIn from unit 2 in updateInputs
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -1005,20 +1025,13 @@ processUnits[3] = {
 
   updateInputs : function() {
     //
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-
+    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
+    //
     for (let i = 0; i < this.inputs.length; i++) {
-      let connection = this.inputs[i];
-      let sourceUnit = connection[0];
-      let sourceVar = connection[1];
-      let thisVar = connection[2];
-      let sourceValue = processUnits[sourceUnit][sourceVar];
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // string
+      let thisVar = this.inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
-      // NOTE: line above works for private AND public thisVar, where public has 'this.'
-      //  line below works only for public thisVar, where thisVar has no 'this.'
-      //  processUnits[unitIndex][thisVar] = sourceValue;
     }
 
     // check for change in overall main time step simTimeStep
@@ -1095,7 +1108,7 @@ processUnits[3] = {
     return ssFlag;
   } // END checkForSteadyState()
 
-}; // END unit 3
+}; // END unit 3, jacket
 
 processUnits[4] = {
   //
@@ -1103,17 +1116,22 @@ processUnits[4] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor temperature controller',
 
-  // NOTE: this unit has a special method: changeMode
+  // *******************************************
+  //           DEPENDENCIES
+  // *******************************************
 
-  // SUMMARY OF DEPENDENCIES
-  // USES OBJECT simParams
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 2 USES processUnits[4].command - manipulated variable
-  //   [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
+  // see const inputs array for input connections to this unit from other units
+  // see public properties for info shared with other units and methods
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
+
+  // define this unit's variables that are to receive input values from other units
+
+  Trxr : 0, // will get Trxr from unit 1 in updateInputs
+
   // define inputs array, which is processed in this unit's updateInputs method
   // where sourceVarNameString is name of a public var in source unit without 'this.'
   // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
@@ -1124,11 +1142,18 @@ processUnits[4] = {
     [1,'Trxr','this.Trxr']
   ],
 
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  command : 0, // output to unit 2
+
+  // *******************************************
+
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
 
-  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
-  // *** e.g., displayReactorLeftConc: 'field_reactor_left_conc',
+  // NOTE: this unit has a special method, changeMode, to handle UI radio buttons
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
@@ -1141,9 +1166,7 @@ processUnits[4] = {
   manualCommand : 348, // (K)
   manualBias  : 300, // (K), command at zero error
   initialCommand  : 300, // controller command signal (coef for unit_2)
-  command         : 0,
   errorIntegral   : 0, // integral error
-  Trxr : 0, // will get Trxr from unit 1 in updateInputs
   mode : "manual", // auto or manual, see changeMode() below
 
   // define arrays to hold info for variables
@@ -1302,20 +1325,13 @@ processUnits[4] = {
 
   updateInputs : function() {
     //
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-
+    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
+    //
     for (let i = 0; i < this.inputs.length; i++) {
-      let connection = this.inputs[i];
-      let sourceUnit = connection[0];
-      let sourceVar = connection[1];
-      let thisVar = connection[2];
-      let sourceValue = processUnits[sourceUnit][sourceVar];
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // string
+      let thisVar = this.inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
-      // NOTE: line above works for private AND public thisVar, where public has 'this.'
-      //  line below works only for public thisVar, where thisVar has no 'this.'
-      //  processUnits[unitIndex][thisVar] = sourceValue;
     }
 
     // check for change in overall main time step simTimeStep
@@ -1382,4 +1398,4 @@ processUnits[4] = {
     return ssFlag;
   } // END OF checkForSteadyState()
 
-}; // END unit 4
+}; // END unit 4, controller

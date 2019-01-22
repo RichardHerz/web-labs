@@ -1,0 +1,56 @@
+ 
+CAN REDUCE dataHeaders type arrays FROM 7 TO 2
+
+BUT THEN HAVE TO ALSO CHANGE IN INTERFACER.JS AND PLOTTER.JS AND SOME PLOTINFO... NOT TO MENTION ALL FILES... SAVE LINES AT COST OF ABSTRACTION... 
+
+// define arrays to hold info for variables
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
+  // these will be filled with values in method initialize
+  this.dataHeaders = []; // name, html id of input, dimensional units
+  this.dataValues = []; // min, max, initial value, current value
+
+  // *******************************************
+  //         define PRIVATE functions
+  // *******************************************
+
+  // *****************************************
+  //        define PRIVILEGED methods
+  // *****************************************
+
+  this.initialize = function() {
+    //
+    // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
+    //
+    // this.dataHeaders = [name, dimensional units, html id of input]
+    // this.dataValues = [min, max, initial value, current value]
+    //
+    let v = 0;
+    this.dataHeaders[v] = ['set point','','input_field_enterSetpoint'];
+    this.dataValues[v] = [0,2,1,1];
+    setPoint = dataValues[3];
+    v = 1
+    this.dataHeaders[v] = ['gain','','input_field_enterGain'];
+    this.dataValues[v] = [0,20,5,5];
+    gain = dataValues[3];
+    //
+    v = 2;
+    this.dataHeaders[v] = ['reset time','','input_field_enterResetTime'];
+    this.dataValues[v] = [0,20,2,2];
+    resetTime = dataValues[3];
+    //
+    // END OF INPUT VARS
+    // record number of input variables, VarCount
+    // used, e.g., in copy data to table
+    //
+    this.VarCount = v;
+    //
+    // OPTIONAL - add entries for output variables if want to use min-max to
+    //            constrain values in updateState or dimensional units in plotInfo
+    //
+    // this.dataHeaders = [name, dimensional units]
+    // this.dataValues = [min, max]
+    // v = 4;
+    // this.dataHeaders[v] = ['command','K'];
+    // this.dataValues[v] = [0,1];
+    //
+  } // END of initialize method

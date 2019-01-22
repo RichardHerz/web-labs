@@ -64,7 +64,7 @@ let puCounterCurrentHeatExchanger = {
     [0,'Tout','this.TinHot'],
     [0,'residenceTime','this.residenceTime']
   ],
-  
+
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
 
@@ -317,20 +317,13 @@ let puCounterCurrentHeatExchanger = {
 
   updateInputs : function() {
     //
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-
+    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
+    //
     for (let i = 0; i < this.inputs.length; i++) {
-      let connection = this.inputs[i];
-      let sourceUnit = connection[0];
-      let sourceVar = connection[1];
-      let thisVar = connection[2];
-      let sourceValue = processUnits[sourceUnit][sourceVar];
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // string
+      let thisVar = this.inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
-      // NOTE: line above works for private AND public thisVar, where public has 'this.'
-      //  line below works only for public thisVar, where thisVar has no 'this.'
-      //  processUnits[unitIndex][thisVar] = sourceValue;
     }
 
     // check for change in overall main time step simTimeStep

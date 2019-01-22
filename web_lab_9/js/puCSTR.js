@@ -10,7 +10,7 @@ function puCSTR(pUnitIndex) {
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
-  //      define INPUT CONNECTIONS
+  //  define INPUT CONNECTIONS from other units
   // *******************************************
 
   // define this unit's variables that are to receive input values from other units
@@ -26,6 +26,12 @@ function puCSTR(pUnitIndex) {
   // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
   inputs[0] = [pUnitIndex - 1,'conc','concIn']; // upstream cstr conc to this unit
   inputs[1] = [0,'conc','feed']; // feed unit 0 conc to calc this unit's conversion
+
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  this.conc = 0; // output conc inside this reactor to next reactor 
 
   // *******************************************
   //        define PRIVATE properties
@@ -49,8 +55,6 @@ function puCSTR(pUnitIndex) {
 
   this.name = 'process unit CSTR'; // used by interfacer.copyData()
   this.residenceTime = 100; // used by controller.checkForSteadyState()
-
-  this.conc = 0; // output conc inside this reactor to next reactor
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -152,20 +156,13 @@ function puCSTR(pUnitIndex) {
 
   this.updateInputs = function() {
     //
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
+    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-
+    //
     for (let i = 0; i < inputs.length; i++) {
-      let connection = inputs[i];
-      let sourceUnit = connection[0];
-      let sourceVar = connection[1];
-      let thisVar = connection[2];
-      let sourceValue = processUnits[sourceUnit][sourceVar];
+      let sourceValue = processUnits[inputs[i][0]][inputs[i][1]]; // string
+      let thisVar = inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
-      // NOTE: line above works for private AND public thisVar, where public has 'this.'
-      //  line below works only for public thisVar, where thisVar has no 'this.'
-      //  processUnits[unitIndex][thisVar] = sourceValue;
     }
 
     // check for change in overall main time step simTimeStep

@@ -6,7 +6,7 @@ function puWaterController(pUnitIndex) {
   // *******************************************
 
   // see const inputs array for input connections to this unit from other units
-  // see public properties for info shared with other units and methods
+  // see output connections & public properties for info shared with other units & methods
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
@@ -23,13 +23,13 @@ function puWaterController(pUnitIndex) {
   //        'this.publicVarName' for public var
   const inputs = [];
   // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs[0] = [1,'level','processVariable']; // input water tank unit level
+  inputs[0] = [1,'level','processVariable']; // input water tank process unit level
 
   // *******************************************
   //  define OUTPUT CONNECTIONS to other units
   // *******************************************
 
-  this.command = 0; // output controller command from this controller unit
+  this.command = 0; // output controller command from this controller process unit
 
   // *******************************************
   //        define PRIVATE properties
@@ -55,17 +55,6 @@ function puWaterController(pUnitIndex) {
   this.name = 'process unit Water Controller'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
-  // define arrays to hold info for variables
-  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
-  // these will be filled with values in method initialize
-  this.dataHeaders = []; // variable names
-  this.dataInputs = []; // HTML field ID's of input parameters
-  this.dataUnits = [];
-  this.dataMin = [];
-  this.dataMax = [];
-  this.dataInitial = [];
-  this.dataValues = [];
-
   // define arrays to hold data for plots, color canvas
   // these arrays will be used by plotter object
   // these will be filled with initial values in method reset
@@ -73,6 +62,12 @@ function puWaterController(pUnitIndex) {
   // this.profileData = []; // for profile plots, plot script requires this name
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
+
+  // define arrays to hold info for variables
+  // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj
+  // these will be filled with values in method initialize
+  this.dataHeaders = []; // name, html id of input, dimensional units
+  this.dataValues = []; // min, max, initial value, current value
 
   // *******************************************
   //         define PRIVATE functions
@@ -86,35 +81,22 @@ function puWaterController(pUnitIndex) {
     //
     // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
     //
-    let v = 0;
-    this.dataHeaders[v] = 'set point';
-    this.dataInputs[v] = 'input_field_enterSetpoint';
-    this.dataUnits[v] = '';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 2;
-    this.dataInitial[v] = 1;
-    setPoint = this.dataInitial[v]; // dataInitial used in getInputValue
-    this.dataValues[v] = setPoint; // current input oalue for reporting
+    // this.dataHeaders = [name, dimensional units, html id of input]
+    // this.dataValues = [min, max, initial value, current value]
     //
-    v = 1;
-    this.dataHeaders[v] = 'gain';
-    this.dataInputs[v] = 'input_field_enterGain';
-    this.dataUnits[v] = '';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 20;
-    this.dataInitial[v] = 5;
-    gain = this.dataInitial[v]; // dataInitial used in getInputValue
-    this.dataValues[v] = gain; // current input oalue for reporting
+    let v = 0;
+    this.dataHeaders[v] = ['set point','','input_field_enterSetpoint'];
+    this.dataValues[v] = [0,2,1,1];
+    setPoint = dataValues[3];
+    v = 1
+    this.dataHeaders[v] = ['gain','','input_field_enterGain'];
+    this.dataValues[v] = [0,20,5,5];
+    gain = dataValues[3];
     //
     v = 2;
-    this.dataHeaders[v] = 'reset time';
-    this.dataInputs[v] = 'input_field_enterResetTime';
-    this.dataUnits[v] = '';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 20;
-    this.dataInitial[v] = 2;
-    resetTime = this.dataInitial[v]; // dataInitial used in getInputValue
-    this.dataValues[v] = resetTime; // current input oalue for reporting
+    this.dataHeaders[v] = ['reset time','','input_field_enterResetTime'];
+    this.dataValues[v] = [0,20,2,2];
+    resetTime = dataValues[3];
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -125,7 +107,72 @@ function puWaterController(pUnitIndex) {
     // OPTIONAL - add entries for output variables if want to use min-max to
     //            constrain values in updateState or dimensional units in plotInfo
     //
+    // this.dataHeaders = [name, dimensional units]
+    // this.dataValues = [min, max]
+    // v = 4;
+    // this.dataHeaders[v] = ['command','K'];
+    // this.dataValues[v] = [0,1];
+    //
   } // END of initialize method
+
+  // this.initialize = function() {
+  //   //
+  //   // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
+  //   //
+  //   let v = 0;
+  //   this.dataHeaders[v] = 'set point';
+  //   this.dataInputs[v] = 'input_field_enterSetpoint';
+  //   this.dataUnits[v] = '';
+  //   this.dataMin[v] = 0;
+  //   this.dataMax[v] = 2;
+  //   this.dataInitial[v] = 1;
+  //   setPoint = this.dataInitial[v]; // dataInitial used in getInputValue
+  //   this.dataValues[v] = setPoint; // current input value for reporting
+  //   //
+  //   // increased abstraction cost to reduce code lines by 5 for each variable,
+  //   //   from 8 to 3 ... worth it?
+  //   //   note the v value is an abstraction in itself...
+  //   //   and above at this... = [] reduce by 5, from 7 lines to 2
+  //   //   for this process unit reduce lines by 5 + 3*5 = 20 lines...
+  //   // dataHeaders[v] = [name,inputID,units] // strings = [Headers,Inputs,units]
+  //   // dataValues[v] = [min,max,initial,current = initial] // numbers
+  //   // thisVar = dataValues[v][2] // = initial
+  //   //
+  //   // even more abstraction cost but no increased reduction in code lines...
+  //   // dataHeaders[v][0] = [name,inputID] // strings = [Headers,Inputs]
+  //   // dataHeaders[v][1] = [min,max,initial,current = initial] // numbers
+  //   // thisVar = dataValues[v][1][2] // = initial
+  //   //
+  //   v = 1;
+  //   this.dataHeaders[v] = 'gain';
+  //   this.dataInputs[v] = 'input_field_enterGain';
+  //   this.dataUnits[v] = '';
+  //   this.dataMin[v] = 0;
+  //   this.dataMax[v] = 20;
+  //   this.dataInitial[v] = 5;
+  //   gain = this.dataInitial[v]; // dataInitial used in getInputValue
+  //   this.dataValues[v] = gain; // current input oalue for reporting
+  //   //
+  //   v = 2;
+  //   this.dataHeaders[v] = 'reset time';
+  //   this.dataInputs[v] = 'input_field_enterResetTime';
+  //   this.dataUnits[v] = '';
+  //   this.dataMin[v] = 0;
+  //   this.dataMax[v] = 20;
+  //   this.dataInitial[v] = 2;
+  //   resetTime = this.dataInitial[v]; // dataInitial used in getInputValue
+  //   this.dataValues[v] = resetTime; // current input oalue for reporting
+  //   //
+  //   // END OF INPUT VARS
+  //   // record number of input variables, VarCount
+  //   // used, e.g., in copy data to table
+  //   //
+  //   this.VarCount = v;
+  //   //
+  //   // OPTIONAL - add entries for output variables if want to use min-max to
+  //   //            constrain values in updateState or dimensional units in plotInfo
+  //   //
+  // } // END of initialize method
 
   this.reset = function() {
     // On 1st load or reload page, the html file fills the fields with html file

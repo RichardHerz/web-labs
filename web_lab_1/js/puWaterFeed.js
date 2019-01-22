@@ -10,20 +10,17 @@ function puWaterFeed(pUnitIndex) {
   // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
-  //      define INPUT CONNECTIONS
+  //  define INPUT CONNECTIONS from other units
   // *******************************************
 
   // define this unit's variables that are to receive input values from other units
   // SPECIAL - none for this unit
 
-  // SPECIAL - no inputs to this unit from other units - only from HTML
-  // define inputs array, which is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  // const inputs = [];
-  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  this.flowRate = 0; // output feed flow rate to water tank process unit
 
   // *******************************************
   //        define PRIVATE properties
@@ -42,7 +39,6 @@ function puWaterFeed(pUnitIndex) {
   // *******************************************
 
   this.name = 'process unit Water Feed'; // used by interfacer.copyData()
-  this.flowRate = 0; // output feed to water tank process unit
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
   // define arrays to hold info for variables
@@ -203,19 +199,8 @@ function puWaterFeed(pUnitIndex) {
     // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
     //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-
-    // // SPECIAL - no inputs to this unit from other units - only from HTML
-    // for (let i = 0; i < inputs.length; i++) {
-    //   let connection = inputs[i];
-    //   let sourceUnit = connection[0];
-    //   let sourceVar = connection[1];
-    //   let thisVar = connection[2];
-    //   let sourceValue = processUnits[sourceUnit][sourceVar];
-    //   eval(thisVar + ' = ' + sourceValue);
-    // //   NOTE: line above works for private AND public thisVar, where public has 'this.'
-    // //    line below works only for public thisVar, where thisVar has no 'this.'
-    // //    processUnits[unitIndex][thisVar] = sourceValue;
-    // }
+    //
+    // SPECIAL - no inputs to this unit from other units - only from HTML
 
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;

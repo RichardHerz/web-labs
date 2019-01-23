@@ -8,7 +8,7 @@ function puWaterFeed(pUnitIndex) {
   //  define INPUT CONNECTIONS from other units
   // *******************************************
 
-  // SPECIAL - none for this unit
+  // SPECIAL - none for this unit - only inputs from HTML UI
   this.updateInputs = function() {}
 
   // *******************************************
@@ -198,9 +198,6 @@ function puWaterFeed(pUnitIndex) {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
-    //
-    // check for change in overall main time step simTimeStep
-    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // SPECIAL - nothing to do for this this feed unit
     // updates handled by updateUIparams

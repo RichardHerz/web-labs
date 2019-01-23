@@ -12,7 +12,7 @@ function puWaterController(pUnitIndex) {
   let processVariable = 0;
 
   this.updateInputs = function() {
-    processVariable = processUnits[1]['level'];
+    processVariable = processUnits[1].level;
   } // END of updateInputs() method
 
   // *******************************************

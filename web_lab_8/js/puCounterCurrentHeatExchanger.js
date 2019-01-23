@@ -21,51 +21,31 @@ let puCounterCurrentHeatExchanger = {
   // unitIndex used in this object's updateUIparams() method
   name : 'Counter-Current Heat Exchanger',
 
-  //  SUMMARY OF DEPENDENCIES
-  //
-  //  THIS OBJECT HAS MULTIPLE I/O CONNECTIONS TO HTML
-  //
-  //  USES FROM OBJECT simParams the following:
-  //    GETS simParams.simTimeStep
-  //  OBJECT controller USES FROM THIS OBJECT:
-  //    variable residenceTime
-  //  OBJECT plotInfo USES FROM THIS OBJECT:
-  //    numNodes, and possibly others
-  //  USES FROM OBJECT puAdiabaticPackedBedPFR, here as processUnits[0], the following:
-  //    numNodes, residenceTime, Trxr[]
-  //    reactor outlet T is heat exchanger hot inlet T
-  //  OBJECT puAdiabaticPackedBedPFR, here as processUnits[0],
-  //    USES FROM THIS UNIT:
-  //      Tcold[] - heat exchanger cold outlet T is reactor inlet T
-  //  CALLS TO FUNCTIONS HERE ARE SENT BY THE FOLLOWING EXTERNAL FUNCTIONS:
-  //    initialize() sent by openThisLab() in object controller
-  //    reset() sent by resetThisLab() in object controller
-  //    updateInputs() & updateState() sent by updateProcessUnits() in object controller
-  //    updateDisplay() sent by updateDisplay() in object controller
-  //    updateUIparams() sent by updateUIparams() in object controller
-  //    checkForSteadyState() sent by checkForSteadyState() in object controller
-  //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
-  //    copyData() in object interfacer uses name, varCount, dataHeaders[],
-  //        dataUnits[], dataValues[], profileData[], stripData[]
-  //    getInputValue() in object interfacer uses dataInputs[], dataInitial[],
-  //        dataMin[], dataMax[]
-  //    getPlotData() in object plotFlot uses profileData[], stripData[]
-  //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //
-  // define inputs array, which is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs : [
-    [0,'Tout','this.TinHot'],
-    [0,'residenceTime','this.residenceTime']
-  ],
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
+  // define variables that are to receive input values from other units
+  TinHot : 0,
+  residenceTime : 0, // for timing checks for steady state check
+
+  updateInputs : function() {
+    this.TinHot = processUnits[0].Tout;
+    this.residenceTime = processUnits[0].residenceTime;
+  },
+
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+    ToutCold : 0, // output to reactor inlet
+
+  // *******************************************
+
+    // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
@@ -81,17 +61,11 @@ let puCounterCurrentHeatExchanger = {
 
   // define main inputs
   // values will be set in method intialize()
-  TinHot : 0,
   TinCold : 0,
-  ToutCold : 0,
   Flowrate : 0,
   FlowHot : 0,
   FlowCold : 0,
-  CpHot : 0,
-  CpCold : 0,
-  Ucoef : 0,
-  Area : 0,
-  Diam : 0,
+  UAcoef : 0,
   VarCount : 0, // number of input variables
 
   // define arrays to hold info for variables
@@ -134,9 +108,6 @@ let puCounterCurrentHeatExchanger = {
   FluidDensity : 1000.0, // kg/m3, fluid density specified to be that of water
 
   ssCheckSum : 0, // used to check for steady state
-  residenceTime : 0, // for timing checks for steady state check
-  // residenceTime is an input to this unit from RXR & is set in updateInputs()
-  // residenceTime is used in this unit's updateState()
 
   initialize : function() {
     //
@@ -315,22 +286,6 @@ let puCounterCurrentHeatExchanger = {
 
   }, // END of updateUIparams()
 
-  updateInputs : function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
-    //
-    for (let i = 0; i < this.inputs.length; i++) {
-      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
-      let thisVar = this.inputs[i][2]; // string
-      eval(thisVar + ' = ' + sourceValue);
-    }
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
-  }, // END of updateInputs()
-
   updateState : function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -340,17 +295,20 @@ let puCounterCurrentHeatExchanger = {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     // *** NEW FOR ADIABATIC RXR + HX ***
     // fix Cp's here
-    CpHot = 2.24; // kJ/kg/K
-    CpCold = CpHot;
+    const CpHot = 2.24; // kJ/kg/K
+    const CpCold = CpHot;
 
     // this HX uses length for integration
     // so need to make some assumptions to obtain HX length
     // residenceTime is obtained in updateInputs() from reactor
     let Volume = this.residenceTime * this.Flowrate; // use Flowrate (m3/s)
-    let Diam = 0.1; // (m), arbitrary, fix so can get length for integratino
+    const Diam = 0.1; // (m), arbitrary, fix so can get length for integratino
     let Length = Volume * 4.0 / Math.PI / Math.pow(Diam, 2); // (m)
 
     let Ax = Math.PI * Math.pow(Diam, 2) / 4.0; // (m2), cross-sectional area for flow

@@ -1,13 +1,8 @@
 function puCSTR(pUnitIndex) {
   // constructor function for process unit
 
-  // *******************************************
-  //           DEPENDENCIES
-  // *******************************************
-
-  // see const inputs array for input connections to this unit from other units
-  // see public properties for info shared with other units and methods
-  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
   //  define INPUT CONNECTIONS from other units
@@ -17,15 +12,10 @@ function puCSTR(pUnitIndex) {
   let concIn = 0; // conc from upstream CSTR
   let feed = 0; // feed to first CSTR to calc this unit's conversion
 
-  // define inputs array, which is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  const inputs = [];
-  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs[0] = [pUnitIndex - 1,'conc','concIn']; // upstream cstr conc to this unit
-  inputs[1] = [0,'conc','feed']; // feed unit 0 conc to calc this unit's conversion
+  this.updateInputs = function() {
+    concIn = processUnits[pUnitIndex - 1].conc; // upstream cstr conc to this unit
+    feed = processUnits[0].conc; // feed unit 0 conc to calc this unit's conversion
+  }
 
   // *******************************************
   //  define OUTPUT CONNECTIONS to other units
@@ -154,22 +144,6 @@ function puCSTR(pUnitIndex) {
 
   } // END of updateUIparams()
 
-  this.updateInputs = function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-    //
-    for (let i = 0; i < inputs.length; i++) {
-      let sourceValue = processUnits[inputs[i][0]][inputs[i][1]]; // numeric
-      let thisVar = inputs[i][2]; // string
-      eval(thisVar + ' = ' + sourceValue);
-    }
-
-    // check for change in overall main time step simTimeStep
-    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-
-  } // END of updateInputs method
-
   this.updateState = function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -179,6 +153,9 @@ function puCSTR(pUnitIndex) {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     const Kflow = 0.014; // Kflow in Lab 2 = Q/Vp/k-1 = 0.04 in Lab 2
     // WARNING: Kflow value may be mentioned in HTML text

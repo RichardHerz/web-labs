@@ -1,19 +1,15 @@
 function puFEED(pUnitIndex) {
   // constructor function for process unit
 
-  // *******************************************
-  //           DEPENDENCIES
-  // *******************************************
-
-  // see const inputs array for input connections to this unit from other units
-  // see public properties for info shared with other units and methods
-  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
   //  define INPUT CONNECTIONS from other units
   // *******************************************
 
-  // SPECIAL - no inputs to this unit from other units - only from HTML
+  // SPECIAL - none for this unit - only inputs from HTML UI
+  this.updateInputs = function() {}
 
   // *******************************************
   //  define OUTPUT CONNECTIONS to other units
@@ -204,22 +200,7 @@ function puFEED(pUnitIndex) {
     ssCheckSum = 1;
   } // END method updateUIfeedSlider()
 
-  this.updateInputs = function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-    //
-    // SPECIAL - no inputs to this unit from other units - only from HTML
-
-    // check for change in overall main time step simTimeStep
-    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-
-  } // END of updateInputs() method
-
   this.updateState = function() {
-
-  // console.log('enter this.updateState, this unitIndex = ' + unitIndex); // xxx
-
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
@@ -228,7 +209,6 @@ function puFEED(pUnitIndex) {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
-    //
 
     // SPECIAL - FEED UNIT - state set by HTML inputs - no actions here
 

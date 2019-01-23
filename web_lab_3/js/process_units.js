@@ -226,11 +226,11 @@ processUnits[1] = {
   UA : 0, // will get UA from unit 3 in updateInputs
 
   updateInputs : function() {
-    this.flowRate = processUnits[0]['flowRate'];
-    this.concIn = processUnits[0]['conc'];
-    this.Tfeed = processUnits[0]['Tfeed'];
-    this.Tj = processUnits[3]['Tj'];
-    this.UA = processUnits[3]['UA'];
+    this.flowRate = processUnits[0].flowRate;
+    this.concIn = processUnits[0].conc;
+    this.Tfeed = processUnits[0].Tfeed
+    this.Tj = processUnits[3].Tj;
+    this.UA = processUnits[3].UA;
     // update residence time used in controller.checkForSteadyState()
     this.residenceTime = this.vol / this.flowRate;
   },
@@ -573,7 +573,7 @@ processUnits[2] = {
   command : 0,
 
   updateInputs : function() {
-    this.command = processUnits[4]['command'];
+    this.command = processUnits[4].command;
   },
 
   // *******************************************
@@ -797,9 +797,9 @@ processUnits[3] = {
   flowRate  : 0, // will get flowRate from unit 3 in updateInputs
 
   updateInputs : function() {
-    this.Trxr = processUnits[1]['Trxr'];
-    this.TjIn = processUnits[2]['TjIn'];
-    this.flowRate = processUnits[2]['flowRate'];
+    this.Trxr = processUnits[1].Trxr;
+    this.TjIn = processUnits[2].TjIn;
+    this.flowRate = processUnits[2].flowRate;
     // residence time used in controller.checkForSteadyState()
     this.residenceTime = this.vol / this.flowRate;
   },
@@ -1037,7 +1037,7 @@ processUnits[4] = {
   Trxr : 0, // will get Trxr from unit 1 in updateInputs
 
   updateInputs : function() {
-    this.Trxr = processUnits[1]['Trxr'];
+    this.Trxr = processUnits[1].Trxr;
   },
 
   // *******************************************

@@ -13,8 +13,8 @@ function puWaterTank(pUnitIndex) {
   let command = 0; // input command from controller process unit
 
   this.updateInputs = function() {
-    flowRate = processUnits[0]['flowRate'];
-    command = processUnits[2]['command'];
+    flowRate = processUnits[0].flowRate;
+    command = processUnits[2].command;
   }
 
   // *******************************************

@@ -21,47 +21,31 @@ let puAdiabaticPackedBedPFR = {
   // unitIndex used in this object's updateUIparams() method
   name : 'Adiabatic Packed Bed PFR',
 
-  // SUMMARY OF DEPENDENCIES
-  //
-  //  THIS OBJECT HAS MULTIPLE I/O CONNECTIONS TO HTML
-  //
-  //  USES FROM OBJECT simParams the following:
-  //    GETS simParams.simTimeStep
-  //  OBJECT controller USES FROM THIS OBJECT:
-  //    variable residenceTime
-  //  USES FROM OBJECT puCounterCurrentHeatExchanger, here as processUnits[1], the following:
-  //    Tcold[] - heat exchanger cold outlet T is reactor inlet T
-  //  OBJECT plotInfo USES FROM THIS OBJECT:
-  //    numNodes, and possibly others
-  //  OBJECT puCounterCurrentHeatExchanger, here as processUnits[1],
-  //    USES FROM THIS OBJECT:
-  //      Trxr[] - reactor outlet T is heat exchanger hot inlet T
-  //  CALLS TO FUNCTIONS HERE ARE SENT BY THE FOLLOWING EXTERNAL FUNCTIONS:
-  //    initialize() sent by openThisLab() in object controller
-  //    reset() sent by resetThisLab() in object controller
-  //    updateInputs() & updateState() sent by updateProcessUnits() in object controller
-  //    updateDisplay() sent by updateDisplay() in object controller
-  //    updateUIparams() sent by updateUIparams() in object controller
-  //    checkForSteadyState() sent by checkForSteadyState() in object controller
-  //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
-  //    copyData() in object interfacer uses name, varCount, dataHeaders[],
-  //        dataUnits[], dataValues[], profileData[], stripData[]
-  //    getInputValue() in object interfacer uses dataInputs[], dataInitial[],
-  //        dataMin[], dataMax[]
-  //    getPlotData() in object plotFlot uses profileData[], stripData[]
-  //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //
-  // define inputs array, which is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs : [
-    [1,'ToutCold','this.Tin']
-  ],
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
+
+  // define variables that are to receive input values from other units
+  Tin : 320,
+
+  updateInputs : function() {
+    this.Tin = processUnits[1].ToutCold;
+    this.updateInputsFinish(); // SPECIAL - get new adiabatic T limits
+  },
+
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  Tout : 0, // output to hot side of HX
+  residenceTime : 0, // HX will use RXR residence time
+  // residenceTime is for timing checks for steady state check
+  // residenceTime is set in this unit's updateUIparams()
+
+  // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -85,14 +69,9 @@ let puAdiabaticPackedBedPFR = {
   Cain : 0, // inlet reactant concentration
   Flowrate : 0, // inlet volumetric flow rate
 
-  // *** WHEN RXR COUPLED TO HX, THIS IS INLET T TO COLD SIDE HX ***
+  // TinHX IS INLET T TO COLD SIDE HX when RXR is coupled to HX
+  // TinHX only used in reactor on initialization and reset of reactor plot
   TinHX : 0, // inlet T to heat exchanger cold side
-
-  // *** WHEN RXR COUPLED TO HX, Tin IS RXR INLET T ***
-  Tin : 0, // inlet T to reactor - to be obtained from HX cold outlet
-
-  // *** WHEN RXR COUPLED TO HX, Tout IS RXR OUTLET T ***
-  Tout : 0, // Tout from reactor will be input to hot side of HX
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -132,9 +111,6 @@ let puAdiabaticPackedBedPFR = {
   numNodes : 200,
 
   ssCheckSum : 0, // used to check for steady state
-  residenceTime : 0, // for timing checks for steady state check
-  // residenceTime is set in this unit's updateUIparams()
-  // residenceTime is an output from this unit to HX unit
 
   CpFluid : 2.24, // (kJ/kg/K)
   densFluid : 1000, // (kg/m3)
@@ -344,20 +320,9 @@ let puAdiabaticPackedBedPFR = {
 
   }, // END of updateUIparams()
 
-  updateInputs : function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
-    //
-    for (let i = 0; i < this.inputs.length; i++) {
-      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
-      let thisVar = this.inputs[i][2]; // string
-      eval(thisVar + ' = ' + sourceValue);
-    }
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
+  updateInputsFinish : function() {
+    // SPECIAL FOR THIS UNIT
+    // called by updateUnits above
     // *** UPDATE MIN-MAX T FOR ADIABATIC REACTOR ***
     // calc adiabatic delta T, positive for negative H (exothermic)
     let adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
@@ -378,8 +343,7 @@ let puAdiabaticPackedBedPFR = {
       // exothermic
       this.dataMin[varMinMaxT] = this.Tin;
     }
-
-  }, // END of updateInputs()
+  }, // END of updateInputsFinish
 
   updateState : function() {
     //
@@ -390,6 +354,9 @@ let puAdiabaticPackedBedPFR = {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     let i = 0; // index for step repeats
     let n = 0; // index for nodes

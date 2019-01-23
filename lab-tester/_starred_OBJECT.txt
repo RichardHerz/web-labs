@@ -1,0 +1,42 @@
+processUnits[0] = {
+  //
+  unitIndex : 0, // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
+  name : 'arena',
+
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
+
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
+
+  // SPECIAL - none for this unit
+  updateInputs : function() {}, // required, called by main controller object
+
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+    // SPECIAL - none for this unit
+
+  // *******************************************
+
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
+
+  // DEFINE MAIN PARAMETERS
+  // values will be set in method initialize()
+
+
+  updateState : function() {
+    //
+    // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
+    // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
+    // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
+    // STATE VARIABLE
+    //
+    // WARNING: this method must NOT contain references to other units!
+    //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;

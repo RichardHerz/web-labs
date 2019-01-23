@@ -1,20 +1,15 @@
 function puWaterFeed(pUnitIndex) {
   // constructor function for process unit
-
-  // *******************************************
-  //           DEPENDENCIES
-  // *******************************************
-
-  // see const inputs array for input connections to this unit from other units
-  // see public properties for info shared with other units and methods
-  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
+  //
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
   //  define INPUT CONNECTIONS from other units
   // *******************************************
 
-  // define this unit's variables that are to receive input values from other units
   // SPECIAL - none for this unit
+  this.updateInputs = function() {}
 
   // *******************************************
   //  define OUTPUT CONNECTIONS to other units
@@ -194,19 +189,6 @@ function puWaterFeed(pUnitIndex) {
     ssCheckSum = 1;
   } // END method updateUIfeedSlider
 
-  this.updateInputs = function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-    //
-    // SPECIAL - no inputs to this unit from other units - only from HTML
-
-    // check for change in overall main time step simTimeStep
-    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-
-  } // END of updateInputs() method
-
   this.updateState = function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -216,8 +198,11 @@ function puWaterFeed(pUnitIndex) {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-    // nothing to do for this this feed unit
+    // SPECIAL - nothing to do for this this feed unit
     // updates handled by updateUIparams
 
   } // END of updateState() method

@@ -1,13 +1,8 @@
 function puWaterTank(pUnitIndex) {
   // constructor function for process unit
-
-  // *******************************************
-  //           DEPENDENCIES
-  // *******************************************
-
-  // see const inputs array for input connections to this unit from other units
-  // see public properties for info shared with other units and methods
-  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
+  //
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
   //  define INPUT CONNECTIONS from other units
@@ -17,15 +12,10 @@ function puWaterTank(pUnitIndex) {
   let flowRate = 0; // input flow rate from feed process unit
   let command = 0; // input command from controller process unit
 
-  // define inputs array, which is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  const inputs = [];
-  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs[0] = [0,'flowRate','flowRate'];
-  inputs[1] = [2,'command','command'];
+  this.updateInputs = function() {
+    flowRate = processUnits[0]['flowRate'];
+    command = processUnits[2]['command'];
+  }
 
   // *******************************************
   //  define OUTPUT CONNECTIONS to other units
@@ -136,22 +126,6 @@ function puWaterTank(pUnitIndex) {
 
   } // END of updateUIparams() method
 
-  this.updateInputs = function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
-    //
-    for (let i = 0; i < inputs.length; i++) {
-      let sourceValue = processUnits[inputs[i][0]][inputs[i][1]]; // numeric
-      let thisVar = inputs[i][2]; // string
-      eval(thisVar + ' = ' + sourceValue);
-    }
-
-    // check for change in overall main time step simTimeStep
-    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-
-  } // END of updateInputs() method
-
   this.updateState = function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -161,6 +135,9 @@ function puWaterTank(pUnitIndex) {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // compute new value of level
     // here have normally open valve

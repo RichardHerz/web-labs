@@ -12,7 +12,7 @@
 // EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
 //  initialize, reset, updateUIparams, updateInputs, updateState,
 //  updateDisplay, checkForSteadyState
-// THESE FUNCTION DEFINITIONS MAY BE EMPTY IN SOME CASES BUT MUST BE PRESENT
+// THESE FUNCTION DEFINITIONS MAY BE EMPTY BUT MUST BE PRESENT
 //
 // EACH PROCESS UNIT DEFINITION MUST DEFINE the variable residenceTime
 
@@ -35,8 +35,11 @@ let processUnits = new Object();
 // then object cleared for garbage collection, e.g.,
 //   puHeatExchanger = null; // puHeatExchanger is an object
 // WARNING: if reorder unit index numbers, then need to edit
-//   those numbers in each unit's private inputs array 
+//   those numbers in each unit's getInputs method
 
-processUnits[0] = new puWaterFeed(0);
-processUnits[1] = new puWaterTank(1);
-processUnits[2] = new puWaterController(2);
+// ADD PROCESS FEED defined in file puCatalystLayer.js
+processUnits[0] = puCatalystLayer;
+processUnits[0].unitIndex = 0;
+
+// clear for garbage collection
+puCatalystLayer = null;

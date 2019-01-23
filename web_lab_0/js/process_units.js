@@ -43,18 +43,30 @@ processUnits[0] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'arena',
 
-  // SUMMARY OF DEPENDENCIES
-  //
-  // USES OBJECT simParams
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   none
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, see updateInputs below
-  //   none
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
+
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
+
+  // SPECIAL - none for this unit
+  updateInputs : function() {}, // required, called by main controller object
+
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+    // SPECIAL - none for this unit
+
+  // *******************************************
+
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
-  // define main parameters
+  // DEFINE MAIN PARAMETERS
   // values will be set in method initialize()
-  N : 0, // (d'less), input
+
+  N : 0, // (d'less), number of Ants to construct
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -286,12 +298,6 @@ processUnits[0] = {
     this.N = this.dataValues[0] = interfacer.getInputValue(unum,0);
 
   }, // END updateUIparams
-
-  updateInputs : function(){
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    //    none for this unit
-  }, // END updateInputs
 
   updateState : function() {
     //

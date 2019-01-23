@@ -13,7 +13,6 @@ function puWaterController(pUnitIndex) {
 
   this.updateInputs = function() {
     processVariable = processUnits[1]['level'];
-    this.updateInputsFinish();
   } // END of updateInputs() method
 
   // SPECIAL - none for this unit

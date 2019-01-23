@@ -1,13 +1,8 @@
 function puBioRxrController(pUnitIndex) {
   // constructor function for process unit
-
-  // *****************************************
-  //           DEPENDENCIES
-  // *****************************************
-
-  // see const inputs array for input connections to this unit from other units
-  // see public properties for info shared with other units and methods
-  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
+  //
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *****************************************
   //       define INPUT CONNECTIONS
@@ -16,14 +11,15 @@ function puBioRxrController(pUnitIndex) {
   // define this unit's variables that are to receive input values from other units
   let processVariable = 0; // input process variable to be controlled
 
-  // define inputs array, which is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  const inputs = [];
-  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs[0] = [1,'biomass','processVariable'];
+  this.updateInputs = function() {
+    processVariable = processUnits[1].biomass;
+  }
+
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  this.command = 0; // output command from this controller unit
 
   // *******************************************
   //        define PRIVATE properties
@@ -51,8 +47,6 @@ function puBioRxrController(pUnitIndex) {
 
   this.name = 'process unit Bioreactor Controller'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
-
-  this.command = 0; // output command from this controller unit
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -228,22 +222,6 @@ function puBioRxrController(pUnitIndex) {
 
   } // END of updateUIparams() method
 
-  this.updateInputs = function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
-    //
-    for (let i = 0; i < inputs.length; i++) {
-      let sourceValue = processUnits[inputs[i][0]][inputs[i][1]]; // numeric
-      let thisVar = inputs[i][2]; // string
-      eval(thisVar + ' = ' + sourceValue);
-    }
-
-    // check for change in overall main time step simTimeStep
-    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-
-  } // END of updateInputs() method
-
   this.updateState = function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -253,6 +231,9 @@ function puBioRxrController(pUnitIndex) {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // compute new value of PI controller command
     // manual bias set to current command when switching to auto in changeMode()

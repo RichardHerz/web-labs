@@ -31,7 +31,7 @@ function puCSTR(pUnitIndex) {
   //  define OUTPUT CONNECTIONS to other units
   // *******************************************
 
-  this.conc = 0; // output conc inside this reactor to next reactor 
+  this.conc = 0; // output conc inside this reactor to next reactor
 
   // *******************************************
   //        define PRIVATE properties
@@ -160,7 +160,7 @@ function puCSTR(pUnitIndex) {
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs ARRAY
     //
     for (let i = 0; i < inputs.length; i++) {
-      let sourceValue = processUnits[inputs[i][0]][inputs[i][1]]; // string
+      let sourceValue = processUnits[inputs[i][0]][inputs[i][1]]; // numeric
       let thisVar = inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
     }

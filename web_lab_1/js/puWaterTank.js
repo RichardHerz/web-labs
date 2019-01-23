@@ -142,7 +142,7 @@ function puWaterTank(pUnitIndex) {
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
     //
     for (let i = 0; i < inputs.length; i++) {
-      let sourceValue = processUnits[inputs[i][0]][inputs[i][1]]; // string
+      let sourceValue = processUnits[inputs[i][0]][inputs[i][1]]; // numeric
       let thisVar = inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
     }

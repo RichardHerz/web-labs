@@ -1,7 +1,9 @@
  
 CAN REDUCE dataHeaders type arrays FROM 7 TO 2
 
-BUT THEN HAVE TO ALSO CHANGE IN INTERFACER.JS AND PLOTTER.JS AND SOME PLOTINFO... NOT TO MENTION ALL FILES... SAVE LINES AT COST OF ABSTRACTION... 
+SAVES LINES AT COST OF ABSTRACTION... 
+
+BUT THEN HAVE TO ALSO CHANGE IN INTERFACER.JS AND PLOTTER.JS AND SOME PLOTINFO... NOT TO MENTION ALL FILES... 
 
 // define arrays to hold info for variables
   // all used in interfacer.getInputValue() &/or interfacer.copyData() &/or plotInfo obj

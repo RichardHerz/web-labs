@@ -451,7 +451,7 @@ processUnits[1] = {
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
     //
     for (let i = 0; i < this.inputs.length; i++) {
-      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // string
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
       let thisVar = this.inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
     }
@@ -772,7 +772,7 @@ processUnits[2] = {
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
     //
     for (let i = 0; i < this.inputs.length; i++) {
-      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // string
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
       let thisVar = this.inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
     }
@@ -1029,7 +1029,7 @@ processUnits[3] = {
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
     //
     for (let i = 0; i < this.inputs.length; i++) {
-      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // string
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
       let thisVar = this.inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
     }
@@ -1329,7 +1329,7 @@ processUnits[4] = {
     // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
     //
     for (let i = 0; i < this.inputs.length; i++) {
-      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // string
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
       let thisVar = this.inputs[i][2]; // string
       eval(thisVar + ' = ' + sourceValue);
     }

@@ -21,22 +21,19 @@ let simParams = {
   //    variable simTimeStep in method controller.changeSimTimeStep
   //
 
-  title : 'Dynamic catalyst layer', // title of simulation
+  title : 'Reactor T control with heat transfer jacket Tj', // title of simulation
 
   runButtonID : "button_runButton", // for functions to run, reset, copy data
   // URLs for methods updateRunCount and updateCurrentRunCountDisplay below
   runLoggerURL : "../webAppRunLog.lc",
   runCurrrentRunCountURL : "../webAppCurrentCount.lc",
-  // WARNING: this.runCounterFieldID does NOT work below in logger URL methods
-  // need literal field ID string in methods below
-  runCounterFieldID : "field_run_counter", // not used, see 2 lines above
 
   // all units use simParams.simTimeStep, getting it at each step in unit updateInputs()
   // see method simParams.changeSimTimeStep() below to change simTimeStep value
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
-  simStepRepeats : 1, // integer number of unit updates between display updates
-  simTimeStep : 16, // time step value, simulation time, of main repeat
+  simStepRepeats : 20, // integer number of unit updates between display updates
+  simTimeStep : 0.1, // time step value, simulation time, of main repeat
 
   // individual units may do more steps in one unit updateState()
   // see individual units for any unitTimeStep and unitStepRepeats
@@ -49,18 +46,22 @@ let simParams = {
   //      e.g., this.runCounterFieldID does NOT work
 
   updateRunCount : function() {
-    // need literal "field_run_counter" below - this.runCounterFieldID does NOT work
+    // WARNING: NEED LITERAL, e.g., "field_run_counter" below
+    //      e.g., this.runCounterFieldID does NOT work
     //
-    // WARNING: runLoggerURL logger script checks for "rxn-diff" literal
-    //
-    $.post(this.runLoggerURL,{webAppNumber: "2, rxn-diff"}) .done(function(data) {
-      document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
-  },
+    $.post(this.runLoggerURL,{webAppNumber: "4, Reactor T control with Tj"})
+      .done(
+        function(data) {
+          // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>";
+        } // END OF function(data)
+      ) // END OF .done(
+  }, // END OF updateRunCount
 
   updateCurrentRunCountDisplay : function() {
-    // need literal "field_run_counter" below - this.runCounterFieldID does NOT work
-    $.post(this.runCurrrentRunCountURL) .done(function(data) {
-      document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
+    // WARNING: NEED LITERAL, e.g., "field_run_counter" below
+    //      e.g., this.runCounterFieldID does NOT work
+    // $.post(this.runCurrrentRunCountURL) .done(function(data) {
+      // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
   },
 
 }; // END simParams object

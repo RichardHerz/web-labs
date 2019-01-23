@@ -37,7 +37,7 @@ let processUnits = new Object();
 // WARNING: if reorder unit index numbers, then need to edit
 //   those numbers in each unit's getInputs method
 
-// processUnits: [0] reactor feed, [1] reactor, [2] feed to jacket, [3] jacket, [4] controller
+// processUnits: [0] reactor feed, [1] reactor, [2] jacket, [3] controller
 
 processUnits[0] = {
   //
@@ -45,28 +45,26 @@ processUnits[0] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor feed',
 
-  // for other info shared with other units and objects, see public properties
-  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
+  // SUMMARY OF DEPENDENCIES
 
-  // *******************************************
-  //  define INPUT CONNECTIONS from other units
-  // *******************************************
+  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // SPECIAL - none for this unit
-  updateInputs : function() {}, // required, called by main controller object
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  //   none
 
-  // *******************************************
-  //  define OUTPUT CONNECTIONS to other units
-  // *******************************************
+  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
+  //   unit 1 USES unit 0 flowRate
+  //   unit 1 USES unit 0 conc
+  //   unit 1 USES unit 0 Tfeed
+  //   [0] reactor feed, [1] reactor, [2] jacket, [3] controller
 
-  flowRate : 0, // (m3/s), feed flow rate, output to unit 1
-  conc : 0, // (mol/m3), feed conc, output to unit 1
-  Tfeed : 300, // (K), feed T, output to unit 1
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
-  // *******************************************
-
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
-  // SEE dataInputs array in initialize() method for input field ID's
+  // define main parameters
+  // values will be set in method intialize()
+  flowRate : 0, // (m3/s), feed flow rate
+  conc : 0, // (mol/m3)
+  Tfeed : 300, // (K)
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -118,6 +116,15 @@ processUnits[0] = {
     //
     this.VarCount = v;
     //
+    // OUTPUT VARS
+    //
+    // v = 7;
+    // this.dataHeaders[v] = 'Trxr';
+    // this.dataUnits[v] =  'K';
+    // // Trxr dataMin & dataMax can be changed in updateUIparams()
+    // this.dataMin[v] = 200;
+    // this.dataMax[v] = 500;
+    //
   }, // END of initialize()
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -132,12 +139,6 @@ processUnits[0] = {
     this.updateUIparams(); // this first, then set other values as needed
 
     // set state variables not set by updateUIparams() to initial settings
-
-    // need to directly set controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
   },
 
   updateUIparams : function(){
@@ -166,6 +167,12 @@ processUnits[0] = {
 
   }, // END updateUIparams
 
+  updateInputs : function(){
+    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
+    // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
+    //    none for this unit
+  }, // END updateInputs
+
   updateState : function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -175,9 +182,6 @@ processUnits[0] = {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
-    //
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
     //
     // nothing to do here for this unit
     //
@@ -202,7 +206,7 @@ processUnits[0] = {
     return ssFlag;
   } // END OF checkForSteadyState()
 
-}; // END unit 0, reactor feed
+}; // END unit 0 - feed to reactor
 
 processUnits[1] = {
   //
@@ -210,38 +214,27 @@ processUnits[1] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor',
 
-  // for other info shared with other units and objects, see public properties
-  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
-
-  // *******************************************
-  //  define INPUT CONNECTIONS from other units
-  // *******************************************
-
-  // define this unit's variables that are to receive input values from other units
-
-  flowRate : 0, // will get flowRate from unit 0 in updateInputs
-  concIn : 0, // will get concIn from unit 0 in updateInputs, feed
-  Tfeed : 0, // will get Tfeed from unit 0 in updateInputs, feed
-  Tj : 0, // will get Tj from unit 3 in updateInputs, jacket
-  UA : 0, // will get UA from unit 3 in updateInputs
-
-  updateInputs : function() {
-    this.flowRate = processUnits[0]['flowRate'];
-    this.concIn = processUnits[0]['conc'];
-    this.Tfeed = processUnits[0]['Tfeed'];
-    this.Tj = processUnits[3]['Tj'];
-    this.UA = processUnits[3]['UA'];
-    // update residence time used in controller.checkForSteadyState()
-    this.residenceTime = this.vol / this.flowRate;
-  },
-
-  // *******************************************
-  //  define OUTPUT CONNECTIONS to other units
-  // *******************************************
-
-  Trxr : 300, // (K), output to unit 4
-
-  // *******************************************
+  // SUMMARY OF DEPENDENCIES
+  //
+  // USES OBJECT simParams
+  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
+  //   unit 3 USES unit 1 Trxr
+  //
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  //
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs : [
+    [0,'flowRate','this.flowRate'],
+    [0,'conc','this.concIn'],
+    [0,'Tfeed','this.Tfeed'],
+    [2,'Tj','this.Tj'],
+    [2,'UA','this.UA']
+  ],
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -260,6 +253,7 @@ processUnits[1] = {
 
   // define variables to hold outputs
   initialTrxr : 300, // (K)
+  Trxr : 300, // (K)
   initialCa : 0, // (mol/m3)
   Ca : 0, // (mol/m3), reactant concentration
 
@@ -293,6 +287,12 @@ processUnits[1] = {
   rho : 1000, // (kg/m3), reactant liquid density
   Cp : 2.0, // (kJ/kg/K), reactant liquid heat capacity
   vol : 0.1, // (m3), volume of reactor contents = constant with flow rate
+
+  flowRate : 0, // will get flowRate from unit 0 in updateInputs
+  concIn : 0, // will get concIn from unit 0 in updateInputs, feed
+  Tfeed : 0, // will get Tfeed from unit 0 in updateInputs, feed
+  Tj : 0, // will get Tj from unit 3 in updateInputs, jacket
+  UA : 0, // will get UA from unit 3 in updateInputs
 
   initialize : function() {
     //
@@ -361,13 +361,6 @@ processUnits[1] = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // need to directly set controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
-
     this.Trxr = this.initialTrxr; // (K)
     this.Ca = this.initialCa; // (mol/m3), reactant conc
 
@@ -423,6 +416,32 @@ processUnits[1] = {
 
   }, // END updateUIparams()
 
+  updateInputs : function() {
+    //
+    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
+    //
+    for (let i = 0; i < this.inputs.length; i++) {
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
+      let thisVar = this.inputs[i][2]; // string
+      eval(thisVar + ' = ' + sourceValue);
+    }
+
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+
+    // residence time used in controller.checkForSteadyState()
+    this.residenceTime = this.vol / this.flowRate;
+    // BUT use width of strip plot to help ensure plot update does not
+    // suspend in middle when reach steady state for check every 2 times
+    // longest res time BUT NOT foolproof, e.g., with
+    // XXX 1 K up then down changes in manual Tj at certain times
+    // let numStripPoints = plotInfo[0]['numberPoints'];
+    // this.residenceTime = this.stripData[1][numStripPoints][0];
+    // console.log('rxr res time = ' + this.residenceTime);
+
+  }, // END updateInputs()
+
   updateState : function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -432,9 +451,6 @@ processUnits[1] = {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
-    //
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     let krxn = this.k300 * Math.exp(-(this.Ea/this.Rg)*(1/this.Trxr- 1/300));
     let rate = -krxn * this.Ca;
@@ -554,273 +570,43 @@ processUnits[1] = {
     return ssFlag;
   } // END checkForSteadyState method
 
-}; // END unit 1, reactor
+}; // END unit 1 - reactor
 
 processUnits[2] = {
   //
   unitIndex : 2, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
-  name : 'feed to heat transfer jacket',
-
-  // for other info shared with other units and objects, see public properties
-  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
-
-  // *******************************************
-  //  define INPUT CONNECTIONS from other units
-  // *******************************************
-
-  // define this unit's variables that are to receive input values from other units
-  command : 0,
-
-  updateInputs : function() {
-    this.command = processUnits[4]['command'];
-  },
-
-  // *******************************************
-  //  define OUTPUT CONNECTIONS to other units
-  // *******************************************
-
-  initialFlowRate : 1, // (m3/s), heat transfer liquid flow rate
-  flowRate : this.initialFlowRate,
-
-  initialTjIn : 350, // (K)
-  TjIn : this.initialTjIn,
-
-  // *******************************************
-
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
-  // SEE dataInputs array in initialize() method for input field ID's
-
-  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
-  // *** e.g., displayReactorLeftConc: 'field_reactor_left_conc',
-
-  // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
-  // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
-
-  // define arrays to hold info for variables
-  // these will be filled with values in method initialize()
-  dataHeaders : [], // variable names
-  dataInputs : [], // input field ID's
-  dataUnits : [],
-  dataMin : [],
-  dataMax : [],
-  dataInitial : [],
-  dataValues : [],
-
-  // define arrays to hold data for plots, color canvas
-  // these will be filled with initial values in method reset()
-  // profileData : [], // for profile plots, plot script requires this name
-  stripData : [], // for strip chart plots, plot script requires this name
-  // colorCanvasData : [], // for color canvas plots, plot script requires this name
-
-  ssCheckSum : 0, // used to check for steady state
-  residenceTime : 0, // for timing checks for steady state check
-  // residenceTime is set in this unit's updateUIparams()
-
-  initialize : function() {
-    //
-    let v = 0;
-    this.dataHeaders[v] = 'jacketInletT';
-    this.dataInputs[v] = '';
-    this.dataUnits[v] = 'K';
-    this.dataMin[v] = 200;
-    this.dataMax[v] = 500;
-    this.dataInitial[v] = 348;
-    this.TjIn = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.TjIn; // current input value for reporting
-    //
-    v = 1;
-    this.dataHeaders[v] = 'jacketFlowrate';
-    this.dataInputs[v] = 'input_field_enterJacketFlowRate';
-    this.dataUnits[v] = 'm3/s';
-    this.dataMin[v] = 1e-7;
-    this.dataMax[v] = 1;
-    this.dataInitial[v] = 1;
-    this.flowRate = this.dataInitial[v];
-    this.dataValues[v] = this.flowRate;
-    //
-    // END OF INPUT VARS
-    // record number of input variables, VarCount
-    // used, e.g., in copy data to table
-    //
-    this.VarCount = v;
-    //
-  }, // END of initialize()
-
-  reset : function(){
-    //
-    // On 1st load or reload page, the html file fills the fields with html file
-    // values and calls reset, which needs updateUIparams to get values in fields.
-    // On click reset button but not reload page, unless do something else here,
-    // reset function will use whatever last values user has entered.
-
-    this.updateUIparams(); // this first, then set other values as needed
-
-    // set state variables not set by updateUIparams() to initial settings
-
-    this.TjIn = this.initialTjIn;
-
-    // each unit has its own data arrays for plots and canvases
-
-    // initialize strip chart data array
-    // initPlotData(numStripVars,numStripPts)
-    let numStripVars = 1; // jacket inlet T here
-    let numStripPts = plotInfo[0]['numberPoints'];
-    this.stripData = plotter.initPlotData(numStripVars,numStripPts);
-
-    let kn = 0;
-    for (k = 0; k <= numStripPts; k += 1) {
-      kn = k * simParams.simTimeStep * simParams.simStepRepeats;
-      // x-axis values
-      // x-axis values will not change during sim
-      // XXX change to get number vars for this plotInfo variable
-      //     so can put in repeat - or better yet, a function
-      //     and same for y-axis below
-      // first index specifies which variable in plot data array
-      this.stripData[0][k][0] = kn;
-      // y-axis values
-      this.stripData[0][k][1] = this.dataMin[0];
-    }
-
-  }, // END reset method
-
-  updateUIparams : function() {
-    //
-    // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
-    // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
-
-    // need to reset controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.resetSSflagsFalse();
-    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-    this.ssCheckSum = 1;
-
-    // check input fields for new values
-    // function getInputValue() is defined in file process_interfacer.js
-    // getInputValue(unit # in processUnits object, variable # in dataInputs array)
-    // see variable numbers above in initialize()
-    // note: this.dataValues.[pVar]
-    //   is only used in copyData() to report input values
-    //
-    let unum = this.unitIndex;
-    //
-    // get jacket inlet T from controller command
-    this.flowRate = this.dataValues[1] = interfacer.getInputValue(unum, 1);
-
-  }, // END of updateUIparams()
-
-  updateState : function(){
-    //
-    // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
-    // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
-    // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
-    // STATE VARIABLE
-    //
-    // WARNING: this method must NOT contain references to other units!
-    //          get info from other units ONLY in updateInputs() method
-
-    // get feed T from controller command
-    this.TjIn = this.command;
-
-  }, // end updateState method
-
-  updateDisplay : function(){
-    // update display elements which only depend on this process unit
-    // except do all plotting at main controller updateDisplay
-    // since some plots may contain data from more than one process unit
-
-    // HANDLE STRIP CHART DATA
-
-    let v = 0; // used as index
-    let p = 0; // used as index
-    let numStripPoints = plotInfo[0]['numberPoints'];
-
-    // handle jacket inlet T
-    v = 0;
-    tempArray = this.stripData[v]; // work on one plot variable at a time
-    // delete first and oldest element which is an [x,y] pair array
-    tempArray.shift();
-    // add the new [x.y] pair array at end
-    tempArray.push( [ 0, this.TjIn ] );
-    // update the variable being processed
-    this.stripData[v] = tempArray;
-
-    // re-number the x-axis values to equal time values
-    // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
-    v = 0; // just one var in this display method, so don't need repeat
-    // to do all vars, for (v = 0; v < numStripVariables; v += 1)
-    for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
-      // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
-      // want next line for newest data at max time
-      this.stripData[v][p][0] = p * timeStep;
-      // want next line for newest data at zero time
-      // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
-    }
-
-  }, // END of updateDisplay()
-
-  checkForSteadyState : function() {
-    // required - called by controller object
-    // returns ssFlag, true if this unit at SS, false if not
-    // *IF* NOT used to check for SS *AND* another unit IS checked,
-    // which can not be at SS, *THEN* return ssFlag = true to calling unit
-    // HOWEVER, if this unit has UI inputs, need to be able to return false
-    let ssFlag = true;
-    // this.ssCheckSum set != 0 on updateUIparams() execution
-    if (this.ssCheckSum != 0) {
-      ssFlag = false;
-    }
-    this.ssCheckSum = 0;
-    return ssFlag;
-  } // END OF checkForSteadyState()
-
-}; // END unit 2, feed to jacket
-
-processUnits[3] = {
-  //
-  unitIndex : 3, // index of this unit as child in processUnits parent object
-  // unitIndex used in this object's updateUIparams() method
   name : 'heat transfer jacket',
 
-  // for other info shared with other units and objects, see public properties
-  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
+  // SUMMARY OF DEPENDENCIES
+  //
+  // USES OBJECT simParams
+  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
+  //   unit 1 USES unit 2 UA
+  //   unit 1 USES unit 2 Tj
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
-  // *******************************************
-  //  define INPUT CONNECTIONS from other units
-  // *******************************************
-
-  // define this unit's variables that are to receive input values from other units
-
-  Trxr    : 0, // will get Trxr from unit 1 in updateInputs
-  TjIn    : 0, // will get TjIn from unit 2 in updateInputs
-  flowRate  : 0, // will get flowRate from unit 3 in updateInputs
-
-  updateInputs : function() {
-    this.Trxr = processUnits[1]['Trxr'];
-    this.TjIn = processUnits[2]['TjIn'];
-    this.flowRate = processUnits[2]['flowRate'];
-    // residence time used in controller.checkForSteadyState()
-    this.residenceTime = this.vol / this.flowRate;
-  },
-
-  // *******************************************
-  //  define OUTPUT CONNECTIONS to other units
-  // *******************************************
-
-  initialTj : 350,
-  Tj : this.initialTj, // output to unit 1
-
-  // *******************************************
-
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
-  // SEE dataInputs array in initialize() method for input field ID's
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  //
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs : [
+    [3,'command','this.command']
+  ],
 
   // variables defined here are available to all functions inside this unit
 
-  vol       : 0.02, // (m3), heat transfer jacket volume
-  rho       : 1000, // (kg/m3), heat transfer liquid density
-  Cp        : 2.0, // (kJ/kg/K), heat transfer liquid heat capacity
+  // vol       : 0.02, // (m3), heat transfer jacket volume
+  // rho       : 1000, // (kg/m3), heat transfer liquid density
+  // Cp        : 2.0, // (kJ/kg/K), heat transfer liquid heat capacity
+
+  initialTj : 350,
+  Tj     : this.initialTj,
+  command : 0, // input from controller
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -887,14 +673,6 @@ processUnits[3] = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // need to directly set controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
-
-    // set state variables not set by updateUIparams to initial settings
     this.Tj = this.initialTj;
 
     // each unit has its own data arrays for plots and canvases
@@ -945,24 +723,30 @@ processUnits[3] = {
 
   }, // END updateUIparams method
 
-  updateState : function() {
+  updateInputs : function() {
     //
-    // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
-    // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
-    // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
-    // STATE VARIABLE
+    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
     //
-    // WARNING: this method must NOT contain references to other units!
-    //          get info from other units ONLY in updateInputs() method
-    //
+    for (let i = 0; i < this.inputs.length; i++) {
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
+      let thisVar = this.inputs[i][2]; // string
+      eval(thisVar + ' = ' + sourceValue);
+    }
+
     // check for change in overall main time step simTimeStep
     this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
-    let invTau = this.flowRate/ this.vol;
+  }, // END updateInputs method
 
-    let dTdt = invTau*(this.TjIn - this.Tj) +
-               (this.Trxr- this.Tj) * this.UA/(this.vol*this.rho*this.Cp);
-    this.Tj = this.Tj + this.unitTimeStep * dTdt;
+  updateState : function(){
+    //
+    // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
+    // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE -
+    // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
+    // STATE VARIABLE
+
+    this.Tj = this.command;
 
   }, // END updateState method
 
@@ -1017,41 +801,39 @@ processUnits[3] = {
     return ssFlag;
   } // END checkForSteadyState()
 
-}; // END unit 3, jacket
+}; // END unit 2 - heat transfer jacket
 
-processUnits[4] = {
+processUnits[3] = {
   //
-  unitIndex : 4, // index of this unit as child in processUnits parent object
+  unitIndex : 3, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor temperature controller',
 
-  // for other info shared with other units and objects, see public properties
-  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
+  // NOTE: this unit has a special method: changeMode
 
-  // *******************************************
-  //  define INPUT CONNECTIONS from other units
-  // *******************************************
+  // SUMMARY OF DEPENDENCIES
+  // USES OBJECT simParams
+  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
+  //   unit 2 USES processUnits[3].command - manipulated variable
+  //   [0] reactor feed, [1] reactor, [2] jacket, [3] controller
 
-  // define this unit's variables that are to receive input values from other units
-
-  Trxr : 0, // will get Trxr from unit 1 in updateInputs
-
-  updateInputs : function() {
-    this.Trxr = processUnits[1]['Trxr'];
-  },
-
-  // *******************************************
-  //  define OUTPUT CONNECTIONS to other units
-  // *******************************************
-
-  command : 0, // output to unit 2
-
-  // *******************************************
+  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
+  //
+  // define inputs array, which is processed in this unit's updateInputs method
+  // where sourceVarNameString is name of a public var in source unit without 'this.'
+  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
+  //        'privateVarName' for private var, and
+  //        'this.publicVarName' for public var
+  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
+  inputs : [
+    [1,'Trxr','this.Trxr']
+  ],
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
 
-  // NOTE: this unit has a special method, changeMode, to handle UI radio buttons
+  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
+  // *** e.g., displayReactorLeftConc: 'field_reactor_left_conc',
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
@@ -1064,7 +846,9 @@ processUnits[4] = {
   manualCommand : 348, // (K)
   manualBias  : 300, // (K), command at zero error
   initialCommand  : 300, // controller command signal (coef for unit_2)
+  command         : 0,
   errorIntegral   : 0, // integral error
+  Trxr : 0, // will get Trxr from unit 1 in updateInputs
   mode : "manual", // auto or manual, see changeMode() below
 
   // define arrays to hold info for variables
@@ -1136,8 +920,8 @@ processUnits[4] = {
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
     //
-    // SPECIAL - use v-1 to not report manualCommand in copy data table header
-    //           but need manualCommand as input var to get from html input
+    // special, use v-1 to not report manualCommand in copy data table header
+    // but need manualCommand as input var to get from html input
     this.VarCount = v-1;
     //
     // OUTPUT VARS
@@ -1161,14 +945,6 @@ processUnits[4] = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // need to directly set controller.ssFlag to false to get sim to run
-    // after change in UI params when previously at steady state
-    controller.ssFlag = false;
-
-    // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
-
-    // set state variables not set by updateUIparams to initial settings
     this.errorIntegral = 0;
     this.command = this.initialCommand;
 
@@ -1192,7 +968,7 @@ processUnits[4] = {
     // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
     this.ssCheckSum = 1;
 
-  }, // end changeMode function
+  }, // END of changeMode() method
 
   updateUIparams : function() {
     //
@@ -1221,7 +997,23 @@ processUnits[4] = {
 
   }, // END updateUIparams method
 
-  updateState : function() {
+  updateInputs : function() {
+    //
+    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
+    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
+    //
+    for (let i = 0; i < this.inputs.length; i++) {
+      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
+      let thisVar = this.inputs[i][2]; // string
+      eval(thisVar + ' = ' + sourceValue);
+    }
+
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+
+  }, // END updateInputs method
+
+  updateState : function(){
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
@@ -1230,9 +1022,6 @@ processUnits[4] = {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
-    //
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     // compute new value of PI controller command
     // manual bias set to current command when switching to auto in changeMode()
@@ -1250,7 +1039,7 @@ processUnits[4] = {
     } else {
       // not at limit, OK to update integral of error
       // update errorIntegral only after it is used above to update this.command
-      this.errorIntegral = this.errorIntegral + error * simParams.simTimeStep; // update integral of error
+      this.errorIntegral = this.errorIntegral + error * this.unitTimeStep; // update integral of error
     }
 
     if (this.mode == "manual"){
@@ -1283,4 +1072,4 @@ processUnits[4] = {
     return ssFlag;
   } // END OF checkForSteadyState()
 
-}; // END unit 4, controller
+}; // END unit 3 - controller

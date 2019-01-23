@@ -39,4 +39,4 @@ processUnits[0] = {
     //          get info from other units ONLY in updateInputs() method
     //
     // check for change in overall main time step simTimeStep
-    unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;

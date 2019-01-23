@@ -26,46 +26,25 @@ let puCatalystLayer = {
   // unitIndex used in this object's updateUIparams() method
   name : 'catalyst layer',
 
-  // SUMMARY OF DEPENDENCIES
-  //
-  //  THIS OBJECT HAS MULTIPLE I/O CONNECTIONS TO HTML
-  //
-  //  USES FROM OBJECT simParams
-  //    GETS simParams.simTimeStep
-  //  OBJECT plotInfo USES FROM THIS OBJECT:
-
-  //    XXX CHECK ON THIS - numNodes, and possibly others
-
-  //  CALLS TO FUNCTIONS HERE ARE SENT BY THE FOLLOWING EXTERNAL FUNCTIONS:
-  //    initialize() sent by openThisLab() in object controller
-  //    reset() sent by resetThisLab() in object controller
-  //    updateInputs() & updateState() sent by updateProcessUnits() in object controller
-  //    updateDisplay() sent by updateDisplay() in object controller
-  //    updateUIparams() sent by updateUIparams() in object controller
-  //    checkForSteadyState() sent by checkForSteadyState() in object controller
-  //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
-  //    copyData() in object interfacer uses name, varCount, dataHeaders[],
-  //        dataUnits[], dataValues[], profileData[], stripData[]
-  //    getInputValue() in object interfacer uses dataInputs[], dataInitial[],
-  //        dataMin[], dataMax[]
-  //    getPlotData() in object plotFlot uses profileData[], stripData[]
-  //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
   // *******************************************
   //  define INPUT CONNECTIONS from other units
   // *******************************************
 
   // SPECIAL - none for this unit
+  updateInputs : function() {}, // required, called by main controller object
 
   // *******************************************
   //  define OUTPUT CONNECTIONS to other units
   // *******************************************
 
-  // SPECIAL - none for this unit
+    // SPECIAL - none for this unit
 
   // *******************************************
 
-    // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
   //
   // THIS UNIT ALSO HAS A CHECKBOX INPUT
@@ -456,26 +435,18 @@ let puCatalystLayer = {
     this.ssCheckSum = 1;
   }, // END method updateUIfeedSlider()
 
-  updateInputs : function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
-    //
-    // SPECIAL - none for this unit
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
-    // console.log('updateInputs, this.unitTimeStep = ' + this.unitTimeStep);
-
-  }, // END of updateInputs method
-
   updateState : function() {
+    //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
     // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
     // STATE VARIABLE
+    //
+    // WARNING: this method must NOT contain references to other units!
+    //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     // document.getElementById("dev01").innerHTML = "UPDATE time = " + controller.simTime.toFixed(0) + "; y = " + this.y[20];
 

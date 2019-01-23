@@ -45,26 +45,27 @@ processUnits[0] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor feed',
 
-  // SUMMARY OF DEPENDENCIES
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // search for controller. & interfacer. & plotter. & simParams. & plotInfo
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //   none
+  // SPECIAL - none for this unit
+  updateInputs : function() {}, // required, called by main controller object
 
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 1 USES unit 0 flowRate
-  //   unit 1 USES unit 0 conc
-  //   unit 1 USES unit 0 Tfeed
-  //   [0] reactor feed, [1] reactor, [2] jacket, [3] controller
-
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
 
   // define main parameters
   // values will be set in method intialize()
-  flowRate : 0, // (m3/s), feed flow rate
+  flowRate : 0, // (m3/s)
   conc : 0, // (mol/m3)
   Tfeed : 300, // (K)
+
+  // *******************************************
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -167,12 +168,6 @@ processUnits[0] = {
 
   }, // END updateUIparams
 
-  updateInputs : function(){
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    // SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    //    none for this unit
-  }, // END updateInputs
-
   updateState : function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -214,27 +209,37 @@ processUnits[1] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'reactor',
 
-  // SUMMARY OF DEPENDENCIES
-  //
-  // USES OBJECT simParams
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 3 USES unit 1 Trxr
-  //
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //
-  // define inputs array, which is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs : [
-    [0,'flowRate','this.flowRate'],
-    [0,'conc','this.concIn'],
-    [0,'Tfeed','this.Tfeed'],
-    [2,'Tj','this.Tj'],
-    [2,'UA','this.UA']
-  ],
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
+
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
+
+  // define variables that are to receive input values from other units
+  flowRate : 0, // will get flowRate from unit 0 in updateInputs
+  concIn : 0, // will get concIn from unit 0 in updateInputs, feed
+  Tfeed : 0, // will get Tfeed from unit 0 in updateInputs, feed
+  Tj : 0, // will get Tj from unit 3 in updateInputs, jacket
+  UA : 0, // will get UA from unit 3 in updateInputs
+
+  updateInputs : function() {
+    this.flowRate = processUnits[0].flowRate;
+    this.concIn = processUnits[0].conc;
+    this.Tfeed = processUnits[0].Tfeed;
+    this.Tj = processUnits[2].Tj;
+    this.UA = processUnits[2].UA;
+    // residence time used in controller.checkForSteadyState()
+    this.residenceTime = this.vol / this.flowRate;
+  },
+
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  Trxr : 300, // (K), output to controller process unit
+
+  // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
   // SEE dataInputs array in initialize() method for input field ID's
@@ -251,9 +256,8 @@ processUnits[1] = {
   Ea : 200, // (kJ/mol), reaction activation energy
   delH : -250, // (kJ/mol), reaction heat of reaction (exothermic < 0)
 
-  // define variables to hold outputs
+  // define variables to hold additional results
   initialTrxr : 300, // (K)
-  Trxr : 300, // (K)
   initialCa : 0, // (mol/m3)
   Ca : 0, // (mol/m3), reactant concentration
 
@@ -287,12 +291,6 @@ processUnits[1] = {
   rho : 1000, // (kg/m3), reactant liquid density
   Cp : 2.0, // (kJ/kg/K), reactant liquid heat capacity
   vol : 0.1, // (m3), volume of reactor contents = constant with flow rate
-
-  flowRate : 0, // will get flowRate from unit 0 in updateInputs
-  concIn : 0, // will get concIn from unit 0 in updateInputs, feed
-  Tfeed : 0, // will get Tfeed from unit 0 in updateInputs, feed
-  Tj : 0, // will get Tj from unit 3 in updateInputs, jacket
-  UA : 0, // will get UA from unit 3 in updateInputs
 
   initialize : function() {
     //
@@ -416,32 +414,6 @@ processUnits[1] = {
 
   }, // END updateUIparams()
 
-  updateInputs : function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
-    //
-    for (let i = 0; i < this.inputs.length; i++) {
-      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
-      let thisVar = this.inputs[i][2]; // string
-      eval(thisVar + ' = ' + sourceValue);
-    }
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
-    // residence time used in controller.checkForSteadyState()
-    this.residenceTime = this.vol / this.flowRate;
-    // BUT use width of strip plot to help ensure plot update does not
-    // suspend in middle when reach steady state for check every 2 times
-    // longest res time BUT NOT foolproof, e.g., with
-    // XXX 1 K up then down changes in manual Tj at certain times
-    // let numStripPoints = plotInfo[0]['numberPoints'];
-    // this.residenceTime = this.stripData[1][numStripPoints][0];
-    // console.log('rxr res time = ' + this.residenceTime);
-
-  }, // END updateInputs()
-
   updateState : function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -451,6 +423,9 @@ processUnits[1] = {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     let krxn = this.k300 * Math.exp(-(this.Ea/this.Rg)*(1/this.Trxr- 1/300));
     let rate = -krxn * this.Ca;
@@ -578,35 +553,29 @@ processUnits[2] = {
   // unitIndex used in this object's updateUIparams() method
   name : 'heat transfer jacket',
 
-  // SUMMARY OF DEPENDENCIES
-  //
-  // USES OBJECT simParams
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 1 USES unit 2 UA
-  //   unit 1 USES unit 2 Tj
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //
-  // define inputs array, which is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs : [
-    [3,'command','this.command']
-  ],
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
 
-  // variables defined here are available to all functions inside this unit
+  // define variables that are to receive input values from other units
+  command : 0, // input from controller
 
-  // vol       : 0.02, // (m3), heat transfer jacket volume
-  // rho       : 1000, // (kg/m3), heat transfer liquid density
-  // Cp        : 2.0, // (kJ/kg/K), heat transfer liquid heat capacity
+  updateInputs : function() {
+    this.command = processUnits[3].command;
+  },
+
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
 
   initialTj : 350,
-  Tj     : this.initialTj,
-  command : 0, // input from controller
+  Tj : this.initialTj, // output to reactor
+  UA : 20, // output to reactor
+
+  // *******************************************
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -617,10 +586,6 @@ processUnits[2] = {
   dataMax : [],
   dataInitial : [],
   dataValues : [],
-
-  // define arrays to hold output variables
-  // these will be filled with initial values in method reset()
-  // *** e.g., Trxr : [],
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -723,28 +688,15 @@ processUnits[2] = {
 
   }, // END updateUIparams method
 
-  updateInputs : function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
-    //
-    for (let i = 0; i < this.inputs.length; i++) {
-      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
-      let thisVar = this.inputs[i][2]; // string
-      eval(thisVar + ' = ' + sourceValue);
-    }
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
-  }, // END updateInputs method
-
   updateState : function(){
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
-    // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE -
+    // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
     // IF IT IS, MAKE SURE PREVIOUS VALUE IS USED TO UPDATE THE OTHER
     // STATE VARIABLE
+    //
+    // WARNING: this method must NOT contain references to other units!
+    //          get info from other units ONLY in updateInputs() method
 
     this.Tj = this.command;
 
@@ -811,34 +763,32 @@ processUnits[3] = {
 
   // NOTE: this unit has a special method: changeMode
 
-  // SUMMARY OF DEPENDENCIES
-  // USES OBJECT simParams
-  // OUTPUT CONNECTIONS FROM THIS UNIT TO OTHER UNITS
-  //   unit 2 USES processUnits[3].command - manipulated variable
-  //   [0] reactor feed, [1] reactor, [2] jacket, [3] controller
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //
-  // define inputs array, which is processed in this unit's updateInputs method
-  // where sourceVarNameString is name of a public var in source unit without 'this.'
-  // where thisUnitVarNameString is variable name in this unit, and to be, e.g.,
-  //        'privateVarName' for private var, and
-  //        'this.publicVarName' for public var
-  // inputs[i] = [sourceUnitIndexNumber,sourceVarNameString,thisUnitVarNameString]
-  inputs : [
-    [1,'Trxr','this.Trxr']
-  ],
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
-  // SEE dataInputs array in initialize() method for input field ID's
+  // define variables that are to receive input values from other units
+  Trxr : 0, // will get Trxr from unit 1 in updateInputs
+  
+  updateInputs : function() {
+    this.Trxr = processUnits[1].Trxr;
+  },
 
-  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
-  // *** e.g., displayReactorLeftConc: 'field_reactor_left_conc',
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+  command : 0, // output to heat transfer jacket
+
+  // *******************************************
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
 
-  // define main inputs
+  // define main parameters
   // values will be set in method intialize()
   resetTime   : 30, // integral mode reset time
   gain				: 300, // controller gain
@@ -846,9 +796,7 @@ processUnits[3] = {
   manualCommand : 348, // (K)
   manualBias  : 300, // (K), command at zero error
   initialCommand  : 300, // controller command signal (coef for unit_2)
-  command         : 0,
   errorIntegral   : 0, // integral error
-  Trxr : 0, // will get Trxr from unit 1 in updateInputs
   mode : "manual", // auto or manual, see changeMode() below
 
   // define arrays to hold info for variables
@@ -997,23 +945,7 @@ processUnits[3] = {
 
   }, // END updateUIparams method
 
-  updateInputs : function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER PROCESS UNITS
-    // SPECIFY REFERENCES TO INPUTS ABOVE WHERE DEFINE inputs[] ARRAY
-    //
-    for (let i = 0; i < this.inputs.length; i++) {
-      let sourceValue = processUnits[this.inputs[i][0]][this.inputs[i][1]]; // numeric
-      let thisVar = this.inputs[i][2]; // string
-      eval(thisVar + ' = ' + sourceValue);
-    }
-
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-
-  }, // END updateInputs method
-
-  updateState : function(){
+  updateState : function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
@@ -1022,6 +954,9 @@ processUnits[3] = {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     // compute new value of PI controller command
     // manual bias set to current command when switching to auto in changeMode()

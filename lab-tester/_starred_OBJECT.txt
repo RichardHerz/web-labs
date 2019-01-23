@@ -11,6 +11,8 @@ processUnits[0] = {
   //  define INPUT CONNECTIONS from other units
   // *******************************************
 
+  // define variables that are to receive input values from other units
+
   // SPECIAL - none for this unit
   updateInputs : function() {}, // required, called by main controller object
 

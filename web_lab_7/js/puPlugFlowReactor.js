@@ -21,35 +21,25 @@ let puPlugFlowReactor = {
   // unitIndex used in this object's updateUIparams() method
   name : 'Plug Flow Reactor',
 
-  // SUMMARY OF DEPENDENCIES
-  //
-  //  THIS OBJECT HAS MULTIPLE I/O CONNECTIONS TO HTML
-  //
-  //  USES FROM OBJECT simParams
-  //    GETS simParams.simTimeStep
-  //  OBJECT plotInfo USES FROM THIS OBJECT:
-  //    numNodes, and possibly others
-  //  OBJECT controller USES FROM THIS OBJECT:
-  //    variable residenceTime
-  //  CALLS TO FUNCTIONS HERE ARE SENT BY THE FOLLOWING EXTERNAL FUNCTIONS:
-  //    initialize() sent by openThisLab() in object controller
-  //    reset() sent by resetThisLab() in object controller
-  //    updateInputs() & updateState() sent by updateProcessUnits() in object controller
-  //    updateDisplay() sent by updateDisplay() in object controller
-  //    updateUIparams() sent by updateUIparams() in object controller
-  //    checkForSteadyState() sent by checkForSteadyState() in object controller
-  //  THE FOLLOWING EXTERNAL FUNCTIONS USE VALUES FROM THIS OBJECT:
-  //    copyData() in object interfacer uses name, varCount, dataHeaders[],
-  //        dataUnits[], dataValues[], profileData[], stripData[]
-  //    getInputValue() in object interfacer uses dataInputs[], dataInitial[],
-  //        dataMin[], dataMax[]
-  //    getPlotData() in object plotFlot uses profileData[], stripData[]
-  //    plotColorCanvasPlot() in object plotter uses colorCanvasData[]
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM OTHER UNITS, used in updateInputs() method
-  //   none
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
 
-  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS...
+  // SPECIAL - none for this unit
+  updateInputs : function() {}, // required, called by main controller object
+
+  // *******************************************
+  //  define OUTPUT CONNECTIONS to other units
+  // *******************************************
+
+    // SPECIAL - none for this unit
+
+  // *******************************************
+
+  // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
   // SEE dataInputs array in initialize() method for input field ID's
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
@@ -402,16 +392,6 @@ let puPlugFlowReactor = {
 
   }, // end of updateUIparams()
 
-  updateInputs : function() {
-    //
-    // GET INPUT CONNECTION VALUES FROM OTHER UNITS FROM PREVIOUS TIME STEP,
-    //   SINCE updateInputs IS CALLED BEFORE updateState IN EACH TIME STEP
-    // SPECIFY REFERENCES TO INPUTS ABOVE in this unit definition
-    //   none
-    // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-  }, // END of updateInputs()
-
   updateState : function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -421,6 +401,9 @@ let puPlugFlowReactor = {
     //
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
+    //
+    // check for change in overall main time step simTimeStep
+    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
     let i = 0; // index for step repeats
     let n = 0; // index for nodes

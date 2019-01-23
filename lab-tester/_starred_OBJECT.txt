@@ -25,6 +25,7 @@ processUnits[0] = {
   // *******************************************
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
+  // SEE dataInputs array in initialize() method for input field ID's
 
   // DEFINE MAIN PARAMETERS
   // values will be set in method initialize()

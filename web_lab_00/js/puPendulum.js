@@ -32,14 +32,14 @@ function puPendulum(pUnitIndex) {
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in checkForSteadyState method
 
-  const gravity = 9.8; // (m2/s), // used in updateState & updateDisplay
+  const gravity = 9.8; // (m/s2), // used in updateState & updateDisplay
   const pi = Math.PI; // used in reset & updateState
   const radius = 1; // (m), radius, rod length, used in updateState & updateDisplay
 
   let velocity = 0; // (m/s), tangential velocity
   let angle = 0; // (radian)
   let fricFrac = 0; // friction factor used in initialize & updateUIparams
-  let accel = 0; // (m2/s), acceleration in tangential direction
+  let accel = 0; // (m/s2), acceleration in tangential direction
 
   // THIS UNIT ALSO HAS A CHECKBOX INPUT
   let inputCheckBoxVectors = "checkbox_vec";
@@ -158,15 +158,13 @@ function puPendulum(pUnitIndex) {
 
     let unum = unitIndex;
     velocity = this.dataValues[0] = interfacer.getInputValue(unum, 0);
-    // strangely, velocity coming back as string...
-    // velocity = Number(velocity);
     angle = this.dataValues[1] = interfacer.getInputValue(unum, 1);
     fricFrac = this.dataValues[2] = interfacer.getInputValue(unum, 2);
 
     // SPECIAL - compensate for Euler method errors, add 0.0016 to 0.003
     // do this here so only added once, NOT in updateState
     fricFrac = fricFrac + 0.0016;
-    accel = gravity * Math.sin(-angle); // update accel for angle changes 
+    accel = gravity * Math.sin(-angle); // update accel for angle changes
 
   } // END of updateUIparams method
 

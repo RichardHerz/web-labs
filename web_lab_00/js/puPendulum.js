@@ -30,7 +30,6 @@ function puPendulum(pUnitIndex) {
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-  let ssCheckSum = 0; // used in checkForSteadyState method
 
   const gravity = 9.8; // (m/s2), // used in updateState & updateDisplay
   const pi = Math.PI; // used in reset & updateState
@@ -51,7 +50,7 @@ function puPendulum(pUnitIndex) {
   // *******************************************
 
   this.name = 'process unit Pendulum'; // used by interfacer.copyData()
-  this.residenceTime = 100; // used by controller.checkForSteadyState()
+  this.residenceTime = 10; // used by controller.checkForSteadyState()
 
   // define arrays to hold data for plots, color canvas
   // these arrays will be used by plotter object
@@ -148,8 +147,6 @@ function puPendulum(pUnitIndex) {
     // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
     controller.resetSSflagsFalse();
-    // set ssCheckSum != 0 used in checkForSteadyState method to check for SS
-    ssCheckSum = 1;
 
     // check input fields for new values
     // function getInputValue is defined in file process_interfacer.js
@@ -293,14 +290,27 @@ function puPendulum(pUnitIndex) {
     // *IF* NOT used to check for SS *AND* another unit IS checked,
     // which can not be at SS, *THEN* return ssFlag = true to calling unit
     // HOWEVER, if this unit has UI inputs, need to be able to return false
-    //
-    let ssFlag = false; // SPECIAL - will always stay false
-    //
-    // ssCheckSum set != 0 on updateUIparams execution
-    if (ssCheckSum != 0) {
-      ssFlag = false;
+
+    let ssFlag = false;
+
+    // need narrow ranges for this check, not == 0
+    // do not check at the top, unstable SS
+    let mmax = 0.0001;
+    let mmin = -mmax;
+    if ((angle > mmin) && (angle < mmax)) {
+      if ((velocity > mmin) && (velocity < mmax)) {
+        if ((accel > mmin) && (accel < mmax)) {
+          ssFlag = true;
+          // console.log('SS zeroed, ssFlag to true');
+        }
+      }
     }
-    ssCheckSum = 0;
+
+    // if (ssFlag == false) {
+    //   console.log('SS not zeroed');
+    //   console.log('angle, veloc, accel = ' +angle+ ', ' +velocity+ ', '+accel);
+    // }
+
     return ssFlag;
   } // END of checkForSteadyState method
 

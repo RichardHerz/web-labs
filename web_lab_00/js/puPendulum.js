@@ -34,9 +34,11 @@ function puPendulum(pUnitIndex) {
 
   const gravity = 9.8; // (m/s2), // used in updateState & updateDisplay
   const pi = Math.PI; // used in reset & updateState
+  const degTOrad = Math.PI / 180; // used in updateUIparams
   const radius = 1; // (m), radius, rod length, used in updateState & updateDisplay
 
   let velocity = 0; // (m/s), tangential velocity
+  let angleDeg = 0; // (degree)
   let angle = 0; // (radian)
   let fricFrac = 0; // friction factor used in initialize & updateUIparams
   let accel = 0; // (m/s2), acceleration in tangential direction
@@ -95,12 +97,12 @@ function puPendulum(pUnitIndex) {
     v = 1;
     this.dataHeaders[v] = 'angle';
     this.dataInputs[v] = "input_field_theta";
-    this.dataUnits[v] = 'radian';
-    this.dataMin[v] = -pi;
-    this.dataMax[v] = pi;
-    this.dataInitial[v] = 1.57; // pi/2 = 1.5708
-    angle = this.dataInitial[v]; // dataInitial used in getInputValue
-    this.dataValues[v] = angle; // current input oalue for reporting
+    this.dataUnits[v] = 'degree';
+    this.dataMin[v] = -180;
+    this.dataMax[v] = 180;
+    this.dataInitial[v] = 90;
+    angleDeg = this.dataInitial[v]; // dataInitial used in getInputValue
+    this.dataValues[v] = angleDeg; // current input oalue for reporting
     //
     v = 2;
     this.dataHeaders[v] = 'friction factor';
@@ -158,12 +160,13 @@ function puPendulum(pUnitIndex) {
 
     let unum = unitIndex;
     velocity = this.dataValues[0] = interfacer.getInputValue(unum, 0);
-    angle = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    angleDeg = this.dataValues[1] = interfacer.getInputValue(unum, 1);
     fricFrac = this.dataValues[2] = interfacer.getInputValue(unum, 2);
 
     // SPECIAL - compensate for Euler method errors, add 0.0016 to 0.003
     // do this here so only added once, NOT in updateState
     fricFrac = fricFrac + 0.0016;
+    angle = angleDeg * degTOrad; // convert user input in degrees to radians
     accel = gravity * Math.sin(-angle); // update accel for angle changes
 
   } // END of updateUIparams method

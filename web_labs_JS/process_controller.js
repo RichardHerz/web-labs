@@ -65,6 +65,7 @@ let controller = {
   }, // END OF function openThisLab
 
   updateProcess : function() {
+    // called periodically by setInterval in interfacer.runThisLab
 
     // update simTime = simulation time elapsed
     // done before simStepRepeats of all units, so
@@ -94,9 +95,11 @@ let controller = {
     let currentMs = controller.updateDisplay();
 
     // // *** SAVE - FOR DEVELOPMENT TIMING CHECK - SAVE ***
+    // //
     // // check timing to make sure updates finish before setInterval
     // // calls update process again in order to maintain constant
     // // ratio between simTime and real time
+    // //
     // let elapsedMs = currentMs - startMs;
     // updateMs = simParams.updateDisplayTimingMs - elapsedMs;
     // let idleMs = Number(updateMs).toPrecision(2);

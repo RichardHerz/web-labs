@@ -11,14 +11,14 @@ let controller = {
 
   // SUMMARY OF DEPENDENCIES
   //
-  // function interfacer.runThisLab() USES FROM THIS OBJECT function runSimulation()
+  // function interfacer.runThisLab() USES FROM THIS OBJECT method updateProcess()
   //
   // USES in object interfacer the function interfacer.resetThisLab()
   //
   // USES in object simParams the following:
   //    variables simStepRepeats, simTimeStep, updateDisplayTimingMs
   //    function updateCurrentRunCountDisplay()
-  //    controller.changeSimTimeStep() can change simParams.simTimeStep
+  //    controller's changeSimTimeStep() can change simParams.simTimeStep
   //
   // USES in each process unit object the following:
   //    variable residenceTime
@@ -30,8 +30,6 @@ let controller = {
   // USES in object plotter the functions
   //    getPlotData(), plotPlotData(), plotArrays.initialize(),
   //    plotColorCanvasPlot()
-
-  runningFlag : false, // set runningFlag to false initially
 
   // simTime is changed in updateSimTime() and resetSimTime()
   // simTime & oldSimTime are used in checkForSteadyState()
@@ -66,105 +64,51 @@ let controller = {
     simParams.updateCurrentRunCountDisplay(); // defined in process_sim_params.js
   }, // END OF function openThisLab
 
-  runSimulation : function() {
+  updateProcess : function() {
 
-    // CALLED BY function runThisLab ON CLICK OF RUN-PAUSE BUTTON
+    // update simTime = simulation time elapsed
+    // done before simStepRepeats of all units, so
+    // simTime update each time is simTimeStep * simStepRepeats
+    controller.updateSimTime();
 
-    // HERE, THE INTEGRATION TIME STEP SIZE MUST BE CONSTANT WITHIN ONE DISPLAY
-    // INTERVAL TO MAINTAIN CORRESPONDENCE BETWEEN SIM TIME AND REAL TIME
-    // FOR A DIFFERENT CASE WHERE THE INTEGRATION TIME STEP SIZE CAN VARY
-    // BETWEEN updateProcessUnits YOU NEED
-    // THE MORE COMPLEX TIMING METHOD USED IN dynamic-process-v2.livecode
+    // do NOT return here when ssFlag goes true at steady statement
+    // because then simTime will not update since this function will not call itself again
+    // DO return at top of updateProcessUnits and updateDisplay which are called below here
+    // such that this updateProcess function always completes normally and calls itself again
 
-    // updateDisplayTimingMs is real time milliseconds between display updates
-    let updateDisplayTimingMs = simParams.updateDisplayTimingMs;
+    // get time at start of updates
+    // for use in development timing check below
     let startDate = new Date(); // need this here
-    let startMs;
-    let currentMs;
-    let elapsedMs;
-    // updateMs is computed below in function updateProcess to be real time
-    // between finish last display update and start next update process
-    let updateMs = 0; // initialize as zero for first call immediately below
+    let startMs = startDate.getTime();
 
-    // first call to updateProcess, which then calls itself
-    // use setTimeout, since updateProcess by itself does not work
-    // NOTE: updateProcess() is a sub function of controller.runSimulation()
-    // and therefore do not use prefix of this. or controller.
-    // () optional at end of updateProcess here
-    setTimeout(updateProcess(), updateMs);
+    // repeating updateProcessUnits must finish before
+    // latest real time at which updateDisplay must occur in order
+    // to maintain correspondence between sim time and real time
 
-    function updateProcess() {
-      // need controller.runningFlag not this.runningFlag
-      // because updateProcess is a subfunction of runSimulation
-      if (!controller.runningFlag) {
-        // exit if runningFlag is not true
-        // runningFlag can become not true by click of RUN-PAUSE, RESET or COPY DATA buttons
-        return;
-      }
+    for (let i = 0; i < simParams.simStepRepeats; i += 1) {
+      controller.updateProcessUnits();
+    }
 
-      // update simTime = simulation time elapsed
-      // done before simStepRepeats of all units, so
-      // simTime update each time is simTimeStep * simStepRepeats
-      // need controller.updateSimTime() not this.updateSimTime()
-      // because updateProcess is a subfunction of runSimulation
-      controller.updateSimTime();
+    // update display
+    // return time for use in development timing check below
+    let currentMs = controller.updateDisplay();
 
-      // do NOT return here when ssFlag goes true at steady statement
-      // because then simTime will not update since this function will not call itself again
-      // DO return at top of updateProcessUnits and updateDisplay which are called below here
-      // such that this updateProcess function always completes normally and calls itself again
+    // // *** SAVE - FOR DEVELOPMENT TIMING CHECK - SAVE ***
+    // // check timing to make sure updates finish before setInterval
+    // // calls update process again in order to maintain constant
+    // // ratio between simTime and real time
+    // let elapsedMs = currentMs - startMs;
+    // updateMs = simParams.updateDisplayTimingMs - elapsedMs;
+    // let idleMs = Number(updateMs).toPrecision(2);
+    // console.log("idle time = " + idleMs); // <<< SAVE THIS CONSOLE LOG <<<
 
-      // get time at start of repeating updateProcessUnits
-      startDate = new Date(); // need this here
-      startMs = startDate.getTime();
-
-      // repeating updateProcessUnits must finish before
-      // latest real time at which updateDisplay must occur in order
-      // to maintain correspondence between sim time and real time
-      //
-
-      // NOTE: updateProcessUnits() and updateDisplay() are members
-      // of top level of controller object and not of this subfunction
-      // updateProcess() inside controller.runSimulation()
-      // which calls them, so need controller. prefix
-      // controller.updateProcessUnits() & controller.updateDisplay()
-
-      for (let i = 0; i < simParams.simStepRepeats; i += 1) {
-        controller.updateProcessUnits();
-      }
-
-      // get time at end of repeating updateProcessUnits and call
-      // to updateDisplay from updateDisplay function return value
-      currentMs = controller.updateDisplay();
-
-      // Adjust wait until next updateProcess to allow for time taken
-      // to do updateProcessUnits and updateDisplay.
-      // In order to respond to user input, do not need updateMs > 0.
-      // BUT DO NEED updateMs > 0 to keep sync between sim time and real time.
-      elapsedMs = currentMs - startMs;
-      updateMs = updateDisplayTimingMs - elapsedMs;
-
-      // // DISPLAY TIMING DATA DURING DEVELOPMENT
-      // // NEED TO EDIT INDEX.HTML TO ACTIVATE "field_output_field"
-      // // first check if field exists
-      // if (document.getElementById("field_output_field")) {
-      //   let idleMs = Number(updateMs).toPrecision(2);
-      //   document.getElementById("field_output_field").innerHTML = "idle time = " + idleMs + "&nbsp;ms";
-      // }
-
-      // END updateProcess WITH CALL TO ITSELF AFTER updateMs WAIT
-      setTimeout(updateProcess, updateMs);  // updateMs
-
-    } // END OF function updateProcess (inside function runSimulation)
-
-  }, // END OF function runSimulation
+  }, // END OF method updateProcess
 
   updateProcessUnits : function() {
-
     // DO COMPUTATIONS TO UPDATE STATE OF PROCESS
     // step all units but do not display
 
-    if (this.ssFlag) {
+    if (controller.ssFlag) {
       // exit if ssFlag true
       return;
     }
@@ -187,7 +131,7 @@ let controller = {
 
   updateDisplay : function() {
 
-    if (this.ssFlag) {
+    if (controller.ssFlag) {
       // exit if ssFlag true
       // ONLY IF DO NOT WANT TO UPDATE DISPLAY - SO MUST BE CONSTANT...
       // BUT FIRST MUST DO THIS (also done below at end normal update)
@@ -232,35 +176,25 @@ let controller = {
     // check and set ssFlag to true if at steady state
     // do this here in updateDisplay rather than each process update
     // so that don't suspend before a final display update of the steady state
-    this.checkForSteadyState();
+    controller.checkForSteadyState();
 
     // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
     let thisDate = new Date();
     let thisMs = thisDate.getTime();
     return thisMs;
 
-  },  // END OF function updateDisplay
-
-  // runningFlag value can change by click of RUN-PAUSE or RESET buttons
-  // calling functions toggleRunningFlag and stopRunningFlag
-  toggleRunningFlag : function() {
-    this.runningFlag = !this.runningFlag;
-  },
-
-  stopRunningFlag : function() {
-    this.runningFlag = false;
-  },
+  },  // END OF method updateDisplay
 
   resetSimTime : function() {
     // called by method interfacer.resetThisLab
-    this.simTime = 0;
-    this.resetSSflagsFalse();
+    controller.simTime = 0;
+    controller.resetSSflagsFalse();
   },
 
   updateSimTime : function() {
     // only updated before simStepRepeats are all executed
     // and only updated once each displayUpdate
-    this.simTime = this.simTime + simParams.simTimeStep * simParams.simStepRepeats;
+    controller.simTime = controller.simTime + simParams.simTimeStep * simParams.simStepRepeats;
   },
 
   changeSimTimeStep : function(factor) {
@@ -270,10 +204,10 @@ let controller = {
   },
 
   resetSSflagsFalse : function() {
-    this.ssStartTime = 0;
-    this.oldSimTime = 0;
-    this.ssFlag = false; // unit sets true when sim reaches steady state
-    this.stripPlotSpan = this.getStripPlotSpan();
+    controller.ssStartTime = 0;
+    controller.oldSimTime = 0;
+    controller.ssFlag = false; // unit sets true when sim reaches steady state
+    controller.stripPlotSpan = controller.getStripPlotSpan();
   },
 
   getStripPlotSpan : function() {
@@ -290,11 +224,11 @@ let controller = {
   },
 
   checkForSteadyState : function() {
-    // uses this.simTime
-    // sets this.ssFlag and this.oldSimTime
+    // uses controller.simTime
+    // sets controller.ssFlag and controller.oldSimTime
     // requires all units to have a residence time variable
     // calls each unit's own checkForSteadyState()
-    // see controller's this.resetSSflagsFalse sent by units' updateUIparams
+    // see controller's controller.resetSSflagsFalse sent by units' updateUIparams
     //
     // check for SS in order to save CPU time when sim is at steady state
     // check for SS by checking for any significant change in array end values
@@ -314,7 +248,7 @@ let controller = {
     }
 
     // check all units to see if any not at steady state
-    if (this.simTime >= this.oldSimTime + 2 * resTime) {
+    if (controller.simTime >= controller.oldSimTime + 2 * resTime) {
 
       // get ssFlag from each unit
       let thisFlag = true; // changes to false if any unit not at steady state
@@ -328,26 +262,26 @@ let controller = {
       }
 
       if (thisFlag == false) {
-        this.ssFlag = false;
-        this.oldSimTime = this.simTime;
-        this.ssStartTime = 0;
+        controller.ssFlag = false;
+        controller.oldSimTime = controller.simTime;
+        controller.ssStartTime = 0;
       } else {
         // all units are at steady state
-        if (this.stripPlotSpan == 0) {
+        if (controller.stripPlotSpan == 0) {
           // no strip plot in this lab
           // all units at SS
-          this.ssFlag = true;
+          controller.ssFlag = true;
         } else {
           // lab has a strip plot
-          if (this.ssStartTime == 0) {
+          if (controller.ssStartTime == 0) {
             // first time reach SS
             // mark time but keep updating plots
-            this.ssStartTime = this.simTime;
+            controller.ssStartTime = controller.simTime;
           } else {
             // has strip plot and has reached SS earlier
-            if ((this.simTime - this.ssStartTime) >= this.stripPlotSpan) {
+            if ((controller.simTime - controller.ssStartTime) >= controller.stripPlotSpan) {
               // has strip plot, reached SS earlier, plot lines should be flat
-              this.ssFlag = true;
+              controller.ssFlag = true;
             } else {
               // has strip plot, reached SS earlier but keep plotting until flat lines
             }
@@ -357,11 +291,11 @@ let controller = {
 
       // save sim time of this check
       // do not save for every call of this function or will never enter IF & check
-      this.oldSimTime = this.simTime;
+      controller.oldSimTime = controller.simTime;
 
-    } else { // ELSE OF if (this.simTime >= this.oldSimTime + 2 * resTime)
+    } else { // ELSE OF if (controller.simTime >= controller.oldSimTime + 2 * resTime)
       // keep running
-    } // END if (this.simTime >= this.oldSimTime + 2 * resTime)
+    } // END if (controller.simTime >= controller.oldSimTime + 2 * resTime)
 
   } // END method checkForSteadyState()
 

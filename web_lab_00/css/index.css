@@ -55,7 +55,7 @@ canvas {
   left: 17px;
   top: 0px;
   width: 608px;
-  height: 184px;
+  height: 190px;
   visibility: visible;
   border-color: red;
   border-width: 2px;
@@ -83,6 +83,32 @@ canvas {
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: false;
+}
+
+#field_time_label {
+  display: block;
+  position: absolute;
+  left: 120px;
+  top: 28px;
+  width: 140px;
+  height: 21px;
+  text-align: right;
+  border : none;
+  border-width: 1px;
+  border-color : DodgerBlue;
+}
+
+#field_time {
+  display: block;
+  position: absolute;
+  left: 267px;
+  top: 29px;
+  width: 60px;
+  height: 21px;
+  text-align: left;
+  border : none;
+  border-width: 1px;
+  border-color : DodgerBlue;
 }
 
 #svg_pendulum {

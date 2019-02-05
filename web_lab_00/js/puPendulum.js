@@ -44,6 +44,8 @@ function puPendulum(pUnitIndex) {
 
   // THIS UNIT ALSO HAS A CHECKBOX INPUT
   let inputCheckBoxVectors = "checkbox_vec";
+  // THIS UNIT ALSO HAS A DISPLAY FIELD FOR simTime
+  let displayTimeField = "field_time";
 
   // *******************************************
   //         define PUBLIC properties
@@ -202,6 +204,8 @@ function puPendulum(pUnitIndex) {
   } // END of updateState method
 
   this.updateDisplay = function() {
+
+    document.getElementById(displayTimeField).innerHTML =  controller.simTime.toFixed(2);
 
     const pixPerMeter = 200; // (px/m)
     const rpix = radius * pixPerMeter; // (px), pixel length of rod-radius

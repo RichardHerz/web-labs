@@ -53,7 +53,7 @@
       This system has a pivot, a rigid, massless rod, and a bob. The green vector is tangential
       linear velocity. The blue vectors are components of
       acceleration. The dotted blue vector is the constant gravitational acceleration.
-      Friction at the pivot is proportional to velocity.
+      Friction at the pivot is proportional to velocity. The simulation runs in slow motion.
       <br>
       <br><font color="#0000FF">Click the Run button to start. Hit the enter key or click out of field after changing inputs.
       </font>
@@ -63,6 +63,9 @@
   <div id="div_simFrame">
     <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
     <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
+
+    <p id="field_time_label">simulation time (s):</p>
+    <p id="field_time">0</p>
 
     <div id="div_input_group">
       <p id="field_v_label">

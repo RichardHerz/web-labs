@@ -235,22 +235,35 @@ let reactor = {
     return(varValue);
   },
 
+  runLoggerURL : "../webAppRunLog.lc",
+
   updateRunCount : function() {
-    $.post("http://reactorlab.net/web_labs/webAppRunLog.lc", {webAppNumber: "home_reactor"});
-  },
+    // WARNING: NEED LITERAL, e.g., "field_run_counter" below
+    //      e.g., this.runCounterFieldID does NOT work
+    //
+    $.post(reactor.runLoggerURL,{webAppNumber: "home_reactor"})
+      .done(
+        function(data) {
+          // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>";
+        } // END OF function(data)
+      ) // END OF .done(
+  }, // END OF updateRunCount 
 
   reactReactor : function() {
 
     // console.log('at reactReactor, reactor.stateFlag = ' + reactor.stateFlag);
-
+    
     if (reactor.stateFlag != 1) {
       // console.log('at reactReactor, if (reactor.stateFlag != 1) is true, returning');
       return;
     }
+    
+    
     // set stateFlag ONLY AFTER get Trxr from input field
     // AND AFTER initialize
     // only get reactor T here at start
     // ignore user changes in middle of rxn
+    reactor.updateRunCount();
     reactor.Trxr = reactor.fGetTrxr();
     reactor.fInitializePlot();
 

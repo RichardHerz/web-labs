@@ -61,7 +61,7 @@ canvas {
   position: absolute;
   top: 0px;
   left: 300px;
-  width: 300px;
+  width: 260px;
   height: 256px;
 }
 
@@ -168,7 +168,7 @@ canvas {
 
 #input_field_Trxr {
   position: absolute;
-  left: 190px;
+  left: 180px;
   top: 29px;
   width: 70px;
   height: 21px;

@@ -52,17 +52,29 @@ canvas {
 #div_simFrame {
   display: block;
   position: relative;
-  float: left;
+  float: left; /* flow text around, right or left*/
+  margin: 0px 0px 0px 0px; /* top right bottom left */
+  border-color: DodgerBlue;
   width: 300px;
   height: 256px;
+  visibility: visible;
+  border-width: 1px;
+  border-style: dotted;
+  LCvScrollbar: false;
 }
 
 #div_plotFrame {
   display: block;
   position: relative;
-  float: left;
-  width: 260px;
+  float: left; /* flow text around, right or left*/
+  margin: 0px 0px 0px 0px; /* top right bottom left */
+  border-color: DodgerBlue;
+  width: 270px;
   height: 256px;
+  visibility: visible;
+  border-width: 1px;
+  border-style: dotted;
+  LCvScrollbar: false;
 }
 
 .reactor_images {
@@ -129,10 +141,15 @@ canvas {
   position: absolute;
   left: 99px;
   top: 129px;
-  width: 107px;
+  width: 106px;
   height: 70px;
   visibility: visible;
   background-color: rgb(0,0,255);
+  border-width: 0px;
+  border-style: solid;
+  border-color: DodgerBlue;
+  opacity: 1;
+  LCvScrollbar: false;
 }
 
 #div_PLOTDIV_conc_plot {
@@ -144,16 +161,20 @@ canvas {
   height: 180px;
   visibility: visible;
   border-width: 1px;
+  /* background-color: rgb(0,253,255); */
   background-color: rgb(255,255,255);
   border-style: outset;
   opacity: 1;
   border-style: none;
   border-color: DodgerBlue;
+  LCthreeD: true;
+  LCshowBorder: true;
+  LCvScrollbar: false;
 }
 
 #field_Trxr_label {
   position: absolute;
-  left: 10px;
+  left: 0px;
   top: 20px;
   width: 220px;
   height: 21px;
@@ -162,14 +183,17 @@ canvas {
   background-color: rgb(255,255,255);
   border-style: none;
   opacity: 1;
-  font-size: 14px;
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+  font-size: 16px;
   border-color: DodgerBlue;
 }
 
 #input_field_Trxr {
   position: absolute;
   left: 180px;
-  top: 29px;
+  top: 32px;
   width: 70px;
   height: 21px;
 border-width: 1px;
@@ -177,6 +201,9 @@ border-width: 1px;
   background-color: rgb(255,255,255);
 border-style: solid;
   opacity: 1;
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
 }
 
 /* example @media for responsive design */

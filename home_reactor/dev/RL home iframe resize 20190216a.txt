@@ -1,0 +1,35 @@
+Our objective is to encourage active learning with interactive simulations. Below is a quick example. Click the React button, then Empty, Fill and React again. Before reacting, you can change the temperature (hit enter/return key or click out of field after changing). <a href="http://reactorlab.net/web-labs/"><i>More Web Labs here</i></a>. &nbsp;<noscript><a href="https://enable-javascript.com/"><img src="http://reactorlab.net/wp-content/uploads/2018/03/js-click-info.png" alt="Javascript must be enabled" width="253" height="18" class="alignnone size-full wp-image-1506"/></a></noscript>
+
+<iframe id="idIframe" src="https://reactorlab.net/web_labs/home_reactor/index.html"></iframe>
+The image is a schematic cross section of a cylindrical reactor and outer, annular heat transfer jacket. This type of reactor is called a batch reactor, since it makes product in batches vs. continuously. The reactant is blue. The product is red. The reaction rate is directly proportional to the reactant concentration: the rate is fast initially and then slows down as reactant is converted to product. The composition at equilibrium is almost all product. The temperature is uniform spatially due to good mixing, and is held constant by a control system and heat transfer to fluid circulating in the heat transfer jacket.
+
+Please see our current work at the <a href="http://reactorlab.net/web-labs/"><i>WEB LABS</i></a> menu tab.
+
+Our desktop software can be downloaded at the <a href="http://reactorlab.net/download/"><i>DOWNLOAD</i></a> menu tab.
+
+<em>March, 2018 marks <a href="http://reactorlab.net/2018/03/10/25th-anniversary-of-reactor-lab-this-month/">25 years of Reactor Lab</a>.</em>
+
+We are interested in hearing your comments, suggestions, or a quick "We are using the Lab." Please email&nbsp;us at <sub><img class="alignnone size-full wp-image-1902" src="http://reactorlab.net/wp-content/uploads/2019/02/mrc.png" alt="" width="180" height="17.6"></sub>
+
+
+================= SCRIPTS N STYLES PLUGIN - ADD JS TO HEAD TAG OF PAGE ==============
+
+// stackoverflow.com/questions/12781205/live-detect-browser-size-jquery-javascript
+// answered Oct 8 '12 at 12:37 by Matt Coughlin
+//
+function jsUpdateSize(){
+    // Get the dimensions of the viewport
+	var iFrameID = "idIframe";
+	var el = document.getElementById(iFrameID);
+    var width = window.innerWidth;
+	var height = window.innerHeight;
+	// adjust iFrame
+	el.width = width;
+	if (width < 640){
+	  el.height = "520";
+	} else {
+	  el.height = "270";
+	}
+};
+window.onload = jsUpdateSize;       // When the page first loads
+window.onresize = jsUpdateSize;     // When the browser changes size

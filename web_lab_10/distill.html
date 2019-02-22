@@ -1,0 +1,64 @@
+<script>
+
+  // assume const recycle ratio, const pressure
+  // assume pseudo-SS in neck (stage 2) from w2 approx 0
+  // assume close approach to vapor-liquid equilibrium at all times
+
+  const r = 0.2; // recycle ratio from neck back to still
+  const p = 101.325; // (Pa), total pressure
+  let w = 100; // (mol), total moles in reactor
+  let x = 0.5; // mole fraction of light key in still
+  let y1 = 0; // vapor mole fract in still set by x
+  let y2 = 0; // vapor mole fract in neck
+
+  let equil = {
+
+    // return y given x
+    getY : function(x) {
+      // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
+      // of data from http://vle-calc.com/
+      // 1.0e+03 * (-0.2951    1.2922   -2.3519    2.3051   -1.3187    0.4478   -0.0882    0.0098    0.0000)
+      let c = [-0.2951,1.2922,-2.3519,2.3051,-1.3187,0.4478,-0.0882,0.0098,0.0000];
+      let y = 0;
+      let n = 8; // order of poly
+      for (i = 0; i < n+1; i++) {
+        y = y + 1.0e+03 * c[i] * Math.pow(x,n-i);
+      }
+      return y;
+    },
+
+  // return T (deg C) given x
+  getT : function(x) {
+    // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
+    // of data from http://vle-calc.com/
+    // 1.0e+04 * (0.5932   -2.6458    4.9219   -4.9565    2.9390   -1.0490    0.2229   -0.0279    0.0100)
+    let c = [0.5932,-2.6458,4.9219,-4.9565,2.9390,-1.0490,0.2229,-0.0279,0.0100];
+    let t = 0;
+    let n = 8; // order of poly
+    for (i = 0; i < n+1; i++) {
+      t = t + 1.0e+04 * c[i] * Math.pow(x,n-i);
+    }
+    return t;
+  },
+
+    // function to return y2 and x2 given y1 with const r
+
+  } // END object equil
+
+  // x and w change with time
+  // fix dw/dt = const < 0
+  // v2 = -dw/dt = const > 0
+  // step in time dx/dt and dw/dt
+  // dx/dt = (v2/w)*(x - y2) from pseudo-SS (w2 approx 0)...
+  // total mol and light key mol balances around neck (stage 2) & const r
+  // need to get y2 from x and r
+  // at any time, know current x
+  // get current y1 from equil...
+  // then find condition where x2 and y2 solve equation
+  // y1 = (1-r)*y2 + r*x2
+  // then use y2 in dx/dt = (v2/w)*(x - y2)
+
+  console.log('y = ' + equil.getY(0.6));
+  console.log('T = ' + equil.getT(0.6));
+
+</script>

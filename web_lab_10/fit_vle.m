@@ -1,7 +1,7 @@
 % http://vle-calc.com/
 % P = 1 atm = 1.01325 bar 
 % TEMPERATURE 	x1 (ethanol) 	y1 (ethanol)
-% �C 	mol/mol 	mol/mol
+% deg C 	mol/mol 	mol/mol
 d = [100.441 	0 	0
 97.5835 	0.01 	0.11164
 95.2475 	0.02 	0.191085

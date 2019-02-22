@@ -6,15 +6,11 @@
 
   const r = 0.2; // recycle ratio from neck back to still
   const p = 101.325; // (Pa), total pressure
-  let w = 100; // (mol), total moles in reactor
-  let x = 0.5; // mole fraction of light key in still
-  let y1 = 0; // vapor mole fract in still set by x
-  let y2 = 0; // vapor mole fract in neck
 
   let equil = {
 
-    // return y given x
     getY : function(x) {
+      // return y given x
       // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
       // of data from http://vle-calc.com/
       // 1.0e+03 * (-0.2951    1.2922   -2.3519    2.3051   -1.3187    0.4478   -0.0882    0.0098    0.0000)
@@ -27,38 +23,103 @@
       return y;
     },
 
-  // return T (deg C) given x
   getT : function(x) {
+    // return T (deg C) given x
     // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
     // of data from http://vle-calc.com/
     // 1.0e+04 * (0.5932   -2.6458    4.9219   -4.9565    2.9390   -1.0490    0.2229   -0.0279    0.0100)
     let c = [0.5932,-2.6458,4.9219,-4.9565,2.9390,-1.0490,0.2229,-0.0279,0.0100];
-    let t = 0;
+    let T = 0;
     let n = 8; // order of poly
     for (i = 0; i < n+1; i++) {
-      t = t + 1.0e+04 * c[i] * Math.pow(x,n-i);
+      T = T + 1.0e+04 * c[i] * Math.pow(x,n-i);
     }
-    return t;
+    return T;
   },
 
-    // function to return y2 and x2 given y1 with const r
+    getX2 : function(y) {
+      // return y2 and x2 given y = y1 and r
+      // same equation rearranged below
+      // from total mol and light key mol bal around neck
+      // y2 - (y - r*x2)/ (1-r) = 0 ... LHS < 0 for x2 = y2 = 0
+      // y - (1-r)*y2 - r*x2 = 0 ... LHS > 0 for x2 = y2 = 0
+      let x2 = 0;
+      let y2 = 0;
+      let inc = 0.01;
+      let lhs = 1; // any initial value > 0
+      // pick an x2 value, use getY(x) to get y2 value, see if zero
+      // get started with something crude
+      // here use zero-crossing
+      while (lhs > 0) {
+        x2 = x2 + inc;
+        y2 = this.getY(x2);
+        lhs = y - (1-r)*y2 - r*x2;
+      }
+      return x2;
+    }
 
   } // END object equil
 
-  // x and w change with time
+  // test functions
+  console.log('y = ' + equil.getY(0.6));
+  console.log('T = ' + equil.getT(0.6));
+  let xx = 0.5;
+  let yx = equil.getY(xx);
+  let x2x = equil.getX2(yx);
+  let y2x = equil.getY(x2x);
+  console.log('xx = 0.5, yx = ' + yx + ', y2x = ' + y2x);
+
   // fix dw/dt = const < 0
   // v2 = -dw/dt = const > 0
   // step in time dx/dt and dw/dt
   // dx/dt = (v2/w)*(x - y2) from pseudo-SS (w2 approx 0)...
-  // total mol and light key mol balances around neck (stage 2) & const r
-  // need to get y2 from x and r
-  // at any time, know current x
-  // get current y1 from equil...
-  // then find condition where x2 and y2 solve equation
-  // y1 = (1-r)*y2 + r*x2
-  // then use y2 in dx/dt = (v2/w)*(x - y2)
+  let y = 0;
+  let x2 = 0;
+  let dxdt = 0;
+  let dwdt = 0;
+  let v2 = 0.1;
+  let x = [];
+  let w = [];
+  let T = [];
+  let y2 = [];
+  let t = [];
+  x[0] = 0.50;
+  w[0] = 100;
+  T[0] = equil.getT(x[0]);
+  t[0] = 0;
+  dt = 1;
+  for (k = 0; k < 800; k++) {
+    y = equil.getY(x[k]);
+    // console.log('y = ' + y);
+    x2 = equil.getX2(y);
+    // console.log('x2 = ' + x2);
+    y2[k] = equil.getY(x2);
+    // console.log('y2[k] = ' + y2[k]);
+    // console.log('v2 = ' + v2);
+    // console.log('k = ' + k);
+    // console.log('w[k] = ' + w[k] );
+    // console.log('x[k] = ' + x[k] );
+    dxdt = ( v2 / w[k] ) * ( x[k] - y2[k] );
+    // console.log('dxdt = ' + dxdt);
+    dwdt = -v2;
+    // console.log('dwdt = ' + dwdt);
+    x[k+1] = x[k] + dxdt * dt;
+    w[k+1] = w[k] + dwdt * dt;
+    T[k+1] = equil.getT(x[k+1]);
+    // xxx doing lines below twice in same loop...
+    y = equil.getY(x[k+1]);
+    x2 = equil.getX2(y);
+    y2[k+1] = equil.getY(x2);
+    t[k+1] = t[k] + dt;
+  }
 
-  console.log('y = ' + equil.getY(0.6));
-  console.log('T = ' + equil.getT(0.6));
+  let n = 0
+  console.log('t,w,T,x,y2 = '+t[n]+', '+w[n]+', '+T[n]+', '+x[n]+', '+y2[n]);
+  n = 100;
+  console.log('t,w,T,x,y2 = '+t[n]+', '+w[n]+', '+T[n]+', '+x[n]+', '+y2[n]);
+  n = 500;
+  console.log('t,w,T,x,y2 = '+t[n]+', '+w[n]+', '+T[n]+', '+x[n]+', '+y2[n]);
+  n = 800;
+  console.log('t,w,T,x,y2 = '+t[n]+', '+w[n]+', '+T[n]+', '+x[n]+', '+y2[n]);
 
 </script>

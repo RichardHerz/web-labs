@@ -39,7 +39,14 @@ function puSpiritStill(pUnitIndex) {
   const thisSteamFieldID = 'input_field_enterSteam';
 
   // define additional internal variables
-  let steam = 0;
+  let steam = 0; // percent max steam input to pot
+  let x = 0; // ethanol molar conc in pot liquid
+  let y = 0; // ethanol molar conc in pot vapor
+  let y2 = 0; // ethanol molar conc in neck vapor
+  let w = 0; // (mol), total moles liquid in pot
+  let v = 0; // (mol/s), vapor product flow rate from neck
+  let pT = 0; // (deg C), pot temperature
+  let nT = 0; // (deg C), neck temperature
 
   // *****************************************
   //         define PUBLIC properties
@@ -48,7 +55,7 @@ function puSpiritStill(pUnitIndex) {
   this.name = 'process unit Spirit Still'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
-  this.recycleRatio = 0.2;
+  this.recycleRatio = 0.2; // used by equil.getX2 function
 
   // define arrays to hold data for plots, color canvas
   // these arrays will be used by plotter object
@@ -152,6 +159,12 @@ function puSpiritStill(pUnitIndex) {
       document.getElementById(thisSteamFieldID).value = this.dataInitial[1];
     }
 
+    w = 100; // initial total moles charged to pot
+    x = 0.5; // initial mole fraction ethanol charged to pot 
+    y = equil.getY(x);
+    let x2 = equil.getX2(y);
+    y2 = equil.getY(x2);
+
     // update display
     this.updateDisplay();
 
@@ -229,10 +242,29 @@ function puSpiritStill(pUnitIndex) {
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
+    // // define additional internal variables
+    // let steam = 0; // percent max steam input to pot
+    // let x = 0; // ethanol molar conc in pot liquid
+    // let y = 0; // ethanol molar conc in pot vapor
+    // let y2 = 0; // ethanol molar conc in neck vapor
+    // let w = 0; // (mol), total moles liquid in pot
+    // let pT = 0; // (deg C), pot temperature
+    // let nT = 0; // (deg C), neck temperature
 
+    // set reset method for initialization of values
 
-    // conc = newConc;
-    // this.biomass = newBiomass;
+    v = 0.1 * steam;
+
+    dxdt = (v / w) * (x - y2);
+    dwdt = -v;
+
+    x = x + dxdt * unitTimeStep;
+    w = w + dwdt * unitTimeStep;
+
+    // update y, y2, x2 for new x
+    y = equil.getY(x);
+    let x2 = equil.getX2(y);
+    y2 = equil.getY(x2);
 
   } // END of updateState() method
 

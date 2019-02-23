@@ -57,22 +57,22 @@ let equil = {
       y = y + 1.0e+03 * c[i] * Math.pow(x,n-i);
     }
     return y;
-  },
+  }, // END function getY
 
-getT : function(x) {
-  // return T (deg C) given x
-  // use a quick fit to get started...
-  // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
-  // of data from http://vle-calc.com/
-  // 1.0e+04 * (0.5932   -2.6458    4.9219   -4.9565    2.9390   -1.0490    0.2229   -0.0279    0.0100)
-  let c = [0.5932,-2.6458,4.9219,-4.9565,2.9390,-1.0490,0.2229,-0.0279,0.0100];
-  let T = 0;
-  let n = 8; // order of poly
-  for (i = 0; i < n+1; i++) {
-    T = T + 1.0e+04 * c[i] * Math.pow(x,n-i);
-  }
-  return T;
-},
+  getT : function(x) {
+    // return T (deg C) given x
+    // use a quick fit to get started...
+    // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
+    // of data from http://vle-calc.com/
+    // 1.0e+04 * (0.5932   -2.6458    4.9219   -4.9565    2.9390   -1.0490    0.2229   -0.0279    0.0100)
+    let c = [0.5932,-2.6458,4.9219,-4.9565,2.9390,-1.0490,0.2229,-0.0279,0.0100];
+    let T = 0;
+    let n = 8; // order of poly
+    for (i = 0; i < n+1; i++) {
+      T = T + 1.0e+04 * c[i] * Math.pow(x,n-i);
+    }
+    return T;
+  }, // END function getT
 
   getX2 : function(y) {
     // uses processUnits[0].recycleRatio
@@ -86,15 +86,14 @@ getT : function(x) {
     let y2 = 0;
     let inc = 0.01;
     let lhs = 1; // any initial value > 0
-    // pick an x2 value, use getY(x) to get y2 value, see if zero
-    // use a quick fix to get started...
-    // here use zero-crossing
+    // pick an x2 value, use getY(x) to get y2 value, get lhs to zero
+    // use a quick fix to get started... zero-crossing
     while (lhs > 0) {
       x2 = x2 + inc;
       y2 = this.getY(x2);
       lhs = y - (1-r)*y2 - r*x2;
     }
     return x2;
-  }
+  } // END function getX2
 
 } // END object equil

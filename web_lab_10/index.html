@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>Web Labs at ReactorLab.net</title>
+
+  <meta name='description' content='batch distillation'>
+  <meta name='description' content='distillation>
+  <meta name='description' content='designed with lcCardLayoutToWeb project at GitHub'>
+
+  <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
+  <!-- ID used to modify with Javascript after initial loading - OR EDIT HERE -->
+  <!-- suggest use content width = div_simFrame width + 2 * div_simFrame left, and no scale -->
+  <meta id='meta-viewport' name='viewport' content='width=650'>
+
+  <!-- load CSS style sheets for this lab  -->
+  <link rel="stylesheet" href="css/index.css">
+
+  <!-- load COMMON CSS style sheets for this lab  -->
+  <link rel="stylesheet" href="../web_labs_CSS/common.css">
+
+  <!-- load SPECIFIC JAVASCRIPT for this lab -->
+
+  <script language="javascript" src="js/process_sim_params.js" type="text/javascript"></script>
+  <script language="javascript" src="js/puSpiritStill.js" type="text/javascript"></script>
+  <script language="javascript" src="js/process_units.js" type="text/javascript"></script>
+  <script language="javascript" src="js/process_plot_info.js" type="text/javascript"></script>
+
+  <!-- load COMMON JAVASCRIPT for Web Labs -->
+  <script language="javascript" src="../web_labs_JS/process_controller.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_interfacer.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_plotter_flot.js" type="text/javascript"></script>
+
+  <!-- load flot.js PLOTTING LIBRARY -->
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery.flot.min-0.8.3.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery.flot.axislabels-20141122.js" type="text/javascript"></script>
+
+  <!-- initialize simulation after loading of this window -->
+  <script language="javascript">
+      // this works as script in html file but not in external js files
+      window.onload = controller.openThisLab; // can NOT use () after openThisLab
+  </script>
+
+</head>
+  <body>
+    <div id="div_page_header">
+      <p>
+      <a href="http://reactorlab.net/web-labs/">Back</a> to Web Labs at ReactorLab.net
+      <p><b><i>Under Development</i></b></p>
+      <p>
+       Starting to develop a simulation of a Scotch Whisky Distillery, starting with the spirit still.
+      </p>
+    </div> <!-- end of div div_page_header -->
+    <div id="div_simFrame">
+      <div id="div_PLOTDIV_plotData">
+      </div> <!-- end of div div_PLOTDIV_plotData -->
+      <img id="image_pot_still_image" src="images/scotch-pot-still.png">
+      <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
+      <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
+      <input type="range" id="range_steamSLIDER" min="0" max="100" step="1" value="0">
+      <p id="field_enterSteamLABEL">
+          Steam
+      </p>
+      <input id="input_field_enterSteam" value="0" onchange="processUnits[0].updateUIparams()">
+      <div id="div_spirit_switch">
+          <label id="radio_mid_cut_LABEL" name="radio_of_div_spirit_switch">
+                <input type="radio" id="radio_mid_cut" name="radio_of_div_spirit_switch" onchange="processUnits[0].changeMode()">
+                <span id="radio_mid_cut_SPAN">mid</span>
+          </label>
+          <label id="radio_low_cut_LABEL" name="radio_of_div_spirit_switch">
+                <input type="radio" id="radio_low_cut" name="radio_of_div_spirit_switch" onchange="processUnits[0].changeMode()">
+                <span id="radio_low_cut_SPAN">low</span>
+          </label>
+          <label id="radio_high_cut_LABEL" name="radio_of_div_spirit_switch">
+                <input type="radio" id="radio_high_cut" name="radio_of_div_spirit_switch" checked onchange="processUnits[0].changeMode()">
+                <span id="radio_high_cut_SPAN">high</span>
+          </label>
+      </div> <!-- end of div div_spirit_switch -->
+      <p id="field_highPercentLABEL">
+          high %
+      </p>
+      <p id="field_highPercent" onchange="processUnits[0].updateUIparams()" value="0">
+          0
+      </p>
+      <p id="field_highAmt" onchange="processUnits[0].updateUIparams()" value="0">
+          0
+      </p>
+      <p id="field_highAmtLABEL">
+          high amt
+      </p>
+      <p id="field_midAmt" onchange="processUnits[0].updateUIparams()" value="0">
+          0
+      </p>
+      <p id="field_midPercentLABEL">
+          mid %
+      </p>
+      <p id="field_midPercent" onchange="processUnits[0].updateUIparams()" value="0">
+          0
+      </p>
+      <p id="field_midAmtLABEL">
+          mid amt
+      </p>
+      <p id="field_lowAmt" onchange="processUnits[0].updateUIparams()" value="0">
+          0
+      </p>
+      <p id="field_lowPercentLABEL">
+          low %
+      </p>
+      <p id="field_lowPercent" onchange="processUnits[0].updateUIparams()" value="0">
+          0
+      </p>
+      <p id="field_lowAmtLABEL">
+          low amt
+      </p>
+    </div> <!-- end of div div_simFrame -->
+  </body>
+</html>

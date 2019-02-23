@@ -1,0 +1,467 @@
+sup {
+  font-size: smaller;
+}
+
+sub {
+  font-size: smaller;
+}
+
+input {
+  display: block;
+  position: absolute;
+  text-align: center;
+}
+
+input, button {
+  text-align: center;
+}
+
+/* do NOT write general style for div since interferes
+    with plotting by jquery.flot.js */
+
+p {
+  display: block;
+  text-align: left;
+}
+
+label {
+  display: block;
+  position: absolute;
+}
+
+img {
+  display: block;
+  position: absolute;
+}
+
+select {
+  display: block;
+  position: absolute;
+}
+
+canvas {
+  display: block;
+  position: absolute;
+  text-align: left;
+}
+
+::-ms-tooltip {
+  display: none;
+}
+
+#div_simFrame {
+  display: block;
+  position: relative;
+  border-color: DodgerBlue;
+  left: 11px;
+  top: 20px;
+  width: 975px;
+  height: 612px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: false;
+}
+
+#image_pot_still_image {
+  position: absolute;
+  left: 13px;
+  top: 52px;
+  width: 506px;
+  height: 357px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  border-width: 1px;
+  background-color: rgba(255, 255, 255, 1);
+  LCthreeD: false;
+  LCshowBorder: false;
+}
+
+#button_runButton {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 70px;
+  height: 24px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#button_resetButton {
+  position: absolute;
+  left: 84px;
+  top: 4px;
+  width: 70px;
+  height: 24px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#div_PLOTDIV_plotData {
+  display: block;
+  position: absolute;
+  left: 541px;
+  top: 59px;
+  width: 430px;
+  height: 248px;
+  visibility: visible;
+  border-width: 1px;
+  border-style: outset;
+  opacity: 1;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: false;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#range_steamSLIDER {
+  left: 44px;
+  top: 470px;
+  width: 233px;
+  height: 17px;
+}
+
+#field_enterSteamLABEL {
+  position: absolute;
+  left: 93px;
+  top: 418px;
+  width: 106px;
+  height: 25px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+  text-align: right;
+}
+
+#input_field_enterSteam {
+  position: absolute;
+  left: 205px;
+  top: 434px;
+  width: 72px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  font-size: 14px;
+  text-align: center;
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#div_spirit_switch {
+  display: block;
+  position: absolute;
+  border-color: DodgerBlue;
+  left: 359px;
+  top: 299px;
+  width: 187px;
+  height: 37px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: false;
+}
+
+#radio_mid_cut_LABEL {
+  display: block;
+  position: absolute;
+  width: 71px;
+  height: 28px;
+  left: 58px;
+  top: 4px;
+}
+
+#radio_mid_cut_SPAN {
+  margin-left: 22px;
+  line-height: 22px;
+  font-size: 15px;
+}
+
+#radio_low_cut_LABEL {
+  display: block;
+  position: absolute;
+  width: 71px;
+  height: 28px;
+  left: 4px;
+  top: 5px;
+}
+
+#radio_low_cut_SPAN {
+  margin-left: 22px;
+  line-height: 22px;
+  font-size: 15px;
+}
+
+#radio_high_cut_LABEL {
+  display: block;
+  position: absolute;
+  width: 71px;
+  height: 28px;
+  left: 112px;
+  top: 4px;
+}
+
+#radio_high_cut_SPAN {
+  margin-left: 22px;
+  line-height: 22px;
+  font-size: 15px;
+}
+
+#field_highPercentLABEL {
+  position: absolute;
+  left: 299px;
+  top: 406px;
+  width: 106px;
+  height: 25px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+  text-align: right;
+}
+
+#field_highPercent {
+  position: absolute;
+  left: 412px;
+  top: 406px;
+  width: 72px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  text-align: center;
+  border-color: DodgerBlue;
+}
+
+#field_highAmt {
+  position: absolute;
+  left: 411px;
+  top: 438px;
+  width: 72px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  text-align: center;
+  border-color: DodgerBlue;
+}
+
+#field_highAmtLABEL {
+  position: absolute;
+  left: 299px;
+  top: 439px;
+  width: 106px;
+  height: 25px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+  text-align: right;
+}
+
+#field_midAmt {
+  position: absolute;
+  left: 419px;
+  top: 501px;
+  width: 72px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  text-align: center;
+  border-color: DodgerBlue;
+}
+
+#field_midPercentLABEL {
+  position: absolute;
+  left: 307px;
+  top: 470px;
+  width: 106px;
+  height: 25px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+  text-align: right;
+}
+
+#field_midPercent {
+  position: absolute;
+  left: 419px;
+  top: 469px;
+  width: 72px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  text-align: center;
+  border-color: DodgerBlue;
+}
+
+#field_midAmtLABEL {
+  position: absolute;
+  left: 307px;
+  top: 502px;
+  width: 106px;
+  height: 25px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+  text-align: right;
+}
+
+#field_lowPercentLABEL {
+  position: absolute;
+  left: 317px;
+  top: 536px;
+  width: 106px;
+  height: 25px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+  text-align: right;
+}
+
+#field_lowPercent {
+  position: absolute;
+  left: 429px;
+  top: 534px;
+  width: 72px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  text-align: center;
+  border-color: DodgerBlue;
+}
+
+#field_lowAmtLABEL {
+  position: absolute;
+  left: 317px;
+  top: 567px;
+  width: 106px;
+  height: 25px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+  text-align: right;
+}
+
+#field_lowAmt {
+  position: absolute;
+  left: 429px;
+  top: 566px;
+  width: 72px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16 px;
+  text-align: center;
+  border-color: DodgerBlue;
+}
+
+/* example @media for responsive design */
+/* requires meta viewport element in HTML head */
+@media(max-width: 640px) {
+  /* change the following when the screen width is <= 640px */
+  /* #div_controller {
+    top: 600px;
+    left: 20px;
+   } */
+}

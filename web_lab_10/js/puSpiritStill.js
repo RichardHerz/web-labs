@@ -39,12 +39,13 @@ function puSpiritStill(pUnitIndex) {
   const thisSteamFieldID = 'input_field_enterSteam';
 
   // define additional internal variables
-  let steam = 0; // percent max steam input to pot
   let x = 0; // ethanol molar conc in pot liquid
   let y = 0; // ethanol molar conc in pot vapor
   let y2 = 0; // ethanol molar conc in neck vapor
-  let w = 0; // (mol), total moles liquid in pot
-  let v = 0; // (mol/s), vapor product flow rate from neck
+  let x2 = 0; // ethanol molar conc in recycled neck liquid
+  const w0 = 100; // (mol), initial total moles liquid charged to pot
+  let w = w0; // (mol), total moles liquid in pot
+  let vrate = 0; // (mol/s), vapor product flow rate from neck
   let pT = 0; // (deg C), pot temperature
   let nT = 0; // (deg C), neck temperature
 
@@ -55,7 +56,8 @@ function puSpiritStill(pUnitIndex) {
   this.name = 'process unit Spirit Still'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
-  this.recycleRatio = 0.2; // used by equil.getX2 function
+  this.recycleRatio = 0.25; // used by equil.getX2 function
+  this.steam = 0;
 
   // define arrays to hold data for plots, color canvas
   // these arrays will be used by plotter object
@@ -146,11 +148,11 @@ function puSpiritStill(pUnitIndex) {
 
     // each unit has its own data arrays for plots and canvases
 
-    // // initialize strip chart data array
-    // // initPlotData(numStripVars,numStripPts)
-    // const numStripVars = 2; // substrate conc, biomass conc in reactor
-    // const numStripPts = plotInfo[0]['numberPoints'];
-    // this.stripData = plotter.initPlotData(numStripVars,numStripPts);
+    // initialize strip chart data array
+    // initPlotData(numStripVars,numStripPts)
+    const numStripVars = 6; // w/w0, x, y, y2, pT, nT
+    const numStripPts = plotInfo[0]['numberPoints'];
+    this.stripData = plotter.initPlotData(numStripVars,numStripPts);
 
     if (document.getElementById(thisSteamSliderID)) {
       document.getElementById(thisSteamSliderID).value = this.dataInitial[0];
@@ -159,11 +161,13 @@ function puSpiritStill(pUnitIndex) {
       document.getElementById(thisSteamFieldID).value = this.dataInitial[1];
     }
 
-    w = 100; // initial total moles charged to pot
-    x = 0.5; // initial mole fraction ethanol charged to pot 
+    w = w0; // initial total moles charged to pot
+    x = 0.5; // initial mole fraction ethanol charged to pot
     y = equil.getY(x);
-    let x2 = equil.getX2(y);
+    x2 = equil.getX2(y);
     y2 = equil.getY(x2);
+    pT = equil.getT(x);
+    nT = equil.getT(x2);
 
     // update display
     this.updateDisplay();
@@ -242,29 +246,26 @@ function puSpiritStill(pUnitIndex) {
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-    // // define additional internal variables
-    // let steam = 0; // percent max steam input to pot
-    // let x = 0; // ethanol molar conc in pot liquid
-    // let y = 0; // ethanol molar conc in pot vapor
-    // let y2 = 0; // ethanol molar conc in neck vapor
-    // let w = 0; // (mol), total moles liquid in pot
-    // let pT = 0; // (deg C), pot temperature
-    // let nT = 0; // (deg C), neck temperature
+    // see reset method for initialization of values
+    vrate = 0.001 * this.steam;
+    let j = 0; // index
+    let dxdt = 0;
+    let dwdt = 0;
 
-    // set reset method for initialization of values
-
-    v = 0.1 * steam;
-
-    dxdt = (v / w) * (x - y2);
-    dwdt = -v;
-
-    x = x + dxdt * unitTimeStep;
-    w = w + dwdt * unitTimeStep;
-
-    // update y, y2, x2 for new x
-    y = equil.getY(x);
-    let x2 = equil.getX2(y);
-    y2 = equil.getY(x2);
+    for (j = 0; j < unitStepRepeats; j++) {
+      if (w > 0) {
+        dxdt = (vrate / w) * (x - y2);
+        dwdt = -vrate;
+        x = x + dxdt * unitTimeStep;
+        w = w + dwdt * unitTimeStep;
+        // update variables for new x
+        y = equil.getY(x);
+        x2 = equil.getX2(y);
+        y2 = equil.getY(x2);
+        pT = equil.getT(x);
+        nT = equil.getT(x2);
+      }
+    }
 
   } // END of updateState() method
 
@@ -273,61 +274,86 @@ function puSpiritStill(pUnitIndex) {
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
-    // let el = document.querySelector(theDisplayReactorContentsID);
-    //
-    // const colorMax = 240;
-    // const biomassMax = this.dataMax[5];
-    // let cValue = Math.round((this.biomass)/biomassMax * colorMax);
-    // let concR = colorMax - cValue;
-    // let concG = colorMax;
-    // let concB = colorMax - cValue;;
-    //
-    // let concColor = "rgb(" + concR + ", " + concG + ", " + concB + ")";
-    // // "background-color" in index.css did not work
-    // el.style.backgroundColor = concColor;
-    //
-    // // console.log('updateDisplay, el.style.backgroundColor = ' + el.style.backgroundColor);
-    //
-    // // HANDLE STRIP CHART DATA
-    //
-    // let v = 0; // used as index
-    // let p = 0; // used as index
-    // let tempArray = [];
-    // let numStripPoints = plotInfo[0]['numberPoints'];
-    // let numStripVars = 2; // only the variables from this unit
-    //
-    // // handle biomass
-    // v = 0;
-    // tempArray = this.stripData[v]; // work on one plot variable at a time
-    // // delete first and oldest element which is an [x,y] pair array
-    // tempArray.shift();
-    // // add the new [x.y] pair array at end
-    // tempArray.push( [0,this.biomass] );
-    // // update the variable being processed
-    // this.stripData[v] = tempArray;
-    //
-    // // handle conc
-    // v = 1;
-    // tempArray = this.stripData[v]; // work on one plot variable at a time
-    // // delete first and oldest element which is an [x,y] pair array
-    // tempArray.shift();
-    // // add the new [x.y] pair array at end
-    // tempArray.push( [0,conc] );
-    // // update the variable being processed
-    // this.stripData[v] = tempArray;
-    //
-    // // re-number the x-axis values to equal time values
-    // // so they stay the same after updating y-axis values
-    // let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
-    // for (v = 0; v < numStripVars; v += 1) {
-    //   for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
-    //     // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
-    //     // want next line for newest data at max time
-    //     this.stripData[v][p][0] = p * timeStep;
-    //     // want next line for newest data at zero time
-    //     // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
-    //   }
-    // }
+    // HANDLE STRIP CHART DATA
+
+    let v = 0; // used as index
+    let p = 0; // used as index
+    let tempArray = [];
+    let numStripPoints = plotInfo[0]['numberPoints'];
+    let numStripVars = 6; // only the variables from this unit
+
+    // handle w/w0
+    v = 0;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [0,w/w0] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // handle x
+    v = 1;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [0,x] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // handle y
+    v = 2;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [0,y] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // handle y2
+    v = 3;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [0,y2] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // handle pT
+    v = 4;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [0,pT] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // handle nT
+    v = 5;
+    tempArray = this.stripData[v]; // work on one plot variable at a time
+    // delete first and oldest element which is an [x,y] pair array
+    tempArray.shift();
+    // add the new [x.y] pair array at end
+    tempArray.push( [0,nT] );
+    // update the variable being processed
+    this.stripData[v] = tempArray;
+
+    // re-number the x-axis values to equal time values
+    // so they stay the same after updating y-axis values
+    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    for (v = 0; v < numStripVars; v += 1) {
+      for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
+        // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
+        // want next line for newest data at max time
+        this.stripData[v][p][0] = p * timeStep;
+        // want next line for newest data at zero time
+        // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
+      }
+    }
 
   } // END of updateDisplay() method
 

@@ -32,8 +32,11 @@ function puSpiritStill(pUnitIndex) {
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in checkForSteadyState method
 
-  // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
-  // const theDisplayReactorContentsID = "#div_PLOTDIV_reactorContents";
+  // CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS
+  // **** currently use these but also see IDs in initialize method, where
+  // **** they are not currently used - which is best?
+  const thisSteamSliderID = 'range_steamSlider';
+  const thisSteamFieldID = 'input_field_enterSteam';
 
   // define additional internal variables
   let steam = 0;
@@ -78,15 +81,26 @@ function puSpiritStill(pUnitIndex) {
     //
     // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
     //
-    v = 0;
+    let v = 0;
+    this.dataHeaders[v] = 'Steam';
+    this.dataInputs[v] = 'range_steamSlider'; // id of input
+    this.dataUnits[v] = '';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 100;
+    this.dataInitial[v] = 0;
+    this.steam = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.steam; // current input oalue for reporting
+    //
+    v = 1;
     this.dataHeaders[v] = 'Steam';
     this.dataInputs[v] = 'input_field_enterSteam';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
     this.dataInitial[v] = 0;
-    steam = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = steam; // current input oalue for reporting
+    this.steam = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.steam; // current input oalue for reporting
+    //
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -97,13 +111,13 @@ function puSpiritStill(pUnitIndex) {
     // OPTIONAL - add entries for output variables if want to use min-max to
     //            constrain values in updateState or dimensional units in plotInfo
     //
-    // v = 1;
+    // v = 2;
     // this.dataHeaders[v] = 'Biomass Conc';
     // this.dataUnits[v] =  'kg/m3';
     // this.dataMin[v] = 0;
     // this.dataMax[v] = 30;
     //
-  } // END of initialize() method
+  } // END of initialize()
 
   this.reset = function() {
     //
@@ -123,16 +137,20 @@ function puSpiritStill(pUnitIndex) {
     // set to zero ssCheckSum used to check for steady state by this unit
     ssCheckSum = 0;
 
-    this.biomass = 1.322; // biomass in reactor, need > 0 initially or no growth
-    conc = 0.3;
-
     // each unit has its own data arrays for plots and canvases
 
-    // initialize strip chart data array
-    // initPlotData(numStripVars,numStripPts)
-    const numStripVars = 2; // substrate conc, biomass conc in reactor
-    const numStripPts = plotInfo[0]['numberPoints'];
-    this.stripData = plotter.initPlotData(numStripVars,numStripPts);
+    // // initialize strip chart data array
+    // // initPlotData(numStripVars,numStripPts)
+    // const numStripVars = 2; // substrate conc, biomass conc in reactor
+    // const numStripPts = plotInfo[0]['numberPoints'];
+    // this.stripData = plotter.initPlotData(numStripVars,numStripPts);
+
+    if (document.getElementById(thisSteamSliderID)) {
+      document.getElementById(thisSteamSliderID).value = this.dataInitial[0];
+    }
+    if (document.getElementById(thisSteamFieldID)) {
+      document.getElementById(thisSteamFieldID).value = this.dataInitial[1];
+    }
 
     // update display
     this.updateDisplay();
@@ -158,13 +176,45 @@ function puSpiritStill(pUnitIndex) {
     //
     let unum = unitIndex;
     //
-    muMax = this.dataValues[0] = interfacer.getInputValue(unum, 0);
-    ks = this.dataValues[1] = interfacer.getInputValue(unum, 1);
-    alpha = this.dataValues[2] = interfacer.getInputValue(unum, 2);
-    beta = this.dataValues[3] = interfacer.getInputValue(unum, 3);
-    gamma = this.dataValues[4] = interfacer.getInputValue(unum, 4);
+    // muMax = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+
+    this.updateUIsteamInput();
 
   } // END of updateUIparams() method
+
+  this.updateUIsteamInput = function() {
+    // SPECIAL FOR THIS UNIT
+    // called in HTML input element so must be a publc method
+    let unum = unitIndex;
+    this.steam = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    // alert('inputfield: this.steam = ' + this.steam);
+    // update position of the range slider
+    if (document.getElementById(thisSteamSliderID)) {
+      document.getElementById(thisSteamSliderID).value = this.steam;
+    }
+    // need to reset controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    ssCheckSum = 1;
+  }, // END method updateUIfeedInput()
+
+  this.updateUIsteamSlider = function() {
+    // SPECIAL FOR THIS UNIT
+    // called in HTML input element so must be a publc method
+    let unum = unitIndex;
+    this.steam = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    // update input field display
+    // alert('slider: this.steam = ' + this.steam);
+    if (document.getElementById(thisSteamFieldID)) {
+      document.getElementById(thisSteamFieldID).value = this.steam;
+    }
+    // need to reset controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    ssCheckSum = 1;
+  } // END method updateUIfeedSlider()
 
   this.updateState = function() {
     //
@@ -179,30 +229,10 @@ function puSpiritStill(pUnitIndex) {
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-     // XXX equations from paper but does NOT seem dimensionlly consistent...
-     // XXX only dimensionally consistent if units of MUmax are m3/kg/h not 1/h....
-    let rxrVolume = 1; // (m3)
-    let G = muMax * conc / (ks + conc); // biomass growth rate
 
-    let Y = (alpha + beta * conc); // partial yield function
-    Y = Math.pow(Y,gamma); // complete yield function
-    let D = flowRate / rxrVolume; // dilution rate = space velocity
 
-    // console.log('RXR updateState, flowRate = '+flowRate);
-
-    let dCdt = D * (feedConc - conc) - (G / Y) * this.biomass;
-    let dC = unitTimeStep * dCdt;
-    let newConc = conc + dC;
-
-    let dBdt = (G - D) * this.biomass;
-    let dB = unitTimeStep * dBdt;
-    let newBiomass = this.biomass + dB;
-
-    if (newConc < 0){newConc = 0;}
-    if (newBiomass < 0){newBiomass = 0;}
-
-    conc = newConc;
-    this.biomass = newBiomass;
+    // conc = newConc;
+    // this.biomass = newBiomass;
 
   } // END of updateState() method
 
@@ -211,61 +241,61 @@ function puSpiritStill(pUnitIndex) {
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
-    let el = document.querySelector(theDisplayReactorContentsID);
-
-    const colorMax = 240;
-    const biomassMax = this.dataMax[5];
-    let cValue = Math.round((this.biomass)/biomassMax * colorMax);
-    let concR = colorMax - cValue;
-    let concG = colorMax;
-    let concB = colorMax - cValue;;
-
-    let concColor = "rgb(" + concR + ", " + concG + ", " + concB + ")";
-    // "background-color" in index.css did not work
-    el.style.backgroundColor = concColor;
-
-    // console.log('updateDisplay, el.style.backgroundColor = ' + el.style.backgroundColor);
-
-    // HANDLE STRIP CHART DATA
-
-    let v = 0; // used as index
-    let p = 0; // used as index
-    let tempArray = [];
-    let numStripPoints = plotInfo[0]['numberPoints'];
-    let numStripVars = 2; // only the variables from this unit
-
-    // handle biomass
-    v = 0;
-    tempArray = this.stripData[v]; // work on one plot variable at a time
-    // delete first and oldest element which is an [x,y] pair array
-    tempArray.shift();
-    // add the new [x.y] pair array at end
-    tempArray.push( [0,this.biomass] );
-    // update the variable being processed
-    this.stripData[v] = tempArray;
-
-    // handle conc
-    v = 1;
-    tempArray = this.stripData[v]; // work on one plot variable at a time
-    // delete first and oldest element which is an [x,y] pair array
-    tempArray.shift();
-    // add the new [x.y] pair array at end
-    tempArray.push( [0,conc] );
-    // update the variable being processed
-    this.stripData[v] = tempArray;
-
-    // re-number the x-axis values to equal time values
-    // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
-    for (v = 0; v < numStripVars; v += 1) {
-      for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
-        // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
-        // want next line for newest data at max time
-        this.stripData[v][p][0] = p * timeStep;
-        // want next line for newest data at zero time
-        // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
-      }
-    }
+    // let el = document.querySelector(theDisplayReactorContentsID);
+    //
+    // const colorMax = 240;
+    // const biomassMax = this.dataMax[5];
+    // let cValue = Math.round((this.biomass)/biomassMax * colorMax);
+    // let concR = colorMax - cValue;
+    // let concG = colorMax;
+    // let concB = colorMax - cValue;;
+    //
+    // let concColor = "rgb(" + concR + ", " + concG + ", " + concB + ")";
+    // // "background-color" in index.css did not work
+    // el.style.backgroundColor = concColor;
+    //
+    // // console.log('updateDisplay, el.style.backgroundColor = ' + el.style.backgroundColor);
+    //
+    // // HANDLE STRIP CHART DATA
+    //
+    // let v = 0; // used as index
+    // let p = 0; // used as index
+    // let tempArray = [];
+    // let numStripPoints = plotInfo[0]['numberPoints'];
+    // let numStripVars = 2; // only the variables from this unit
+    //
+    // // handle biomass
+    // v = 0;
+    // tempArray = this.stripData[v]; // work on one plot variable at a time
+    // // delete first and oldest element which is an [x,y] pair array
+    // tempArray.shift();
+    // // add the new [x.y] pair array at end
+    // tempArray.push( [0,this.biomass] );
+    // // update the variable being processed
+    // this.stripData[v] = tempArray;
+    //
+    // // handle conc
+    // v = 1;
+    // tempArray = this.stripData[v]; // work on one plot variable at a time
+    // // delete first and oldest element which is an [x,y] pair array
+    // tempArray.shift();
+    // // add the new [x.y] pair array at end
+    // tempArray.push( [0,conc] );
+    // // update the variable being processed
+    // this.stripData[v] = tempArray;
+    //
+    // // re-number the x-axis values to equal time values
+    // // so they stay the same after updating y-axis values
+    // let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    // for (v = 0; v < numStripVars; v += 1) {
+    //   for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
+    //     // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
+    //     // want next line for newest data at max time
+    //     this.stripData[v][p][0] = p * timeStep;
+    //     // want next line for newest data at zero time
+    //     // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
+    //   }
+    // }
 
   } // END of updateDisplay() method
 
@@ -281,38 +311,7 @@ function puSpiritStill(pUnitIndex) {
     // but wait at least one residence time after the previous check
     // to allow changes to propagate down unit
     //
-    // use conc at oldest time on plot in check
-    // as well as current conc in crt check
-    // in order to help ensure strip plot update doesn't stop unless plot flat
-    // AND use width of strip plot for residence time in updateInputs
-    // BUT NOT foolproof, e.g., with
-    // 1 K up then down changes at certain times
-    //
-    // multiply all numbers by a factor to get desired number significant
-    // figures to left decimal point so toFixed() does not return string "0.###"
-    // WARNING: too many sig figs will prevent detecting steady state
-    //
-    let unum = unitIndex;
-    let rc = 1.0e2 * this.stripData[unum][0][1]; // oldest biomass conc in rxr conc plot
-    let rt = 1.0e2 * this.biomass;
-    let lc = 1.0e2 * this.stripData[unum][1][1]; // oldest substrate conc in rxr conc plot
-    let lt = 1.0e2 * conc;
-    rc = rc.toFixed(0); // strings
-    rt = rt.toFixed(0);
-    lc = lc.toFixed(0);
-    lt = lt.toFixed(0);
-    // concatenate strings
-    let newCheckSum = rc +'.'+ rt +'.'+ lt +'.'+ lc;
-    //
-    let oldSScheckSum = ssCheckSum;
     let ssFlag = false;
-    if (newCheckSum == oldSScheckSum) {ssFlag = true;}
-    ssCheckSum = newCheckSum; // save current value for use next time
-
-    // console.log('simTime = ' + controller.simTime);
-    // console.log('  oldSScheckSum = ' + oldSScheckSum);
-    // console.log('    newCheckSum = ' + newCheckSum + ', ssFlag = ' + ssFlag);
-
     return ssFlag;
   } // END checkForSteadyState method
 

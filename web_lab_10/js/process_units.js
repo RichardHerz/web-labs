@@ -46,6 +46,7 @@ let equil = {
 
   getY : function(x) {
     // return y given x
+    // use a quick fit to get started...
     // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
     // of data from http://vle-calc.com/
     // 1.0e+03 * (-0.2951    1.2922   -2.3519    2.3051   -1.3187    0.4478   -0.0882    0.0098    0.0000)
@@ -60,6 +61,7 @@ let equil = {
 
 getT : function(x) {
   // return T (deg C) given x
+  // use a quick fit to get started...
   // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
   // of data from http://vle-calc.com/
   // 1.0e+04 * (0.5932   -2.6458    4.9219   -4.9565    2.9390   -1.0490    0.2229   -0.0279    0.0100)
@@ -85,7 +87,7 @@ getT : function(x) {
     let inc = 0.01;
     let lhs = 1; // any initial value > 0
     // pick an x2 value, use getY(x) to get y2 value, see if zero
-    // get started with something crude
+    // use a quick fix to get started...
     // here use zero-crossing
     while (lhs > 0) {
       x2 = x2 + inc;

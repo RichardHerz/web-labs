@@ -58,16 +58,21 @@
       </p>
     </div> <!-- end of div div_page_header -->
     <div id="div_simFrame">
-      <div id="div_PLOTDIV_plotData">
-      </div> <!-- end of div div_PLOTDIV_plotData -->
-      <img id="image_pot_still_image" src="images/scotch-pot-still.png">
       <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
       <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
-      <input type="range" id="range_steamSLIDER" min="0" max="100" step="1" value="0" onchange="processUnits[0].updateUIparams()">
+      <img id="image_pot_still_image" src="images/scotch-pot-still.png">
+      <div id="div_PLOTDIV_plotData">
+      </div> <!-- end of div div_PLOTDIV_plotData -->
       <p id="field_enterSteamLABEL">
           Steam
       </p>
-      <input id="input_field_enterSteam" value="0" onchange="processUnits[0].updateUIparams()">
+      <input id="input_field_enterSteam" value="0" onchange="processUnits[0].updateUIsteamInput()">
+      </input>
+      <!-- note about range slider: need event onchange for Win IE, oninput for others -->
+      <input type="range" id="range_steamSlider" min="0" max="100" step="1" value="0"
+        oninput="processUnits[0].updateUIsteamSlider()"
+        onchange="processUnits[0].updateUIsteamSlider()">
+      </input>
       <div id="div_spirit_switch">
           <label id="radio_mid_cut_LABEL" name="radio_of_div_spirit_switch">
                 <input type="radio" id="radio_mid_cut" name="radio_of_div_spirit_switch" onchange="processUnits[0].changeMode()">

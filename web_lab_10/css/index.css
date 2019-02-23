@@ -234,14 +234,53 @@ canvas {
   font-size: 15px;
 }
 
+#field_vaporProductPercentLABEL {
+  position: absolute;
+  left: 219px;
+  top: 130px;
+  width: 86px;
+  height: 25px;
+  visibility: visible;
+  border-width: 1px;
+  border-color: DodgerBlue;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+  text-align: right;
+}
+
+#field_vaporProductPercent {
+  position: absolute;
+  left: 312px;
+  top: 130px;
+  width: 72px;
+  height: 22px;
+  visibility: visible;
+  border-width: 1px;
+  border-color: DodgerBlue;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  text-align: center;
+}
+
 #field_highPercentLABEL {
   position: absolute;
   left: 299px;
   top: 406px;
   width: 106px;
   height: 25px;
-  border-width: 1px;
   visibility: visible;
+  border-width: 1px;
+  border-color: DodgerBlue;
   border-style: none;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
@@ -258,8 +297,9 @@ canvas {
   top: 406px;
   width: 72px;
   height: 22px;
-  border-width: 1px;
   visibility: visible;
+  border-width: 1px;
+  border-color: DodgerBlue;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
@@ -268,7 +308,6 @@ canvas {
   LCshowBorder: true;
   font-size: 16px;
   text-align: center;
-  border-color: DodgerBlue;
 }
 
 #field_highAmt {

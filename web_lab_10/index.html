@@ -6,7 +6,7 @@
   <title>Web Labs at ReactorLab.net</title>
 
   <meta name='description' content='batch distillation'>
-  <meta name='description' content='distillation>
+  <meta name='description' content='distillation'>
   <meta name='description' content='spirit still'>
   <meta name='description' content='whisky still'>
   <meta name='description' content='whiskey still'>
@@ -63,7 +63,7 @@
       <img id="image_pot_still_image" src="images/scotch-pot-still.png">
       <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
       <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
-      <input type="range" id="range_steamSLIDER" min="0" max="100" step="1" value="0">
+      <input type="range" id="range_steamSLIDER" min="0" max="100" step="1" value="0" onchange="processUnits[0].updateUIparams()">
       <p id="field_enterSteamLABEL">
           Steam
       </p>
@@ -82,41 +82,47 @@
                 <span id="radio_high_cut_SPAN">high</span>
           </label>
       </div> <!-- end of div div_spirit_switch -->
+      <p id="field_vaporProductPercentLABEL">
+          vapor %
+      </p>
+      <p id="field_vaporProductPercent">
+        0
+      </p>
       <p id="field_highPercentLABEL">
-          high %
+        high %
       </p>
-      <p id="field_highPercent" onchange="processUnits[0].updateUIparams()" value="0">
-          0
-      </p>
-      <p id="field_highAmt" onchange="processUnits[0].updateUIparams()" value="0">
-          0
+      <p id="field_highPercent">
+        0
       </p>
       <p id="field_highAmtLABEL">
-          high amt
+        high amt
       </p>
-      <p id="field_midAmt" onchange="processUnits[0].updateUIparams()" value="0">
-          0
+      <p id="field_highAmt">
+        0
       </p>
       <p id="field_midPercentLABEL">
           mid %
       </p>
-      <p id="field_midPercent" onchange="processUnits[0].updateUIparams()" value="0">
-          0
+      <p id="field_midPercent">
+        0
       </p>
       <p id="field_midAmtLABEL">
-          mid amt
+        mid amt
       </p>
-      <p id="field_lowAmt" onchange="processUnits[0].updateUIparams()" value="0">
-          0
+      <p id="field_midAmt">
+        0
       </p>
       <p id="field_lowPercentLABEL">
-          low %
+        low %
       </p>
-      <p id="field_lowPercent" onchange="processUnits[0].updateUIparams()" value="0">
-          0
+      <p id="field_lowPercent">
+        0
       </p>
       <p id="field_lowAmtLABEL">
-          low amt
+        low amt
+      </p>
+      <p id="field_lowAmt">
+        0
       </p>
     </div> <!-- end of div div_simFrame -->
   </body>

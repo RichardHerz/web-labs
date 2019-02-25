@@ -40,10 +40,14 @@ y = d(:,3);
 
 n = 8;
 
+xp = linspace(0,1,1000);
+
 coef = polyfit(x,y,n)
-yp = polyval(coef,x);
-subplot(2,1,1), plot(x,y,'b',x,yp,'r')
+yp = polyval(coef,xp);
+subplot(2,1,1), plot(x,y,'bo',xp,yp,'r'),
+title('ethanol in water (every 0.001 in 8th order poly fit)'), 
+xlabel('x'),ylabel('y')
 
 coefT = polyfit(x,T,n)
-Tp = polyval(coefT,x);
-subplot(2,1,2), plot(x,T,'b',x,Tp,'r')
+Tp = polyval(coefT,xp);
+subplot(2,1,2), plot(x,T,'bo',xp,Tp,'r'), xlabel('x'),ylabel('T (°C)')

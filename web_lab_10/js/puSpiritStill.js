@@ -56,7 +56,7 @@ function puSpiritStill(pUnitIndex) {
   this.name = 'process unit Spirit Still'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
-  this.recycleRatio = 0.25; // used by equil.getX2 function
+  this.refluxRatio = 0.25; // used by equil.getX2 function
   this.steam = 0;
 
   // define arrays to hold data for plots, color canvas
@@ -161,8 +161,23 @@ function puSpiritStill(pUnitIndex) {
       document.getElementById(thisSteamFieldID).value = this.dataInitial[1];
     }
 
+    /*
+    1 liter water = 55.555 mol water, 1 liter ethanol = 21.7 mol ethanol << CHECK
+    BUT SEE BELOW chem vol fraction not same as ABV... CHECK WHAT MS THESIS USED
+    MS thesis spirit still starts at 26.1 vol% ethanol in liquid feed, assuming chem vol frac,
+    which is about 12 mol% ethanol - and distillate is about 70 vol% ethanol
+    which is about 48 mol% ethanol - and this sim gives about 52 mol% for
+    feed of 12 mol% ethanol...
+    WARNING https://en.wikipedia.org/wiki/Alcohol_by_volume
+    "Thus, ABV is not the same as volume fraction expressed as a percentage.
+    Volume fraction, which is widely used in chemistry..."
+    max vol contraction on mixing at about 40 mol % ethanol - at
+    50 mol% ethanol vol contraction is about 3% of total vol
+    so max 3% error in percent number (e.g., 0.485 vs. 0.5 if ignore...)
+    */
+
     w = w0; // initial total moles charged to pot
-    x = 0.5; // initial mole fraction ethanol charged to pot
+    x = 0.12; // initial mole fraction ethanol charged to pot
     y = equil.getY(x);
     x2 = equil.getX2(y);
     y2 = equil.getY(x2);

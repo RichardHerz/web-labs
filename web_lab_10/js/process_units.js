@@ -40,7 +40,7 @@ let processUnits = new Object();
 processUnits[0] = new puSpiritStill(0);
 
 let equil = {
-  // uses processUnits[0].recycleRatio
+  // uses processUnits[0].refluxRatio
   // object with ethanol-water vapor-liquid equilibrium info
   // the key component is ethanol, x and y are mole fractions of ethanol
 
@@ -75,13 +75,13 @@ let equil = {
   }, // END function getT
 
   getX2 : function(y) {
-    // uses processUnits[0].recycleRatio
+    // uses processUnits[0].refluxRatio
     // return y2 and x2 given y = y1 and recycle ratio
     // same equation rearranged below
     // from total mol and light key mol bal around neck
     // y2 - (y - r*x2)/ (1-r) = 0 ... LHS < 0 for x2 = y2 = 0
     // y - (1-r)*y2 - r*x2 = 0 ... LHS > 0 for x2 = y2 = 0
-    let r = processUnits[0].recycleRatio;
+    let r = processUnits[0].refluxRatio;
     let x2 = 0;
     let y2 = 0;
     let inc = 0.01;

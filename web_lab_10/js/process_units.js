@@ -40,6 +40,16 @@ let processUnits = new Object();
 processUnits[0] = new puSpiritStill(0);
 
 let equil = {
+
+  // *** IMPROVE: for getX and getY, only need to fit input data through
+  // *** max x,y seen in distillation
+  // *** 
+  // *** also maybe fit deviation from x=y diagonal for easier poly fit...
+
+  // *** IMPROVE: for getX2 during distill know direction x,y moving, so
+  // *** start from last solution to new solution & only from start on reset,
+  // *** where can also use better method of solution
+
   // uses processUnits[0].refluxRatio
   // object with ethanol-water vapor-liquid equilibrium info
   // the key component is ethanol, x and y are mole fractions of ethanol
@@ -87,7 +97,7 @@ let equil = {
     let inc = 0.01;
     let lhs = 1; // any initial value > 0
     // pick an x2 value, use getY(x) to get y2 value, get lhs to zero
-    // use a quick fix to get started... zero-crossing
+    // use a quick fix to get started... ALSO see *** IMPROVE above
     while (lhs > 0) {
       x2 = x2 + inc;
       y2 = this.getY(x2);

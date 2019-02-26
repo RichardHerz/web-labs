@@ -1,5 +1,5 @@
 % http://vle-calc.com/
-% P = 1 atm = 1.01325 bar 
+% P = 1 atm = 1.01325 bar
 % TEMPERATURE 	x1 (ethanol) 	y1 (ethanol)
 % deg C 	mol/mol 	mol/mol
 d = [100.441 	0 	0
@@ -42,12 +42,21 @@ n = 8;
 
 xp = linspace(0,1,1000);
 
+% *** IMPROVE: for getX and getY, only need to fit input data through
+% *** max x,y seen in distillation
+% 
+% *** also maybe fit deviation from x=y diagonal for easier poly fit...
+
+% *** IMPROVE: for getX2 during distill know direction x,y moving, so
+% *** start from last solution to new solution & only from start on reset,
+% *** where can also use better method of solution
+
 coef = polyfit(x,y,n)
 yp = polyval(coef,xp);
 subplot(2,1,1), plot(x,y,'bo',xp,yp,'r'),
-title('ethanol in water (every 0.001 in 8th order poly fit)'), 
+title('ethanol in water (every 0.001 in 8th order poly fit)'),
 xlabel('x'),ylabel('y')
 
 coefT = polyfit(x,T,n)
 Tp = polyval(coefT,xp);
-subplot(2,1,2), plot(x,T,'bo',xp,Tp,'r'), xlabel('x'),ylabel('T (°C)')
+subplot(2,1,2), plot(x,T,'bo',xp,Tp,'r'), xlabel('x'),ylabel('T (ï¿½C)')

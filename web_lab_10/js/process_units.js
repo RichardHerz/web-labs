@@ -43,7 +43,7 @@ let equil = {
 
   // *** IMPROVE: for getX and getY, only need to fit input data through
   // *** max x,y seen in distillation
-  // *** 
+  // ***
   // *** also maybe fit deviation from x=y diagonal for easier poly fit...
 
   // *** IMPROVE: for getX2 during distill know direction x,y moving, so
@@ -94,7 +94,9 @@ let equil = {
     let r = processUnits[0].refluxRatio;
     let x2 = 0;
     let y2 = 0;
-    let inc = 0.01;
+    // NOTE: dy/dx large at low x so difference of inc = 0.01 will give
+    // stepped y (and T) at low x, but check timing for small inc 
+    let inc = 0.001;
     let lhs = 1; // any initial value > 0
     // pick an x2 value, use getY(x) to get y2 value, get lhs to zero
     // use a quick fix to get started... ALSO see *** IMPROVE above

@@ -236,9 +236,9 @@ canvas {
 
 #field_vaporProductPercentLABEL {
   position: absolute;
-  left: 219px;
+  left: 204px;
   top: 130px;
-  width: 86px;
+  width: 110px;
   height: 25px;
   visibility: visible;
   border-width: 1px;
@@ -255,7 +255,7 @@ canvas {
 
 #field_vaporProductPercent {
   position: absolute;
-  left: 312px;
+  left: 316px;
   top: 130px;
   width: 72px;
   height: 22px;

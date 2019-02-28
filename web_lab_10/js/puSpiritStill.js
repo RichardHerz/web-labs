@@ -44,6 +44,7 @@ function puSpiritStill(pUnitIndex) {
   let y = 0; // ethanol molar conc in pot vapor
   let y2 = 0; // ethanol molar conc in neck vapor
   let x2 = 0; // ethanol molar conc in recycled neck liquid
+  let refluxRatio = 0.25;
   const w0 = 100; // (mol), initial total moles liquid charged to pot
   let w = w0; // (mol), total moles liquid in pot
   let vrate = 0; // (mol/s), vapor product flow rate from neck
@@ -57,7 +58,6 @@ function puSpiritStill(pUnitIndex) {
   this.name = 'process unit Spirit Still'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
-  this.refluxRatio = 0.25; // used by equil.getX2 function
   this.steam = 0;
 
   // define arrays to hold data for plots, color canvas
@@ -180,7 +180,7 @@ function puSpiritStill(pUnitIndex) {
     w = w0; // initial total moles charged to pot
     x = 0.12; // initial mole fraction ethanol charged to pot
     y = equil.getY(x);
-    x2 = equil.getX2(y);
+    x2 = equil.getX2(y,refluxRatio);
     y2 = equil.getY(x2);
     pT = equil.getT(x);
     nT = equil.getT(x2);
@@ -276,7 +276,7 @@ function puSpiritStill(pUnitIndex) {
         w = w + dwdt * unitTimeStep;
         // update variables for new x
         y = equil.getY(x);
-        x2 = equil.getX2(y);
+        x2 = equil.getX2(y,refluxRatio);
         y2 = equil.getY(x2);
         pT = equil.getT(x);
         nT = equil.getT(x2);

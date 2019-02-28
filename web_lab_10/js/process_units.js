@@ -50,7 +50,6 @@ let equil = {
   // *** start from last solution to new solution & only from start on reset,
   // *** where can also use better method of solution
 
-  // uses processUnits[0].refluxRatio
   // object with ethanol-water vapor-liquid equilibrium info
   // the key component is ethanol, x and y are mole fractions of ethanol
 
@@ -84,14 +83,12 @@ let equil = {
     return T;
   }, // END function getT
 
-  getX2 : function(y) {
-    // uses processUnits[0].refluxRatio
-    // return y2 and x2 given y = y1 and recycle ratio
+  getX2 : function(y,r) {
+    // return y2 and x2 given y = y1 and r = recycle ratio
     // same equation rearranged below
     // from total mol and light key mol bal around neck
     // y2 - (y - r*x2)/ (1-r) = 0 ... LHS < 0 for x2 = y2 = 0
     // y - (1-r)*y2 - r*x2 = 0 ... LHS > 0 for x2 = y2 = 0
-    let r = processUnits[0].refluxRatio;
     let x2 = 0;
     let y2 = 0;
     // NOTE: dy/dx large at low x so difference of inc = 0.01 will give
@@ -103,7 +100,7 @@ let equil = {
     while (lhs > 0) {
       x2 = x2 + inc;
       y2 = this.getY(x2);
-      lhs = y - (1-r)*y2 - r*x2;
+      lhs = y - (1-r) * y2 - r * x2;
     }
     return x2;
   }, // END function getX2
@@ -125,7 +122,7 @@ let equil = {
       abv = abv + c[i] * Math.pow(x,n-i);
     }
     return abv;
-  } ,// END function getABV
+  }, // END function getABV
 
   getXfromABV : function(abv) {
     // returns mole fraction of vapor or liquid given percent Alcohol by Volume

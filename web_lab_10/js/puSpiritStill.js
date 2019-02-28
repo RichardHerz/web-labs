@@ -37,6 +37,7 @@ function puSpiritStill(pUnitIndex) {
   // **** they are not currently used - which is best?
   const thisSteamSliderID = 'range_steamSlider';
   const thisSteamFieldID = 'input_field_enterSteam';
+  const thisVaporProductFieldID = 'field_vaporProductPercent';
 
   // define additional internal variables
   let x = 0; // ethanol molar conc in pot liquid
@@ -288,6 +289,10 @@ function puSpiritStill(pUnitIndex) {
     // update display elements which only depend on this process unit
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
+
+    // display ABV of vapor product
+    let abv = equil.getABV(y2).toFixed(1);
+    document.getElementById(thisVaporProductFieldID).innerHTML = abv;
 
     // HANDLE STRIP CHART DATA
 

@@ -95,7 +95,7 @@ let equil = {
     let x2 = 0;
     let y2 = 0;
     // NOTE: dy/dx large at low x so difference of inc = 0.01 will give
-    // stepped y (and T) at low x, but check timing for small inc 
+    // stepped y (and T) at low x, but check timing for small inc
     let inc = 0.001;
     let lhs = 1; // any initial value > 0
     // pick an x2 value, use getY(x) to get y2 value, get lhs to zero
@@ -106,6 +106,44 @@ let equil = {
       lhs = y - (1-r)*y2 - r*x2;
     }
     return x2;
-  } // END function getX2
+  }, // END function getX2
+
+  getABV : function(x) {
+    // returns percent Alcohol by Volume given mole fraction of vapor or liquid
+    // Alcohol by volume (ABV) is vol of pure alcohol used to make mixture divided
+    // by volume of mixture after mixing, which is reduced from sum of volumes
+    // of water and ethanol used because of nonideal mixing.
+    // ABV is proportional to specific gravity of mixture as measured
+    // by a hydrometer in ethanol-water mixure.
+    // Reference http://www.ddbst.com/en/EED/VE/VE0%20Ethanol%3BWater.php
+    // Excess Volume Data Set 947
+    // perform polynomial fit in MATLAB
+    let c = [-5.9441e+01,2.9458e+02,-6.2361e+02,7.4758e+02,-5.8137e+02,3.2225e+02,7.4575e-03];
+    let abv = 0;
+    let n = 6; // order of poly
+    for (i = 0; i < n+1; i++) {
+      abv = abv + c[i] * Math.pow(x,n-i);
+    }
+    return abv;
+  } ,// END function getABV
+
+  getXfromABV : function(abv) {
+    // returns mole fraction of vapor or liquid given percent Alcohol by Volume
+    // Alcohol by volume (ABV) is vol of pure alcohol used to make mixture divided
+    // by volume of mixture after mixing, which is reduced from sum of volumes
+    // of water and ethanol used because of nonideal mixing.
+    // ABV is proportional to specific gravity of mixture as measured
+    // by a hydrometer in ethanol-water mixure.
+    // Reference http://www.ddbst.com/en/EED/VE/VE0%20Ethanol%3BWater.php
+    // Excess Volume Data Set 947
+    // perform polynomial fit in MATLAB
+    let c = [2.1892e-08,-2.9368e-06,1.6496e-04,7.7197e-04,7.1373e-03];
+    let x = 0;
+    let n = 4; // order of poly
+    for (i = 0; i < n+1; i++) {
+      x = x + c[i] * Math.pow(x,n-i);
+    }
+    return x;
+  } // END function getXfromABV
 
 } // END object equil

@@ -1,0 +1,17 @@
+% Alcohol by volume (ABV) is vol of pure alcohol used to make mixture divided 
+% by volume of mixture after mixing, which is reduced from sum of volumes
+% of water and ethanol used because of nonideal mixing.
+% ABV is proportional to specific gravity of mixture as measured
+% by a hydrometer in ethanol-water mixure. 
+% Reference http://www.ddbst.com/en/EED/VE/VE0%20Ethanol%3BWater.php
+% Excess Volume Data Set 947
+
+POLY COEF N = 6 GIVEN MOL FRAC X OF ETHANOL IN WATER,  FIND ABV 
+
+coef = [-5.9441e+01,2.9458e+02,-6.2361e+02,7.4758e+02,-5.8137e+02,3.2225e+02,7.4575e-03];
+
+
+POLY COEF N = 4 GIVEN ABV FIND X (n = 6 was ill conditioned fit)
+
+coef2 = [2.1892e-08,-2.9368e-06,1.6496e-04,7.7197e-04,7.1373e-03]; 
+

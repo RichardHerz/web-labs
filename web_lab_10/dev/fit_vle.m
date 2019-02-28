@@ -40,12 +40,10 @@ y = d(:,3);
 
 n = 8;
 
-xp = linspace(0,1,1000);
+xp = linspace(0,.5,1000);
 
 % *** IMPROVE: for getX and getY, only need to fit input data through
 % *** max x,y seen in distillation
-% 
-% *** also maybe fit deviation from x=y diagonal for easier poly fit...
 
 % *** IMPROVE: for getX2 during distill know direction x,y moving, so
 % *** start from last solution to new solution & only from start on reset,
@@ -57,6 +55,25 @@ subplot(2,1,1), plot(x,y,'bo',xp,yp,'r'),
 title('ethanol in water (every 0.001 in 8th order poly fit)'),
 xlabel('x'),ylabel('y')
 
+% % NO DRAMATIC IMPROVEMENT FITTING DIFFERENCE FROM DIAGONAL
+% % (y-x) vs. x, and fitting normal from diagonal vs. x same as
+% % fitting difference times sqrt(2)/2
+% % 
+% coef = polyfit(x,y-x,n)
+% f = polyval(coef,xp);
+% subplot(2,1,2), plot(x,y,'bo',xp,f+xp,'r'),
+% title('ethanol in water (every 0.001 in 8th order poly fit)'),
+% xlabel('x'),ylabel('y')
+
 coefT = polyfit(x,T,n)
 Tp = polyval(coefT,xp);
-subplot(2,1,2), plot(x,T,'bo',xp,Tp,'r'), xlabel('x'),ylabel('T (�C)')
+subplot(2,1,2), plot(x,T,'bo',xp,Tp,'r'), xlabel('x'),ylabel('T (C)')
+
+% for n=8 fit of all points get sum sq error = 9.44e-4 for all points
+% for n-8 fit of all points get sum sq error = 8.17e-4 for x=0 to x=0.5 pts
+% for n=8 fit of points x=0 to x=0.5, get sum sq error = 0.301e-4
+
+coef = polyfit(x,y,n)
+yp = polyval(coef,x(1:16));
+sse = sum((y(1:16)-yp).^2)
+

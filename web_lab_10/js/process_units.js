@@ -58,12 +58,11 @@ let equil = {
     // use a quick fit to get started...
     // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
     // of data from http://vle-calc.com/
-    // 1.0e+03 * (-0.2951    1.2922   -2.3519    2.3051   -1.3187    0.4478   -0.0882    0.0098    0.0000)
-    let c = [-0.2951,1.2922,-2.3519,2.3051,-1.3187,0.4478,-0.0882,0.0098,0.0000];
+    let c = [-2.950714e+02,1.292187e+03,-2.351946e+03,2.305127e+03,-1.318719e+03,4.478104e+02,-8.823241e+01,9.824809e+00,1.548339e-02];
     let y = 0;
     let n = 8; // order of poly
     for (i = 0; i < n+1; i++) {
-      y = y + 1.0e+03 * c[i] * Math.pow(x,n-i);
+      y = y + c[i] * Math.pow(x,n-i);
     }
     return y;
   }, // END function getY
@@ -73,12 +72,11 @@ let equil = {
     // use a quick fit to get started...
     // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
     // of data from http://vle-calc.com/
-    // 1.0e+04 * (0.5932   -2.6458    4.9219   -4.9565    2.9390   -1.0490    0.2229   -0.0279    0.0100)
-    let c = [0.5932,-2.6458,4.9219,-4.9565,2.9390,-1.0490,0.2229,-0.0279,0.0100];
+    let c = [5.931733e+03,-2.645760e+04,4.921855e+04,-4.956457e+04,2.939019e+04,-1.048966e+04,2.228854e+03,-2.792872e+02,1.00205e+02];
     let T = 0;
     let n = 8; // order of poly
     for (i = 0; i < n+1; i++) {
-      T = T + 1.0e+04 * c[i] * Math.pow(x,n-i);
+      T = T + c[i] * Math.pow(x,n-i);
     }
     return T;
   }, // END function getT

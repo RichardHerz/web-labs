@@ -48,6 +48,7 @@ function puSpiritStill(pUnitIndex) {
   let refluxRatio = 0.25;
   const m0 = 100; // (mol), initial total moles liquid charged to pot
   let m = m0; // (mol), total moles liquid in pot
+  let vol0 = 0; // can't call equi.getVol() yet, do in reset
   let vrate = 0; // (mol/s), vapor product flow rate from neck
   let pT = 0; // (deg C), pot temperature
   let nT = 0; // (deg C), neck temperature
@@ -165,6 +166,7 @@ function puSpiritStill(pUnitIndex) {
 
     m = m0; // initial total moles charged to pot, m0 set above
     x = x0; // initial mole fraction ethanol charged to pot
+    vol0 = equil.getVol(m,x); // (liters), volume liquid in pot
     y = equil.getY(x);
     x2 = equil.getX2(y,refluxRatio);
     y2 = equil.getY(x2);
@@ -256,7 +258,11 @@ function puSpiritStill(pUnitIndex) {
 
     for (j = 0; j < unitStepRepeats; j++) {
       if (m > 0) {
-        dxdt = (vrate / m) * (x - y2);
+        // xxx m * dx/dt = - vrate * y2 ?????
+        // xxx rate change mol in pot = rate mol leaving...?
+        // xxx check vrate definition
+        dxdt = -vrate * y2 / m;
+        // WAS dxdt = (vrate / m) * (x - y2);
         dmdt = -vrate;
         x = x + dxdt * unitTimeStep;
         m = m + dmdt * unitTimeStep;
@@ -288,13 +294,24 @@ function puSpiritStill(pUnitIndex) {
     let numStripPoints = plotInfo[0]['numberPoints'];
     let numStripVars = 6; // only the variables from this unit
 
-    // handle m/m0
+    // // handle m/m0
+    // v = 0;
+    // tempArray = this.stripData[v]; // work on one plot variable at a time
+    // // delete first and oldest element which is an [x,y] pair array
+    // tempArray.shift();
+    // // add the new [x.y] pair array at end
+    // tempArray.push( [0,m/m0] );
+    // // update the variable being processed
+    // this.stripData[v] = tempArray;
+
+    // handle vol/vol0
     v = 0;
+    let vol = equil.getVol(m,x);
     tempArray = this.stripData[v]; // work on one plot variable at a time
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [0,m/m0] );
+    tempArray.push( [0,vol/vol0] );
     // update the variable being processed
     this.stripData[v] = tempArray;
 

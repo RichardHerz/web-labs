@@ -99,7 +99,7 @@ let plotInfo = {
     let vnum = 0; // 1st variable
     plotInfo[pnum]['varUnitIndex'][vnum] = unum; // value is index of unit in processUnits object
     plotInfo[pnum]['var'][vnum] = vnum; // value is variable index in plot data array
-    plotInfo[pnum]['varLabel'][vnum] = 'm/m0';
+    plotInfo[pnum]['varLabel'][vnum] = 'v/v0';
     // varDataUnits are dimensional units used in copy data table, along with varLabel
     plotInfo[pnum]['varDataUnits'][vnum] = ''; // processUnits[1]['dataUnits'][4]; // 1st var
     // varShow values are 'show' to show on plot and legend,

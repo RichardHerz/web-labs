@@ -140,7 +140,7 @@ let equil = {
     let n = c.length; // order of poly + 1
     let x = 0;
     for (i = 0; i < n; i++) {
-      x = x + c[i] * Math.pow(x,n-1-i);
+      x = x + c[i] * Math.pow(abv,n-1-i);
     }
     return x;
   }, // END function getXfromABV
@@ -163,6 +163,34 @@ let equil = {
     let v2 = m * (1-x) * mvol2/1000; // liters water = mol * cm3/mol / (cm3/liter)
     let vol = v1 + v2; // total vol before correction
     vol = vol + m * dv / 1000; // liters = mol * cm3/mol / (cm3/liter)
-  } // END function getVol
+    return vol;
+  }, // END function getVol
+
+  getMolesAndX : function(vol,abv) {
+    // return total moles and x given total vol and ABV %
+    // use existing function to find x given ABV
+    // so start here knowing total vol, ABV, x FIND total moles
+    const mpL1 = 21.7; // mol per liter ethanol
+    const mpL2 = 55.555; // mol per liter water
+    let x = this.getXfromABV(abv);
+    let v1 = abv/100 * vol; // approx vol 1
+    let m1 = mpL1 * v1 // approx liters 1 = mol/L * L
+    let m2 = mpL2 * (vol - v1);
+    let m = m1 + m2 // approx total moles
+    // so now have total vol, x and initial guess of total moles
+    // can iterate with function above to find actual total moles
+    // use crude method for now
+    // at most a 6% difference between simple mixing and use of excess vol
+    // = 100% * 1.1/18 for water, so start 10% low
+    m = m - 0.9 * m;
+    let minc = 0.001 * m;
+    let volest = 0; // so enter repeat
+    while (volest < vol) {
+      m = m + minc;
+      volest = this.getVol(m,x);
+    }
+    let result = [m,x];
+    return result;
+  } // end function getMolesAndX
 
 } // END object equil

@@ -41,12 +41,13 @@ function puSpiritStill(pUnitIndex) {
 
   // define additional internal variables
   let x = 0; // ethanol molar conc in pot liquid
+  const x0 = 0.12; // initial ethanol molar conc in feed to pot, see in reset()
   let y = 0; // ethanol molar conc in pot vapor
   let y2 = 0; // ethanol molar conc in neck vapor
   let x2 = 0; // ethanol molar conc in recycled neck liquid
   let refluxRatio = 0.25;
-  const w0 = 100; // (mol), initial total moles liquid charged to pot
-  let w = w0; // (mol), total moles liquid in pot
+  const m0 = 100; // (mol), initial total moles liquid charged to pot
+  let m = m0; // (mol), total moles liquid in pot
   let vrate = 0; // (mol/s), vapor product flow rate from neck
   let pT = 0; // (deg C), pot temperature
   let nT = 0; // (deg C), neck temperature
@@ -151,7 +152,7 @@ function puSpiritStill(pUnitIndex) {
 
     // initialize strip chart data array
     // initPlotData(numStripVars,numStripPts)
-    const numStripVars = 6; // w/w0, x, y, y2, pT, nT
+    const numStripVars = 6; // m/m0, x, y, y2, pT, nT
     const numStripPts = plotInfo[0]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts);
 
@@ -162,23 +163,8 @@ function puSpiritStill(pUnitIndex) {
       document.getElementById(thisSteamFieldID).value = this.dataInitial[1];
     }
 
-    /*
-    1 liter water = 55.555 mol water, 1 liter ethanol = 21.7 mol ethanol << CHECK
-    BUT SEE BELOW chem vol fraction not same as ABV... CHECK WHAT MS THESIS USED
-    MS thesis spirit still starts at 26.1 vol% ethanol in liquid feed, assuming chem vol frac,
-    which is about 12 mol% ethanol - and distillate is about 70 vol% ethanol
-    which is about 48 mol% ethanol - and this sim gives about 52 mol% for
-    feed of 12 mol% ethanol...
-    WARNING https://en.wikipedia.org/wiki/Alcohol_by_volume
-    "Thus, ABV is not the same as volume fraction expressed as a percentage.
-    Volume fraction, which is widely used in chemistry..."
-    max vol contraction on mixing at about 40 mol % ethanol - at
-    50 mol% ethanol vol contraction is about 3% of total vol
-    so max 3% error in percent number (e.g., 0.485 vs. 0.5 if ignore...)
-    */
-
-    w = w0; // initial total moles charged to pot
-    x = 0.12; // initial mole fraction ethanol charged to pot
+    m = m0; // initial total moles charged to pot, m0 set above
+    x = x0; // initial mole fraction ethanol charged to pot
     y = equil.getY(x);
     x2 = equil.getX2(y,refluxRatio);
     y2 = equil.getY(x2);
@@ -266,14 +252,14 @@ function puSpiritStill(pUnitIndex) {
     vrate = 0.001 * this.steam;
     let j = 0; // index
     let dxdt = 0;
-    let dwdt = 0;
+    let dmdt = 0;
 
     for (j = 0; j < unitStepRepeats; j++) {
-      if (w > 0) {
-        dxdt = (vrate / w) * (x - y2);
-        dwdt = -vrate;
+      if (m > 0) {
+        dxdt = (vrate / m) * (x - y2);
+        dmdt = -vrate;
         x = x + dxdt * unitTimeStep;
-        w = w + dwdt * unitTimeStep;
+        m = m + dmdt * unitTimeStep;
         // update variables for new x
         y = equil.getY(x);
         x2 = equil.getX2(y,refluxRatio);
@@ -302,13 +288,13 @@ function puSpiritStill(pUnitIndex) {
     let numStripPoints = plotInfo[0]['numberPoints'];
     let numStripVars = 6; // only the variables from this unit
 
-    // handle w/w0
+    // handle m/m0
     v = 0;
     tempArray = this.stripData[v]; // work on one plot variable at a time
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [0,w/w0] );
+    tempArray.push( [0,m/m0] );
     // update the variable being processed
     this.stripData[v] = tempArray;
 

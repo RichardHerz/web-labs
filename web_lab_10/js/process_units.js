@@ -55,10 +55,12 @@ let equil = {
 
   getY : function(x) {
     // return y given x
-    // use a quick fit to get started...
-    // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
-    // of data from http://vle-calc.com/
-    let c = [-2.950714e+02,1.292187e+03,-2.351946e+03,2.305127e+03,-1.318719e+03,4.478104e+02,-8.823241e+01,9.824809e+00,1.548339e-02];
+    // data from http://vle-calc.com/ for ethanol in water-ethanol mix at P = 1.01325 bar
+    // perform polynomial fit in MATLAB with addition of 5 duplicate end points
+    // at each end for weighting in fit
+    // let c = [-3.2694e+02,1.4346e+03,-2.6134e+03,2.5591e+03,-1.4589e+03,4.9155e+02,-9.5447e+01,1.0357e+01,3.8238e-03];
+    // set last coef to zero so returns y=0 with input of x=0
+    let c = [-3.2694e+02,1.4346e+03,-2.6134e+03,2.5591e+03,-1.4589e+03,4.9155e+02,-9.5447e+01,1.0357e+01,0.00];
     let y = 0;
     let n = 8; // order of poly
     for (i = 0; i < n+1; i++) {
@@ -69,10 +71,12 @@ let equil = {
 
   getT : function(x) {
     // return T (deg C) given x
-    // use a quick fit to get started...
-    // polynomial fit in MATLAB for ethanol in water-ethanol mix at P = 1.01325 bar
-    // of data from http://vle-calc.com/
-    let c = [5.931733e+03,-2.645760e+04,4.921855e+04,-4.956457e+04,2.939019e+04,-1.048966e+04,2.228854e+03,-2.792872e+02,1.00205e+02];
+    // data from http://vle-calc.com/ for ethanol in water-ethanol mix at P = 1.01325 bar
+    // perform polynomial fit in MATLAB with addition of 5 duplicate end points
+    // at each end for weighting in fit
+    // let c = [4.5855e+03,-2.0995e+04,4.0116e+04,-4.1540e+04,2.5375e+04,-9.3550e+03,2.0597e+03,-2.6803e+02,9.9981e+01];
+    // set last coef to 100 so returns normal boiling point of water, 100 C when x=0
+    let c = [4.5855e+03,-2.0995e+04,4.0116e+04,-4.1540e+04,2.5375e+04,-9.3550e+03,2.0597e+03,-2.6803e+02,100.00];
     let T = 0;
     let n = 8; // order of poly
     for (i = 0; i < n+1; i++) {
@@ -87,11 +91,11 @@ let equil = {
     // from total mol and light key mol bal around neck
     // y2 - (y - r*x2)/ (1-r) = 0 ... LHS < 0 for x2 = y2 = 0
     // y - (1-r)*y2 - r*x2 = 0 ... LHS > 0 for x2 = y2 = 0
-    let x2 = 0;
-    let y2 = 0;
     // NOTE: dy/dx large at low x so difference of inc = 0.01 will give
     // stepped y (and T) at low x, but check timing for small inc
     let inc = 0.001;
+    let x2 = -inc; // so start at x2=0 in repeat & still can go to zero ABV 
+    let y2 = 0;
     let lhs = 1; // any initial value > 0
     // pick an x2 value, use getY(x) to get y2 value, get lhs to zero
     // use a quick fix to get started... ALSO see *** IMPROVE above
@@ -105,15 +109,18 @@ let equil = {
 
   getABV : function(x) {
     // returns percent Alcohol by Volume given mole fraction of vapor or liquid
-    // Alcohol by volume (ABV) is vol of pure alcohol used to make mixture divided
+    // Alcohol by volume (ABV) is 100% * vol of pure alcohol used to make mixture divided
     // by volume of mixture after mixing, which is reduced from sum of volumes
     // of water and ethanol used because of nonideal mixing.
     // ABV is proportional to specific gravity of mixture as measured
     // by a hydrometer in ethanol-water mixure.
     // Reference http://www.ddbst.com/en/EED/VE/VE0%20Ethanol%3BWater.php
     // Excess Volume Data Set 947
-    // perform polynomial fit in MATLAB
-    let c = [-5.9441e+01,2.9458e+02,-6.2361e+02,7.4758e+02,-5.8137e+02,3.2225e+02,7.4575e-03];
+    // perform polynomial fit in MATLAB with addition of 5 duplicate end points
+    // at each end for weighting in fit - no signif change if only fit excess vol
+    // let c = [-6.1179e+01,3.0022e+02,-6.3062e+02,7.5176e+02,-5.8258e+02,3.2240e+02,2.0980e-03];
+    // set last coef to zero so returns 0% ABV with input of x=0
+    let c = [-6.1179e+01,3.0022e+02,-6.3062e+02,7.5176e+02,-5.8258e+02,3.2240e+02,0.00];
     let abv = 0;
     let n = 6; // order of poly
     for (i = 0; i < n+1; i++) {
@@ -124,17 +131,20 @@ let equil = {
 
   getXfromABV : function(abv) {
     // returns mole fraction of vapor or liquid given percent Alcohol by Volume
-    // Alcohol by volume (ABV) is vol of pure alcohol used to make mixture divided
+    // Alcohol by volume (ABV) is 100% * vol of pure alcohol used to make mixture divided
     // by volume of mixture after mixing, which is reduced from sum of volumes
     // of water and ethanol used because of nonideal mixing.
     // ABV is proportional to specific gravity of mixture as measured
     // by a hydrometer in ethanol-water mixure.
     // Reference http://www.ddbst.com/en/EED/VE/VE0%20Ethanol%3BWater.php
     // Excess Volume Data Set 947
-    // perform polynomial fit in MATLAB
-    let c = [2.1892e-08,-2.9368e-06,1.6496e-04,7.7197e-04,7.1373e-03];
+    // perform polynomial fit in MATLAB with addition of 5 duplicate end points
+    // at each end for weighting in fit - no signif change if only fit excess vol
+    // let c = [6.3733e-12,-1.5614e-09,1.4834e-07,-6.1903e-06,1.3610e-04,2.3484e-03,1.8731e-04];
+    // set last coef to zero so returns x=0 with input of 0% ABV
+    let c = [6.3733e-12,-1.5614e-09,1.4834e-07,-6.1903e-06,1.3610e-04,2.3484e-03,0.00];
     let x = 0;
-    let n = 4; // order of poly
+    let n = 6; // order of poly
     for (i = 0; i < n+1; i++) {
       x = x + c[i] * Math.pow(x,n-i);
     }

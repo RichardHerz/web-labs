@@ -379,4 +379,4 @@ function puSpiritStill(pUnitIndex) {
     return ssFlag;
   } // END checkForSteadyState method
 
-} // END of puBioReactor
+} // END of puSpiritStill

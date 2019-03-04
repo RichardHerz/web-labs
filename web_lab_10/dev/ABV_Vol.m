@@ -71,7 +71,7 @@ x = d(:,2);
 mw1 = 46.069; % molecular weight
 mvol1 = 58.4; % cm3/mol
 dens1 = 0.789; % molecular weight
-mpL1 = 21.7; % mol per liter
+mpL1 = 17.123; % mol per liter
 
 % component 2 is water
 mw2 = 18.015; % molecular weight
@@ -106,19 +106,26 @@ vol = ABV_Vol_f1(m,x);
 % use existing function to find x given ABV
 % so start here knowing total vol, ABV, x FIND total moles
 
-% xxx for abv=100, get volest = 126.62 !!! 
-
-vol = 100 % liters
-abv = 100; % percent ethanol
+clc
+vol = 1000 % liters
+abv = 50 % percent ethanol
 x = getXfromABV(abv);
 v1 = abv/100 * vol; % approx vol 1
-m1 = mpL1 * v1; % approx liters 1 = mol/L * L
+m1 = mpL1 * v1 % approx liters 1 = mol/L * L
 m2 = mpL2 * (vol - v1);
-m = m1 + m2; % approx total moles
-volest = ABV_Vol_f1(m,x)
-
+m = m1 + m2 % approx total moles
 % so now have total vol, x and initial guess of total moles
 % can iterate with function above to find actual total moles 
-
+% use crude method for now 
+% at most a 6% difference between simple mixing and use of excess vol
+% = 100% * 1.1/18 for water, so start 10% low
+m = m - 0.9*m;
+minc = 0.001*m;
+volest = 0; % so enter repeat
+while volest < vol
+    m = m + minc;
+    volest = ABV_Vol_f1(m,x);
+end
+m
 
 

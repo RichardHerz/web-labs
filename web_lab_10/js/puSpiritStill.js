@@ -37,7 +37,7 @@ function puSpiritStill(pUnitIndex) {
   // **** they are not currently used - which is best?
   const thisSteamSliderID = 'range_steamSlider';
   const thisSteamFieldID = 'input_field_enterSteam';
-  const thisVaporProductFieldID = 'field_vaporProductPercent';
+  const thisProductPercentFieldID = 'field_productPercent';
 
   // define additional internal variables
   let x = 0; // ethanol molar conc in pot liquid
@@ -284,7 +284,7 @@ function puSpiritStill(pUnitIndex) {
 
     // display ABV of vapor product
     let abv = equil.getABV(y2).toFixed(1);
-    document.getElementById(thisVaporProductFieldID).innerHTML = abv;
+    document.getElementById(thisProductPercentFieldID).innerHTML = abv;
 
     // HANDLE STRIP CHART DATA
 

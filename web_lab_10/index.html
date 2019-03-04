@@ -48,87 +48,120 @@
   </script>
 
 </head>
-  <body>
-    <div id="div_page_header">
-      <p>
-      <a href="http://reactorlab.net/web-labs/">Back</a> to Web Labs at ReactorLab.net
-      <p><b><i>Under Development</i></b></p>
-      <p>
-       Starting to develop a simulation of a Scotch Whisky Distillery, starting with the spirit still.
-      </p>
-    </div> <!-- end of div div_page_header -->
-    <div id="div_simFrame">
-      <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
-      <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
-      <img id="image_pot_still_image" src="images/scotch-pot-still.png">
-      <div id="div_PLOTDIV_plotData">
-      </div> <!-- end of div div_PLOTDIV_plotData -->
-      <p id="field_enterSteamLABEL">
-          Steam
-      </p>
-      <input id="input_field_enterSteam" value="0" onchange="processUnits[0].updateUIsteamInput()">
-      </input>
-      <!-- note about range slider: need event onchange for Win IE, oninput for others -->
-      <input type="range" id="range_steamSlider" min="0" max="100" step="1" value="0"
-        oninput="processUnits[0].updateUIsteamSlider()"
-        onchange="processUnits[0].updateUIsteamSlider()">
-      </input>
-      <div id="div_spirit_switch">
-          <label id="radio_mid_cut_LABEL" name="radio_of_div_spirit_switch">
-                <input type="radio" id="radio_mid_cut" name="radio_of_div_spirit_switch" onchange="processUnits[0].changeMode()">
-                <span id="radio_mid_cut_SPAN">mid</span>
-          </label>
-          <label id="radio_low_cut_LABEL" name="radio_of_div_spirit_switch">
-                <input type="radio" id="radio_low_cut" name="radio_of_div_spirit_switch" onchange="processUnits[0].changeMode()">
-                <span id="radio_low_cut_SPAN">low</span>
-          </label>
-          <label id="radio_high_cut_LABEL" name="radio_of_div_spirit_switch">
-                <input type="radio" id="radio_high_cut" name="radio_of_div_spirit_switch" checked onchange="processUnits[0].changeMode()">
-                <span id="radio_high_cut_SPAN">high</span>
-          </label>
-      </div> <!-- end of div div_spirit_switch -->
-      <p id="field_vaporProductPercentLABEL">
-          liquid ABV %
-      </p>
-      <p id="field_vaporProductPercent">
-        0
-      </p>
-      <p id="field_highPercentLABEL">
+<body>
+  <div id="div_page_header">
+    <p>
+    <a href="http://reactorlab.net/web-labs/">Back</a> to Web Labs at ReactorLab.net
+    <p><b><i>Under Development</i></b></p>
+    <p>
+     Starting to develop a simulation of a Scotch Whisky Distillery, starting with the spirit still.
+    </p>
+  </div> <!-- end of div div_page_header -->
+  <div id="div_simFrame">
+    <img id="image_pot_still_image" src="images/scotch-pot-still.png">
+    <input type="button" id="button_runButton" value="Run" value="Run" onclick="interfacer.runThisLab()">
+    <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="interfacer.resetThisLab()">
+    <div id="div_PLOTDIV_plotData">
+    </div> <!-- end of div div_PLOTDIV_plotData -->
+    <p id="field_enterSteamLABEL">
+        Steam
+    </p>
+    <input id="input_field_enterSteam" value="0" onchange="processUnits[0].updateUIsteamInput()">
+    </input>
+    <!-- note about range slider: need event onchange for Win IE, oninput for others -->
+    <input type="range" id="range_steamSlider" min="0" max="100" step="1" value="0"
+      oninput="processUnits[0].updateUIsteamSlider()"
+      onchange="processUnits[0].updateUIsteamSlider()">
+    </input>
+     <div id="div_spirit_switch">
+        <label id="radio_mid_cut_LABEL" name="radio_of_div_spirit_switch">
+              <input type="radio" id="radio_mid_cut" name="radio_of_div_spirit_switch" onchange="processUnits[0].changeMode()">
+              <span id="radio_mid_cut_SPAN">mid</span>
+        </label>
+        <label id="radio_low_cut_LABEL" name="radio_of_div_spirit_switch">
+              <input type="radio" id="radio_low_cut" name="radio_of_div_spirit_switch" onchange="processUnits[0].changeMode()">
+              <span id="radio_low_cut_SPAN">low</span>
+        </label>
+        <label id="radio_high_cut_LABEL" name="radio_of_div_spirit_switch">
+              <input type="radio" id="radio_high_cut" name="radio_of_div_spirit_switch" checked onchange="processUnits[0].changeMode()">
+              <span id="radio_high_cut_SPAN">high</span>
+        </label>
+     </div> <!-- end of div div_spirit_switch -->
+     <p id="field_highPercentLABEL">
         high %
-      </p>
-      <p id="field_highPercent">
-        0
-      </p>
-      <p id="field_highAmtLABEL">
+     </p>
+     <p id="field_highPercent" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_highAmt" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_highAmtLABEL">
         high amt
-      </p>
-      <p id="field_highAmt">
-        0
-      </p>
-      <p id="field_midPercentLABEL">
-          mid %
-      </p>
-      <p id="field_midPercent">
-        0
-      </p>
-      <p id="field_midAmtLABEL">
+     </p>
+     <p id="field_midAmt" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_midPercentLABEL">
+        mid %
+     </p>
+     <p id="field_midPercent" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_midAmtLABEL">
         mid amt
-      </p>
-      <p id="field_midAmt">
-        0
-      </p>
-      <p id="field_lowPercentLABEL">
+     </p>
+     <p id="field_lowAmt" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_lowPercentLABEL">
         low %
-      </p>
-      <p id="field_lowPercent">
-        0
-      </p>
-      <p id="field_lowAmtLABEL">
+     </p>
+     <p id="field_lowPercent" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_lowAmtLABEL">
         low amt
-      </p>
-      <p id="field_lowAmt">
-        0
-      </p>
-    </div> <!-- end of div div_simFrame -->
-  </body>
+     </p>
+     <p id="field_productPercentLABEL">
+        ABV %
+     </p>
+     <p id="field_productPercent" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_productRate" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_productRateLABEL">
+        rate
+     </p>
+     <p id="field_neck_T" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_pot_T" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_neck_T_LABEL">
+        Temperature (&deg;C)
+     </p>
+     <p id="field_pot_Vol_LABEL">
+        Liters
+     </p>
+     <p id="field_neck_T" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_pot_ABV" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_pot_T_LABEL">
+        Temperature (&deg;C)
+     </p>
+     <p id="field_pot_Vol" onchange="processUnits[0].updateUIparams()" value="340">
+        4
+     </p>
+     <p id="field_pot_ABV_LABEL">
+        ABV %
+     </p>
+  </div> <!-- end of div div_simFrame -->
+</body>
 </html>

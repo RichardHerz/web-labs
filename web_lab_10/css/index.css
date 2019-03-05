@@ -253,27 +253,8 @@ border-style: solid;
 
 #field_highPercent {
   position: absolute;
-  left: 471px;
-  top: 386px;
-  width: 72px;
-  height: 22px;
-  border-width: 1px;
-  visibility: visible;
-  border-style: dotted;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: true;
-  font-size: 16px;
-  border-color: DodgerBlue;
-  text-align: center;
-}
-
-#field_highAmt {
-  position: absolute;
   left: 470px;
-  top: 418px;
+  top: 386px;
   width: 72px;
   height: 22px;
   border-width: 1px;
@@ -305,6 +286,25 @@ border-style: solid;
   LCshowBorder: false;
   font-size: 16px;
   text-align: right;
+}
+
+#field_highAmt {
+  position: absolute;
+  left: 470px;
+  top: 419px;
+  width: 72px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+  text-align: center;
 }
 
 #field_midAmt {
@@ -527,25 +527,6 @@ border-style: solid;
   LCshowBorder: false;
   font-size: 16px;
   text-align: right;
-}
-
-#field_neck_T {
-  position: absolute;
-  left: 145px;
-  top: 111px;
-  width: 72px;
-  height: 22px;
-  border-width: 1px;
-  visibility: visible;
-  border-style: dotted;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: true;
-  font-size: 16px;
-  border-color: DodgerBlue;
-  text-align: center;
 }
 
 #field_pot_T {

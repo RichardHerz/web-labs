@@ -1,0 +1,16 @@
+#field_
+
+highPercent
+highAmt
+midPercent
+midAmt
+lowPercent
+lowAmt
+
+productPercent
+productRate
+
+neck_T
+pot_T
+pot_Vol
+pot_ABV

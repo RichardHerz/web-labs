@@ -37,15 +37,14 @@ function puSpiritStill(pUnitIndex) {
   // **** they are not currently used - which is best?
   const thisSteamSliderID = 'range_steamSlider';
   const thisSteamFieldID = 'input_field_enterSteam';
-  const thisProductPercentFieldID = 'field_productPercent';
 
   // define additional internal variables
   let x = 0; // ethanol molar conc in pot liquid
-  const x0 = 0.12; // initial ethanol molar conc in feed to pot, see in reset()
+  const x0 = 0.2; // initial ethanol molar conc in feed to pot, see in reset()
   let y = 0; // ethanol molar conc in pot vapor
   let y2 = 0; // ethanol molar conc in neck vapor
   let x2 = 0; // ethanol molar conc in recycled neck liquid
-  let refluxRatio = 0.25;
+  let refluxRatio = 0.1;
   const m0 = 100; // (mol), initial total moles liquid charged to pot
   let m = m0; // (mol), total moles liquid in pot
   let vol0 = 0; // can't call equi.getVol() yet, do in reset
@@ -258,11 +257,12 @@ function puSpiritStill(pUnitIndex) {
 
     for (j = 0; j < unitStepRepeats; j++) {
       if (m > 0) {
-        // xxx m * dx/dt = - vrate * y2 ?????
-        // xxx rate change mol in pot = rate mol leaving...?
         // xxx check vrate definition
-        dxdt = -vrate * y2 / m;
-        // WAS dxdt = (vrate / m) * (x - y2);
+        // d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
+        // dm/dt = -vrate
+        // m*dx/dt - x*vrate = -vrate*y2
+        // dx/dt = -vrate * (y2 - x) / m
+        dxdt = -vrate * (y2 - x) / m;
         dmdt = -vrate;
         x = x + dxdt * unitTimeStep;
         m = m + dmdt * unitTimeStep;
@@ -282,9 +282,13 @@ function puSpiritStill(pUnitIndex) {
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
-    // display ABV of vapor product
-    let abv = equil.getABV(y2).toFixed(1);
-    document.getElementById(thisProductPercentFieldID).innerHTML = abv;
+    // display values in fields
+    let abv = equil.getABV(y2);
+    document.getElementById('field_productPercent').innerHTML = abv.toFixed(1);
+    document.getElementById('field_pot_T').innerHTML = pT.toFixed(1);
+    document.getElementById('field_neck_T').innerHTML = nT.toFixed(1);
+    abv = equil.getABV(x);
+    document.getElementById('field_pot_ABV').innerHTML = abv.toFixed(1);
 
     // HANDLE STRIP CHART DATA
 

@@ -40,12 +40,13 @@ function puSpiritStill(pUnitIndex) {
 
   // define additional internal variables
   let x = 0; // ethanol molar conc in pot liquid
-  const x0 = 0.2; // initial ethanol molar conc in feed to pot, see in reset()
+  const x0 = 0.15; // initial ethanol molar conc in feed to pot, see in reset()
   let y = 0; // ethanol molar conc in pot vapor
   let y2 = 0; // ethanol molar conc in neck vapor
   let x2 = 0; // ethanol molar conc in recycled neck liquid
   let refluxRatio = 0.1;
-  const m0 = 100; // (mol), initial total moles liquid charged to pot
+  const m0 = 1.0e5; // (mol), initial total moles liquid charged to pot
+  let feedVol = 4000; // can't call getMolesAndX(vol,abv) yet, do in reset
   let m = m0; // (mol), total moles liquid in pot
   let vol0 = 0; // can't call equi.getVol() yet, do in reset
   let vrate = 0; // (mol/s), vapor product flow rate from neck
@@ -163,9 +164,16 @@ function puSpiritStill(pUnitIndex) {
       document.getElementById(thisSteamFieldID).value = this.dataInitial[1];
     }
 
-    m = m0; // initial total moles charged to pot, m0 set above
     x = x0; // initial mole fraction ethanol charged to pot
-    vol0 = equil.getVol(m,x); // (liters), volume liquid in pot
+    let abv = equil.getABV(x);
+    vol0 = 3989; // liters
+    let result = equil.getMolesAndX(vol0,abv);
+    // m = m0; // initial total moles charged to pot, m0 set above
+    m = result[0]; // initial total moles charged to pot, m0 set above
+
+    console.log('reset, vol0 = ' + vol0);
+    console.log('reset, m = ' + m);
+
     y = equil.getY(x);
     x2 = equil.getX2(y,refluxRatio);
     y2 = equil.getY(x2);
@@ -250,7 +258,7 @@ function puSpiritStill(pUnitIndex) {
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // see reset method for initialization of values
-    vrate = 0.001 * this.steam;
+    vrate = 1.0 * this.steam;
     let j = 0; // index
     let dxdt = 0;
     let dmdt = 0;
@@ -266,6 +274,10 @@ function puSpiritStill(pUnitIndex) {
         dmdt = -vrate;
         x = x + dxdt * unitTimeStep;
         m = m + dmdt * unitTimeStep;
+
+        if (x < 0) {x = 0};
+        if (m < 0) {m = 0};
+
         // update variables for new x
         y = equil.getY(x);
         x2 = equil.getX2(y,refluxRatio);
@@ -289,6 +301,8 @@ function puSpiritStill(pUnitIndex) {
     document.getElementById('field_neck_T').innerHTML = nT.toFixed(1);
     abv = equil.getABV(x);
     document.getElementById('field_pot_ABV').innerHTML = abv.toFixed(1);
+    let potVol = equil.getVol(m,x);
+    document.getElementById('field_pot_Vol').innerHTML = potVol.toFixed(0);
 
     // HANDLE STRIP CHART DATA
 

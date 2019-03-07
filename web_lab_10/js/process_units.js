@@ -85,9 +85,8 @@ let equil = {
     // from total mol and light key mol bal around neck
     // y2 - (y - r*x2)/ (1-r) = 0 ... LHS < 0 for x2 = y2 = 0
     // y - (1-r)*y2 - r*x2 = 0 ... LHS > 0 for x2 = y2 = 0
-    // NOTE: dy/dx large at low x so difference of inc = 0.01 will give
-    // stepped y (and T) at low x, but check timing for small inc
     let inc = 0.001;
+    // NOTE: x drops over run toward zero, so start search at zero
     let x2 = -inc; // so start at x2=0 in repeat & still can go to zero ABV
     let y2 = 0;
     let lhs = 1; // any initial value > 0

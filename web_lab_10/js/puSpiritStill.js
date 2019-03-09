@@ -52,6 +52,13 @@ function puSpiritStill(pUnitIndex) {
   let vrate = 0; // (mol/s), vapor product flow rate from neck
   let pT = 0; // (deg C), pot temperature
   let nT = 0; // (deg C), neck temperature
+  // values for the shot cuts
+  let highMolTotal = 1e-6; // 1e-6 to avoid div by zero
+  let highMolEthanol = 0;
+  let midMolTotal = 1e-6;
+  let midMolEthanol = 0;
+  let lowMolTotal = 1e-6;
+  let lowMolEthanol = 0;
 
   // *****************************************
   //         define PUBLIC properties
@@ -166,7 +173,7 @@ function puSpiritStill(pUnitIndex) {
 
     x = x0; // initial mole fraction ethanol charged to pot
     let abv = equil.getABV(x);
-    vol0 = 3989; // liters
+    vol0 = 7978; // liters, 7978 to end up with 8000
     let result = equil.getMolesAndX(vol0,abv);
     // m = m0; // initial total moles charged to pot, m0 set above
     m = result[0]; // initial total moles charged to pot, m0 set above
@@ -179,6 +186,19 @@ function puSpiritStill(pUnitIndex) {
     y2 = equil.getY(x2);
     pT = equil.getT(x);
     nT = equil.getT(x2);
+
+    // reset values for the shot cuts
+    highMolTotal = 1e-6; // 1e-6 to avoid div by zero
+    highMolEthanol = 0;
+    midMolTotal = 1e-6;
+    midMolEthanol = 0;
+    lowMolTotal = 1e-6;
+    lowMolEthanol = 0;
+    // SPECIAL - SET CHECKED OF RADIO BUTTONS TO MATCH THIS SETTING
+    // PAGE RELOAD DOES NOT CHANGE CHECKED BUT DOES CALL initialize & reset
+    document.getElementById("radio_high_cut").checked = true;
+    document.getElementById("radio_mid_cut").checked = false;
+    document.getElementById("radio_low_cut").checked = false;
 
     // update display
     this.updateDisplay();
@@ -284,6 +304,24 @@ function puSpiritStill(pUnitIndex) {
         y2 = equil.getY(x2);
         pT = equil.getT(x);
         nT = equil.getT(x2);
+
+        // update accumulation in shots
+        let el = document.querySelector("#radio_high_cut");
+        if (el.checked){
+          highMolTotal = highMolTotal + vrate * unitTimeStep;
+          highMolEthanol = highMolEthanol + y2 * vrate * unitTimeStep;
+        }
+        el = document.querySelector("#radio_mid_cut");
+        if (el.checked){
+          midMolTotal = midMolTotal + vrate * unitTimeStep;
+          midMolEthanol = midMolEthanol + y2 * vrate * unitTimeStep;
+        }
+        el = document.querySelector("#radio_low_cut");
+        if (el.checked){
+          lowMolTotal = lowMolTotal + vrate * unitTimeStep;
+          lowMolEthanol = lowMolEthanol + y2 * vrate * unitTimeStep;
+        }
+
       }
     }
 
@@ -295,14 +333,43 @@ function puSpiritStill(pUnitIndex) {
     // since some plots may contain data from more than one process unit
 
     // display values in fields
-    let abv = equil.getABV(y2);
-    document.getElementById('field_productPercent').innerHTML = abv.toFixed(1);
-    document.getElementById('field_pot_T').innerHTML = pT.toFixed(1);
-    document.getElementById('field_neck_T').innerHTML = nT.toFixed(1);
-    abv = equil.getABV(x);
+
+    // pot conditions
+    let abv = equil.getABV(x);
     document.getElementById('field_pot_ABV').innerHTML = abv.toFixed(1);
     let potVol = equil.getVol(m,x);
     document.getElementById('field_pot_Vol').innerHTML = potVol.toFixed(0);
+
+    // neck T
+    document.getElementById('field_pot_T').innerHTML = pT.toFixed(1);
+    document.getElementById('field_neck_T').innerHTML = nT.toFixed(1);
+
+    // product ABV
+    abv = equil.getABV(y2);
+    document.getElementById('field_productPercent').innerHTML = abv.toFixed(1);
+    // product volumetric flow rate (liters per sim time unit)
+    let neckVolRate = vrate * equil.getVol(1,y2); // rate (mol/time) * (vol/mol) at y2
+    document.getElementById('field_productRate').innerHTML = neckVolRate.toFixed(1);
+
+    // shot cuts
+    // high cut
+    let tx = highMolEthanol / highMolTotal;
+    abv = equil.getABV(tx);
+    let tvol = equil.getVol(highMolTotal,tx);
+    document.getElementById('field_highAmt').innerHTML = tvol.toFixed(0);
+    document.getElementById('field_highPercent').innerHTML = abv.toFixed(1);
+    // mid cut
+    tx = midMolEthanol / midMolTotal;
+    abv = equil.getABV(tx);
+    tvol = equil.getVol(midMolTotal,tx);
+    document.getElementById('field_midAmt').innerHTML = tvol.toFixed(0);
+    document.getElementById('field_midPercent').innerHTML = abv.toFixed(1);
+    // low cut
+    tx = lowMolEthanol / lowMolTotal;
+    abv = equil.getABV(tx);
+    tvol = equil.getVol(lowMolTotal,tx);
+    document.getElementById('field_lowAmt').innerHTML = tvol.toFixed(0);
+    document.getElementById('field_lowPercent').innerHTML = abv.toFixed(1);
 
     // HANDLE STRIP CHART DATA
 

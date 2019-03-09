@@ -189,48 +189,66 @@ border-style: solid;
 #radio_mid_cut_LABEL {
   display: block;
   position: absolute;
-  width: 71px;
+  width: 52px;
   height: 28px;
   left: 58px;
   top: 4px;
   text-align: left;
+  border-width: 1px;
+  border-style: solid;
+  border-color: DodgerBlue;
 }
 
 #radio_mid_cut_SPAN {
   margin-left: 22px;
   line-height: 22px;
   font-size: 15px;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: DodgerBlue;
 }
 
 #radio_low_cut_LABEL {
   display: block;
   position: absolute;
-  width: 71px;
+  width: 52px;
   height: 28px;
   left: 4px;
   top: 5px;
   text-align: left;
+  border-width: 1px;
+  border-style: solid;
+  border-color: DodgerBlue;
 }
 
 #radio_low_cut_SPAN {
   margin-left: 22px;
   line-height: 22px;
   font-size: 15px;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: DodgerBlue;
 }
 
 #radio_high_cut_LABEL {
   display: block;
   position: absolute;
-  width: 71px;
+  width: 52px;
   height: 28px;
   left: 112px;
   top: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: DodgerBlue;
 }
 
 #radio_high_cut_SPAN {
   margin-left: 22px;
   line-height: 22px;
   font-size: 15px;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: DodgerBlue;
 }
 
 #field_highPercentLABEL {

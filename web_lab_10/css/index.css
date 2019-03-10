@@ -135,6 +135,76 @@ canvas {
   height: 17px;
 }
 
+#field_enterFeedVol_LABEL {
+  position: absolute;
+  left: 10px;
+  top: 500px;
+  width: 180px;
+  height: 25px;
+  visibility: visible;
+  opacity: 1;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  background-color: rgba(255, 255, 255, 1);
+  text-align: right;
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#input_field_enterFeedVol {
+  position: absolute;
+  left: 200px;
+  top: 513px;
+  width: 72px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#field_enterFeedABV_LABEL {
+  position: absolute;
+  left: 10px;
+  top: 533px;
+  width: 180px;
+  height: 25px;
+  visibility: visible;
+  opacity: 1;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  background-color: rgba(255, 255, 255, 1);
+  text-align: right;
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#input_field_enterFeedABV {
+  position: absolute;
+  left: 200px;
+  top: 546px;
+  width: 72px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
 #field_enterSteamLABEL {
   position: absolute;
   left: 102px;
@@ -158,9 +228,9 @@ canvas {
   top: 434px;
   width: 72px;
   height: 22px;
-border-width: 1px;
+  border-width: 1px;
   visibility: visible;
-border-style: solid;
+  border-style: solid;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;

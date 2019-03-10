@@ -86,7 +86,17 @@
               <input type="radio" id="radio_high_cut" name="radio_of_div_spirit_switch" checked onchange="processUnits[0].changeMode()">
               <span id="radio_high_cut_SPAN">high</span>
         </label>
-     </div> <!-- end of div div_spirit_switch -->
+    </div> <!-- end of div div_spirit_switch -->
+    <p id="field_enterFeedVol_LABEL">
+        Enter feed volume (liters)
+    </p>
+    <input id="input_field_enterFeedVol" value="2000" onchange="processUnits[0].updateUIparams()">
+    </input>
+    <p id="field_enterFeedABV_LABEL">
+        Enter feed % ABV
+    </p>
+    <input id="input_field_enterFeedABV" value="12" onchange="processUnits[0].updateUIparams()">
+    </input>
      <p id="field_highPercentLABEL">
         high %
      </p>
@@ -112,7 +122,7 @@
         low liters
      </p>
      <p id="field_productPercentLABEL">
-        ABV %
+        % ABV
      </p>
      <p id="field_productPercent" onchange="processUnits[0].updateUIparams()"></p>
      <p id="field_productRate" onchange="processUnits[0].updateUIparams()"></p>
@@ -133,7 +143,7 @@
      </p>
      <p id="field_pot_Vol" onchange="processUnits[0].updateUIparams()"></p>
      <p id="field_pot_ABV_LABEL">
-        ABV %
+        % ABV
      </p>
   </div> <!-- end of div div_simFrame -->
 </body>

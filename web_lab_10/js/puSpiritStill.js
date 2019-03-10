@@ -44,7 +44,7 @@ function puSpiritStill(pUnitIndex) {
   let y = 0; // ethanol molar conc in pot vapor
   let y2 = 0; // ethanol molar conc in neck vapor
   let x2 = 0; // ethanol molar conc in recycled neck liquid
-  let refluxRatio = 0.1;
+  let refluxRatio = 0.25;
   const m0 = 1.0e5; // (mol), initial total moles liquid charged to pot
   let feedVol = 4000; // can't call getMolesAndX(vol,abv) yet, do in reset
   let m = m0; // (mol), total moles liquid in pot

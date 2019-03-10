@@ -45,10 +45,11 @@ function puSpiritStill(pUnitIndex) {
   let y2 = 0; // ethanol molar conc in neck vapor
   let x2 = 0; // ethanol molar conc in recycled neck liquid
   let refluxRatio = 0.25;
+  let steam = 0;
+  let feedVol = 0;
+  let feedABV = 0;
   const m0 = 1.0e5; // (mol), initial total moles liquid charged to pot
-  let feedVol = 4000; // can't call getMolesAndX(vol,abv) yet, do in reset
   let m = m0; // (mol), total moles liquid in pot
-  let vol0 = 0; // can't call equi.getVol() yet, do in reset
   let vrate = 0; // (mol/s), vapor product flow rate from neck
   let pT = 0; // (deg C), pot temperature
   let nT = 0; // (deg C), neck temperature
@@ -66,8 +67,6 @@ function puSpiritStill(pUnitIndex) {
 
   this.name = 'process unit Spirit Still'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
-
-  this.steam = 0;
 
   // define arrays to hold data for plots, color canvas
   // these arrays will be used by plotter object
@@ -107,8 +106,8 @@ function puSpiritStill(pUnitIndex) {
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
     this.dataInitial[v] = 0;
-    this.steam = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.steam; // current input oalue for reporting
+    steam = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = steam; // current input oalue for reporting
     //
     v = 1;
     this.dataHeaders[v] = 'Steam';
@@ -117,9 +116,28 @@ function puSpiritStill(pUnitIndex) {
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
     this.dataInitial[v] = 0;
-    this.steam = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.steam; // current input oalue for reporting
+    steam = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = steam; // current input oalue for reporting
     //
+    v = 2;
+    this.dataHeaders[v] = 'Feed Volume';
+    this.dataInputs[v] = 'input_field_enterFeedVol'; // id of input
+    this.dataUnits[v] = 'liter';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 20000;
+    this.dataInitial[v] = 4000;
+    this.feedVol = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.feedVol; // current input oalue for reporting
+    //
+    v = 3;
+    this.dataHeaders[v] = 'Feed ABV';
+    this.dataInputs[v] = 'input_field_enterFeedABV'; // id of input
+    this.dataUnits[v] = '%';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 100;
+    this.dataInitial[v] = 12;
+    this.feedABV = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.feedABV; // current input oalue for reporting
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -171,15 +189,13 @@ function puSpiritStill(pUnitIndex) {
       document.getElementById(thisSteamFieldID).value = this.dataInitial[1];
     }
 
-    x = x0; // initial mole fraction ethanol charged to pot
-    let abv = equil.getABV(x);
-    vol0 = 7978; // liters, 7978 to end up with 8000
-    let result = equil.getMolesAndX(vol0,abv);
-    // m = m0; // initial total moles charged to pot, m0 set above
-    m = result[0]; // initial total moles charged to pot, m0 set above
+    // process input fields feedVol and feedABV
+    // to get initial total moles, m, and initial mol fraction ethanol, x
+    let result = equil.getMolesAndX(feedVol,feedABV);
+    m = result[0]; // initial total moles charged to pot
+    x = result[1]; // initial mole fraction ethanol charged to pot
 
-    console.log('reset, vol0 = ' + vol0);
-    console.log('reset, m = ' + m);
+    // console.log('reset, x = ' + x);
 
     y = equil.getY(x);
     x2 = equil.getX2(y,refluxRatio);
@@ -224,7 +240,8 @@ function puSpiritStill(pUnitIndex) {
     //
     let unum = unitIndex;
     //
-    // muMax = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    feedVol = this.dataValues[2] = interfacer.getInputValue(unum, 2);
+    feedABV = this.dataValues[3] = interfacer.getInputValue(unum, 3);
 
     this.updateUIsteamInput();
 
@@ -234,11 +251,11 @@ function puSpiritStill(pUnitIndex) {
     // SPECIAL FOR THIS UNIT
     // called in HTML input element so must be a publc method
     let unum = unitIndex;
-    this.steam = this.dataValues[1] = interfacer.getInputValue(unum, 1);
-    // alert('inputfield: this.steam = ' + this.steam);
+    steam = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    // alert('inputfield: steam = ' + steam);
     // update position of the range slider
     if (document.getElementById(thisSteamSliderID)) {
-      document.getElementById(thisSteamSliderID).value = this.steam;
+      document.getElementById(thisSteamSliderID).value = steam;
     }
     // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
@@ -251,11 +268,11 @@ function puSpiritStill(pUnitIndex) {
     // SPECIAL FOR THIS UNIT
     // called in HTML input element so must be a publc method
     let unum = unitIndex;
-    this.steam = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    steam = this.dataValues[0] = interfacer.getInputValue(unum, 0);
     // update input field display
-    // alert('slider: this.steam = ' + this.steam);
+    // alert('slider: steam = ' + steam);
     if (document.getElementById(thisSteamFieldID)) {
-      document.getElementById(thisSteamFieldID).value = this.steam;
+      document.getElementById(thisSteamFieldID).value = steam;
     }
     // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
@@ -278,7 +295,7 @@ function puSpiritStill(pUnitIndex) {
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // see reset method for initialization of values
-    vrate = 1.0 * this.steam;
+    vrate = 1.0 * steam;
     let j = 0; // index
     let dxdt = 0;
     let dmdt = 0;
@@ -379,24 +396,14 @@ function puSpiritStill(pUnitIndex) {
     let numStripPoints = plotInfo[0]['numberPoints'];
     let numStripVars = 6; // only the variables from this unit
 
-    // // handle m/m0
-    // v = 0;
-    // tempArray = this.stripData[v]; // work on one plot variable at a time
-    // // delete first and oldest element which is an [x,y] pair array
-    // tempArray.shift();
-    // // add the new [x.y] pair array at end
-    // tempArray.push( [0,m/m0] );
-    // // update the variable being processed
-    // this.stripData[v] = tempArray;
-
-    // handle vol/vol0
+    // handle vol/feedVol
     v = 0;
     let vol = equil.getVol(m,x);
     tempArray = this.stripData[v]; // work on one plot variable at a time
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [0,vol/vol0] );
+    tempArray.push( [0,vol/feedVol] );
     // update the variable being processed
     this.stripData[v] = tempArray;
 

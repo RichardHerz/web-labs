@@ -363,7 +363,7 @@ function puSpiritStill(pUnitIndex) {
           lowMolEthanol = lowMolEthanol + y2 * vrate * unitTimeStep;
         }
 
-        // DEVELOPMENT - ESTIMATE ENERGY INPUT USED
+        // **** DEVELOPMENT - ESTIMATE ENERGY INPUT USED ****
         //   rough for now, add details later (heat of mixing, delta from ref state, etc.)
 
         // change in moles of ethanol in liquid in pot
@@ -372,9 +372,12 @@ function puSpiritStill(pUnitIndex) {
         //   d(m(1-x))/dt = -m*dx/dt + (1-x)*dm/dt = -vrate*(1-y2)
 
         // energy rate required to vaporize
-        dedt = vrate*y2*hvapE + vrate*(1-y2)*hvapW; // (kJ/time)
+        dedt = vrate * (y2*hvapE + (1-y2)*hvapW); // (kJ/time)
         // add energy rate to heat liquid to new T
-        dedt = dedt + (pT-pTold) * m * (x*cppE) + ((1-x)*cppW); // (kJ/time)
+        dedt = dedt + (pT-pTold)/unitTimeStep * m * ( x*cppE + (1-x)*cppW ); // (kJ/time)
+        // add energy to heat metal system
+        let massCu = 300; // kg Cu
+        dedt = dedt + (pT-pTold)/unitTimeStep * massCu * cpCu;
 
       }
     }

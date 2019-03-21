@@ -39,27 +39,51 @@ function puSpiritStill(pUnitIndex) {
   const thisSteamFieldID = 'input_field_enterSteam';
 
   // define additional internal variables
-  let x = 0; // ethanol molar conc in pot liquid
-  const x0 = 0.15; // initial ethanol molar conc in feed to pot, see in reset()
-  let y = 0; // ethanol molar conc in pot vapor
-  let y2 = 0; // ethanol molar conc in neck vapor
-  let x2 = 0; // ethanol molar conc in recycled neck liquid
+  let x = 0; // ethanol mole fraction in pot liquid
+  const x0 = 0.15; // initial ethanol mole fraction in feed to pot, see in reset()
+  let y = 0; // ethanol mole fraction in pot vapor
+  let y2 = 0; // ethanol mole fraction in neck vapor
+  let x2 = 0; // ethanol mole fraction in recycled neck liquid
   let refluxRatio = 0.25;
   let steam = 0;
   let feedVol = 0;
   let feedABV = 0;
-  const m0 = 1.0e5; // (mol), initial total moles liquid charged to pot
+  const m0 = 1.0; // (mol), initial total moles liquid charged to pot
   let m = m0; // (mol), total moles liquid in pot
   let vrate = 0; // (mol/s), vapor product flow rate from neck
   let pT = 0; // (deg C), pot temperature
   let nT = 0; // (deg C), neck temperature
   // values for the shot cuts
-  let highMolTotal = 1e-6; // 1e-6 to avoid div by zero
+  let highMolTotal = 1e-6; // (mol), 1e-6 to avoid div by zero
   let highMolEthanol = 0;
   let midMolTotal = 1e-6;
   let midMolEthanol = 0;
   let lowMolTotal = 1e-6;
   let lowMolEthanol = 0;
+
+  // PHYSICAL PROPERTIES
+
+  let dedt = 0; // power input (kJ per time unit), UNDER DEVELOPMENT
+
+  // ETHANOL http://vle-calc.com
+  const cpE = 3.397; // (kJ/kg/K), heat capacity of liquid
+  const hvapE = 38.64; // (kJ/mol), heat of vaporization
+  const mwE = 46.069e-3; // (kg/mol), molecular weight
+  const densE = 0.789; // (kg/liter), liquid density
+  const molVolE = 58.4e-3; // (liter/mol) = (cm3/mol) * (1 liter)/(1e3 cm3), molar volume
+  const cppE = cpE * densE * molVolE; // (kJ/mol/K), heat capacity of liquid
+
+  // WATER http://vle-calc.com
+  const cpW = 4.189; // kJ/kg/K
+  const hvapW = 40.72; // (kJ/mol)
+  const mwW = 18.0152e-3; // (kg/mol), molecular weight
+  const densW = 1.0; // (kg/liter)
+  const molVolW = 18.0e-3; // (liter/mol) = (cm3/mol) * (1 liter)/(1e3 cm3), molar volume
+  const cppW = cpW * densW * molVolW; // (kJ/mol/K), heat capacity of liquid
+
+  // METALS https://www.engineeringtoolbox.com/specific-heat-metals-d_152.html
+  const cpCu = 0.39; // kJ/kg/K, copper
+  const cpSt = 0.49; // kJ/kg/K, carbon steel
 
   // *****************************************
   //         define PUBLIC properties
@@ -302,7 +326,6 @@ function puSpiritStill(pUnitIndex) {
 
     for (j = 0; j < unitStepRepeats; j++) {
       if (m > 0) {
-        // xxx check vrate definition
         // d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
         // dm/dt = -vrate
         // m*dx/dt - x*vrate = -vrate*y2
@@ -319,6 +342,7 @@ function puSpiritStill(pUnitIndex) {
         y = equil.getY(x);
         x2 = equil.getX2(y,refluxRatio);
         y2 = equil.getY(x2);
+        let pTold = pT; // save for energy calc
         pT = equil.getT(x);
         nT = equil.getT(x2);
 
@@ -339,6 +363,19 @@ function puSpiritStill(pUnitIndex) {
           lowMolEthanol = lowMolEthanol + y2 * vrate * unitTimeStep;
         }
 
+        // DEVELOPMENT - ESTIMATE ENERGY INPUT USED
+        //   rough for now, add details later (heat of mixing, delta from ref state, etc.)
+
+        // change in moles of ethanol in liquid in pot
+        //   d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
+        // change in moles of water in liquid in pot
+        //   d(m(1-x))/dt = -m*dx/dt + (1-x)*dm/dt = -vrate*(1-y2)
+
+        // energy rate required to vaporize
+        dedt = vrate*y2*hvapE + vrate*(1-y2)*hvapW; // (kJ/time)
+        // add energy rate to heat liquid to new T
+        dedt = dedt + (pT-pTold) * m * (x*cppE) + ((1-x)*cppW); // (kJ/time)
+
       }
     }
 
@@ -348,6 +385,8 @@ function puSpiritStill(pUnitIndex) {
     // update display elements which only depend on this process unit
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
+
+    console.log('dedt (kJ/time) = ' + dedt);
 
     // display values in fields
 

@@ -356,7 +356,7 @@ function puSpiritStill(pUnitIndex) {
           dTdt = qrate / mcp; // (K/time) = (kJ/time) / (kJ/K)
 
           // xxx need to add heat loss to surroundings
-          
+
           // xxx ALSO should have neck (nT) heating up a bit...
 
           pT = pT + dTdt * unitTimeStep;
@@ -364,7 +364,12 @@ function puSpiritStill(pUnitIndex) {
         } else {
 
           // reached initial boiling point of feed
+
+          // find vrate so dedt = qrate
+          // here use rough method of incrementing
           // increment molar evaporation rate vrate until dedt matches qrate
+          // choose increment vinc for desired resolution of energy solution
+          // for 4000 L, 12% ABV, initial vrate about 62.0
 
           let vinc = 0.1;
           vrate = -vinc;
@@ -455,7 +460,7 @@ function puSpiritStill(pUnitIndex) {
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
-    // console.log('dedt (kJ/time) = ' + dedt);
+    // console.log('vrate = ' + vrate);
 
     // display values in fields
 

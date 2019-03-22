@@ -52,7 +52,9 @@ function puSpiritStill(pUnitIndex) {
   let m = m0; // (mol), total moles liquid in pot
   let vrate = 0; // (mol/s), vapor product flow rate from neck
   let pT = 0; // (deg C), pot temperature
+  let pTbp = 0; // (deg C), initial boiling point of feed to pot
   let nT = 0; // (deg C), neck temperature
+
   // values for the shot cuts
   let highMolTotal = 1e-6; // (mol), 1e-6 to avoid div by zero
   let highMolEthanol = 0;
@@ -84,6 +86,7 @@ function puSpiritStill(pUnitIndex) {
   // METALS https://www.engineeringtoolbox.com/specific-heat-metals-d_152.html
   const cpCu = 0.39; // kJ/kg/K, copper
   const cpSt = 0.49; // kJ/kg/K, carbon steel
+  let massCu = 300; // kg Cu
 
   // *****************************************
   //         define PUBLIC properties
@@ -221,11 +224,19 @@ function puSpiritStill(pUnitIndex) {
 
     // console.log('reset, x = ' + x);
 
-    y = equil.getY(x);
-    x2 = equil.getX2(y,refluxRatio);
-    y2 = equil.getY(x2);
-    pT = equil.getT(x);
-    nT = equil.getT(x2);
+    // xxx OLD
+    // y = equil.getY(x);
+    // x2 = equil.getX2(y,refluxRatio);
+    // y2 = equil.getY(x2);
+    // pT = equil.getT(x);
+    // nT = equil.getT(x2);
+
+    y = 0;
+    x2 = 0;
+    y2 = 0;
+    pT = 20; // (deg C), initial pot Temperature
+    pTbp = equil.getT(x); // (deg C), initial boiling point of feed to pot
+    nT = 20; // (deg C), initial neck Temperature
 
     // reset values for the shot cuts
     highMolTotal = 1e-6; // 1e-6 to avoid div by zero
@@ -320,76 +331,102 @@ function puSpiritStill(pUnitIndex) {
 
     // see reset method for initialization of values
 
-    let qrate = 100 * steam;
+    let qrate = 50 * steam;
 
     let dxdt = 0;
     let dmdt = 0;
     let xnew = 0;
     let mnew = 0;
+    let mcp = 0;
+    let dTdt = 0;
     let j = 0; // index
+
+    // **** DEVELOPMENT - ESTIMATE ENERGY INPUT USED ****
+    //   rough for now, add details later (heat of mixing, loss to surroundings, etc.)
 
     for (j = 0; j < unitStepRepeats; j++) {
       if (m > 0) {
 
-        // increment vrate until dedt matches qrate
+        if (pT < pTbp) {
 
-        let vinc = 0.1;
-        vrate = -vinc;
-        dedt = qrate - 1; // to enter while repeat
+          // heating feed up to boiling point
+          // T changes but assume (for now) composition x does not
+          mcp = m * ( x * cppE + (1-x) * cppW ); // (kJ/K)
+          mcp = mcp + massCu * cpCu;
+          dTdt = qrate / mcp; // (K/time) = (kJ/time) / (kJ/K)
 
-        while (dedt < qrate) {
+          // xxx need to add heat loss to surroundings
+          
+          // xxx ALSO should have neck (nT) heating up a bit...
 
-          vrate = vrate + vinc;
+          pT = pT + dTdt * unitTimeStep;
 
-          // d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
-          // dm/dt = -vrate
-          // m*dx/dt - x*vrate = -vrate*y2
-          // dx/dt = -vrate * (y2 - x) / m
-          dxdt = -vrate * (y2 - x) / m;
-          dmdt = -vrate;
+        } else {
 
-          xnew = x + dxdt * unitTimeStep;
-          mnew = m + dmdt * unitTimeStep;
+          // reached initial boiling point of feed
+          // increment molar evaporation rate vrate until dedt matches qrate
 
-          if (xnew < 0) {xnew = 0};
-          if (mnew < 0) {mnew = 0};
+          let vinc = 0.1;
+          vrate = -vinc;
+          dedt = qrate - 1; // to enter while repeat
 
-          // update variables for new x
-          y = equil.getY( xnew );
+          while (dedt < qrate) {
+
+            vrate = vrate + vinc;
+
+            // d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
+            // dm/dt = -vrate
+            // m*dx/dt - x*vrate = -vrate*y2
+            // dx/dt = -vrate * (y2 - x) / m
+            dxdt = -vrate * (y2 - x) / m;
+            dmdt = -vrate;
+
+            xnew = x + dxdt * unitTimeStep;
+            mnew = m + dmdt * unitTimeStep;
+
+            if (xnew < 0) {xnew = 0};
+            if (mnew < 0) {mnew = 0};
+
+            // update variables for new x
+            y = equil.getY( xnew );
+            x2 = equil.getX2(y,refluxRatio);
+            y2 = equil.getY(x2);
+            let pTold = pT; // save for energy calc
+            pT = equil.getT( xnew );
+            nT = equil.getT(x2);
+
+            // change in moles of ethanol in liquid in pot
+            //   d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
+            // change in moles of water in liquid in pot
+            //   d(m(1-x))/dt = -m*dx/dt + (1-x)*dm/dt = -vrate*(1-y2)
+
+            // energy rate required to vaporize
+            dedt = vrate * (y2*hvapE + (1-y2)*hvapW); // (kJ/time)
+            // add energy rate to heat liquid to new T
+            dedt = dedt + (pT-pTold)/unitTimeStep * mnew * ( xnew * cppE + (1-xnew) * cppW ); // (kJ/time)
+            // add energy to heat metal system
+            dedt = dedt + (pT-pTold)/unitTimeStep * massCu * cpCu;
+
+            // xxx need to add heat loss to surroundings
+
+          } // END of while (dedt < qrate) {
+
+          // now have approx agreement between dedt and qrate
+          // under boiling conditions (pT >= pTbp)
+
+          // update variables
+          m = mnew;
+          x = xnew;
+          //
+          y = equil.getY(x);
           x2 = equil.getX2(y,refluxRatio);
           y2 = equil.getY(x2);
-          let pTold = pT; // save for energy calc
-          pT = equil.getT( xnew );
+          pT = equil.getT(x);
           nT = equil.getT(x2);
 
-          // **** DEVELOPMENT - ESTIMATE ENERGY INPUT USED ****
-          //   rough for now, add details later (heat of mixing, loss to surroundings, etc.)
+        } // END of else of if (pT < pTbp) {
 
-          // change in moles of ethanol in liquid in pot
-          //   d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
-          // change in moles of water in liquid in pot
-          //   d(m(1-x))/dt = -m*dx/dt + (1-x)*dm/dt = -vrate*(1-y2)
-
-          // energy rate required to vaporize
-          dedt = vrate * (y2*hvapE + (1-y2)*hvapW); // (kJ/time)
-          // add energy rate to heat liquid to new T
-          dedt = dedt + (pT-pTold)/unitTimeStep * mnew * ( xnew * cppE + (1-xnew) * cppW ); // (kJ/time)
-          // add energy to heat metal system
-          let massCu = 300; // kg Cu
-          dedt = dedt + (pT-pTold)/unitTimeStep * massCu * cpCu;
-
-        } // END of while (dedt < qrate) {
-
-        // update variables
-        m = mnew;
-        x = xnew;
-        //
-        y = equil.getY(x);
-        x2 = equil.getX2(y,refluxRatio);
-        y2 = equil.getY(x2);
-        let pTold = pT; // save for energy calc
-        pT = equil.getT(x);
-        nT = equil.getT(x2);
+        // now have new T and, if boiling, new composition
 
         // update accumulation in shots
         let el = document.querySelector("#radio_high_cut");

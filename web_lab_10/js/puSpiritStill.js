@@ -319,26 +319,71 @@ function puSpiritStill(pUnitIndex) {
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
     // see reset method for initialization of values
-    vrate = 1.0 * steam;
-    let j = 0; // index
+
+    let qrate = 100 * steam;
+
     let dxdt = 0;
     let dmdt = 0;
+    let xnew = 0;
+    let mnew = 0;
+    let j = 0; // index
 
     for (j = 0; j < unitStepRepeats; j++) {
       if (m > 0) {
-        // d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
-        // dm/dt = -vrate
-        // m*dx/dt - x*vrate = -vrate*y2
-        // dx/dt = -vrate * (y2 - x) / m
-        dxdt = -vrate * (y2 - x) / m;
-        dmdt = -vrate;
-        x = x + dxdt * unitTimeStep;
-        m = m + dmdt * unitTimeStep;
 
-        if (x < 0) {x = 0};
-        if (m < 0) {m = 0};
+        // increment vrate until dedt matches qrate
 
-        // update variables for new x
+        let vinc = 0.1;
+        vrate = -vinc;
+        dedt = qrate - 1; // to enter while repeat
+
+        while (dedt < qrate) {
+
+          vrate = vrate + vinc;
+
+          // d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
+          // dm/dt = -vrate
+          // m*dx/dt - x*vrate = -vrate*y2
+          // dx/dt = -vrate * (y2 - x) / m
+          dxdt = -vrate * (y2 - x) / m;
+          dmdt = -vrate;
+
+          xnew = x + dxdt * unitTimeStep;
+          mnew = m + dmdt * unitTimeStep;
+
+          if (xnew < 0) {xnew = 0};
+          if (mnew < 0) {mnew = 0};
+
+          // update variables for new x
+          y = equil.getY( xnew );
+          x2 = equil.getX2(y,refluxRatio);
+          y2 = equil.getY(x2);
+          let pTold = pT; // save for energy calc
+          pT = equil.getT( xnew );
+          nT = equil.getT(x2);
+
+          // **** DEVELOPMENT - ESTIMATE ENERGY INPUT USED ****
+          //   rough for now, add details later (heat of mixing, loss to surroundings, etc.)
+
+          // change in moles of ethanol in liquid in pot
+          //   d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
+          // change in moles of water in liquid in pot
+          //   d(m(1-x))/dt = -m*dx/dt + (1-x)*dm/dt = -vrate*(1-y2)
+
+          // energy rate required to vaporize
+          dedt = vrate * (y2*hvapE + (1-y2)*hvapW); // (kJ/time)
+          // add energy rate to heat liquid to new T
+          dedt = dedt + (pT-pTold)/unitTimeStep * mnew * ( xnew * cppE + (1-xnew) * cppW ); // (kJ/time)
+          // add energy to heat metal system
+          let massCu = 300; // kg Cu
+          dedt = dedt + (pT-pTold)/unitTimeStep * massCu * cpCu;
+
+        } // END of while (dedt < qrate) {
+
+        // update variables
+        m = mnew;
+        x = xnew;
+        //
         y = equil.getY(x);
         x2 = equil.getX2(y,refluxRatio);
         y2 = equil.getY(x2);
@@ -363,24 +408,8 @@ function puSpiritStill(pUnitIndex) {
           lowMolEthanol = lowMolEthanol + y2 * vrate * unitTimeStep;
         }
 
-        // **** DEVELOPMENT - ESTIMATE ENERGY INPUT USED ****
-        //   rough for now, add details later (heat of mixing, delta from ref state, etc.)
-
-        // change in moles of ethanol in liquid in pot
-        //   d(mx)/dt = m*dx/dt + x*dm/dt = -vrate*y2
-        // change in moles of water in liquid in pot
-        //   d(m(1-x))/dt = -m*dx/dt + (1-x)*dm/dt = -vrate*(1-y2)
-
-        // energy rate required to vaporize
-        dedt = vrate * (y2*hvapE + (1-y2)*hvapW); // (kJ/time)
-        // add energy rate to heat liquid to new T
-        dedt = dedt + (pT-pTold)/unitTimeStep * m * ( x*cppE + (1-x)*cppW ); // (kJ/time)
-        // add energy to heat metal system
-        let massCu = 300; // kg Cu
-        dedt = dedt + (pT-pTold)/unitTimeStep * massCu * cpCu;
-
-      }
-    }
+      } // END of if (m > 0) {
+    } // END of for (j = 0; j < unitStepRepeats; j++) {
 
   } // END of updateState() method
 
@@ -389,7 +418,7 @@ function puSpiritStill(pUnitIndex) {
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
-    console.log('dedt (kJ/time) = ' + dedt);
+    // console.log('dedt (kJ/time) = ' + dedt);
 
     // display values in fields
 

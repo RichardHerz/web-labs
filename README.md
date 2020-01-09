@@ -4,6 +4,8 @@ For information about the structure of the labs, click the "Wiki" tab near the t
 
 To run these labs, go to http://reactorlab.net/web-labs/
 
+See Readme's of individual labs for screenshots.
+
 Screenshot of web lab 7:
 
 ![PFR-image-github](http://reactorlab.net/graphics/github_media/PFR-image-github.png)

@@ -54,7 +54,7 @@
       <a href="images/pfr-info.html" target="new">More info</a>
     </p>
   </div> <!-- end of div div_page_header -->
-<div id="div_simFrame">
+  <div id="div_simFrame">
       <div id="div_PLOTDIV_PFR_plot">
       </div> <!-- end of div div_PLOTDIV_T_plot -->
    <canvas id="canvas_CANVAS_jacket" width="201" height="64"></canvas> <!-- canvas for colormap graphic -->
@@ -91,10 +91,24 @@
    <p id="field_Kf300_label">
       k at 300 K (m<sup>3</sup>/kg/s)
    </p>
+
+   <!-- XXX NEW - input field overlay button for QUIZ + see modalDemo below for output field -->
    <!-- <input id="input_field_Kf300" value="1.0e-7" onchange="interfacer.updateUIparams()"> -->
    <input id="input_field_Kf300" value="???" onchange="interfacer.updateUIparams()">
-   <!-- XXX NEW - input field overlay button for QUIZ  -->
-   <input type="button" id="button_quiz_Kf300" value="???" onclick="">
+   <input type="button" id="button_quiz_Kf300" value="???" onclick="fAnswerKf300()">
+  <script>
+    function fAnswerKf300() {
+    var txt;
+    var kAnswer = prompt("Please enter Kf300 value:");
+    if (kAnswer == null || kAnswer == "") {
+      txt = "User cancelled the prompt.";
+    } else {
+      txt = "You entered: " + kAnswer;
+    }
+    document.getElementById("modalDemo").innerHTML = txt;
+    }
+  </script>
+
    <p id="field_Ea_label">
       Ea (kJ/mol)
    </p>
@@ -128,5 +142,9 @@
    </p>
    <input id="input_field_Tjacket" value="355" onchange="interfacer.updateUIparams()">
 </div> <!-- end of div div_input_fields_group -->
+
+<!-- XXX NEW - display result of input field overlay button for QUIZ  -->
+<p id="modalDemo">???</p>
+
 </body>
 </html>

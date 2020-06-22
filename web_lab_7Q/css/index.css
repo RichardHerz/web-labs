@@ -348,7 +348,8 @@ canvas {
 #button_quiz_Kf300 {
   position: absolute;
   /* left +3 from field */
-  left: 193px;
+  /* BUT SHIFT FOR DEVELOPMENT */
+  left: 293px;
   /* top +2 from field */
   top: 6px;
   width: 91px;

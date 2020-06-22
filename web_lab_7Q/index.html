@@ -103,7 +103,11 @@
     if (kAnswer == null || kAnswer == "") {
       txt = "User cancelled the prompt.";
     } else {
-      txt = "You entered: " + kAnswer;
+      let varValue = document.getElementById("input_field_Kf300").value;
+      txt = "You entered: " + kAnswer + " correct is " + varValue
+      if (kAnswer == varValue){
+        alert("correct");
+      }
     }
     document.getElementById("modalDemo").innerHTML = txt;
     }

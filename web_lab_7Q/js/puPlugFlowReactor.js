@@ -121,10 +121,16 @@ let puPlugFlowReactor = {
     this.dataInputs[v] = 'input_field_Kf300';
     this.dataUnits[v] = 'm3/kg/s';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 10;
+    this.dataMax[v] = 5.0e-7;
     this.dataInitial[v] = 1.0e-7;
     this.Kf300 = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Kf300; // current input value for reporting
+    // SPECIAL - Kf300 is a quiz var - need to get quiz value & put in html input
+    // get random value & put into input field 
+    let qval = this.dataMin[v] + Math.random() * (this.dataMax[v] - this.dataMin[v]);
+    // both html and jquery method below work
+    document.getElementById(this.dataInputs[v]).setAttribute('value',qval); // this is html
+    // $("#"+this.dataInputs[v]).val(qval); // this is jquery
     //
     v = 1;
     this.dataHeaders[v] = 'Ea';

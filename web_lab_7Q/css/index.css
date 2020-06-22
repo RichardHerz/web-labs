@@ -335,14 +335,29 @@ canvas {
   top: 4px;
   width: 91px;
   height: 21px;
-border-width: 1px;
+  border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
-border-style: solid;
+  border-style: solid;
   opacity: 1;
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: true;
+}
+
+#button_quiz_Kf300 {
+  position: absolute;
+  /* left +3 from field */
+  left: 193px;
+  /* top +2 from field */
+  top: 6px;
+  width: 91px;
+  height: 21px;
+  border-width: 1px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  border-style: solid;
+  opacity: 1;
 }
 
 #field_Ea_label {

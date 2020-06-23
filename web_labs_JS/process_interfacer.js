@@ -101,6 +101,22 @@ let interfacer = {
     }
   },  // END OF function updateUIparams
 
+  checkQuizAnswer : function(v) {
+    // input argument v is var's index in pu's dataHeaders array 
+    let txt;
+    let kAnswer = prompt("Please enter value:");
+    if (kAnswer == null || kAnswer == "") {
+      txt = "User cancelled the prompt.";
+    } else {
+      let varValue = document.getElementById("input_field_Kf300").value;
+      txt = "You entered: " + kAnswer + " correct is " + varValue
+      if (kAnswer == varValue){
+        alert("correct");
+      }
+    }
+    document.getElementById("modalDemo").innerHTML = txt;
+  }, // END OF function checkQuizAnswer
+
   copyData : function(plotIndex) {
     // CALLED BY UI COPY DATA BUTTONS DEFINED IN HTML
     // copies data from plot to new browser tab or popup window - see below
@@ -150,7 +166,7 @@ let interfacer = {
                     + '???' + '&nbsp;'
                     + processUnits[n]['dataUnits'][v] + '<br>';
         } else {
-            // is not quiz input variable - display input value 
+            // is not quiz input variable - display input value
             tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
                     + processUnits[n]['dataValues'][v] + '&nbsp;'
                     + processUnits[n]['dataUnits'][v] + '<br>';

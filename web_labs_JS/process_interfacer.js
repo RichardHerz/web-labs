@@ -101,16 +101,18 @@ let interfacer = {
     }
   },  // END OF function updateUIparams
 
-  checkQuizAnswer : function(v) {
-    // input argument v is var's index in pu's dataHeaders array 
+  checkQuizAnswer : function(u,v) {
+    // CALLED BY UI ??? BUTTONS OVERLAYING QUIZ VAR INPUT FIELDS
+    // argument is pu index, var index in pu dataHeaders[]
     let txt;
-    let kAnswer = prompt("Please enter value:");
-    if (kAnswer == null || kAnswer == "") {
+    let varName = processUnits[u]['dataHeaders'][v];
+    let varAnswer = prompt("Please enter value of " + varName + ": ");
+    if (varAnswer == null || varAnswer == "") {
       txt = "User cancelled the prompt.";
     } else {
       let varValue = document.getElementById("input_field_Kf300").value;
-      txt = "You entered: " + kAnswer + " correct is " + varValue
-      if (kAnswer == varValue){
+      txt = "You entered: " + varAnswer + " correct is " + varValue
+      if ((varAnswer >= 0.8 * varValue) && (varAnswer <= 1.2 * varValue)){
         alert("correct");
       }
     }

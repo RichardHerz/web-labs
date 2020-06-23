@@ -73,7 +73,7 @@ let puPlugFlowReactor = {
   dataMax : [],
   dataInitial : [],
   dataValues : [],
-  dataQuizInputs : [], // SPECIAL - set to true only for quiz input vars 
+  dataQuizInputs : [], // SPECIAL - set to true only for quiz input vars
 
   // define arrays to hold output variables
   // these will be filled with initial values in method reset()
@@ -118,7 +118,7 @@ let puPlugFlowReactor = {
   initialize : function() {
     //
     // SPECIAL - THIS LAB IS A QUIZ
-    let qval; // initialize var
+    let qval; // initialize qval
     //
     let v = 0;
     this.dataHeaders[v] = 'Kf300';
@@ -226,7 +226,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 250;
     this.dataMax[v] = 400;
-    this.dataInitial[v] = 355;
+    this.dataInitial[v] = 350;
     this.Tjacket = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Tjacket; // current input value for reporting
     //

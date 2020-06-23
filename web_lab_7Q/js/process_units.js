@@ -35,10 +35,10 @@ let processUnits = new Object();
 // then object cleared for garbage collection, e.g.,
 //   puHeatExchanger = null; // puHeatExchanger is an object
 // WARNING: if reorder unit index numbers, then need to edit
-//   those numbers in each unit's inputs array 
+//   those numbers in each unit's inputs array
 
-processUnits[0] = puPlugFlowReactor;
+processUnits[0] = puPlugFlowReactorQUIZ;
 processUnits[0].unitIndex = 0;
 
 // clear separate process units for garbage collection
-puPlugFlowReactor = null;
+puPlugFlowReactorQUIZ = null;

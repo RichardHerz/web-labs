@@ -317,7 +317,7 @@ canvas {
   position: absolute;
   /* left +3 from field */
   /* BUT SHIFT +100 more FOR DEVELOPMENT */
-  left: 293px;
+  left: 193px;
   /* top +2 from field */
   top: 6px;
   width: 91px;
@@ -333,7 +333,7 @@ canvas {
   position: absolute;
   /* left +3 from field */
   /* BUT SHIFT +100 more FOR DEVELOPMENT */
-  left: 293px;
+  left: 193px;
   /* top +2 from field */
   top: 33px;
   width: 91px;
@@ -349,7 +349,7 @@ canvas {
   position: absolute;
   /* left +3 from field */
   /* BUT SHIFT +100 more FOR DEVELOPMENT */
-  left: 293px;
+  left: 193px;
   /* top +2 from field */
   top: 60px;
   width: 91px;

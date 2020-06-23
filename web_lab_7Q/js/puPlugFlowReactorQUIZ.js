@@ -16,7 +16,7 @@
 
 // -------------------------------------------------------------------
 
-let puPlugFlowReactor = {
+let puPlugFlowReactorQUIZ = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'Plug Flow Reactor',
@@ -124,7 +124,7 @@ let puPlugFlowReactor = {
     this.dataHeaders[v] = 'Kf300';
     this.dataInputs[v] = 'input_field_Kf300';
     this.dataUnits[v] = 'm3/kg/s';
-    this.dataMin[v] = 0;
+    this.dataMin[v] = 1.0e-8;
     this.dataMax[v] = 5.0e-7;
     this.dataInitial[v] = 1.0e-7;
     this.Kf300 = this.dataInitial[v]; // dataInitial used in getInputValue()
@@ -226,7 +226,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 250;
     this.dataMax[v] = 400;
-    this.dataInitial[v] = 350;
+    this.dataInitial[v] = 370;
     this.Tjacket = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Tjacket; // current input value for reporting
     //

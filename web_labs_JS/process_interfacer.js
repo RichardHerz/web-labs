@@ -106,14 +106,20 @@ let interfacer = {
     // argument is pu index, var index in pu dataHeaders[]
     let txt;
     let varName = processUnits[u]['dataHeaders'][v];
+    let inputFieldName = "input_field_" + varName;
     let varAnswer = prompt("Please enter value of " + varName + ": ");
     if (varAnswer == null || varAnswer == "") {
       txt = "User cancelled the prompt.";
     } else {
-      let varValue = document.getElementById("input_field_Kf300").value;
-      txt = "You entered: " + varAnswer + " correct is " + varValue
+      let varValue = document.getElementById(inputFieldName).value;
+      txt = "You entered: " + varAnswer + " correct is " + varValue;
       if ((varAnswer >= 0.8 * varValue) && (varAnswer <= 1.2 * varValue)){
-        alert("correct");
+        alert("Good! " + txt);
+        // set the visiblity of overlay button to hidden
+        let bname = "button_quiz_" + varName;
+        document.getElementById(bname).style.visibility = "hidden";
+      } else {
+        alert("Not within +/- 20%. Try again.");
       }
     }
     document.getElementById("modalDemo").innerHTML = txt;

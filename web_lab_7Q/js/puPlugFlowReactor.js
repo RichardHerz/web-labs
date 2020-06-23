@@ -73,6 +73,7 @@ let puPlugFlowReactor = {
   dataMax : [],
   dataInitial : [],
   dataValues : [],
+  dataQuizInputs : [], // SPECIAL - set to true only for quiz input vars 
 
   // define arrays to hold output variables
   // these will be filled with initial values in method reset()
@@ -116,6 +117,9 @@ let puPlugFlowReactor = {
 
   initialize : function() {
     //
+    // SPECIAL - THIS LAB IS A QUIZ
+    let qval; // initialize var
+    //
     let v = 0;
     this.dataHeaders[v] = 'Kf300';
     this.dataInputs[v] = 'input_field_Kf300';
@@ -125,9 +129,10 @@ let puPlugFlowReactor = {
     this.dataInitial[v] = 1.0e-7;
     this.Kf300 = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Kf300; // current input value for reporting
-    // SPECIAL - Kf300 is a quiz var - need to get quiz value & put in html input
-    // get random value & put into input field 
-    let qval = this.dataMin[v] + Math.random() * (this.dataMax[v] - this.dataMin[v]);
+    // SPECIAL - this is a quiz var - need to set quiz value & put in html input
+    // because updateUIparams runs after this
+    this.dataQuizInputs[v] = true;
+    qval = this.dataMin[v] + Math.random() * (this.dataMax[v] - this.dataMin[v]);
     // both html and jquery method below work
     document.getElementById(this.dataInputs[v]).setAttribute('value',qval); // this is html
     // $("#"+this.dataInputs[v]).val(qval); // this is jquery
@@ -137,20 +142,32 @@ let puPlugFlowReactor = {
     this.dataInputs[v] = 'input_field_Ea';
     this.dataUnits[v] = 'kJ/mol';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 200;
-    this.dataInitial[v] = 100;
+    this.dataMax[v] = 100;
+    this.dataInitial[v] = 50;
     this.Ea = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Ea; // current input value for reporting
+    // SPECIAL - this is a quiz var - need to set quiz value & put in html input
+    // because updateUIparams runs after this
+    this.dataQuizInputs[v] = true;
+    qval = this.dataMin[v] + Math.random() * (this.dataMax[v] - this.dataMin[v]);
+    qval = Math.round(qval);
+    document.getElementById(this.dataInputs[v]).setAttribute('value',qval);
     //
     v = 2;
     this.dataHeaders[v] = 'DelH';
     this.dataInputs[v] = 'input_field_DelH';
     this.dataUnits[v] = 'kJ/mol';
-    this.dataMin[v] = -200;
-    this.dataMax[v] = 200;
+    this.dataMin[v] = -100;
+    this.dataMax[v] = 150;
     this.dataInitial[v] = -125;
     this.DelH = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.DelH; // current input value for reporting
+    // SPECIAL - this is a quiz var - need to set quiz value & put in html input
+    // because updateUIparams runs after this
+    this.dataQuizInputs[v] = true;
+    qval = this.dataMin[v] + Math.random() * (this.dataMax[v] - this.dataMin[v]);
+    qval = Math.round(qval);
+    document.getElementById(this.dataInputs[v]).setAttribute('value',qval);
     //
     v = 3;
     this.dataHeaders[v] = 'Wcat';

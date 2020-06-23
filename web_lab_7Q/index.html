@@ -92,10 +92,10 @@
       k at 300 K (m<sup>3</sup>/kg/s)
    </p>
 
-   <!-- XXX NEW - input field overlay button for QUIZ + see modalDemo below for output field -->
-   <!-- <input id="input_field_Kf300" value="1.0e-7" onchange="interfacer.updateUIparams()"> -->
-   <input id="input_field_Kf300" value="???" onchange="interfacer.updateUIparams()">
-   <input type="button" id="button_quiz_Kf300" value="???" onclick="fAnswerKf300()">
+  <!-- XXX NEW - input field overlay button for QUIZ + see modalDemo below for output field -->
+  <!-- <input id="input_field_Kf300" value="1.0e-7" onchange="interfacer.updateUIparams()"> -->
+  <input id="input_field_Kf300" value="???" onchange="interfacer.updateUIparams()">
+  <input type="button" id="button_quiz_Kf300" value="???" onclick="fAnswerKf300()">
   <script>
     function fAnswerKf300() {
     var txt;
@@ -117,10 +117,18 @@
       Ea (kJ/mol)
    </p>
    <input id="input_field_Ea" value="100" onchange="interfacer.updateUIparams()">
+
+   <!-- XXX NEw QUIZ -->
+   <input type="button" id="button_quiz_Ea" value="???" onclick="fAnswerEa()">
+
    <p id="field_DelH_label">
       &#8710;H (kJ/mol)
    </p>
    <input id="input_field_DelH" value="-125" onchange="interfacer.updateUIparams()">
+
+   <!-- XXX NEw QUIZ -->
+   <input type="button" id="button_quiz_DelH" value="???" onclick="fAnswerDH()">
+
    <p id="field_Wcat_label">
       Wcat (kg)
    </p>

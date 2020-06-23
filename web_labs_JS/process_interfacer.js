@@ -139,13 +139,22 @@ let interfacer = {
     tText += 'Values of input parameters at time of data capture:<br>';
     // list inputs for all units since, other units may affect these results
     numUnits = Object.keys(processUnits).length;
+    let qpos; // position of _quiz in variable name
     for (n = 0; n < numUnits; n += 1) {
       tText += '* ' + processUnits[n]['name'] + '<br>';
       numVar = processUnits[n]['VarCount'];
       for (v = 0; v <= numVar; v += 1) { // NOTE: <=
-        tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
-                + processUnits[n]['dataValues'][v] + '&nbsp;'
-                + processUnits[n]['dataUnits'][v] + '<br>';
+        if (processUnits[n]['dataQuizInputs'][v]) {
+            // is quiz variable - do not display input value
+            tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+                    + '???' + '&nbsp;'
+                    + processUnits[n]['dataUnits'][v] + '<br>';
+        } else {
+            // is not quiz input variable - display input value 
+            tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+                    + processUnits[n]['dataValues'][v] + '&nbsp;'
+                    + processUnits[n]['dataUnits'][v] + '<br>';
+        }
       }
     }
     tText += '</p>';

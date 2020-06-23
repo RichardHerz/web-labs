@@ -54,7 +54,7 @@ let puPlugFlowReactorQUIZ = {
 
   // define main inputs
   // values will be set in method initialize()
-  Kf300 : 0,
+  k_300K : 0,
   Ea : 0,
   DelH : 0,
   Wcat : 0,
@@ -121,14 +121,14 @@ let puPlugFlowReactorQUIZ = {
     let qval; // initialize qval
     //
     let v = 0;
-    this.dataHeaders[v] = 'Kf300';
-    this.dataInputs[v] = 'input_field_Kf300';
+    this.dataHeaders[v] = 'k_300K';
+    this.dataInputs[v] = 'input_field_k_300K';
     this.dataUnits[v] = 'm3/kg/s';
     this.dataMin[v] = 1.0e-8;
     this.dataMax[v] = 5.0e-7;
     this.dataInitial[v] = 1.0e-7;
-    this.Kf300 = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Kf300; // current input value for reporting
+    this.k_300K = this.dataInitial[v]; // dataInitial used in getInputValue()
+    this.dataValues[v] = this.k_300K; // current input value for reporting
     // SPECIAL - this is a quiz var - need to set quiz value & put in html input
     // because updateUIparams runs after this
     this.dataQuizInputs[v] = true;
@@ -327,7 +327,7 @@ let puPlugFlowReactorQUIZ = {
     //
     let unum = this.unitIndex;
     //
-    this.Kf300 = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    this.k_300K = this.dataValues[0] = interfacer.getInputValue(unum, 0);
     this.Ea = this.dataValues[1] = interfacer.getInputValue(unum, 1);
     this.DelH = this.dataValues[2] = interfacer.getInputValue(unum, 2);
     this.Wcat = this.dataValues[3] = interfacer.getInputValue(unum, 3);
@@ -470,7 +470,7 @@ let puPlugFlowReactorQUIZ = {
       // internal nodes
       for (n = 1; n < this.numNodes; n += 1) {
 
-        kT = this.Kf300 * Math.exp(EaOverRg300 - EaOverRg/this.Trxr[n]);
+        kT = this.k_300K * Math.exp(EaOverRg300 - EaOverRg/this.Trxr[n]);
 
         dCaDT = -flowCoef * (this.Ca[n] - this.Ca[n-1]) - rxnCoef * kT * this.Ca[n];
         dTrxrDT = - energyFlowCoef * (this.Trxr[n] - this.Trxr[n-1])
@@ -495,7 +495,7 @@ let puPlugFlowReactorQUIZ = {
 
       n = this.numNodes;
 
-      kT = this.Kf300 * Math.exp(EaOverRg300 - EaOverRg/this.Trxr[n]);
+      kT = this.k_300K * Math.exp(EaOverRg300 - EaOverRg/this.Trxr[n]);
 
       dCaDT = -flowCoef * (this.Ca[n] - this.Ca[n-1]) - rxnCoef * kT * this.Ca[n];
       dTrxrDT = - energyFlowCoef * (this.Trxr[n] - this.Trxr[n-1])

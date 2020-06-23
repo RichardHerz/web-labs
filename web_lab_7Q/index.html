@@ -91,13 +91,13 @@
 
    <!-- onchange can send interfacer.updateUIparams() to update all units *OR* send updateUIparams() to specific units -->
 
-   <p id="field_Kf300_label">
+   <p id="field_k_300K_label">
       k at 300 K (m<sup>3</sup>/kg/s)
    </p>
-  <input id="input_field_Kf300" value="???" onchange="interfacer.updateUIparams()">
+  <input id="input_field_k_300K" value="???" onchange="interfacer.updateUIparams()">
 
   <!-- NEW QUIZ -->
-  <input type="button" id="button_quiz_Kf300" value="???"
+  <input type="button" id="button_quiz_k_300K" value="???"
      onclick="interfacer.checkQuizAnswer(0,0)">
      <!-- checkQuizAnswer argument is pu index, var index in pu dataHeaders[] -->
 
@@ -146,9 +146,6 @@
    </p>
    <input id="input_field_Tjacket" value="370" onchange="interfacer.updateUIparams()">
 </div> <!-- end of div div_input_fields_group -->
-
-<!-- XXX NEW - display result of input field overlay button for QUIZ  -->
-<p id="modalDemo">???</p>
 
 </body>
 </html>

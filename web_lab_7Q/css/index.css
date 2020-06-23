@@ -313,7 +313,7 @@ canvas {
 
 /* SPECIAL - THIS LAB IS A QUIZ */
 
-#button_quiz_Kf300 {
+#button_quiz_k_300K {
   position: absolute;
   /* left +3 from field */
   /* BUT SHIFT +100 more FOR DEVELOPMENT */
@@ -361,7 +361,7 @@ canvas {
   opacity: 1;
 }
 
-#field_Kf300_label {
+#field_k_300K_label {
   position: absolute;
   left: 4px;
   top: -10px;
@@ -379,7 +379,7 @@ canvas {
   border-color: DodgerBlue;
 }
 
-#input_field_Kf300 {
+#input_field_k_300K {
   position: absolute;
   left: 190px;
   top: 4px;

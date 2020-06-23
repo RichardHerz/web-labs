@@ -119,10 +119,9 @@ let interfacer = {
         let bname = "button_quiz_" + varName;
         document.getElementById(bname).style.visibility = "hidden";
       } else {
-        alert("Not within +/- 20%. Try again.");
+        alert(varAnswer + " not within +/- 20%. Try again.");
       }
     }
-    document.getElementById("modalDemo").innerHTML = txt;
   }, // END OF function checkQuizAnswer
 
   copyData : function(plotIndex) {

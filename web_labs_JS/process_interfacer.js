@@ -52,13 +52,13 @@ let interfacer = {
     // do NOT update process nor display again here (will take one step)
   }, // END OF function resetThisLab
 
-  getInputValue : function(pUnitIndex,pVar) {
+  getInputValue : function(u,v) {
     // GET INPUT VALUES FROM INPUT FIELDS - CALLED IN UNITS updateUIparams()
     // USES OBJECT processUnits
-    let varInputID = processUnits[pUnitIndex]['dataInputs'][pVar];
-    let varInitial = processUnits[pUnitIndex]['dataInitial'][pVar];
-    let varMin = processUnits[pUnitIndex]['dataMin'][pVar];
-    let varMax = processUnits[pUnitIndex]['dataMax'][pVar];
+    let varInputID = processUnits[u]['dataInputs'][v];
+    let varInitial = processUnits[u]['dataInitial'][v];
+    let varMin = processUnits[u]['dataMin'][v];
+    let varMax = processUnits[u]['dataMax'][v];
     let varValue = 0; // set below
     // get the contents of the input and handle
     if (document.getElementById(varInputID)) {
@@ -101,9 +101,28 @@ let interfacer = {
     }
   },  // END OF function updateUIparams
 
+  initializeQuizVar : function(u,v) {
+    // inputs are unit index, quiz variable index
+    processUnits[u]['dataQuizInputs'][v] = true; // checked in interfacer.copyData
+    let qval = processUnits[u]['dataMin'][v]
+      + Math.random()
+      * (processUnits[u]['dataMax'][v] - processUnits[u]['dataMin'][v]);
+    // format number so don't get zillions of places after decimal place
+    if (Math.abs(qval) >= 1){
+      qval = Math.round(qval);
+    }
+    // both html and jquery method below work
+    document.getElementById(processUnits[u]['dataInputs'][v]).setAttribute('value',qval); // this is html
+    // $("#"+processUnits[u]['dataInputs'][v]).val(qval); // this is jquery
+  }, // END OF function initializeQuizVar
+
   checkQuizAnswer : function(u,v) {
+    //
+    // xxx TO DO: with correct answer, set processUnits[n]['dataQuizInputs'][v]
+    //            to false so value will appear when Copy Data
+    //
     // CALLED BY UI ??? BUTTONS OVERLAYING QUIZ VAR INPUT FIELDS
-    // argument is pu index, var index in pu dataHeaders[]
+    // argument is process unit index, var index in pu's dataHeaders[]
     let txt;
     let varName = processUnits[u]['dataHeaders'][v];
     let inputFieldName = "input_field_" + varName;
@@ -162,7 +181,6 @@ let interfacer = {
     tText += 'Values of input parameters at time of data capture:<br>';
     // list inputs for all units since, other units may affect these results
     numUnits = Object.keys(processUnits).length;
-    let qpos; // position of _quiz in variable name
     for (n = 0; n < numUnits; n += 1) {
       tText += '* ' + processUnits[n]['name'] + '<br>';
       numVar = processUnits[n]['VarCount'];

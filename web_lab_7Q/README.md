@@ -1,3 +1,3 @@
-Lab 7 – Dynamic simulation of a packed bed reactor with heat exchange 
+Lab 7 Quiz – Dynamic simulation of a packed bed reactor with heat exchange 
 
-![Lab-7-image-github](http://reactorlab.net/wp-content/uploads/2018/05/packedbed.png) 
+![Lab-7Q-image-github](http://reactorlab.net/web_labs/web_lab_7Q/images/pfr-quiz.png) 

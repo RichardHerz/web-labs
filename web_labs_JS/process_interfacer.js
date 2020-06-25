@@ -185,13 +185,21 @@ let interfacer = {
       tText += '* ' + processUnits[n]['name'] + '<br>';
       numVar = processUnits[n]['VarCount'];
       for (v = 0; v <= numVar; v += 1) { // NOTE: <=
-        if (processUnits[n]['dataQuizInputs'][v]) {
+        if (processUnits[n]['dataQuizInputs']) {
+          // unit has array dataQuizInputs, now check which vars are quiz vars
+          if (processUnits[n]['dataQuizInputs'][v]) {
             // is quiz variable - do not display input value
             tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
                     + '???' + '&nbsp;'
                     + processUnits[n]['dataUnits'][v] + '<br>';
-        } else {
+          } else {
             // is not quiz input variable - display input value
+            tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+                    + processUnits[n]['dataValues'][v] + '&nbsp;'
+                    + processUnits[n]['dataUnits'][v] + '<br>';
+          }
+        } else {
+            // unit does NOT have array dataQuizInputs, so show all input values 
             tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
                     + processUnits[n]['dataValues'][v] + '&nbsp;'
                     + processUnits[n]['dataUnits'][v] + '<br>';

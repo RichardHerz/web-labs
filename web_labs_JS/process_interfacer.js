@@ -101,20 +101,25 @@ let interfacer = {
     }
   },  // END OF function updateUIparams
 
-  initializeQuizVar : function(u,v) {
-    // inputs are unit index, quiz variable index
-    processUnits[u]['dataQuizInputs'][v] = true; // checked in interfacer.copyData
-    let qval = processUnits[u]['dataMin'][v]
-      + Math.random()
-      * (processUnits[u]['dataMax'][v] - processUnits[u]['dataMin'][v]);
-    // format number so don't get zillions of places after decimal place
-    if (Math.abs(qval) >= 1){
-      qval = Math.round(qval);
+  initializeQuizVars : function(u,qv) {
+    // inputs are unit index, array of quiz variable indexes in that unit
+    let v;
+    let qval;
+    for (n = 0; n < qv.length; n += 1) {
+      v = qv[n];
+      processUnits[u]['dataQuizInputs'][v] = true; // checked in interfacer.copyData
+      qval = processUnits[u]['dataMin'][v]
+        + Math.random()
+        * (processUnits[u]['dataMax'][v] - processUnits[u]['dataMin'][v]);
+      // format number so don't get zillions of places after decimal place
+      if (Math.abs(qval) >= 1){
+        qval = Math.round(qval);
+      }
+      // both html and jquery method below work
+      document.getElementById(processUnits[u]['dataInputs'][v]).setAttribute('value',qval); // this is html
+      // $("#"+processUnits[u]['dataInputs'][qv[n]]).val(qval); // this is jquery
     }
-    // both html and jquery method below work
-    document.getElementById(processUnits[u]['dataInputs'][v]).setAttribute('value',qval); // this is html
-    // $("#"+processUnits[u]['dataInputs'][v]).val(qval); // this is jquery
-  }, // END OF function initializeQuizVar
+  }, // END OF function initializeQuizVars
 
   checkQuizAnswer : function(u,v) {
     //
@@ -199,7 +204,7 @@ let interfacer = {
                     + processUnits[n]['dataUnits'][v] + '<br>';
           }
         } else {
-            // unit does NOT have array dataQuizInputs, so show all input values 
+            // unit does NOT have array dataQuizInputs, so show all input values
             tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
                     + processUnits[n]['dataValues'][v] + '&nbsp;'
                     + processUnits[n]['dataUnits'][v] + '<br>';

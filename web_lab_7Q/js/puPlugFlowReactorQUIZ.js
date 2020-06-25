@@ -73,7 +73,7 @@ let puPlugFlowReactorQUIZ = {
   dataMax : [],
   dataInitial : [],
   dataValues : [],
-  dataQuizInputs : [], // SPECIAL for quizzes, set by interfacer.initializeQuizVar
+  dataQuizInputs : [], // SPECIAL for quizzes, set by interfacer.initializeQuizVars
 
   // define arrays to hold output variables
   // these will be filled with initial values in method reset()
@@ -117,8 +117,7 @@ let puPlugFlowReactorQUIZ = {
 
   initialize : function() {
     //
-    // SPECIAL - THIS LAB IS A QUIZ - see variables below that call
-    //           interfacer.initializeQuizVar
+    // SPECIAL - THIS LAB IS A QUIZ - see function call at end this method
     //
     let v = 0;
     this.dataHeaders[v] = 'k_300K';
@@ -129,8 +128,6 @@ let puPlugFlowReactorQUIZ = {
     this.dataInitial[v] = 1.0e-7;
     this.k_300K = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.k_300K; // current input value for reporting
-    // SPECIAL - this is a quiz input variable
-    interfacer.initializeQuizVar(this.unitIndex,v);
     //
     v = 1;
     this.dataHeaders[v] = 'Ea';
@@ -141,8 +138,6 @@ let puPlugFlowReactorQUIZ = {
     this.dataInitial[v] = 50;
     this.Ea = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.Ea; // current input value for reporting
-    // SPECIAL - this is a quiz input variable
-    interfacer.initializeQuizVar(this.unitIndex,v);
     //
     v = 2;
     this.dataHeaders[v] = 'DelH';
@@ -153,8 +148,6 @@ let puPlugFlowReactorQUIZ = {
     this.dataInitial[v] = -125;
     this.DelH = this.dataInitial[v]; // dataInitial used in getInputValue()
     this.dataValues[v] = this.DelH; // current input value for reporting
-    // SPECIAL - this is a quiz input variable
-    interfacer.initializeQuizVar(this.unitIndex,v);
     //
     v = 3;
     this.dataHeaders[v] = 'Wcat';
@@ -235,6 +228,11 @@ let puPlugFlowReactorQUIZ = {
     this.dataUnits[v] =  'mol/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = this.dataMax[4]; // [4] is Cain
+    //
+    // SPECIAL - THIS LAB IS A QUIZ - set initial values of quiz unknowns
+    // requires declaration of dataQuizInputs array at top of this unit
+    let qv = [0,1,2]; // list of indexes v of quiz input variables
+    interfacer.initializeQuizVars(this.unitIndex,qv);
     //
   }, // END of initialize()
 

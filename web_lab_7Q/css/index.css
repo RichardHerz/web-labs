@@ -329,6 +329,22 @@ canvas {
   opacity: 1;
 }
 
+#field_quiz_transparent_k_300K {
+  position: absolute;
+  /* left +3 from field */
+  /* BUT SHIFT +100 more FOR DEVELOPMENT */
+  left: 193px;
+  /* top -16 from input field */
+  top: -10px;
+  width: 91px;
+  height: 21px;
+  border-width: 1px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  border-style: solid;
+  opacity: 0;
+}
+
 #button_quiz_Ea {
   position: absolute;
   /* left +3 from field */
@@ -345,6 +361,22 @@ canvas {
   opacity: 1;
 }
 
+#field_quiz_transparent_Ea {
+  position: absolute;
+  /* left +3 from field */
+  /* BUT SHIFT +100 more FOR DEVELOPMENT */
+  left: 193px;
+  /* top -16 from input field */
+  top: 17px;
+  width: 91px;
+  height: 21px;
+  border-width: 1px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  border-style: solid;
+  opacity: 0;
+}
+
 #button_quiz_DelH {
   position: absolute;
   /* left +3 from field */
@@ -359,6 +391,22 @@ canvas {
   background-color: rgb(255,255,255);
   border-style: solid;
   opacity: 1;
+}
+
+#field_quiz_transparent_DelH {
+  position: absolute;
+  /* left +3 from field */
+  /* BUT SHIFT +100 more FOR DEVELOPMENT */
+  left: 193px;
+  /* top -16 from input field */
+  top: 44px;
+  width: 91px;
+  height: 21px;
+  border-width: 0px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  border-style: solid;
+  opacity: 0;
 }
 
 #field_k_300K_label {
@@ -388,6 +436,8 @@ canvas {
   border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
+  /* set border width 0 for quiz input fields */
+  border-width: 0px;
   border-style: solid;
   opacity: 1;
   LCvScrollbar: false;
@@ -419,10 +469,11 @@ canvas {
   top: 31px;
   width: 91px;
   height: 21px;
-border-width: 1px;
+  /* set border width 0 for quiz input fields */
+  border-width: 0px;
+  border-style: solid;
   visibility: visible;
   background-color: rgb(255,255,255);
-border-style: solid;
   opacity: 1;
   LCvScrollbar: false;
   LCthreeD: true;
@@ -453,10 +504,11 @@ border-style: solid;
   top: 58px;
   width: 91px;
   height: 21px;
-border-width: 1px;
+  /* set border width 0 for quiz input fields */
+  border-width: 0px;
+  border-style: solid;
   visibility: visible;
   background-color: rgb(255,255,255);
-border-style: solid;
   opacity: 1;
   LCvScrollbar: false;
   LCthreeD: true;

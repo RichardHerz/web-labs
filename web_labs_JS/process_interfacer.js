@@ -108,7 +108,7 @@ let interfacer = {
     for (n = 0; n < qv.length; n += 1) {
       v = qv[n];
       processUnits[u]['dataQuizInputs'][v] = true; // checked in interfacer.copyData
-      qval = processUnits[u]['dataMin'][v]
+      qval = processUnits[u]['dataMin'][v];
         + Math.random()
         * (processUnits[u]['dataMax'][v] - processUnits[u]['dataMin'][v]);
       // format number so don't get zillions of places after decimal place
@@ -117,7 +117,7 @@ let interfacer = {
       }
       // both html and jquery method below work
       document.getElementById(processUnits[u]['dataInputs'][v]).setAttribute('value',qval); // this is html
-      // $("#"+processUnits[u]['dataInputs'][qv[n]]).val(qval); // this is jquery
+      // $("#"+processUnits[u]['dataInputs'][v).val(qval); // this is jquery
     }
   }, // END OF function initializeQuizVars
 

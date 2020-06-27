@@ -152,7 +152,6 @@ let interfacer = {
   }, // END OF function initializeQuizVars
 
   checkQuizAnswer : function(u,v) {
-    alert('enter checkQuizAnswer');
     //
     // xxx TO DO: with correct answer, set processUnits[n]['dataQuizInputs'][v]
     //            to false so value will appear when Copy Data
@@ -167,20 +166,19 @@ let interfacer = {
       txt = "User cancelled the prompt.";
     } else {
       let varValue = this.quizInputArray[u][v];
-      txt = "You entered: " + varAnswer + " correct is " + varValue.toExponential(2);
+      // format small values 
+      if (varValue > -1 && varValue < 1){
+        varValue = varValue.toExponential(2);
+      }
+      txt = "You entered: " + varAnswer + " correct is " + varValue;
       if ((varAnswer >= 0.8 * varValue) && (varAnswer <= 1.2 * varValue)){
         alert("Good! " + txt);
         // put the value in the input field
         let el = document.getElementById(processUnits[u]['dataInputs'][v]);
-        if (varValue > -1 && varValue < 1){
-          varValue = varValue.toExponential(2);
-        }
         el.value = varValue;
-
-        // // set the visiblity of overlay button to hidden
-        // let bname = "button_quiz_" + varName;
-        // document.getElementById(bname).style.visibility = "hidden";
-
+        // set the visiblity of overlay button to hidden
+        let bname = "button_quiz_" + varName;
+        document.getElementById(bname).style.visibility = "hidden";
         // mark as not quiz variable so appears in copyData table
         processUnits[u]['dataQuizInputs'][v] = false;
         // put value into processUnits[u]['dataValues'][v] for copyData

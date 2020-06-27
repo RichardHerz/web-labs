@@ -55,37 +55,50 @@ let interfacer = {
   }, // END OF function resetThisLab
 
   getInputValue : function(u,v) {
-    // GET INPUT VALUES FROM INPUT FIELDS - CALLED IN UNITS updateUIparams()
+    // GET INPUT VALUE - CALLED IN UNITS updateUIparams()
     // USES OBJECT processUnits
     let varInputID = processUnits[u]['dataInputs'][v];
     let varInitial = processUnits[u]['dataInitial'][v];
     let varMin = processUnits[u]['dataMin'][v];
     let varMax = processUnits[u]['dataMax'][v];
     let varValue = 0; // set below
-    // get the contents of the input and handle
-    if (document.getElementById(varInputID)) {
-      // the input exists so get the value and make sure it is within range
-      varValue = document.getElementById(varInputID).value;
-      varValue = Number(varValue); // force any number as string to numeric number
-      if (isNaN(varValue)) {varValue = varInitial;} // handle e.g., 259x, xxx
-      if (varValue < varMin) {varValue = varMin;}
-      if (varValue > varMax) {varValue = varMax;}
-      //
-      if (varValue == 0) {
-        // do nothing, otherwise in else if below, get 0.000e+00
-      } else if (Math.abs(varValue) < 1.0e-3) {
-        varValue = varValue.toExponential(2); // toExponential() returns STRING
-      } else if (Math.abs(varValue) >= 9.999e+3) {
-        varValue = varValue.toExponential(2); // toExponential() returns STRING
+    // have to get any quiz vars from array and not html input field
+    let qflag = false;
+    if (processUnits[u]['dataQuizInputs']) {
+      // unit has array dataQuizInputs, now check which vars are quiz vars
+      if (processUnits[u]['dataQuizInputs'][v]) {
+        // is quiz variable - do not display input value
+        qflag = true;
+        varValue = this.quizInputArray[u][v];
       }
-      // OK to put formatted number as STRING returned by toExponential() into field...
-      document.getElementById(varInputID).value = varValue;
-      // BUT need to return value as NUMBER to calling unit...
-      varValue = Number(varValue);
-    } else {
-      // this 'else' is in case there is no input on the web page yet in order to
-      // allow for independence and portability of this process unit
-      varValue = varInitial;
+    }
+    if (qflag == false) {
+      // not a quiz variable
+      // get the contents of the input from html input field
+      if (document.getElementById(varInputID)) {
+        // the input exists so get the value and make sure it is within range
+        varValue = document.getElementById(varInputID).value;
+        varValue = Number(varValue); // force any number as string to numeric number
+        if (isNaN(varValue)) {varValue = varInitial;} // handle e.g., 259x, xxx
+        if (varValue < varMin) {varValue = varMin;}
+        if (varValue > varMax) {varValue = varMax;}
+        //
+        if (varValue == 0) {
+          // do nothing, otherwise in else if below, get 0.000e+00
+        } else if (Math.abs(varValue) < 1.0e-3) {
+          varValue = varValue.toExponential(2); // toExponential() returns STRING
+        } else if (Math.abs(varValue) >= 9.999e+3) {
+          varValue = varValue.toExponential(2); // toExponential() returns STRING
+        }
+        // OK to put formatted number as STRING returned by toExponential() into field...
+        document.getElementById(varInputID).value = varValue;
+        // BUT need to return value as NUMBER to calling unit...
+        varValue = Number(varValue);
+      } else {
+        // this 'else' is in case there is no input on the web page yet in order to
+        // allow for independence and portability of this process unit
+        varValue = varInitial;
+      }
     }
     return varValue
   }, // END of getInputValue()
@@ -107,7 +120,7 @@ let interfacer = {
     // XXX IN DEVELOPMENT
     // XXX fix so can handle arbitrary number of rows and columns
     // XXX check to make sure initializeQuizVars works with
-    // XXX non contiguous indexes, e.g., 1,3,5 vs. 0,1,2 
+    // XXX non contiguous indexes, e.g., 1,3,5 vs. 0,1,2
     let arrayStub = new Array();
     // for (u = 0; u < processUnits.length; u += 1) {
     //   arrayStub[v] = new Array();
@@ -139,6 +152,7 @@ let interfacer = {
   }, // END OF function initializeQuizVars
 
   checkQuizAnswer : function(u,v) {
+    alert('enter checkQuizAnswer');
     //
     // xxx TO DO: with correct answer, set processUnits[n]['dataQuizInputs'][v]
     //            to false so value will appear when Copy Data
@@ -162,9 +176,11 @@ let interfacer = {
           varValue = varValue.toExponential(2);
         }
         el.value = varValue;
-        // set the visiblity of overlay button to hidden
-        let bname = "button_quiz_" + varName;
-        document.getElementById(bname).style.visibility = "hidden";
+
+        // // set the visiblity of overlay button to hidden
+        // let bname = "button_quiz_" + varName;
+        // document.getElementById(bname).style.visibility = "hidden";
+
         // mark as not quiz variable so appears in copyData table
         processUnits[u]['dataQuizInputs'][v] = false;
         // put value into processUnits[u]['dataValues'][v] for copyData

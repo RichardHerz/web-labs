@@ -11,6 +11,8 @@ let interfacer = {
 
   timerID : 0, // used by setInterval & clearInterval in runThisLab & resetThisLab
 
+  quizInputArray : [],
+
   runThisLab : function() {
     // TOGGLES between running (button label 'Pause') & paused (button label 'Run')
     // REQUIRES run button id='button_runButton' & display labels be 'Run' & 'Pause'
@@ -101,6 +103,21 @@ let interfacer = {
     }
   },  // END OF function updateUIparams
 
+  initializeQuizArrays : function() {
+    // XXX IN DEVELOPMENT
+    // XXX fix so can handle arbitrary number of rows and columns
+    // XXX check to make sure initializeQuizVars works with
+    // XXX non contiguous indexes, e.g., 1,3,5 vs. 0,1,2 
+    let arrayStub = new Array();
+    // for (u = 0; u < processUnits.length; u += 1) {
+    //   arrayStub[v] = new Array();
+    // }
+    arrayStub[0] = [1,2,3];
+    arrayStub[1] = [4,5,6];
+    // alert(arrayStub);
+    return arrayStub;
+  }, // END OF function initializeQuizArrays
+
   initializeQuizVars : function(u,qv) {
     // inputs are unit index, array of quiz variable indexes in that unit
     let v;
@@ -108,16 +125,16 @@ let interfacer = {
     for (n = 0; n < qv.length; n += 1) {
       v = qv[n];
       processUnits[u]['dataQuizInputs'][v] = true; // checked in interfacer.copyData
-      qval = processUnits[u]['dataMin'][v];
-        + Math.random()
+      qval = processUnits[u]['dataMin'][v] // line continues below...
+        + Math.random() // line continues below...
         * (processUnits[u]['dataMax'][v] - processUnits[u]['dataMin'][v]);
       // format number so don't get zillions of places after decimal place
       if (Math.abs(qval) >= 1){
         qval = Math.round(qval);
       }
-      // both html and jquery method below work
-      document.getElementById(processUnits[u]['dataInputs'][v]).setAttribute('value',qval); // this is html
-      // $("#"+processUnits[u]['dataInputs'][v).val(qval); // this is jquery
+      // put u,v,qval into quizInputArray
+      // and not html input field so user can't inspect html for qval
+      this.quizInputArray[u][v] = qval;
     }
   }, // END OF function initializeQuizVars
 
@@ -135,13 +152,23 @@ let interfacer = {
     if (varAnswer == null || varAnswer == "") {
       txt = "User cancelled the prompt.";
     } else {
-      let varValue = document.getElementById(inputFieldName).value;
-      txt = "You entered: " + varAnswer + " correct is " + varValue;
+      let varValue = this.quizInputArray[u][v];
+      txt = "You entered: " + varAnswer + " correct is " + varValue.toExponential(2);
       if ((varAnswer >= 0.8 * varValue) && (varAnswer <= 1.2 * varValue)){
         alert("Good! " + txt);
+        // put the value in the input field
+        let el = document.getElementById(processUnits[u]['dataInputs'][v]);
+        if (varValue > -1 && varValue < 1){
+          varValue = varValue.toExponential(2);
+        }
+        el.value = varValue;
         // set the visiblity of overlay button to hidden
         let bname = "button_quiz_" + varName;
         document.getElementById(bname).style.visibility = "hidden";
+        // mark as not quiz variable so appears in copyData table
+        processUnits[u]['dataQuizInputs'][v] = false;
+        // put value into processUnits[u]['dataValues'][v] for copyData
+        processUnits[u]['dataValues'][v] = varValue;
       } else {
         alert(varAnswer + " not within +/- 20%. Try again.");
       }

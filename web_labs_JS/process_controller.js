@@ -48,6 +48,8 @@ let controller = {
   stripPlotSpan : 5000,
 
   openThisLab : function() {
+    // initialize array to hold any quiz input variables hidden from user
+    interfacer.quizInputArray = interfacer.initializeQuizArrays();
     // initialize variables in each process unit
     // the order of the numeric index of process units does not affect the simulation
     let numUnits = Object.keys(processUnits).length; // number of units

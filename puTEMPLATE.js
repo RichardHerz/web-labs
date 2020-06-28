@@ -32,7 +32,7 @@ let puTEMPLATE = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   // define arrays to hold output variables
@@ -73,9 +73,7 @@ let puTEMPLATE = {
     // this.dataUnits[v] = 'm3/kg/s';
     // this.dataMin[v] = 0;
     // this.dataMax[v] = 1;
-    // this.dataInitial[v] = 1.0e-7;
-    // this.Kf300 = this.dataInitial[v]; // dataInitial used in getInputValue()
-    // this.dataValues[v] = this.Kf300; // current input value for reporting
+    // this.dataDefault[v] = 1.0e-7;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -117,8 +115,8 @@ let puTEMPLATE = {
     this.ssCheckSum = 0;
 
     for (k = 0; k <= this.numNodes; k += 1) {
-      this.Ca[k] = this.dataInitial[4]; // [4] is Cain
-      this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
+      this.Ca[k] = this.dataDefault[4]; // [4] is Cain
+      this.Trxr[k] = this.dataDefault[6]; // [6] is TinHX
     }
 
     // initialize profile data array
@@ -146,8 +144,8 @@ let puTEMPLATE = {
       this.profileData[0][k][0] = kn;
       this.profileData[1][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = this.dataInitial[6]; // [6] is TinHX
-      this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
+      this.profileData[0][k][1] = this.dataDefault[6]; // [6] is TinHX
+      this.profileData[1][k][1] = this.dataDefault[4]; // [4] is Cain
     }
 
     // update display

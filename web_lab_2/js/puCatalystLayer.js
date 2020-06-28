@@ -85,7 +85,7 @@ let puCatalystLayer = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   // define arrays to hold data for plots, color canvas
@@ -148,9 +148,7 @@ let puCatalystLayer = {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0;
-    this.Cmax = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Cmax; // current input value for reporting
+    this.dataDefault[v] = 0;
     //
     v = 1;
     this.dataHeaders[v] = 'CmaxSlider';
@@ -158,81 +156,63 @@ let puCatalystLayer = {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0;
-    this.CmaxSlider = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.CmaxSlider; // current input value for reporting
+    this.dataDefault[v] = 0;
     v = 2;
     this.dataHeaders[v] = 'Kflow';
     this.dataInputs[v] = 'input_field_enterKflow';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0.001;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 2.5;
-    this.Kflow = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Kflow; // current input value for reporting
+    this.dataDefault[v] = 2.5;
     v = 3;
     this.dataHeaders[v] = 'Kads';
     this.dataInputs[v] = 'input_field_enterKads';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 1;
-    this.Kads = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Kads; // current input value for reporting
+    this.dataDefault[v] = 1;
     v = 4;
     this.dataHeaders[v] = 'Kdiff';
     this.dataInputs[v] = 'input_field_enterKdiff';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0.0001;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0.003;
-    this.Kdiff = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Kdiff; // current input value for reporting
+    this.dataDefault[v] = 0.003;
     v = 5;
     this.dataHeaders[v] = 'Phi'; // Thiele Modulus
     this.dataInputs[v] = 'input_field_enterThieleMod';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0.001;
     this.dataMax[v] = 1000;
-    this.dataInitial[v] = 34;
-    this.Phi = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Phi; // current input value for reporting
+    this.dataDefault[v] = 34;
     v = 6;
     this.dataHeaders[v] = 'Alpha';
     this.dataInputs[v] = 'input_field_enterAlpha';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0.001;
     this.dataMax[v] = 1000;
-    this.dataInitial[v] = 10;
-    this.Alpha = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Alpha; // current input value for reporting
+    this.dataDefault[v] = 10;
     v = 7;
     this.dataHeaders[v] = 'Period';
     this.dataInputs[v] = 'input_field_enterCyclePeriod';
     this.dataUnits[v] = '';
     this.dataMin[v] = 100;
     this.dataMax[v] = 1000;
-    this.dataInitial[v] = 500;
-    this.Period = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Period; // current input value for reporting
+    this.dataDefault[v] = 500;
     v = 8;
     this.dataHeaders[v] = 'Duty'; // percent on, duty cycle for square cycling
     this.dataInputs[v] = 'input_field_enterDuty';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 50;
-    this.Duty = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Duty; // current input value for reporting
+    this.dataDefault[v] = 50;
     v = 9;
     this.dataHeaders[v] = 'Bscale'; // percent on, duty cycle for square cycling
     this.dataInputs[v] = 'input_field_enterBscale';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 4;
-    this.Bscale = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Bscale; // current input value for reporting
+    this.dataDefault[v] = 4;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount

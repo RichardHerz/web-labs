@@ -75,7 +75,7 @@ let puCounterCurrentHeatExchanger = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   // define arrays to hold output variables
@@ -118,9 +118,7 @@ let puCounterCurrentHeatExchanger = {
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 5.0e-3;
-    this.Flowrate = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Flowrate; // current input value for reporting
+    this.dataDefault[v] = 5.0e-3;
     //
     v = 1;
     this.dataHeaders[v] = 'System Tin';
@@ -128,9 +126,7 @@ let puCounterCurrentHeatExchanger = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 320;
     this.dataMax[v] = 380;
-    this.dataInitial[v] = 340;
-    this.Tin = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Tin; // current input value for reporting
+    this.dataDefault[v] = 340;
     //
     v = 2;
     this.dataHeaders[v] = 'UAcoef';
@@ -139,9 +135,7 @@ let puCounterCurrentHeatExchanger = {
     this.dataUnits[v] = 'kW/K';
     this.dataMin[v] = 0;
     this.dataMax[v] = 60;
-    this.dataInitial[v] = 20;
-    this.UAcoef = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.UAcoef; // current input value for reporting
+    this.dataDefault[v] = 20;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -173,8 +167,8 @@ let puCounterCurrentHeatExchanger = {
     // set state variables not set by updateUIparams() to initial settings
 
     // this.dataMin[1] is, e.g., 320
-    // this.dataInitial[1] is, e.g., 340
-    this.TinCold = this.dataInitial[1]; // bottom left of HX
+    // this.dataDefault[1] is, e.g., 340
+    this.TinCold = this.dataDefault[1]; // bottom left of HX
     this.TinHot = this.dataMin[1]; // top right of HX
     this.ToutCold = this.dataMin[1]; // btm right of HX output to RXR inlet
 
@@ -198,7 +192,7 @@ let puCounterCurrentHeatExchanger = {
     this.colorCanvasData = plotter.initColorCanvasArray(2,this.numNodes,1);
 
     // this.dataMin[1] is, e.g., 320
-    // this.dataInitial[1] is, e.g., 340
+    // this.dataDefault[1] is, e.g., 340
     for (k = 0; k <= this.numNodes; k += 1) {
       this.Thot[k] = this.dataMin[1];
       this.Tcold[k] = this.dataMin[1];
@@ -217,7 +211,7 @@ let puCounterCurrentHeatExchanger = {
       this.profileData[1][k][0] = kn;
       // y-axis values
       // this.dataMin[1] is, e.g., 320
-      // this.dataInitial[1] is, e.g., 340
+      // this.dataDefault[1] is, e.g., 340
       this.profileData[0][k][1] = this.dataMin[1];
       this.profileData[1][k][1] = this.dataMin[1];
     }
@@ -236,7 +230,7 @@ let puCounterCurrentHeatExchanger = {
       this.stripData[3][k][0] = k * timeStep;
       // y-axis values
       // this.dataMin[1] is, e.g., 320
-      // this.dataInitial[1] is, e.g., 340
+      // this.dataDefault[1] is, e.g., 340
       this.stripData[0][k][1] = this.dataMin[1];
       this.stripData[1][k][1] = this.dataMin[1];
       this.stripData[2][k][1] = this.dataMin[1];

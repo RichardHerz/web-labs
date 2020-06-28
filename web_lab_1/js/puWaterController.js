@@ -53,7 +53,7 @@ function puWaterController(pUnitIndex) {
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
-  this.dataInitial = [];
+  this.dataDefault = [];
   this.dataValues = [];
 
   // define arrays to hold data for plots, color canvas
@@ -82,9 +82,7 @@ function puWaterController(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
-    this.dataInitial[v] = 1;
-    setPoint = this.dataInitial[v]; // dataInitial used in getInputValue
-    this.dataValues[v] = setPoint; // current input oalue for reporting
+    this.dataDefault[v] = 1;
     //
     v = 1;
     this.dataHeaders[v] = 'gain';
@@ -92,9 +90,7 @@ function puWaterController(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 20;
-    this.dataInitial[v] = 5;
-    gain = this.dataInitial[v]; // dataInitial used in getInputValue
-    this.dataValues[v] = gain; // current input oalue for reporting
+    this.dataDefault[v] = 5;
     //
     v = 2;
     this.dataHeaders[v] = 'reset time';
@@ -102,9 +98,7 @@ function puWaterController(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 20;
-    this.dataInitial[v] = 2;
-    resetTime = this.dataInitial[v]; // dataInitial used in getInputValue
-    this.dataValues[v] = resetTime; // current input oalue for reporting
+    this.dataDefault[v] = 2;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount

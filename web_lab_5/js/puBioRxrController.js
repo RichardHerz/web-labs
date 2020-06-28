@@ -63,7 +63,7 @@ function puBioRxrController(pUnitIndex) {
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
-  this.dataInitial = [];
+  this.dataDefault = [];
   this.dataValues = [];
 
   // *****************************************
@@ -80,9 +80,7 @@ function puBioRxrController(pUnitIndex) {
     this.dataUnits[v] = 'kg/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 30;
-    this.dataInitial[v] = 5;
-    setPoint = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = setPoint; // current input oalue for reporting
+    this.dataDefault[v] = 5;
     //
     v = 1;
     this.dataHeaders[v] = 'gain';
@@ -90,9 +88,7 @@ function puBioRxrController(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
-    this.dataInitial[v] = 0.1;
-    gain = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = gain; // current input oalue for reporting
+    this.dataDefault[v] = 0.1;
     //
     v = 2;
     this.dataHeaders[v] = 'reset time';
@@ -100,9 +96,7 @@ function puBioRxrController(pUnitIndex) {
     this.dataUnits[v] = 'h';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 5;
-    resetTime = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = resetTime; // current input oalue for reporting
+    this.dataDefault[v] = 5;
     //
     v = 3;
     this.dataHeaders[v] = 'manualCommand';
@@ -110,9 +104,7 @@ function puBioRxrController(pUnitIndex) {
     this.dataUnits[v] = 'kg/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 40;
-    this.dataInitial[v] = 30;
-    manualCommand = this.dataInitial[v];
-    this.dataValues[v] = manualCommand;
+    this.dataDefault[v] = 30;
     //
     // SPECIAL - SET CHECKED OF RADIO BUTTONS TO MATCH THIS SETTING
     // PAGE RELOAD DOES NOT CHANGE CHECKED BUT DOES CALL initialize
@@ -158,7 +150,7 @@ function puBioRxrController(pUnitIndex) {
 
     // set state variables not set by updateUIparams to initial settings
     errorIntegral = 0;
-    this.command = this.dataInitial[3]; // initial manual command
+    this.command = this.dataDefault[3]; // initial manual command
 
     // XXX should this reset mode to manual?
 

@@ -80,7 +80,7 @@ let puAdiabaticPackedBedPFR = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   // define arrays to hold output variables
@@ -125,9 +125,7 @@ let puAdiabaticPackedBedPFR = {
     this.dataUnits[v] = 'm3/kg/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 1.0e-7;
-    this.Kf300 = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Kf300; // current input value for reporting
+    this.dataDefault[v] = 1.0e-7;
     //
     v = 1;
     this.dataHeaders[v] = 'Ea';
@@ -135,9 +133,7 @@ let puAdiabaticPackedBedPFR = {
     this.dataUnits[v] = 'kJ/mol';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 100;
-    this.Ea = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Ea; // current input value for reporting
+    this.dataDefault[v] = 100;
     //
     v = 2;
     this.dataHeaders[v] = 'DelH';
@@ -145,9 +141,7 @@ let puAdiabaticPackedBedPFR = {
     this.dataUnits[v] = 'kJ/mol';
     this.dataMin[v] = -150;
     this.dataMax[v] = 150;
-    this.dataInitial[v] = -125;
-    this.DelH = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.DelH; // current input value for reporting
+    this.dataDefault[v] = -125;
     //
     v = 3;
     this.dataHeaders[v] = 'Wcat';
@@ -155,9 +149,7 @@ let puAdiabaticPackedBedPFR = {
     this.dataUnits[v] = 'kg';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
-    this.dataInitial[v] = 100;
-    this.Wcat = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Wcat; // current input value for reporting
+    this.dataDefault[v] = 100;
     //
     v = 4;
     this.dataHeaders[v] = 'Cain';
@@ -165,9 +157,7 @@ let puAdiabaticPackedBedPFR = {
     this.dataUnits[v] = 'mol/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 550;
-    this.dataInitial[v] = 500;
-    this.Cain = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Cain; // current input value for reporting
+    this.dataDefault[v] = 500;
     //
     v = 5;
     this.dataHeaders[v] = 'Flowrate';
@@ -175,9 +165,7 @@ let puAdiabaticPackedBedPFR = {
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 5.0e-3;
-    this.Flowrate = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Flowrate; // current input value for reporting
+    this.dataDefault[v] = 5.0e-3;
     //
     v = 6;
     // *** only used in reactor to initialize and reset plots
@@ -186,9 +174,7 @@ let puAdiabaticPackedBedPFR = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 320;
     this.dataMax[v] = 380;
-    this.dataInitial[v] = this.dataMin[v];
-    this.TinHX = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.TinHX; // current input value for reporting
+    this.dataDefault[v] = this.dataMin[v];
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -227,11 +213,11 @@ let puAdiabaticPackedBedPFR = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    this.Tout = this.dataInitial[6]; // [6] is TinHX
+    this.Tout = this.dataDefault[6]; // [6] is TinHX
 
     for (k = 0; k <= this.numNodes; k += 1) {
-      this.Ca[k] = this.dataInitial[4]; // [4] is Cain
-      this.Trxr[k] = this.dataInitial[6]; // [6] is TinHX
+      this.Ca[k] = this.dataDefault[4]; // [4] is Cain
+      this.Trxr[k] = this.dataDefault[6]; // [6] is TinHX
     }
 
     // initialize profile data array
@@ -261,8 +247,8 @@ let puAdiabaticPackedBedPFR = {
       this.profileData[0][k][0] = kn;
       this.profileData[1][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = this.dataInitial[6]; // [6] is TinHX
-      this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
+      this.profileData[0][k][1] = this.dataDefault[6]; // [6] is TinHX
+      this.profileData[1][k][1] = this.dataDefault[4]; // [4] is Cain
     }
 
     let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
@@ -275,7 +261,7 @@ let puAdiabaticPackedBedPFR = {
       // first index specifies which variable
       this.stripData[0][k][0] = k * timeStep;
       // y-axis values
-      this.stripData[0][k][1] = this.dataInitial[4]; // [4] is Cain
+      this.stripData[0][k][1] = this.dataDefault[4]; // [4] is Cain
     }
 
     // update display

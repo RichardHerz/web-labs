@@ -70,7 +70,7 @@ function puPendulum(pUnitIndex) {
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
-  this.dataInitial = [];
+  this.dataDefault = [];
   this.dataValues = [];
 
   // *******************************************
@@ -91,9 +91,7 @@ function puPendulum(pUnitIndex) {
     this.dataUnits[v] = 'm/s';
     this.dataMin[v] = -10;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 1;
-    velocity = this.dataInitial[v]; // dataInitial used in getInputValue
-    this.dataValues[v] = velocity; // current input oalue for reporting
+    this.dataDefault[v] = 1;
     //
     v = 1;
     this.dataHeaders[v] = 'angle';
@@ -101,9 +99,7 @@ function puPendulum(pUnitIndex) {
     this.dataUnits[v] = 'degree';
     this.dataMin[v] = -180;
     this.dataMax[v] = 180;
-    this.dataInitial[v] = 90;
-    angleDeg = this.dataInitial[v]; // dataInitial used in getInputValue
-    this.dataValues[v] = angleDeg; // current input oalue for reporting
+    this.dataDefault[v] = 90;
     //
     v = 2;
     this.dataHeaders[v] = 'friction factor';
@@ -111,9 +107,7 @@ function puPendulum(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0;
-    fricFrac = this.dataInitial[v]; // dataInitial used in getInputValue
-    this.dataValues[v] = fricFrac; // current input oalue for reporting
+    this.dataDefault[v] = 0;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount

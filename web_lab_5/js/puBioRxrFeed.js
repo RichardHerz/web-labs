@@ -56,7 +56,7 @@ function puBioRxrFeed(pUnitIndex) {
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
-  this.dataInitial = [];
+  this.dataDefault = [];
   this.dataValues = [];
 
   // *****************************************
@@ -77,9 +77,7 @@ function puBioRxrFeed(pUnitIndex) {
     this.dataUnits[v] = 'm3/h';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0.2;
-    this.flowRate = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.flowRate; // current input oalue for reporting
+    this.dataDefault[v] = 0.2;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount

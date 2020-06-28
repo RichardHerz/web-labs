@@ -75,7 +75,7 @@ processUnits[0] = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   // define arrays to hold output variables
@@ -118,9 +118,7 @@ processUnits[0] = {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 200;
-    this.dataInitial[v] = 200;
-    this.N = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.N; // current input value for reporting
+    this.dataDefault[v] = 200;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount

@@ -58,10 +58,10 @@ let interfacer = {
     // GET INPUT VALUE - CALLED IN UNITS updateUIparams()
     // USES OBJECT processUnits
     let varInputID = processUnits[u]['dataInputs'][v];
-    let varInitial = processUnits[u]['dataInitial'][v];
+    let varDefault = processUnits[u]['dataDefault'][v];
     let varMin = processUnits[u]['dataMin'][v];
     let varMax = processUnits[u]['dataMax'][v];
-    let varValue = 0; // set below
+    let varValue; // set below
     // have to get any quiz vars from array and not html input field
     let qflag = false;
     if (processUnits[u]['dataQuizInputs']) {
@@ -79,7 +79,7 @@ let interfacer = {
         // the input exists so get the value and make sure it is within range
         varValue = document.getElementById(varInputID).value;
         varValue = Number(varValue); // force any number as string to numeric number
-        if (isNaN(varValue)) {varValue = varInitial;} // handle e.g., 259x, xxx
+        if (isNaN(varValue)) {varValue = varDefault;} // handle e.g., 259x, xxx
         if (varValue < varMin) {varValue = varMin;}
         if (varValue > varMax) {varValue = varMax;}
         //
@@ -97,7 +97,7 @@ let interfacer = {
       } else {
         // this 'else' is in case there is no input on the web page yet in order to
         // allow for independence and portability of this process unit
-        varValue = varInitial;
+        varValue = varDefault;
       }
     }
     return varValue
@@ -117,7 +117,7 @@ let interfacer = {
   },  // END OF function updateUIparams
 
   initializeQuizArrays : function() {
-    // called by controller.openThisLab 
+    // called by controller.openThisLab
     // initialize a 2D array to hold quiz input values
     // first index length is number of process units
     // second index values are undefined or quiz input value

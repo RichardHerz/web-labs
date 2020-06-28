@@ -111,7 +111,7 @@ function puSpiritStill(pUnitIndex) {
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
-  this.dataInitial = [];
+  this.dataDefault = [];
   this.dataValues = [];
 
   // *****************************************
@@ -132,9 +132,7 @@ function puSpiritStill(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 0;
-    steam = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = steam; // current input oalue for reporting
+    this.dataDefault[v] = 0;
     //
     v = 1;
     this.dataHeaders[v] = 'Steam';
@@ -142,9 +140,7 @@ function puSpiritStill(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 0;
-    steam = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = steam; // current input oalue for reporting
+    this.dataDefault[v] = 0;
     //
     v = 2;
     this.dataHeaders[v] = 'Feed Volume';
@@ -152,9 +148,7 @@ function puSpiritStill(pUnitIndex) {
     this.dataUnits[v] = 'liter';
     this.dataMin[v] = 0;
     this.dataMax[v] = 20000;
-    this.dataInitial[v] = 4000;
-    this.feedVol = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.feedVol; // current input oalue for reporting
+    this.dataDefault[v] = 4000;
     //
     v = 3;
     this.dataHeaders[v] = 'Feed ABV';
@@ -162,9 +156,7 @@ function puSpiritStill(pUnitIndex) {
     this.dataUnits[v] = '%';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 12;
-    this.feedABV = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.feedABV; // current input oalue for reporting
+    this.dataDefault[v] = 12;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -210,10 +202,10 @@ function puSpiritStill(pUnitIndex) {
     this.stripData = plotter.initPlotData(numStripVars,numStripPts);
 
     if (document.getElementById(thisSteamSliderID)) {
-      document.getElementById(thisSteamSliderID).value = this.dataInitial[0];
+      document.getElementById(thisSteamSliderID).value = this.dataDefault[0];
     }
     if (document.getElementById(thisSteamFieldID)) {
-      document.getElementById(thisSteamFieldID).value = this.dataInitial[1];
+      document.getElementById(thisSteamFieldID).value = this.dataDefault[1];
     }
 
     // process input fields feedVol and feedABV

@@ -81,7 +81,7 @@ let puCoCounterHeatExchanger = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   // define arrays to hold output variables
@@ -136,9 +136,7 @@ let puCoCounterHeatExchanger = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 300;
     this.dataMax[v] = 370;
-    this.dataInitial[v] = 360;
-    this.TinHot = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.TinHot; // current input value for reporting
+    this.dataDefault[v] = 360;
     //
     v = 1;
     this.dataHeaders[v] = 'TinCold';
@@ -146,9 +144,7 @@ let puCoCounterHeatExchanger = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 300;
     this.dataMax[v] = 370;
-    this.dataInitial[v] = 310;
-    this.TinCold =  this.dataInitial[v];
-    this.dataValues[v] = this.TinCold;
+    this.dataDefault[v] = 310;
     //
     v = 2;
     this.dataHeaders[v] = 'FlowHot';
@@ -156,9 +152,7 @@ let puCoCounterHeatExchanger = {
     this.dataUnits[v] = 'kg/s';
     this.dataMin[v] = 0.15;
     this.dataMax[v] = 4.0;
-    this.dataInitial[v] = 0.5;
-    this.FlowHot = this.dataInitial[v];
-    this.dataValues[v] = this.FlowHot;
+    this.dataDefault[v] = 0.5;
     //
     v = 3;
     this.dataHeaders[v] = 'FlowCold';
@@ -166,9 +160,7 @@ let puCoCounterHeatExchanger = {
     this.dataUnits[v] = 'kg/s';
     this.dataMin[v] = 0.15;
     this.dataMax[v] = 4.0;
-    this.dataInitial[v] = 0.75;
-    this.FlowCold = this.dataInitial[v];
-    this.dataValues[v] = this.FlowCold;
+    this.dataDefault[v] = 0.75;
     //
     v = 4;
     this.dataHeaders[v] = 'CpHot';
@@ -176,9 +168,7 @@ let puCoCounterHeatExchanger = {
     this.dataUnits[v] =  'kJ/kg/K';
     this.dataMin[v] = 1;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 4.2;
-    this.CpHot = this.dataInitial[v];
-    this.dataValues[v] = this.CpHot;
+    this.dataDefault[v] = 4.2;
     //
     v = 5;
     this.dataHeaders[v] = 'CpCold';
@@ -186,9 +176,7 @@ let puCoCounterHeatExchanger = {
     this.dataUnits[v] =  'kJ/kg/K';
     this.dataMin[v] = 1;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 4.2;
-    this.CpCold = this.dataInitial[v];
-    this.dataValues[v] = this.CpCold;
+    this.dataDefault[v] = 4.2;
     //
     v = 6;
     this.dataHeaders[v] = 'Ucoef';
@@ -196,9 +184,7 @@ let puCoCounterHeatExchanger = {
     this.dataUnits[v] =  'kW/m2/K';
     this.dataMin[v] = 0;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 0.6;
-    this.Ucoef = this.dataInitial[v];
-    this.dataValues[v] = this.Ucoef;
+    this.dataDefault[v] = 0.6;
     //
     v = 7;
     this.dataHeaders[v] = 'Area';
@@ -206,9 +192,7 @@ let puCoCounterHeatExchanger = {
     this.dataUnits[v] =  'm2';
     this.dataMin[v] = 1;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 4;
-    this.Area = this.dataInitial[v];
-    this.dataValues[v] = this.Area;
+    this.dataDefault[v] = 4;
     //
     v = 8;
     this.dataHeaders[v] = 'Diam';
@@ -216,9 +200,7 @@ let puCoCounterHeatExchanger = {
     this.dataUnits[v] =  'm';
     this.dataMin[v] = 0.02;
     this.dataMax[v] = 0.20;
-    this.dataInitial[v] = 0.15;
-    this.Diam = this.dataInitial[v];
-    this.dataValues[v] = this.Diam;
+    this.dataDefault[v] = 0.15;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount

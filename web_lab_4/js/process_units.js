@@ -74,7 +74,7 @@ processUnits[0] = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   ssCheckSum : 0, // used to check for steady state
@@ -88,9 +88,7 @@ processUnits[0] = {
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0.0001;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0.05;
-    this.flowRate = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.flowRate; // current input value for reporting
+    this.dataDefault[v] = 0.05;
     //
     v = 1;
     this.dataHeaders[v] = 'feedConc';
@@ -98,9 +96,7 @@ processUnits[0] = {
     this.dataUnits[v] = 'mol/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
-    this.dataInitial[v] = 0;
-    this.conc = this.dataInitial[v];
-    this.dataValues[v] = this.conc;
+    this.dataDefault[v] = 0;
     //
     v = 2;
     this.dataHeaders[v] = 'feedTemp';
@@ -108,9 +104,7 @@ processUnits[0] = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 200;
     this.dataMax[v] = 500;
-    this.dataInitial[v] = 300;
-    this.Tfeed = this.dataInitial[v];
-    this.dataValues[v] = this.Tfeed;
+    this.dataDefault[v] = 300;
     // END OF INPUT VARS
     // record number of input variables, VarCount
     // used, e.g., in copy data to table
@@ -268,7 +262,7 @@ processUnits[1] = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   // define arrays to hold data for plots, color canvas
@@ -300,9 +294,7 @@ processUnits[1] = {
     this.dataUnits[v] = '1/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 5.0e-6;
-    this.k300 = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.k300; // current input value for reporting
+    this.dataDefault[v] = 5.0e-6;
     //
     v = 1;
     this.dataHeaders[v] = 'Ea';
@@ -310,9 +302,7 @@ processUnits[1] = {
     this.dataUnits[v] = 'kJ/mol';
     this.dataMin[v] = 0;
     this.dataMax[v] = 500;
-    this.dataInitial[v] = 200
-    this.Ea = this.dataInitial[v];
-    this.dataValues[v] = this.Ea;
+    this.dataDefault[v] = 200
     //
     v = 2;
     this.dataHeaders[v] = 'delH';
@@ -320,9 +310,7 @@ processUnits[1] = {
     this.dataUnits[v] = 'kJ/mol';
     this.dataMin[v] = -400;
     this.dataMax[v] = 400;
-    this.dataInitial[v] = -250
-    this.delH = this.dataInitial[v];
-    this.dataValues[v] = this.delH;
+    this.dataDefault[v] = -250
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -584,7 +572,7 @@ processUnits[2] = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   // define arrays to hold data for plots, color canvas
@@ -607,9 +595,7 @@ processUnits[2] = {
     this.dataUnits[v] = 'kJ/s/K';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 20;
-    this.UA = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.UA; // current input value for reporting
+    this.dataDefault[v] = 20;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -772,7 +758,7 @@ processUnits[3] = {
 
   // define variables that are to receive input values from other units
   Trxr : 0, // will get Trxr from unit 1 in updateInputs
-  
+
   updateInputs : function() {
     this.Trxr = processUnits[1].Trxr;
   },
@@ -806,7 +792,7 @@ processUnits[3] = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   // allow this unit to take more than one step within one main loop step in updateState method
@@ -825,9 +811,7 @@ processUnits[3] = {
     this.dataUnits[v] = 's';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 30;
-    this.resetTime = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.resetTime; // current input value for reporting
+    this.dataDefault[v] = 30;
     //
     v = 1;
     this.dataHeaders[v] = 'gain';
@@ -835,9 +819,7 @@ processUnits[3] = {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
-    this.dataInitial[v] = 300;
-    this.gain = this.dataInitial[v];
-    this.dataValues[v] = this.gain;
+    this.dataDefault[v] = 300;
     //
     v = 2;
     this.dataHeaders[v] = 'setPoint';
@@ -845,9 +827,7 @@ processUnits[3] = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 300;
     this.dataMax[v] = 500;
-    this.dataInitial[v] = 340;
-    this.setPoint = this.dataInitial[v];
-    this.dataValues[v] = this.setPoint;
+    this.dataDefault[v] = 340;
     //
     v = 3;
     this.dataHeaders[v] = 'manualCommand';
@@ -855,9 +835,7 @@ processUnits[3] = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 200;
     this.dataMax[v] = 450;
-    this.dataInitial[v] = 348;
-    this.manualCommand = this.dataInitial[v];
-    this.dataValues[v] = this.manualCommand;
+    this.dataDefault[v] = 348;
     //
     // SPECIAL - SET CHECKED OF RADIO BUTTONS TO MATCH THIS SETTING
     // PAGE RELOAD DOES NOT CHANGE CHECKED BUT DOES CALL initialize

@@ -44,7 +44,7 @@ function puWaterFeed(pUnitIndex) {
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
-  this.dataInitial = [];
+  this.dataDefault = [];
   this.dataValues = [];
 
   // define arrays to hold data for plots, color canvas
@@ -73,9 +73,7 @@ function puWaterFeed(pUnitIndex) {
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 3;
-    this.dataInitial[v] = 2;
-    this.flowRate = this.dataInitial[v]; // dataInitial used in interfacer.getInputValue()
-    this.dataValues[v] = this.flowRate; // current input value in interfacer.copyData()
+    this.dataDefault[v] = 2;
     //
     v = 1;
     this.dataHeaders[v] = 'Flow Rate';
@@ -83,9 +81,7 @@ function puWaterFeed(pUnitIndex) {
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 3;
-    this.dataInitial[v] = 2;
-    this.flowRate = this.dataInitial[v];
-    this.dataValues[v] = this.flowRate;
+    this.dataDefault[v] = 2;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount

@@ -55,7 +55,7 @@ function puWaterTank(pUnitIndex) {
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
-  this.dataInitial = [];
+  this.dataDefault = [];
   this.dataValues = [];
 
   // define arrays to hold data for plots, color canvas

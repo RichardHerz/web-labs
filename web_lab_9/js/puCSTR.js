@@ -62,7 +62,7 @@ function puCSTR(pUnitIndex) {
   // this.dataUnits = [];
   // this.dataMin = [];
   // this.dataMax = [];
-  // this.dataInitial = [];
+  // this.dataDefault = [];
   // this.dataValues = [];
 
   // *******************************************

@@ -72,7 +72,7 @@ function puBioReactor(pUnitIndex) {
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
-  this.dataInitial = [];
+  this.dataDefault = [];
   this.dataValues = [];
 
   // *****************************************
@@ -93,9 +93,7 @@ function puBioReactor(pUnitIndex) {
     this.dataUnits[v] = 'm3/kg/h'; // in Wu & Chang 2007 was 1/h
     this.dataMin[v] = 0.01;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 0.3;
-    muMax = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = muMax; // current input oalue for reporting
+    this.dataDefault[v] = 0.3;
     //
     v = 1;
     this.dataHeaders[v] = 'ks';  // Wu & Chang 2007, ks = 1.75
@@ -103,9 +101,7 @@ function puBioReactor(pUnitIndex) {
     this.dataUnits[v] = 'kg/m3';
     this.dataMin[v] = 0.01;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 1.75;
-    ks = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = ks; // current input oalue for reporting
+    this.dataDefault[v] = 1.75;
     //
     v = 2;
     this.dataHeaders[v] = 'alpha';  // Wu & Chang 2007, alpha = 0.01
@@ -113,9 +109,7 @@ function puBioReactor(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0.01;
-    alpha = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = alpha; // current input oalue for reporting
+    this.dataDefault[v] = 0.01;
     //
     v = 3;
     this.dataHeaders[v] = 'beta';  // Wu & Chang 2007, beta = 0.03
@@ -123,9 +117,7 @@ function puBioReactor(pUnitIndex) {
     this.dataUnits[v] = 'm3/kg';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0.03;
-    beta = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = beta; // current input oalue for reporting
+    this.dataDefault[v] = 0.03;
     //
     v = 4;
     this.dataHeaders[v] = 'gamma'; // Wu & Chang 2007, gamma = 0.1
@@ -133,9 +125,7 @@ function puBioReactor(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
-    this.dataInitial[v] = 0.5;
-    gamma = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = gamma; // current input oalue for reporting
+    this.dataDefault[v] = 0.5;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount

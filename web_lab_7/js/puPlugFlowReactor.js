@@ -71,7 +71,7 @@ let puPlugFlowReactor = {
   dataUnits : [],
   dataMin : [],
   dataMax : [],
-  dataInitial : [],
+  dataDefault : [],
   dataValues : [],
 
   // define arrays to hold output variables
@@ -122,9 +122,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'm3/kg/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 1.0e-7;
-    this.Kf300 = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Kf300; // current input value for reporting
+    this.dataDefault[v] = 1.0e-7;
     //
     v = 1;
     this.dataHeaders[v] = 'Ea';
@@ -132,9 +130,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'kJ/mol';
     this.dataMin[v] = 0;
     this.dataMax[v] = 200;
-    this.dataInitial[v] = 100;
-    this.Ea = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Ea; // current input value for reporting
+    this.dataDefault[v] = 100;
     //
     v = 2;
     this.dataHeaders[v] = 'DelH';
@@ -142,9 +138,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'kJ/mol';
     this.dataMin[v] = -200;
     this.dataMax[v] = 200;
-    this.dataInitial[v] = -125;
-    this.DelH = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.DelH; // current input value for reporting
+    this.dataDefault[v] = -125;
     //
     v = 3;
     this.dataHeaders[v] = 'Wcat';
@@ -152,9 +146,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'kg';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
-    this.dataInitial[v] = 100;
-    this.Wcat = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Wcat; // current input value for reporting
+    this.dataDefault[v] = 100;
     //
     v = 4;
     this.dataHeaders[v] = 'Cain';
@@ -162,9 +154,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'mol/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
-    this.dataInitial[v] = 500;
-    this.Cain = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Cain; // current input value for reporting
+    this.dataDefault[v] = 500;
     //
     v = 5;
     this.dataHeaders[v] = 'Flowrate';
@@ -172,9 +162,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0;
     this.dataMax[v] = 10;
-    this.dataInitial[v] = 4.0e-3;
-    this.Flowrate = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Flowrate; // current input value for reporting
+    this.dataDefault[v] = 4.0e-3;
     //
     v = 6;
     this.dataHeaders[v] = 'Tin';
@@ -182,9 +170,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 250;
     this.dataMax[v] = 400;
-    this.dataInitial[v] = 350;
-    this.Tin = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Tin; // current input value for reporting
+    this.dataDefault[v] = 350;
     //
     v = 7;
     this.dataHeaders[v] = 'UAcoef';
@@ -193,9 +179,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'kW/kg/K';
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
-    this.dataInitial[v] = 0.1;
-    this.UAcoef = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.UAcoef; // current input value for reporting
+    this.dataDefault[v] = 0.1;
     //
     v = 8;
     this.dataHeaders[v] = 'Tjacket';
@@ -203,9 +187,7 @@ let puPlugFlowReactor = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 250;
     this.dataMax[v] = 400;
-    this.dataInitial[v] = 355;
-    this.Tjacket = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.Tjacket; // current input value for reporting
+    this.dataDefault[v] = 355;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -248,8 +230,8 @@ let puPlugFlowReactor = {
     document.getElementById(this.displayReactorRightConc).innerHTML = 0.0 + ' mol/m<sup>3</sup>';
 
     for (k = 0; k <= this.numNodes; k += 1) {
-      this.Trxr[k] = this.dataInitial[8]; // [8] is Tjacket
-      this.TrxrNew[k] = this.dataInitial[8];
+      this.Trxr[k] = this.dataDefault[8]; // [8] is Tjacket
+      this.TrxrNew[k] = this.dataDefault[8];
       this.Ca[k] = 0;
       this.CaNew[k] = 0;
     }
@@ -278,8 +260,8 @@ let puPlugFlowReactor = {
       this.profileData[0][k][0] = kn;
       this.profileData[1][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = this.dataInitial[6]; // [6] is Tin
-      this.profileData[1][k][1] = this.dataInitial[4]; // [4] is Cain
+      this.profileData[0][k][1] = this.dataDefault[6]; // [6] is Tin
+      this.profileData[1][k][1] = this.dataDefault[4]; // [4] is Cain
     }
 
   }, // end reset

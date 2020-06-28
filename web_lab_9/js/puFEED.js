@@ -56,7 +56,7 @@ function puFEED(pUnitIndex) {
   this.dataUnits = [];
   this.dataMin = [];
   this.dataMax = [];
-  this.dataInitial = [];
+  this.dataDefault = [];
   this.dataValues = [];
 
   // *******************************************
@@ -80,9 +80,7 @@ function puFEED(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0;
-    this.conc = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.conc; // current input oalue for reporting
+    this.dataDefault[v] = 0;
     //
     v = 1;
     this.dataHeaders[v] = 'Feed Conc';
@@ -90,9 +88,7 @@ function puFEED(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataInitial[v] = 0;
-    this.conc = this.dataInitial[v]; // dataInitial used in getInputValue()
-    this.dataValues[v] = this.conc; // current input oalue for reporting
+    this.dataDefault[v] = 0;
     //
     //
     // END OF INPUT VARS

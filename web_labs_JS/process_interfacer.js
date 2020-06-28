@@ -117,17 +117,15 @@ let interfacer = {
   },  // END OF function updateUIparams
 
   initializeQuizArrays : function() {
-    // XXX IN DEVELOPMENT
-    // XXX fix so can handle arbitrary number of rows and columns
-    // XXX check to make sure initializeQuizVars works with
-    // XXX non contiguous indexes, e.g., 1,3,5 vs. 0,1,2
-    let arrayStub = new Array();
-    // for (u = 0; u < processUnits.length; u += 1) {
-    //   arrayStub[v] = new Array();
-    // }
-    arrayStub[0] = [1,2,3];
-    arrayStub[1] = [4,5,6];
-    // alert(arrayStub);
+    // called by controller.openThisLab 
+    // initialize a 2D array to hold quiz input values
+    // first index length is number of process units
+    // second index values are undefined or quiz input value
+    let arrayStub = [];
+    let numUnits = Object.keys(processUnits).length
+    for (u = 0; u < numUnits; u += 1) {
+      arrayStub[u] = [];
+    }
     return arrayStub;
   }, // END OF function initializeQuizArrays
 
@@ -166,7 +164,7 @@ let interfacer = {
       txt = "User cancelled the prompt.";
     } else {
       let varValue = this.quizInputArray[u][v];
-      // format small values 
+      // format small values
       if (varValue > -1 && varValue < 1){
         varValue = varValue.toExponential(2);
       }

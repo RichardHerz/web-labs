@@ -20,8 +20,8 @@ let simParams = {
   // OBJECT controller CAN CHANGE in object simParams the following:
   //    variable simTimeStep in method controller.changeSimTimeStep
   //
-  
-  title : 'Packed Bed Plug Flow Reactor', // title of simulation
+
+  title : 'Packed Bed Plug Flow Reactor *QUIZ*', // title of simulation
 
   runButtonID : "button_runButton", // for functions to run, reset, copy data
   // URLs for methods updateRunCount and updateCurrentRunCountDisplay below

@@ -150,12 +150,8 @@ let interfacer = {
   }, // END OF function initializeQuizVars
 
   checkQuizAnswer : function(u,v) {
-    //
-    // xxx TO DO: with correct answer, set processUnits[n]['dataQuizInputs'][v]
-    //            to false so value will appear when Copy Data
-    //
     // CALLED BY UI ??? BUTTONS OVERLAYING QUIZ VAR INPUT FIELDS
-    // argument is process unit index, var index in pu's dataHeaders[]
+    // argument is process unit index, var index in unit's dataHeaders[]
     let txt;
     let varName = processUnits[u]['dataHeaders'][v];
     let inputFieldName = "input_field_" + varName;
@@ -163,6 +159,7 @@ let interfacer = {
     if (varAnswer == null || varAnswer == "") {
       txt = "User cancelled the prompt.";
     } else {
+      varAnswer = Number(varAnswer);
       let varValue = this.quizInputArray[u][v];
       varValue = this.formatNumToNum(varValue);
       txt = "You entered: " + varAnswer + " correct is " + varValue;
@@ -174,8 +171,10 @@ let interfacer = {
         // set the visiblity of overlay button to hidden
         let bname = "button_quiz_" + varName;
         document.getElementById(bname).style.visibility = "hidden";
-        // mark as not quiz variable so appears in copyData table
-        processUnits[u]['dataQuizInputs'][v] = false;
+        // change element value from true to 'answered' in order
+        // to show value & mark as answered quiz variable in copyData table
+        // note 'answered' evaluates as true, so need to test for 'answered'
+        processUnits[u]['dataQuizInputs'][v] = 'answered';
         // put value into processUnits[u]['dataValues'][v] for copyData
         processUnits[u]['dataValues'][v] = varValue;
       } else {
@@ -230,12 +229,22 @@ let interfacer = {
         if (processUnits[n]['dataQuizInputs']) {
           // unit has array dataQuizInputs, now check which vars are quiz vars
           if (processUnits[n]['dataQuizInputs'][v]) {
-            // is an unknown quiz variable - do not display input value
+            // note 'answered' evaluates as true, so need to test for 'answered'
+            if (processUnits[n]['dataQuizInputs'][v] == 'answered'){
+              // is a ANSWERED quiz variable - display input value
+              varValue = processUnits[n]['dataValues'][v];
+              varValue = this.formatNumToNum(varValue);
+              tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+                      + varValue + '&nbsp;'
+                      + processUnits[n]['dataUnits'][v] + ' * ANSWERED * <br>';
+            } else {
+            // is an UNKNOWN quiz variable - do not display input value
             tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
                     + '???' + '&nbsp;'
-                    + processUnits[n]['dataUnits'][v] + '<br>';
+                    + processUnits[n]['dataUnits'][v] + ' * UNKNOWN * <br>';
+            }
           } else {
-            // is not an unknown quiz variable - display input value
+            // is not a quiz variable - display input value
             varValue = processUnits[n]['dataValues'][v];
             varValue = this.formatNumToNum(varValue);
             tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
@@ -352,7 +361,7 @@ let interfacer = {
   }, // END of function copyData
 
   formatNumToNum : function(varValue) {
-    // returns number as NUMBER 
+    // returns number as NUMBER
     varValue = Number(varValue); // if string input, toExponential throws error
     if (varValue == 0) {
       // do nothing, otherwise in else if below, get 0.000e+00

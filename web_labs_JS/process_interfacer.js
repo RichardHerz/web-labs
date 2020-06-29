@@ -83,13 +83,7 @@ let interfacer = {
         if (varValue < varMin) {varValue = varMin;}
         if (varValue > varMax) {varValue = varMax;}
         //
-        if (varValue == 0) {
-          // do nothing, otherwise in else if below, get 0.000e+00
-        } else if (Math.abs(varValue) < 1.0e-3) {
-          varValue = varValue.toExponential(2); // toExponential() returns STRING
-        } else if (Math.abs(varValue) >= 9.999e+3) {
-          varValue = varValue.toExponential(2); // toExponential() returns STRING
-        }
+        varValue = this.formatNumToNum(varValue);
         // OK to put formatted number as STRING returned by toExponential() into field...
         document.getElementById(varInputID).value = varValue;
         // BUT need to return value as NUMBER to calling unit...
@@ -119,8 +113,9 @@ let interfacer = {
   initializeQuizArrays : function() {
     // called by controller.openThisLab
     // initialize a 2D array to hold quiz input values
-    // first index length is number of process units
-    // second index values are undefined or quiz input value
+    // first index length must be fixed and here is number of process units
+    // second index length can be changed later and
+    // values are undefined or quiz input value
     let arrayStub = [];
     let numUnits = Object.keys(processUnits).length
     for (u = 0; u < numUnits; u += 1) {
@@ -139,9 +134,14 @@ let interfacer = {
       qval = processUnits[u]['dataMin'][v] // line continues below...
         + Math.random() // line continues below...
         * (processUnits[u]['dataMax'][v] - processUnits[u]['dataMin'][v]);
+      // XXX trouble with this for DelH heat of reaction - get ave = 0
       // format number so don't get zillions of places after decimal place
-      if (Math.abs(qval) >= 1){
+      // digits in small numbers won't affect answer check & will format on display
+      if (Math.abs(qval) >= 10){
         qval = Math.round(qval);
+      } else if (Math.abs(qval) >= 1) {
+        qval = qval.toFixed(1); // toFixed returns qval as STRING
+        qval = Number(qval); // so convert back to Number
       }
       // put u,v,qval into quizInputArray
       // and not html input field so user can't inspect html for qval
@@ -164,10 +164,7 @@ let interfacer = {
       txt = "User cancelled the prompt.";
     } else {
       let varValue = this.quizInputArray[u][v];
-      // format small values
-      if (varValue > -1 && varValue < 1){
-        varValue = varValue.toExponential(2);
-      }
+      varValue = this.formatNumToNum(varValue);
       txt = "You entered: " + varAnswer + " correct is " + varValue;
       if ((varAnswer >= 0.8 * varValue) && (varAnswer <= 1.2 * varValue)){
         alert("Good! " + txt);
@@ -211,6 +208,7 @@ let interfacer = {
     let k; // points index
     let numUnits;
     let numVar;
+    let varValue;
     let varIndex; // index of selected variable in unit local data array
     let varUnitIndex; // index of unit from which variable is to be obtained
     let tText; // we will put the data into this variable
@@ -232,20 +230,24 @@ let interfacer = {
         if (processUnits[n]['dataQuizInputs']) {
           // unit has array dataQuizInputs, now check which vars are quiz vars
           if (processUnits[n]['dataQuizInputs'][v]) {
-            // is quiz variable - do not display input value
+            // is an unknown quiz variable - do not display input value
             tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
                     + '???' + '&nbsp;'
                     + processUnits[n]['dataUnits'][v] + '<br>';
           } else {
-            // is not quiz input variable - display input value
+            // is not an unknown quiz variable - display input value
+            varValue = processUnits[n]['dataValues'][v];
+            varValue = this.formatNumToNum(varValue);
             tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
-                    + processUnits[n]['dataValues'][v] + '&nbsp;'
+                    + varValue + '&nbsp;'
                     + processUnits[n]['dataUnits'][v] + '<br>';
           }
         } else {
             // unit does NOT have array dataQuizInputs, so show all input values
+            varValue = processUnits[n]['dataValues'][v];
+            varValue = this.formatNumToNum(varValue);
             tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
-                    + processUnits[n]['dataValues'][v] + '&nbsp;'
+                    + varValue + '&nbsp;'
                     + processUnits[n]['dataUnits'][v] + '<br>';
         }
       }
@@ -325,6 +327,8 @@ let interfacer = {
     dataWindow.document.close();
 
     function formatNum(nn) {
+      // use this to get fixed number of digits in each column of table
+      // returns number as STRING
       if (isNaN(nn)) {
         return nn;
       }
@@ -343,8 +347,22 @@ let interfacer = {
         nn = nn.toExponential(4);
       }
       return nn;
-    } // END of function formatNum
+    } // END of sub function formatNum of copyData
 
-  } // END of function copyData
+  }, // END of function copyData
+
+  formatNumToNum : function(varValue) {
+    // returns number as NUMBER 
+    varValue = Number(varValue); // if string input, toExponential throws error
+    if (varValue == 0) {
+      // do nothing, otherwise in else if below, get 0.000e+00
+      } else if (Math.abs(varValue) < 1.0e-3) {
+        varValue = varValue.toExponential(2); // toExponential() returns STRING
+      } else if (Math.abs(varValue) >= 9.999e+3) {
+        varValue = varValue.toExponential(2); // toExponential() returns STRING
+    }
+    varValue = Number(varValue); // return as number
+    return varValue;
+  } // END of function formatNumToNum
 
 } // END OF OBJECT interfacer

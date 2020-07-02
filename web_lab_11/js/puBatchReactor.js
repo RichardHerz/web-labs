@@ -49,18 +49,18 @@ let puBatchReactor = {
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
 
   // define main inputs
-  // values will be set in method initialize()
+  // values will be set in method initialize() calling method updateUIparams()
   Tin : 0, // Temperature
   Cain : 0, // initial reactant concentration
   Vol : 0, // volume of reactor contents
-  tfinal : 0,
+  t_final : 0,
   k_300 : 0, // forward rate constant at 300 K
   Ea : 0, // activation energy
   nth : 0, // reaction order (-1, 0, 1, 2)
 
   // define arrays to hold info for variables
-  // these will be filled with values in method initialize()
-  dataHeaders : [], // variable names
+  // these will be filled with values below in method initialize()
+  dataHeaders : [], // variable names for display - may differ from internal names
   dataInputs : [], // input field ID's
   dataUnits : [],
   dataMin : [],
@@ -72,8 +72,6 @@ let puBatchReactor = {
   // these will be filled with initial values in method reset()
   Ca : [],
 
-  CaNew : [], // XXX not sure this is needed
-
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
   profileData : [], // for profile plots, plot script requires this name
@@ -82,7 +80,7 @@ let puBatchReactor = {
   //   none here
 
   // WARNING: numNodes is accessed in process_plot_info.js
-  numNodes : 200, // THIS IS REALLY PLOT POINTS FOR PROFILE & STRIP PLOTS
+  numPlotPoints : 200, // THIS IS REALLY PLOT POINTS FOR PROFILE & STRIP PLOTS
 
   initialize : function() {
     //
@@ -171,12 +169,12 @@ let puBatchReactor = {
     // set state variables not set by updateUIparams() to initial settings
 
     for (k = 0; k <= this.numNodes; k += 1) {
-      this.Ca[k] = 0;
+      this.Ca[k] = this.Cain;
     }
 
     // initialize profile data array
     // plotter.initPlotData(numProfileVars,numProfilePts)
-    this.profileData = plotter.initPlotData(1,this.numNodes); // holds data for static profile plots
+    this.profileData = plotter.initPlotData(1,this.numPlotPoints); // holds data for static profile plots
 
     // // initialize strip chart data array
     // // plotter.initPlotData(numStripVars,numStripPts)
@@ -187,7 +185,7 @@ let puBatchReactor = {
     // this.colorCanvasData = plotter.initColorCanvasArray(2,this.numNodes,1);
 
     let kn;
-    for (k = 0; k <= this.numNodes; k += 1) {
+    for (k = 0; k <= this.numPlotPoints; k += 1) {
       kn = k;
       // x-axis values
       // x-axis values will not change during sim
@@ -197,7 +195,7 @@ let puBatchReactor = {
       // first index specifies which variable
       this.profileData[0][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = this.dataDefault[4]; // [4] is Cain
+      this.profileData[0][k][1] = 0; // this.dataDefault[4]; // [4] is Cain
     }
 
   }, // end reset
@@ -226,10 +224,12 @@ let puBatchReactor = {
     this.Tin = this.dataValues[3] = interfacer.getInputValue(unum, 3);
     this.Cain = this.dataValues[4] = interfacer.getInputValue(unum, 4);
     this.Vol= this.dataValues[5] = interfacer.getInputValue(unum, 5);
-    this.tfinal = this.dataValues[6] = interfacer.getInputValue(unum, 6);
+    this.t_final = this.dataValues[6] = interfacer.getInputValue(unum, 6);
 
     // // adjust axis of profile plot
-    // plotter['plotArrays']['plotFlag'][0] = 0;  // so axes will refresh
+    plotter['plotArrays']['plotFlag'][0] = 0;  // so axes will refresh
+    plotInfo[0]['xAxisMax'] = this.t_final;
+
     // plotInfo[0]['yLeftAxisMin'] = this.dataMin[9]; // [9] is Trxr
     // plotInfo[0]['yLeftAxisMax'] = this.dataMax[9];
     // plotInfo[0]['yRightAxisMin'] = 0;
@@ -280,107 +280,25 @@ let puBatchReactor = {
     //          get info from other units ONLY in updateInputs() method
     //
 
-    let i = 0; // index for step repeats
-    let n = 0; // index for nodes
-    let TrxrN = 0;
-    let dTrxrDT = 0;
-    let CaN = 0;
-    let dCaDT = 0;
-
-    // CpFluid, densFluid, densCat are properties of puPlugFlowReactor
-    let CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
-    let voidFrac = 0.3; // bed void fraction
-    let densBed = (1 - voidFrac) * this.densCat; // (kg/m3), bed density
-    // assume fluid and catalyst at same T at each position in reactor
-    let CpMean = voidFrac * this.CpFluid + (1 - voidFrac) * CpCat;
-
-    let dW = this.Wcat / this.numNodes;
     let Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
-    let kT = 0; // will vary with T below
-    let EaOverRg = this.Ea / Rg; // so not compute in loop below
-    let EaOverRg300 = EaOverRg / 300; // so not compute in loop below
+    let EaOverRg = this.Ea / Rg;
+    let EaOverRg300 = EaOverRg / 300;
 
-    let flowCoef = this.Flowrate * densBed / voidFrac / dW;
-    let rxnCoef = densBed / voidFrac;
+    // this reactor is ISOTHERMAL so only need to compute k at reaction T once
+    kT = this.k_300 * Math.exp(EaOverRg300 - EaOverRg/this.Tin);
 
-    let energyFlowCoef = this.Flowrate * this.densFluid * this.CpFluid / CpMean / dW;
-    let energyXferCoef = this.UAcoef / CpMean;
-    let energyRxnCoef = this.DelH / CpMean;
-
-    // this unit can take multiple steps within one outer main loop repeat step
-    for (i=0; i<this.unitStepRepeats; i+=1) {
-
-      // do node at inlet end
-      n = 0;
-
-      TrxrN = this.Tin;
-      CaN = this.Cain;
-
-      this.TrxrNew[n] = TrxrN;
-      this.CaNew[n] = CaN;
-
-      // internal nodes
-      for (n = 1; n < this.numNodes; n += 1) {
-
-        kT = this.k_300 * Math.exp(EaOverRg300 - EaOverRg/this.Trxr[n]);
-
-        dCaDT = -flowCoef * (this.Ca[n] - this.Ca[n-1]) - rxnCoef * kT * this.Ca[n];
-        dTrxrDT = - energyFlowCoef * (this.Trxr[n] - this.Trxr[n-1])
-                  + energyXferCoef * (this.Tjacket - this.Trxr[n])
-                  - energyRxnCoef * kT * this.Ca[n];
-
-        CaN = this.Ca[n] + dCaDT * this.unitTimeStep;
-        TrxrN = this.Trxr[n] + dTrxrDT * this.unitTimeStep;
-
-        // CONSTRAIN TO BE IN BOUND
-        if (TrxrN > this.dataMax[9]) {TrxrN = this.dataMax[9];} // [9] is Trxr
-        if (TrxrN < this.dataMin[9]) {TrxrN = this.dataMin[9];}
-        if (CaN < 0.0) {CaN = 0.0;}
-        if (CaN > this.Cain) {CaN = this.Cain;}
-
-        this.TrxrNew[n] = TrxrN;
-        this.CaNew[n] = CaN;
-
-      } // end repeat through internal nodes
-
-      // do node at hot outlet end
-
-      n = this.numNodes;
-
-      kT = this.k_300 * Math.exp(EaOverRg300 - EaOverRg/this.Trxr[n]);
-
-      dCaDT = -flowCoef * (this.Ca[n] - this.Ca[n-1]) - rxnCoef * kT * this.Ca[n];
-      dTrxrDT = - energyFlowCoef * (this.Trxr[n] - this.Trxr[n-1])
-                + energyXferCoef * (this.Tjacket - this.Trxr[n])
-                - energyRxnCoef * kT * this.Ca[n];
-
-      CaN = this.Ca[n] + dCaDT * this.unitTimeStep;
-      TrxrN = this.Trxr[n] + dTrxrDT * this.unitTimeStep;
-
-      // CONSTRAIN TO BE IN BOUND
-      if (TrxrN > this.dataMax[9]) {TrxrN = this.dataMax[9];} // [9] is Trxr
-      if (TrxrN < this.dataMin[9]) {TrxrN = this.dataMin[9];}
-      if (CaN < 0.0) {CaN = 0.0;}
-      if (CaN > this.Cain) {CaN = this.Cain;}
-
-      this.TrxrNew[n] = TrxrN;
-      this.CaNew[n] = CaN;
-
-      // finished updating all nodes
-
-      // copy new to current
-      this.Trxr = this.TrxrNew;
-      this.Ca = this.CaNew;
-
-    } // END NEW FOR REPEAT for (i=0; i<this.unitStepRepeats; i+=1)
+    let t; // reaction time
+    // plot will have numPlotPoints + 1 points - see process_plot_info.js
+    for (j=0; j<=this.numPlotPoints; j+=1) {
+      t =  this.t_final * j/this.numPlotPoints;
+      this.Ca[j] = this.reactBATCHnthSS(t,kT,this.nth,this.Cain);
+    }
 
   }, // end updateState method
 
   updateDisplay : function() {
 
     // note use .toFixed(n) method of object to round number to n decimal points
-
-    let n = 0; // used as index
 
     // document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
     // document.getElementById(this.displayReactorRightT).innerHTML = this.Trxr[this.numNodes].toFixed(1) + ' K';
@@ -396,10 +314,13 @@ let puBatchReactor = {
     //     SIMPLE ASSIGNMENT FOR ALL Y VALUES, e.g.,
     // profileData[0][1][n] = y;
 
-    // for (n=0; n<=this.numNodes; n+=1) {
-    //   this.profileData[0][n][1] = this.Trxr[n];
-    //   this.profileData[1][n][1] = this.Ca[n];
-    // }
+    // set x-axis max on plot
+    plotInfo[0]['xAxisMax'] = this.t_final;
+
+    // fill array for plot
+    for (j=0; j<=this.numPlotPoints; j+=1) {
+      this.profileData[0][j][1] = this.Ca[j];
+    }
 
     // HANDLE COLOR CANVAS DATA - HERE FOR PFR TEMPERATURE vs. POSITION
     // the data vs. node is horizontal, not vertical
@@ -419,6 +340,29 @@ let puBatchReactor = {
   checkForSteadyState : function() {
     let ssFlag = false;
     return ssFlag;
-  } // END checkForSteadyState method
+  }, // END checkForSteadyState method
+
+  reactBATCHnthSS : function(t,k,n,Cain) {
+    // returns conc at time t
+    let Ca;
+
+    switch(n) {
+      case -1:
+        // code block
+        break;
+      case 0:
+        // code block
+        break;
+      case 1:
+        // put Cin*exp(-k*tau) into Cout
+        Ca = Cain * Math.exp(-k*t);
+        break;
+      case 2:
+          // code block
+      default:
+        Ca = Cain;
+    }
+    return Ca
+  } // END reactBATCHnthSS method
 
 }; // END puBatchReactor object

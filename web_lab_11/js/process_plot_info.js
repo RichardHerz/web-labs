@@ -57,7 +57,7 @@ let plotInfo = {
     plotInfo[pnum]['title'] = 'Batch history';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    plotInfo[pnum]['numberPoints'] = processUnits[unum]['numNodes']; // should match numNodes in process unit
+    plotInfo[pnum]['numberPoints'] = processUnits[unum]['numPlotPoints']; // should match name in process unit
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'time (s)';
     plotInfo[pnum]['xAxisTableLabel'] = 'time (s)'; // label for copy data table

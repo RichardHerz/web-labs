@@ -164,7 +164,7 @@ canvas {
   LCshowBorder: false;
 }
 
-#field_enterReactionTimeLABEL {
+#field_ReactionTimeLABEL {
   position: absolute;
   left: 4px;
   top: 86px;
@@ -181,7 +181,7 @@ canvas {
   font-size: 16px;
 }
 
-#input_field_enterVmin {
+#input_field_ReactionTime {
   position: absolute;
   left: 208px;
   top: 102px;
@@ -197,7 +197,7 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#field_enterVolumeLABEL {
+#field_VolumeLABEL {
   position: absolute;
   left: 4px;
   top: 53px;
@@ -214,7 +214,7 @@ border-style: solid;
   font-size: 16px;
 }
 
-#input_field_enterVolume {
+#input_field_Volume {
   position: absolute;
   left: 208px;
   top: 69px;
@@ -230,7 +230,7 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#field_enterConcentrationLABEL {
+#field_ConcentrationLABEL {
   position: absolute;
   left: 4px;
   top: 21px;
@@ -247,7 +247,7 @@ border-style: solid;
   font-size: 16px;
 }
 
-#input_field_enterConcentration {
+#input_field_Concentration {
   position: absolute;
   left: 208px;
   top: 37px;
@@ -263,7 +263,7 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#field_enterTempertureLABEL {
+#field_TempertureLABEL {
   position: absolute;
   left: 4px;
   top: -12px;
@@ -280,7 +280,7 @@ border-style: solid;
   font-size: 16px;
 }
 
-#input_field_enterTemperature {
+#input_field_Temperature {
   position: absolute;
   left: 208px;
   top: 5px;
@@ -346,7 +346,7 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#field_enterRateConstantLABEL {
+#field_RateConstantLABEL {
   position: absolute;
   left: 12px;
   top: 405px;
@@ -363,7 +363,7 @@ border-style: solid;
   font-size: 16px;
 }
 
-#input_field_enterRateConstant {
+#input_field_RateConstant {
   position: absolute;
   left: 216px;
   top: 421px;
@@ -379,7 +379,7 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#input_field_enterActivationEnergy {
+#input_field_ActivationEnergy {
   position: absolute;
   left: 216px;
   top: 453px;
@@ -395,7 +395,7 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#field_enterActivationEnergyLABEL {
+#field_ActivationEnergyLABEL {
   position: absolute;
   left: 12px;
   top: 437px;
@@ -412,7 +412,7 @@ border-style: solid;
   font-size: 16px;
 }
 
-#input_field_enterReactionOrder {
+#input_field_ReactionOrder {
   position: absolute;
   left: 216px;
   top: 485px;

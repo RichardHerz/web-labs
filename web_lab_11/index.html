@@ -52,40 +52,40 @@
    <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="resetThisLab()">
    <input type="button" id="button_runButton" value="Run" value="Run" onclick="runThisLab()">
    <div id="div_operatingParams">
-      <p id="field_enterReactionTimeLABEL">
+      <p id="field_ReactionTimeLABEL">
             Enter reaction time (s)
       </p>
-      <input id="input_field_enterVmin" value="0.01" onchange="unit_3.updateUIparams()" value="0.05">
-      <p id="field_enterVolumeLABEL">
+      <input id="input_field_ReactionTime" value="1" onchange="interfacer.updateUIparams()">
+      <p id="field_VolumeLABEL">
             Enter Volume (m<sup shift="-4">3</sup>)
       </p>
-      <input id="input_field_enterVolume" value="1" onchange="unit_1.updateUIparams()" value="400">
-      <p id="field_enterConcentrationLABEL">
+      <input id="input_field_Volume" value="1" onchange="interfacer.updateUIparams()">
+      <p id="field_ConcentrationLABEL">
             Enter reactant conc (mol/m3)
       </p>
-      <input id="input_field_enterConcentration" value="0.3" onchange="unit_1.updateUIparams()" value="300">
-      <p id="field_enterTempertureLABEL">
+      <input id="input_field_Concentration" value="100" onchange="interfacer.updateUIparams()">
+      <p id="field_TempertureLABEL">
             Enter Temperature (K)
       </p>
-      <input id="input_field_enterTemperature" value="300" onchange="unit_1.updateUIparams()" value="0.005">
+      <input id="input_field_Temperature" value="300" onchange="interfacer.updateUIparams()">
    </div> <!-- end of div div_operatingParams -->
    <div id="div_controller">
-         <div id="div_PLOTDIV_plotData">
-         </div> <!-- end of div div_PLOTDIV_plotData -->
+      <div id="div_PLOTDIV_plotData">
+      </div> <!-- end of div div_PLOTDIV_plotData -->
       <input type="button" id="button_copyDataButton" value="Copy data" value="Copy data" onclick="copyData()">
-      <!-- <p> id="field_enterJacketFeedTTempLABEL" MAY HAVE css visibility:hidden on open page; changed by unit_5.changeMode -->
-      <!-- input id="input_field_enterJacketFeedTTemp" MAY BE type="hidden" on open page; changed by unit_5.changeMode -->
+      <!-- <p> id="field_JacketFeedTTempLABEL" MAY HAVE css visibility:hidden on open page; changed by unit_5.changeMode -->
+      <!-- input id="input_field_JacketFeedTTemp" MAY BE type="hidden" on open page; changed by unit_5.changeMode -->
       <!-- end "div_RADIO_group_Controller" -->
    </div> <!-- end of div div_controller -->
-   <p id="field_enterRateConstantLABEL">
+   <p id="field_RateConstantLABEL">
       Enter k at 300 K
    </p>
-   <input id="input_field_enterRateConstant" value="5e-3" onchange="unit_3.updateUIparams()" value="0.05">
-   <input id="input_field_enterActivationEnergy" value="60" onchange="unit_4.updateUIparams()" value="20">
-   <p id="field_enterActivationEnergyLABEL">
+   <input id="input_field_RateConstant" value="5e-3" onchange="interfacer.updateUIparams()">
+   <input id="input_field_ActivationEnergy" value="60" onchange="interfacer.updateUIparams()">
+   <p id="field_ActivationEnergyLABEL">
       Enter Ea (kJ/mol)
    </p>
-   <input id="input_field_enterReactionOrder" value="1" onchange="unit_4.updateUIparams()" value="20">
+   <input id="input_field_ReactionOrder" value="1" onchange="interfacer.updateUIparams()">
    <p id="field_ReactionOrderLABEL">
       Enter reaction order (-1,0,1,2)
    </p>

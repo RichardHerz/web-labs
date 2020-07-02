@@ -28,7 +28,7 @@ let interfacer = {
       if (simParams.labType == 'Dynamic') {
         // change button label to 'Pause'
         el.value = 'Pause'; // REQUIRES run button id="button_runButton"
-        // repeat calling updateProcess to run lab - NO () after .updateProcess
+        // repeat calling updateProcess to run lab - use no () after .updateProcess
         this.timerID = setInterval(controller.updateProcess,simParams.updateDisplayTimingMs);
       } else {
         // lapType is Single or Profile

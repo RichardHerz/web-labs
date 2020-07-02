@@ -1,0 +1,35 @@
+let v = 0;
+this.dataHeaders[v] = 'k_300';
+this.dataInputs[v] = 'input_field_k_300';
+//
+v = 1;
+this.dataHeaders[v] = 'Ea';
+this.dataInputs[v] = 'input_field_Ea';
+//
+v = 2;
+this.dataHeaders[v] = 'Reaction Order';
+this.dataInputs[v] = 'input_field_ReactionOrder';
+//
+v = 3;
+this.dataHeaders[v] = 'Temperature';
+this.dataInputs[v] = 'input_field_Temperature';
+//
+v = 4;
+this.dataHeaders[v] = 'Ca_init';
+this.dataInputs[v] = 'input_field_Concentration';
+//
+v = 5;
+this.dataHeaders[v] = 'Volume';
+this.dataInputs[v] = 'input_field_Volume';
+//
+v = 6;
+this.dataHeaders[v] = 't_final';
+this.dataInputs[v] = 'input_field_ReactionTime';
+
+Tin : 0, // Temperature
+Cain : 0, // initial reactant concentration
+Vol : 0, // volume of reactor contents
+tfinal : 0,
+k_300 : 0, // forward rate constant at 300 K
+Ea : 0, // activation energy
+nth : 0, // reaction order (-1, 0, 1, 2)

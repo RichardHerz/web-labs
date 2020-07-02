@@ -49,13 +49,13 @@
          <div id="div_PLOTDIV_reactorContents">
          </div> <!-- end of div div_PLOTDIV_reactorContents -->
    </div> <!-- end of div div_reactor -->
-   <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="resetThisLab()">
-   <input type="button" id="button_runButton" value="Run" value="Run" onclick="runThisLab()">
+   <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="interfacer.resetThisLab()">
+   <input type="button" id="button_runButton" value="Run" value="Run" onclick="interfacer.runThisLab()">
    <div id="div_operatingParams">
       <p id="field_ReactionTimeLABEL">
             Enter reaction time (s)
       </p>
-      <input id="input_field_ReactionTime" value="1" onchange="interfacer.updateUIparams()">
+      <input id="input_field_ReactionTime" value="100" onchange="interfacer.updateUIparams()">
       <p id="field_VolumeLABEL">
             Enter Volume (m<sup shift="-4">3</sup>)
       </p>
@@ -72,7 +72,7 @@
    <div id="div_controller">
       <div id="div_PLOTDIV_plotData">
       </div> <!-- end of div div_PLOTDIV_plotData -->
-      <input type="button" id="button_copyDataButton" value="Copy data" value="Copy data" onclick="copyData()">
+      <input type="button" id="button_copyDataButton" value="Copy data" value="Copy data" onclick="interfacer.copyData(0)">
       <!-- <p> id="field_JacketFeedTTempLABEL" MAY HAVE css visibility:hidden on open page; changed by unit_5.changeMode -->
       <!-- input id="input_field_JacketFeedTTemp" MAY BE type="hidden" on open page; changed by unit_5.changeMode -->
       <!-- end "div_RADIO_group_Controller" -->

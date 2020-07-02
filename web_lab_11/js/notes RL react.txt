@@ -1,0 +1,154 @@
+-----------------
+
+function ReactPFRnthSS order, Cin, k, tau, cBreak
+  
+  # this also works for ideal batch reactors!
+  
+  # have orders 0 and -1 change to 1st order below conc = cBreak
+  if cBreak is a number and cBreak > 0 then
+    if order is 0 then
+      put k/cBreak into kBreak
+      if Cin <= cBreak then
+        put 1 into order
+        put kBreak into k
+      end if
+    else if order is -1 then
+      put k/cBreak^2 into kBreak
+      if Cin <= cBreak then
+        put 1 into order
+        put kBreak into k
+      end if
+    end if
+  end if
+  
+  if order is 2 then
+    
+    put Cin/(1 + Cin*k*tau) into Cout
+    
+  else if order is 1 then
+    
+    put Cin*exp(-k*tau) into Cout
+    
+  else if order is 0 then
+    
+    if cBreak is a number and cBreak > 0 then
+      put (Cin - cBreak)/k into tauBreak
+      if tau <= tauBreak then
+        put (Cin - k*tau) into Cout
+      else
+        # conc drops into 1st order regime
+        put cBreak*exp(-kBreak*(tau-tauBreak)) into Cout
+      end if
+    else
+      if k*tau < Cin then
+        put (Cin - k*tau) into Cout
+      end if
+    end if
+    
+  else if order is -1 then
+    
+    if cBreak is a number and cBreak > 0 then
+      put (Cin^2/2 - cBreak^2/2)/k into tauBreak
+      if tau <= tauBreak then
+        put sqrt(Cin^2 - 2*k*tau) into Cout
+      else
+        # conc drops into 1st order regime
+        put cBreak*exp(-kBreak*(tau-tauBreak)) into Cout
+      end if
+    else
+      if 2*k*tau < Cin^2 then
+        put sqrt(Cin^2 - 2*k*tau) into Cout
+      end if
+    end if
+    
+  else
+    answer "bug:  order supplied to ReactPFRnthSS() must be -1, 0, 1, or 2"
+  end if
+  
+  if Cout < 0 then put 0 into Cout # just in case
+  
+  return Cout
+  
+end ReactPFRnthSS
+
+# -----------------
+
+function ReactCSTRnthSS order, Cin, k, tau, CoutOLD, cMax, cBreak
+  
+  # xxx note cMax not used here but have to check everywhere before removing!!
+  
+  # have orders 0 and -1 change to 1st order below conc = cBreak
+  if cBreak is a number and cBreak > 0 then
+    if order is 0 then
+      put k/cBreak into kBreak
+      if Cin <= cBreak then
+        put 1 into order
+        put kBreak into k
+      end if
+    else if order is -1 then
+      put k/cBreak^2 into kBreak
+      if Cin <= cBreak then
+        put 1 into order
+        put kBreak into k
+      end if
+    end if
+  else
+    put 0 into cBreak
+  end if
+  
+  if order is 1 then
+    
+    put Cin/(1 + k*tau) into Cout
+    
+  else if order is 0 then
+    
+    put (Cin - k*tau) into Cout -- Cout may go negative but will get caught next
+    if Cout < cBreak then
+      put Cin/(1 + kBreak*tau) into Cout
+    end if
+    if Cout < 0 then
+      put 0 into Cout -- in case user didn't supply cBreak, etc.
+    end if
+    
+  else if order is -1 then
+    
+    # see if there is a high C SS (low conversion)
+    # assume that other quadratic solution (Cin - (Cin^2 - 4*k*tau)^0.5)/2 is unstable
+    
+    if Cin >= (4*k*tau)^0.5 then
+      put (Cin + (Cin^2 - 4*k*tau)^0.5)/2 into cHighSS
+    else
+      put 0 into cHighSS
+    end if
+    
+    # calc low C SS
+    
+    if kBreak is a number then
+      put Cin/(1 + kBreak*tau) into cLowSS
+    else
+      put 0 into cLowSS
+    end if
+    
+    # decide which SS to go to based on where we came from
+    
+    if CoutOLD > cBreak then
+      put cHighSS into Cout
+    else
+      put cLowSS into Cout
+    end if
+    
+  else if order is 2 then
+    
+    put (-1 + (1 + 4*k*tau*Cin)^0.5)/(2*k*tau) into Cout
+    
+  else
+    answer "bug: order supplied to ReactCSTRnthSS() must be -1, 0, 1, or 2"
+  end if
+  
+  if Cout < 0 then put 0 into Cout # just in case
+  
+  return Cout
+  
+end ReactCSTRnthSS
+
+# -----------------

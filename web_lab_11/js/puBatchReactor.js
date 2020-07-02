@@ -139,8 +139,8 @@ let puBatchReactor = {
     this.dataInputs[v] = 'input_field_ReactionTime';
     this.dataUnits[v] = 's';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 10000;
-    this.dataDefault[v] = 10;
+    this.dataMax[v] = 1000;
+    this.dataDefault[v] = 100;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -186,9 +186,9 @@ let puBatchReactor = {
     // // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
     // this.colorCanvasData = plotter.initColorCanvasArray(2,this.numNodes,1);
 
-    let kn = 0;
+    let kn;
     for (k = 0; k <= this.numNodes; k += 1) {
-      kn = k/this.numNodes;
+      kn = k;
       // x-axis values
       // x-axis values will not change during sim
       // XXX change to get number vars for this plotInfo variable

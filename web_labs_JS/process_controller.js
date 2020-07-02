@@ -48,6 +48,17 @@ let controller = {
   stripPlotSpan : 5000,
 
   openThisLab : function() {
+
+    // XXX need more work here to validate values including empty value 
+    // check labType and set to default Dynamic if does not exist
+    if (simParams.labType) {
+      // simParams.labType exists
+      // valid values are Single, Profile, Dynamic
+    } else {
+      // does not exist, set to default Dynamic
+      simParams.labType = 'Dynamic';
+    }
+
     // initialize array to hold any quiz input variables hidden from user
     interfacer.quizInputArray = interfacer.initializeQuizArrays();
     // initialize variables in each process unit

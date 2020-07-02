@@ -20,13 +20,22 @@ let interfacer = {
     //
     let el = document.getElementById('button_runButton');
     if (el.value == 'Run') {
+
       // button label is 'Run' & was clicked, so start running
-      // change button label to 'Pause'
-      el.value = 'Pause'; // REQUIRES run button id="button_runButton"
       controller.ssFlag = false; // unit sets true when sim reaches steady state
       simParams.updateRunCount();
-      // repeat calling updateProcess to run lab - NO () after .updateProcess
-      this.timerID = setInterval(controller.updateProcess,simParams.updateDisplayTimingMs);
+
+      if (simParams.labType == 'Dynamic') {
+        // change button label to 'Pause'
+        el.value = 'Pause'; // REQUIRES run button id="button_runButton"
+        // repeat calling updateProcess to run lab - NO () after .updateProcess
+        this.timerID = setInterval(controller.updateProcess,simParams.updateDisplayTimingMs);
+      } else {
+        // lapType is Single or Profile
+        // update process once
+        controller.updateProcess();
+      }
+
     } else {
       // button label is 'Pause' & was clicked, so stop running
       // sim will stop after last updateProcess and its updateDisplay finishes

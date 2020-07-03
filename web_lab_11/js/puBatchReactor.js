@@ -43,7 +43,7 @@ let puBatchReactor = {
   // SEE dataInputs array in initialize() method for input field ID's
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
-  //    none for this lab
+  Ca_output_field_ID : "field_Ca_final",
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
@@ -52,6 +52,7 @@ let puBatchReactor = {
   // values will be set in method initialize() calling method updateUIparams()
   Tin : 0, // Temperature
   Cain : 0, // initial reactant concentration
+  Ca_final : 0, // final reactant concentration
   Vol : 0, // volume of reactor contents
   t_final : 0,
   k_300 : 0, // forward rate constant at 300 K
@@ -71,6 +72,7 @@ let puBatchReactor = {
   // define arrays to hold output variables
   // these will be filled with initial values in method reset()
   Ca : [],
+  time : [],
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -86,10 +88,10 @@ let puBatchReactor = {
     //
     let v = 0;
     this.dataHeaders[v] = 'k_300';
-    this.dataInputs[v] = 'input_field_k_300';
-    this.dataUnits[v] = '(depends on order)';
+    this.dataInputs[v] = 'input_field_RateConstant';
+    this.dataUnits[v] = '(units depend on order)';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 10;
+    this.dataMax[v] = 109;
     this.dataDefault[v] = 1.0e-7;
     //
     v = 1;
@@ -129,7 +131,7 @@ let puBatchReactor = {
     this.dataInputs[v] = 'input_field_Volume';
     this.dataUnits[v] = 'm3';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 10;
+    this.dataMax[v] = 10000;
     this.dataDefault[v] = 4.0e-3;
     //
     v = 6;
@@ -287,28 +289,22 @@ let puBatchReactor = {
     // this reactor is ISOTHERMAL so only need to compute k at reaction T once
     kT = this.k_300 * Math.exp(EaOverRg300 - EaOverRg/this.Tin);
 
-    let t; // reaction time
     // plot will have numPlotPoints + 1 points - see process_plot_info.js
     for (j=0; j<=this.numPlotPoints; j+=1) {
-      t =  this.t_final * j/this.numPlotPoints;
-      this.Ca[j] = this.reactBATCHnthSS(t,kT,this.nth,this.Cain);
+      this.time[j] =  this.t_final * j/this.numPlotPoints;
+      this.Ca[j] = this.reactBATCHnthSS(this.time[j],kT,this.nth,this.Cain);
     }
+
+    this.Ca_final = this.Ca[this.numPlotPoints];
 
   }, // end updateState method
 
   updateDisplay : function() {
 
     // note use .toFixed(n) method of object to round number to n decimal points
-
-    // document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
-    // document.getElementById(this.displayReactorRightT).innerHTML = this.Trxr[this.numNodes].toFixed(1) + ' K';
-    //
-    // document.getElementById(this.displayReactorLeftConc).innerHTML = this.Cain.toFixed(1);
-    // document.getElementById(this.displayReactorRightConc).innerHTML = this.Ca[this.numNodes].toFixed(1) + ' mol/m<sup>3</sup>';;
+    document.getElementById(this.Ca_output_field_ID).innerHTML = this.Ca_final.toFixed(1);
 
     // HANDLE PROFILE PLOT DATA
-
-    // copy variable values to profileData array which holds data for plotting
 
     // XXX CONSIDER RE-ORDERING LAST TWO INDEXES IN profileData SO CAN USE
     //     SIMPLE ASSIGNMENT FOR ALL Y VALUES, e.g.,
@@ -317,23 +313,11 @@ let puBatchReactor = {
     // set x-axis max on plot
     plotInfo[0]['xAxisMax'] = this.t_final;
 
-    // fill array for plot
+    // fill array for profile plot
     for (j=0; j<=this.numPlotPoints; j+=1) {
+      this.profileData[0][j][0] = this.time[j];
       this.profileData[0][j][1] = this.Ca[j];
     }
-
-    // HANDLE COLOR CANVAS DATA - HERE FOR PFR TEMPERATURE vs. POSITION
-    // the data vs. node is horizontal, not vertical
-    // and vertical strip is all the same
-    // so when initialize colorCanvasData array, take this into account
-    // FOR PFR - COLOR CANVAS DOES NOT SCROLL WITH TIME
-    // SO DO NOT SHIFT AND PUSH DATA LIKE DO IN SCROLLING CANVAS
-
-    // // colorCanvasData[v][x][y]
-    // for (n=0; n<=this.numNodes; n+=1) {
-    //   this.colorCanvasData[0][n][0] = this.Trxr[n];
-    //   this.colorCanvasData[1][n][0] = this.Tjacket; // XXX should only do this once...
-    // }
 
   }, // end updateDisplay method
 

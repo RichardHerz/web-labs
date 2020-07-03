@@ -334,7 +334,7 @@ border-style: solid;
 
 #button_copyDataButton {
   position: absolute;
-  left: 326px;
+  left: 82px;
   top: 258px;
   width: 104px;
   height: 24px;
@@ -437,6 +437,40 @@ border-style: solid;
   border-width: 1px;
   visibility: visible;
   border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#field_Ca_final_LABEL {
+  position: absolute;
+  left: 262px;
+  top: 240px;
+  width: 150px;
+  height: 32px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#field_Ca_final {
+  position: absolute;
+  left: 262px;
+  top: 280px;
+  width: 100px;
+  height: 32px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: solid;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;

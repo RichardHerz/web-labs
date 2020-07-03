@@ -445,32 +445,17 @@ border-style: solid;
   font-size: 16px;
 }
 
-#field_Ca_final_LABEL {
-  position: absolute;
-  left: 262px;
-  top: 240px;
-  width: 150px;
-  height: 32px;
-  border-width: 1px;
-  visibility: visible;
-  border-style: dotted;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
-}
-
 #field_Ca_final {
   position: absolute;
-  left: 262px;
-  top: 280px;
-  width: 100px;
+  left: 200px;
+  top: 240px;
+  width: 220px;
   height: 32px;
+  text-align : right;
   border-width: 1px;
-  visibility: visible;
-  border-style: solid;
+  /* set style.visbility = 'visible' at end updateState */
+  visibility: hidden;
+  border-style: none;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;

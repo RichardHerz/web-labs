@@ -91,7 +91,7 @@ let puBatchReactor = {
     this.dataInputs[v] = 'input_field_RateConstant';
     this.dataUnits[v] = '(units depend on order)';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 109;
+    this.dataMax[v] = 1000;
     this.dataDefault[v] = 1.0e-7;
     //
     v = 1;
@@ -106,7 +106,7 @@ let puBatchReactor = {
     this.dataHeaders[v] = 'Reaction Order';
     this.dataInputs[v] = 'input_field_ReactionOrder';
     this.dataUnits[v] = '';
-    this.dataMin[v] = 0;
+    this.dataMin[v] = -1;
     this.dataMax[v] = 2;
     this.dataDefault[v] = 1;
     //
@@ -228,6 +228,16 @@ let puBatchReactor = {
     this.Vol= this.dataValues[5] = interfacer.getInputValue(unum, 5);
     this.t_final = this.dataValues[6] = interfacer.getInputValue(unum, 6);
 
+    // ensure order nth has values -1,0,1,2
+    let x = Math.round(this.nth);
+    if (x < -1) {
+      x = -1;
+    } else if (x > 2) {
+      x = 2;
+    }
+    this.nth = x;
+    document.getElementById(this.dataInputs[2]).value = this.nth;
+
     // // adjust axis of profile plot
     plotter['plotArrays']['plotFlag'][0] = 0;  // so axes will refresh
     plotInfo[0]['xAxisMax'] = this.t_final;
@@ -296,13 +306,15 @@ let puBatchReactor = {
     }
 
     this.Ca_final = this.Ca[this.numPlotPoints];
+    document.getElementById(this.Ca_output_field_ID).style.visibility = 'visible';
 
   }, // end updateState method
 
   updateDisplay : function() {
 
     // note use .toFixed(n) method of object to round number to n decimal points
-    document.getElementById(this.Ca_output_field_ID).innerHTML = this.Ca_final.toFixed(1);
+    let txt = 'Ca final (mol/m<sup>3</sup>) = ' + this.Ca_final.toFixed(1);
+    document.getElementById(this.Ca_output_field_ID).innerHTML = txt;
 
     // HANDLE PROFILE PLOT DATA
 
@@ -329,20 +341,25 @@ let puBatchReactor = {
   reactBATCHnthSS : function(t,k,n,Cain) {
     // returns conc at time t
     let Ca;
-
     switch(n) {
       case -1:
-        // code block
+        let x = ( Math.pow(Cain,2) - 2 * k * t );
+        if (x > 0) {
+          Ca = Math.sqrt(x);
+        } else {
+          Ca = 0;
+        }
         break;
       case 0:
-        // code block
+        Ca = (Cain - k * t);
+        if (Ca < 0) {Ca = 0};
         break;
       case 1:
-        // put Cin*exp(-k*tau) into Cout
-        Ca = Cain * Math.exp(-k*t);
+        Ca = Cain * Math.exp(-k * t);
         break;
       case 2:
-          // code block
+        Ca = Cain / (1 + Cain * k * t);
+        break;
       default:
         Ca = Cain;
     }

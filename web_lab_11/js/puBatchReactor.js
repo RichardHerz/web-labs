@@ -96,7 +96,7 @@ let puBatchReactor = {
     //
     v = 1;
     this.dataHeaders[v] = 'Ea';
-    this.dataInputs[v] = 'input_field_Ea';
+    this.dataInputs[v] = 'input_field_ActivationEnergy';
     this.dataUnits[v] = 'kJ/mol';
     this.dataMin[v] = 0;
     this.dataMax[v] = 200;
@@ -294,10 +294,9 @@ let puBatchReactor = {
 
     let Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
     let EaOverRg = this.Ea / Rg;
-    let EaOverRg300 = EaOverRg / 300;
 
     // this reactor is ISOTHERMAL so only need to compute k at reaction T once
-    kT = this.k_300 * Math.exp(EaOverRg300 - EaOverRg/this.Tin);
+    kT = this.k_300 * Math.exp(EaOverRg/300 - EaOverRg/this.Tin);
 
     // plot will have numPlotPoints + 1 points - see process_plot_info.js
     for (j=0; j<=this.numPlotPoints; j+=1) {

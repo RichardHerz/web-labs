@@ -86,13 +86,13 @@ let plotInfo = {
     // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
     // WARNING: all below with prefix 'var' must have same number of child objects,
     // one for each variable placed on plot
-    plotInfo[pnum]['varUnitIndex'] = new Array();
-    plotInfo[pnum]['var'] = new Array();
-    plotInfo[pnum]['varLabel'] = new Array();
-    plotInfo[pnum]['varDataUnits'] = new Array();
-    plotInfo[pnum]['varShow'] = new Array();
-    plotInfo[pnum]['varYaxis'] = new Array();
-    plotInfo[pnum]['varYscaleFactor'] = new Array();
+    plotInfo[pnum]['varUnitIndex'] = [];
+    plotInfo[pnum]['var'] = [];
+    plotInfo[pnum]['varLabel'] = [];
+    plotInfo[pnum]['varDataUnits'] = [];
+    plotInfo[pnum]['varShow'] = [];
+    plotInfo[pnum]['varYaxis'] = [];
+    plotInfo[pnum]['varYscaleFactor'] = [];
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //
@@ -105,6 +105,6 @@ let plotInfo = {
     plotInfo[pnum]['varYaxis'][vnum] = 'left';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
-  }, // end initialize method of plotInfo
+  } // end initialize method of plotInfo
 
-} // end plotInfo
+}; // end of object plotInfo

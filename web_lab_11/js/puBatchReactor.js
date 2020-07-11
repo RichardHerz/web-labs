@@ -305,6 +305,8 @@ let puBatchReactor = {
     }
 
     this.Ca_final = this.Ca[this.numPlotPoints];
+    
+    // change Ca final output field to visible only after 1st run
     document.getElementById(this.Ca_output_field_ID).style.visibility = 'visible';
 
   }, // end updateState method

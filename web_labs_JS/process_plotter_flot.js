@@ -40,12 +40,12 @@ let plotter = {
       // uses length of plotInfo so must be called after plotInfo has been initialized
       let npl = Object.keys(plotInfo).length; // number of plots
       this.plotFlag = [0];
-      for (let p = 1; p < npl; p += 1) {
+      for (p = 1; p < npl; p += 1) {
         this.plotFlag.push(0);
       }
     } // END of method initialize()
 
-  }, // END of object plotArrays
+  }, // END of plotArrays (child object of parent object plotter)
 
   // --------- DEFINE METHODS ---------------
 
@@ -216,7 +216,7 @@ let plotter = {
     // set up the plot axis labels and plot legend
 
     let xShow = plotInfo[pNumber]['xAxisShow'];
-    let xLabel = plotInfo[pNumber]['xAxisLabel'];;
+    let xLabel = plotInfo[pNumber]['xAxisLabel'];
     let xMin= plotInfo[pNumber]['xAxisMin'];
     let xMax = plotInfo[pNumber]['xAxisMax'];
     let yLeftLabel = plotInfo[pNumber]['yLeftAxisLabel'];
@@ -272,7 +272,7 @@ let plotter = {
       options.xaxis = {
         transform: function (v) { return -v; },
         inverseTransform: function (v) { return -v; }
-      }
+      };
     }
 
     // only draw plot with axes and all options the first time
@@ -303,11 +303,11 @@ let plotter = {
     //    index 3 specifies x or y in x,y data point pair [0 & 1]
     let v;
     let p;
-    let plotDataStub = new Array();
+    let plotDataStub = [];
     for (v = 0; v < numVars; v += 1) {
-      plotDataStub[v] = new Array();
+      plotDataStub[v] = [];
       for (p = 0; p <= numPlotPoints; p += 1) { // NOTE = AT p <=
-        plotDataStub[v][p] = new Array();
+        plotDataStub[v][p] = [];
         plotDataStub[v][p][0] = 0;
         plotDataStub[v][p][1] = 0;
       }
@@ -321,7 +321,7 @@ let plotter = {
     // But can NOT do assignment for [v] [p+1] [0] since p+1 element does not yet
     // exist, where here p = numPlotPoints+1.
     // Would have to first create new p+1 array
-    //    plotDataStub [v] [p+1] = new Array();
+    //    plotDataStub [v] [p+1] = [];
     // Then can do
     //    plotDataStub [v] [p+1] [0] = 0;
     //    plotDataStub [v] [p+1] [1] = 0; // etc.
@@ -468,11 +468,11 @@ let plotter = {
     let v;
     let x;
     let y;
-    let plotDataStub = new Array();
+    let plotDataStub = [];
     for (v = 0; v < numVars; v += 1) {
-      plotDataStub[v] = new Array();
+      plotDataStub[v] = [];
         for (x = 0; x <= numXpts; x += 1) { // NOTE = AT <=
-        plotDataStub[v][x] = new Array();
+        plotDataStub[v][x] = [];
         for (y = 0; y < numYpts; y += 1) {
           plotDataStub[v][x][y] = 0;
         }
@@ -540,7 +540,7 @@ let plotter = {
     let scaledVarVal; // holds variable value scaled 0-1 by minVarVal & maxVarVal
 
     // repeat through all old and new x,y locations
-    for (let i=0; i < xLocArray.length; i +=1) {
+    for (i=0; i < xLocArray.length; i +=1) {
       t = xLocArray[i];
       s = yLocArray[i];
 
@@ -586,8 +586,8 @@ let plotter = {
         context.fillRect(x,y,tPixelsPerPoint,sPixelsPerPoint);
       }
 
-    } // END for (let i=0; i < xLocArray.length; i +=1)
+    } // END for (i=0; i < xLocArray.length; i +=1)
 
   } // END of function plotColorCanvasPixelList
 
-} // END of object plotter
+}; // END of object plotter

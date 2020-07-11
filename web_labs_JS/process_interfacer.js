@@ -53,7 +53,7 @@ let interfacer = {
     controller.resetSimTime();
     // reset all units
     let numUnits = Object.keys(processUnits).length; // number of units
-    for (let n = 0; n < numUnits; n += 1) {
+    for (n = 0; n < numUnits; n += 1) {
       processUnits[n].reset();
     }
     controller.resetSSflagsFalse();
@@ -103,7 +103,7 @@ let interfacer = {
         varValue = varDefault;
       }
     }
-    return varValue
+    return varValue;
   }, // END of getInputValue()
 
   updateUIparams : function() {
@@ -114,7 +114,7 @@ let interfacer = {
     // specific unit involved in that input.
     //
     let numUnits = Object.keys(processUnits).length; // number of units
-    for (let n = 0; n < numUnits; n += 1) {
+    for (n = 0; n < numUnits; n += 1) {
       processUnits[n].updateUIparams();
     }
   },  // END OF function updateUIparams
@@ -126,7 +126,7 @@ let interfacer = {
     // second index length can be changed later and
     // values are undefined or quiz input value
     let arrayStub = [];
-    let numUnits = Object.keys(processUnits).length
+    let numUnits = Object.keys(processUnits).length;
     for (u = 0; u < numUnits; u += 1) {
       arrayStub[u] = [];
     }
@@ -220,7 +220,7 @@ let interfacer = {
     let varIndex; // index of selected variable in unit local data array
     let varUnitIndex; // index of unit from which variable is to be obtained
     let tText; // we will put the data into this variable
-    let tItemDelimiter = ', &nbsp;'
+    let tItemDelimiter = ', &nbsp;';
     let tVarLabelLen = plotInfo[plotIndex]['varLabel'].length; // length for loops below
 
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
@@ -383,4 +383,4 @@ let interfacer = {
     return varValue;
   } // END of function formatNumToNum
 
-} // END OF OBJECT interfacer
+}; // END OF OBJECT interfacer

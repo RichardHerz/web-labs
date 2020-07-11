@@ -66,6 +66,12 @@ let interfacer = {
   getInputValue : function(u,v) {
     // GET INPUT VALUE - CALLED IN UNITS updateUIparams()
     // USES OBJECT processUnits
+
+    // XXX TEST DOT NOTATION
+    // let varInputID = processUnits[u]['dataInputs'][v]; // ORIG WORKS
+    // let varInputID = processUnits[u].dataInputs[v]; // THIS WORKS
+    // processUnits[u].dataInputs.v does *NOT* work
+
     let varInputID = processUnits[u]['dataInputs'][v];
     let varDefault = processUnits[u]['dataDefault'][v];
     let varMin = processUnits[u]['dataMin'][v];

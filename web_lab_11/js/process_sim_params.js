@@ -23,7 +23,7 @@ let simParams = {
 
   title : 'Batch Reactor, isothermal, nth order reaction', // title of simulation
 
-  labType : 'Single', // valid values are: Single, Profile, Dynamic (default)
+  labType : 'Profile', // valid values are: Single, Profile, Dynamic (default)
 
   runButtonID : "button_runButton", // for functions to run, reset, copy data
   // URLs for methods updateRunCount and updateCurrentRunCountDisplay below

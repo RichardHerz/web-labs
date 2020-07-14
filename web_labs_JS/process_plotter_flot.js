@@ -165,17 +165,26 @@ let plotter = {
     let v = 0; // value of element k in plotList
     let vLabel = []; // array to hold variable names for plot legend
     let yAxis = []; // array to hold y-axis, "left" or "right"
-    let vShow = []; // array to hold "show" or "hide" (hide still in copy-save data)
+    let vShow = []; // array to hold "show", "tabled", or empty or other, e.g., "hide"
     plotList.forEach(fGetAxisData);
     function fGetAxisData(v,k) {
   	  // v = value of element k of plotList array
       // k is index of plotList array
-      yAxis[k] = plotInfo[pNumber]['varYaxis'][k]; // get "left" or "right" for plot y axis
-      vShow[k] = plotInfo[pNumber]['varShow'][k]; // get "show" or "hide"
+      yAxis[k] = plotInfo[pNumber]['varYaxis'][k];
+      vShow[k] = plotInfo[pNumber]['varShow'][k];
       vLabel[k] = plotInfo[pNumber]['varLabel'][k];
     }
 
     // put data in form needed by flot.js
+
+    // NOTE: plotInfo object for lab has varShow option for each variable listed
+    // COMMENT FROM process_plot_info.js
+    //    varShow values are 'show' to show on plot and legend,
+    //    'tabled' to not show on plot nor legend but list in copy data table
+    //    and any other value, e.g., 'hide' to not show on plot but do show in legend
+    //    varShow value can be changed by javascript if want to show/hide curve with checkbox
+    //    e.g., plotInfo[pnum]['varShow'][vnum] = 'show';
+    // interfacer.copyData tabulates all variables in plotInfo regardless of the varShow value
 
     let plotCanvasHtmlID = plotInfo[pNumber]['canvas'];
 

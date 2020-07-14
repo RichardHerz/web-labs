@@ -280,6 +280,15 @@ let interfacer = {
 
     tText += '<p>' + plotInfo[plotIndex]['title'] + '</p>';
 
+    // NOTE: plotInfo object for lab has varShow option for each variable listed but
+    // copyData tabulates all variables in plotInfo regardless of the varShow value
+    // FROM process_plot_info.js 
+    //    varShow values are 'show' to show on plot and legend,
+    //    'tabled' to not show on plot nor legend but list in copy data table
+    //    and any other value, e.g., 'hide' to not show on plot but do show in legend
+    //    varShow value can be changed by javascript if want to show/hide curve with checkbox
+    //    e.g., plotInfo[pnum]['varShow'][vnum] = 'show';
+
     // column headers
     tText += '<p>';
     // first, x-axis variable name for table

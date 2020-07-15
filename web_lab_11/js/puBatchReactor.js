@@ -44,6 +44,8 @@ let puBatchReactor = {
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
   Ca_output_field_ID : "field_Ca_final",
+  conversion_output_field_ID  : "field_conversion_final",
+  displayReactorContents: '#div_PLOTDIV_reactorContents', // need # because selecting CSS
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
@@ -51,8 +53,8 @@ let puBatchReactor = {
   // define main inputs
   // values will be set in method initialize() calling method updateUIparams()
   Tin : 0, // Temperature
-  Cain : 0, // initial reactant concentration
-  Ca_final : 0, // final reactant concentration
+  Cain : 1, // initial reactant concentration
+  Ca_final : 1, // final reactant concentration
   Vol : 0, // volume of reactor contents
   t_final : 0,
   k_300 : 0, // forward rate constant at 300 K
@@ -305,9 +307,12 @@ let puBatchReactor = {
     }
 
     this.Ca_final = this.Ca[this.numPlotPoints];
-    
+
     // change Ca final output field to visible only after 1st run
     document.getElementById(this.Ca_output_field_ID).style.visibility = 'visible';
+
+    // change conversion final output field to visible only after 1st run
+    document.getElementById(this.conversion_output_field_ID).style.visibility = 'visible';
 
   }, // end updateState method
 
@@ -316,6 +321,27 @@ let puBatchReactor = {
     // note use .toFixed(n) method of object to round number to n decimal points
     let txt = 'Ca final (mol/m<sup>3</sup>) = ' + this.Ca_final.toFixed(1);
     document.getElementById(this.Ca_output_field_ID).innerHTML = txt;
+
+    // note use .toFixed(n) method of object to round number to n decimal points
+    let conversion_final = 100 * (1 - this.Ca_final / this.Cain);
+    txt = 'Conversion final (%) = ' + conversion_final.toFixed(1);
+    document.getElementById(this.conversion_output_field_ID).innerHTML = txt;
+
+    // WARNING: must have simParams vars imTimeStep = 1 and simStepRepeats = 1
+    // for simtime to equal # runs between resets
+    document.getElementById("field_run_count").innerHTML = "Total runs = " + controller.simTime.toFixed(0);
+
+    // set reactor contents color to final color
+    let el = document.querySelector(this.displayReactorContents);
+    // el.style.backgroundColor = "rgb(0,0,255)";
+    // compute color for this reactantConc
+    let cafinal = this.Ca_final;
+    if (controller.simTime == 0) {cafinal = this.Cain;}
+    let B = Math.round(255 * cafinal / this.Cain); // Blue = reactant
+    let R = 255 - B; // Red = product
+    let colorString = "rgb(" + R + ", 0, " + B + ")";
+    // set color for this reactantConc
+    el.style.backgroundColor = colorString; // backgroundColor NOT background-color
 
     // HANDLE PROFILE PLOT DATA
 

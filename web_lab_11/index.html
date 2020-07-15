@@ -43,12 +43,24 @@
 
 </head>
 <body>
+<div id="div_page_header">
+  <p>
+  <a href="http://reactorlab.net/web-labs/">Back</a> to Web Labs at ReactorLab.net
+  <p><b><i>Batch Reactor</i></b> - isothermal with n-th order reaction</p>
+  <!-- <p id="field_output_field"></p> -->
+  <p>
+    Click the Run button to start.
+    Change an input value, then hit the Enter key or click out of the field.
+    <a href="images/batch-info.html" target="new">More info</a>
+  </p>
+</div> <!-- end of div div_page_header -->
 <div id="div_simFrame">
    <div id="div_reactor">
       <img id="image_reactorImage" src="images/reactor.png">
          <div id="div_PLOTDIV_reactorContents">
          </div> <!-- end of div div_PLOTDIV_reactorContents -->
    </div> <!-- end of div div_reactor -->
+   <p id="field_run_count"></p>
    <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="interfacer.resetThisLab()">
    <input type="button" id="button_runButton" value="Run" value="Run" onclick="interfacer.runThisLab()">
    <div id="div_operatingParams">
@@ -77,6 +89,7 @@
       <!-- input id="input_field_JacketFeedTTemp" MAY BE type="hidden" on open page; changed by unit_5.changeMode -->
       <!-- end "div_RADIO_group_Controller" -->
       <p id="field_Ca_final"></p>
+      <p id="field_conversion_final"></p>
    </div> <!-- end of div div_controller -->
    <p id="field_RateConstantLABEL">
       Enter k at 300 K

@@ -80,8 +80,8 @@ let plotInfo = {
     // for flot.js colors, only basic color names appear to work, e.g., white, blue, red
     // for all html color names to hex see http://www.color-hex.com
     // for all color names to hex see https://www.w3schools.com/colors/colors_picker.asp
-    plotInfo[pnum]['plotDataSeriesColors'] = ['#ff6347','#1e90ff']; // optional, in variable order 0, 1, etc.
-    // ['#ff6347','#1e90ff'] is Tomato and DodgerBlue
+    plotInfo[pnum]['plotDataSeriesColors'] = ['#420420','#1e90ff']; // optional, in variable order 0, 1, etc.
+    // ['#ff6347','#1e90ff'] is Tomato and DodgerBlue, #420420 is black
     //
     // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
     // WARNING: all below with prefix 'var' must have same number of child objects,

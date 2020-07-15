@@ -232,8 +232,17 @@ let interfacer = {
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
     // list current input values
+
     let timeTOround = controller.simTime;
-    tText += '<p>Simulation time of data capture = ' + timeTOround.toFixed(3) + ' s <br>';
+    if (simParams.labType == 'Dynamic') {
+      tText += '<p>Simulation time of data capture = ' + timeTOround.toFixed(3) + ' s <br>';
+    } else {
+      // Single or Profile labType
+      // WARNING: must have simParams vars imTimeStep = 1 and simStepRepeats = 1
+      // for simtime to equal # runs between resets
+      tText += '<p>Total runs at time of data capture = ' + timeTOround.toFixed(0) + '<br>';
+    }
+
     tText += 'Values of input parameters at time of data capture:<br>';
     // list inputs for all units since, other units may affect these results
     numUnits = Object.keys(processUnits).length;
@@ -282,7 +291,7 @@ let interfacer = {
 
     // NOTE: plotInfo object for lab has varShow option for each variable listed but
     // copyData tabulates all variables in plotInfo regardless of the varShow value
-    // FROM process_plot_info.js 
+    // FROM process_plot_info.js
     //    varShow values are 'show' to show on plot and legend,
     //    'tabled' to not show on plot nor legend but list in copy data table
     //    and any other value, e.g., 'hide' to not show on plot but do show in legend

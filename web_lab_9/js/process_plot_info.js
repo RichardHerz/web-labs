@@ -1,5 +1,5 @@
 /*
-  Design, text, images and code by Richard K. Herz, 2017-2018
+  Design, text, images and code by Richard K. Herz, 2017-2020
   Copyrights held by Richard K. Herz
   Licensed for use under the GNU General Public License v3.0
   https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -26,13 +26,14 @@
 // more than one plot can be put one one web page by
 // defining multiple object children, where the first index
 // plotInfo[0] is the plot number index (starting at 0)
-//
+
 // for plots with fixed number of points at constant x locations
 // filled initially and kept constant, then plot has numberPoints + 1 pts and
 // set numberPoints < = than width of plot in HTML pixels for fast plotting
+
 // for plots with x,y pairs added together in unit updateDisplay methods
 // at arbitrary locations, numberPoints statement is optional or value = "" or 0
-//
+// and, usually, plotDataPoints = 1 (true) and plotDataLines = 0 (false)
 
 let plotInfo = {
 

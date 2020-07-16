@@ -26,6 +26,13 @@
 // more than one plot can be put one one web page by
 // defining multiple object children, where the first index
 // plotInfo[0] is the plot number index (starting at 0)
+//
+// for plots with fixed number of points at constant x locations
+// filled initially and kept constant, then plot has numberPoints + 1 pts and
+// set numberPoints < = than width of plot in HTML pixels for fast plotting
+// for plots with x,y pairs added together in updateDisplay methods
+// at arbitrary locations, numberPoints statement is optional or value = "" or 0
+//
 
 let plotInfo = {
 
@@ -165,11 +172,12 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'SS Conversion';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotSSconversion'; // flot.js wants ID with prefix #
+    // for plots with fixed number of points at constant x locations
+    // filled initially and kept constant, then plot has numberPoints + 1 pts and
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    // xxx in this lab, not sure why numberPoints = 0 works, coming back to this later...
-    // xxx maybe plotter.initPlotData only needs the first element created for the
-    // xxx 2nd index in plotDataStub and then can add x,y pairs at end as needed... 
-    plotInfo[pnum]['numberPoints'] = 0; // xxx 100; // 0 also works
+    // for labs with x,y pairs added together in updateDisplay methods
+    // at arbitrary locations, numberPoints statement is optional or value = "" or 0
+    plotInfo[pnum]['numberPoints'] = 0;
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'System Feed Reactant Concentration';
     plotInfo[pnum]['xAxisTableLabel'] = 'Feed Conc'; // label for copy data table
@@ -231,9 +239,12 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'SS Rate';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotSSrate'; // flot.js wants ID with prefix #
+    // for labs with fixed number of points at constant x locations
+    // filled initially and kept constant, then plot has numberPoints + 1 pts and
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    plotInfo[pnum]['numberPoints'] = 100;
-    // plot has numberPoints + 1 pts!
+    // for labs with x,y pairs added together in updateDisplay methods
+    // at arbitrary locations, numberPoints statement is optional or value = "" or 0
+    plotInfo[pnum]['numberPoints'] = 0;
     plotInfo[pnum]['xAxisLabel'] = 'Reactant Concentration in Reactor';
     plotInfo[pnum]['xAxisTableLabel'] = 'Conc in Rxr'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis

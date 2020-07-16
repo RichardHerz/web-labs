@@ -62,8 +62,15 @@ let plotter = {
     let sf = 1; // scale factor used below
     let thisNumPts = 0; // used a couple places below with array .length
 
+    // for plots with fixed number of points at constant x locations
+    // filled initially and kept constant, then plot has numberPoints + 1 pts and
+    // set numberPoints < = than width of plot in HTML pixels for fast plotting
+    // for labs with x,y pairs added together in updateDisplay methods
+    // at arbitrary locations, numberPoints statement in process_plot_info.js
+    // and values in plotInfo is optional or value = "" or 0 since
+    // this.initPlotData will return a valid array for that case 
     let numPlotPoints = plotInfo[plotInfoNum]['numberPoints'];
-    // plot will have 0 to numberPoints for total of numberPoints + 1 points
+
     let varNumbers = plotInfo[plotInfoNum]['var'];
     let numVar = varNumbers.length;
     let varUnitIndex;

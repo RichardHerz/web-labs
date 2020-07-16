@@ -30,7 +30,7 @@
 // for plots with fixed number of points at constant x locations
 // filled initially and kept constant, then plot has numberPoints + 1 pts and
 // set numberPoints < = than width of plot in HTML pixels for fast plotting
-// for plots with x,y pairs added together in updateDisplay methods
+// for plots with x,y pairs added together in unit updateDisplay methods
 // at arbitrary locations, numberPoints statement is optional or value = "" or 0
 //
 
@@ -175,7 +175,7 @@ let plotInfo = {
     // for plots with fixed number of points at constant x locations
     // filled initially and kept constant, then plot has numberPoints + 1 pts and
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    // for labs with x,y pairs added together in updateDisplay methods
+    // for labs with x,y pairs added together in unit updateDisplay methods
     // at arbitrary locations, numberPoints statement is optional or value = "" or 0
     plotInfo[pnum]['numberPoints'] = 0;
     // plot has numberPoints + 1 pts!
@@ -242,7 +242,7 @@ let plotInfo = {
     // for labs with fixed number of points at constant x locations
     // filled initially and kept constant, then plot has numberPoints + 1 pts and
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    // for labs with x,y pairs added together in updateDisplay methods
+    // for labs with x,y pairs added together in unit updateDisplay methods
     // at arbitrary locations, numberPoints statement is optional or value = "" or 0
     plotInfo[pnum]['numberPoints'] = 0;
     plotInfo[pnum]['xAxisLabel'] = 'Reactant Concentration in Reactor';

@@ -65,10 +65,10 @@ let plotter = {
     // for plots with fixed number of points at constant x locations
     // filled initially and kept constant, then plot has numberPoints + 1 pts and
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    // for labs with x,y pairs added together in updateDisplay methods
+    // for labs with x,y pairs added together in unit updateDisplay methods
     // at arbitrary locations, numberPoints statement in process_plot_info.js
     // and values in plotInfo is optional or value = "" or 0 since
-    // this.initPlotData will return a valid array for that case 
+    // this.initPlotData will return a valid array for that case
     let numPlotPoints = plotInfo[plotInfoNum]['numberPoints'];
 
     let varNumbers = plotInfo[plotInfoNum]['var'];

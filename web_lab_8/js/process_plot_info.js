@@ -5,7 +5,7 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// WARNING: in process units, local data array names for plotting must
+// WARNING: in process units, local data array names for plotting must be
 //          'profileData' for ['type'] = 'profile'
 //          'stripData' for ['type'] = 'strip'
 //          'colorCanvasData' for ['type'] = 'canvas'
@@ -34,6 +34,9 @@
 // for plots with x,y pairs added together in unit updateDisplay methods
 // at arbitrary locations, numberPoints statement is optional or value = "" or 0
 // and, usually, plotDataPoints = 1 (true) and plotDataLines = 0 (false)
+//
+// plotInfo[plotIndex]['numberPoints'] value is required to copy plot data
+// to table by interfacer.copyData() method
 
 let plotInfo = {
 
@@ -262,8 +265,7 @@ let plotInfo = {
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_strip_plot'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     let npts = 400; // special so can use value below at xAxisMax
-    plotInfo[pnum]['numberPoints'] = npts;
-    // plot has numberPoints + 1 pts!
+    plotInfo[pnum]['numberPoints'] = npts; // special, required since multiple units on this plot
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
     plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis

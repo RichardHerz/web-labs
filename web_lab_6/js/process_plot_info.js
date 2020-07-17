@@ -5,7 +5,7 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// WARNING: in process units, local data array names for plotting must
+// WARNING: in process units, local data array names for plotting must be
 //          'profileData' for ['type'] = 'profile'
 //          'stripData' for ['type'] = 'strip'
 //          'colorCanvasData' for ['type'] = 'canvas'
@@ -34,6 +34,9 @@
 // for plots with x,y pairs added together in unit updateDisplay methods
 // at arbitrary locations, numberPoints statement is optional or value = "" or 0
 // and, usually, plotDataPoints = 1 (true) and plotDataLines = 0 (false)
+//
+// plotInfo[plotIndex]['numberPoints'] value is required to copy plot data
+// to table by interfacer.copyData() method
 
 let plotInfo = {
 

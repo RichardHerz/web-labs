@@ -5,7 +5,7 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// WARNING: in process units, local data array names for plotting must
+// WARNING: in process units, local data array names for plotting must be
 //          'profileData' for ['type'] = 'profile'
 //          'stripData' for ['type'] = 'strip'
 //          'colorCanvasData' for ['type'] = 'canvas'
@@ -34,6 +34,9 @@
 // for plots with x,y pairs added together in unit updateDisplay methods
 // at arbitrary locations, numberPoints statement is optional or value = "" or 0
 // and, usually, plotDataPoints = 1 (true) and plotDataLines = 0 (false)
+//
+// plotInfo[plotIndex]['numberPoints'] value is required to copy plot data
+// to table by interfacer.copyData() method
 
 let plotInfo = {
 
@@ -178,6 +181,8 @@ let plotInfo = {
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     // for labs with x,y pairs added together in unit updateDisplay methods
     // at arbitrary locations, numberPoints statement is optional or value = "" or 0
+    // however, plotInfo[plotIndex]['numberPoints'] value is required to copy plot data
+    // to table by interfacer.copyData() method
     plotInfo[pnum]['numberPoints'] = 0;
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'System Feed Reactant Concentration';
@@ -245,6 +250,8 @@ let plotInfo = {
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     // for labs with x,y pairs added together in unit updateDisplay methods
     // at arbitrary locations, numberPoints statement is optional or value = "" or 0
+    // however, plotInfo[plotIndex]['numberPoints'] value is required to copy plot data
+    // to table by interfacer.copyData() method
     plotInfo[pnum]['numberPoints'] = 0;
     plotInfo[pnum]['xAxisLabel'] = 'Reactant Concentration in Reactor';
     plotInfo[pnum]['xAxisTableLabel'] = 'Conc in Rxr'; // label for copy data table
@@ -345,109 +352,3 @@ let plotInfo = {
   }, // end initialize method of plotInfo
 
 } // end plotInfo
-
-// // OLD CONVERSION STRIP CHART PLOT
-// // plot 4 info
-// pnum = 3;
-// plotInfo[pnum] = new Object();
-// plotInfo[pnum]['type'] = 'strip';
-// plotInfo[pnum]['title'] = 'Conversion';
-// plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotConversion'; // flot.js wants ID with prefix #
-// // set numberPoints < = than width of plot in HTML pixels for fast plotting
-// let numPts = 563; // special - used below more than once
-// plotInfo[pnum]['numberPoints'] = numPts;
-// // plot has numberPoints + 1 pts!
-// plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
-// plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
-// // xAxisShow false does not show numbers, nor label, nor grid for x-axis
-// // might be better to cover numbers if desire not to show numbers
-// plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
-// plotInfo[pnum]['xAxisMin'] = 0;
-// // multiplier in line below is numberPoints for this plot
-// plotInfo[pnum]['xAxisMax'] = numPts * simParams.simTimeStep * simParams.simStepRepeats; // numberPoints * ...
-// plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
-// plotInfo[pnum]['yLeftAxisLabel'] = 'Reactant Conversion';
-// plotInfo[pnum]['yLeftAxisMin'] = 0;
-// plotInfo[pnum]['yLeftAxisMax'] = 2;
-// plotInfo[pnum]['yRightAxisLabel'] = '';
-// plotInfo[pnum]['yRightAxisMin'] = 0;
-// plotInfo[pnum]['yRightAxisMax'] = 2;
-// plotInfo[pnum]['plotLegendPosition'] = "ne";
-// plotInfo[pnum]['plotLegendShow'] = 1;  // Boolean, '' or 0 for no show, 1 or "show"
-// plotInfo[pnum]['plotGridBgColor'] = 'white';
-// // colors can be specified rgb, rgba, hex, and color names
-// // for flot.js colors, only basic color names appear to work, e.g., white, blue, red
-// // for all html color names to hex see http://www.color-hex.com
-// // for all color names to hex see https://www.w3schools.com/colors/colors_picker.asp
-// plotInfo[pnum]['plotDataSeriesColors'] = ['blue','red','#919191']; // optional, in variable order 0, 1, etc.
-// // ['#1e90ff','#ff6347','#919191'] is DodgerBlue, Tomato, Tin (metal Tin)
-// //
-// // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
-// // WARNING: all below with prefix 'var' must have same number of child objects,
-// // one for each variable placed on plot
-// plotInfo[pnum]['varUnitIndex'] = new Array();
-// plotInfo[pnum]['var'] = new Array();
-// plotInfo[pnum]['varLabel'] = new Array();
-// plotInfo[pnum]['varDataUnits'] = new Array();
-// plotInfo[pnum]['varShow'] = new Array();
-// plotInfo[pnum]['varYaxis'] = new Array();
-// plotInfo[pnum]['varYscaleFactor'] = new Array();
-// //
-// // ADD SETTINGS FOR EACH VARIABLE
-// //
-// vnum = 0; // 1st variable
-// plotInfo[pnum]['varUnitIndex'][vnum] = 1; // value is index of unit in processUnits object
-// plotInfo[pnum]['var'][vnum] = 1; // value is variable index in plot data array
-// plotInfo[pnum]['varLabel'][vnum] = 'Rxr 1';
-// // varDataUnits are dimensional units used in copy data table, along with varLabel
-// plotInfo[pnum]['varDataUnits'][vnum] = ''; // processUnits[1]['dataUnits'][4]; // 1st var
-// // varShow values are 'show' to show on plot and legend,
-// // 'tabled' to not show on plot nor legend but list in copy data table
-// // and any other value, e.g., 'hide' to not show on plot but do show in legend
-// // varShow value can be changed by javascript if want to show/hide curve with checkbox
-// plotInfo[pnum]['varShow'][vnum] = 'show';
-// plotInfo[pnum]['varYaxis'][vnum] = 'left';
-// plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
-// //
-// vnum = 1; // 2nd variable
-// plotInfo[pnum]['varUnitIndex'][vnum] = 2; // value is index of unit in processUnits object
-// plotInfo[pnum]['var'][vnum] = 1; // value is variable index in plot data array
-// plotInfo[pnum]['varLabel'][vnum] = 'Rxr 2';
-// // varDataUnits are dimensional units used in copy data table, along with varLabel
-// plotInfo[pnum]['varDataUnits'][vnum] = ''; // processUnits[1]['dataUnits'][4]; // 1st var
-// // varShow values are 'show' to show on plot and legend,
-// // 'tabled' to not show on plot nor legend but list in copy data table
-// // and any other value, e.g., 'hide' to not show on plot but do show in legend
-// // varShow value can be changed by javascript if want to show/hide curve with checkbox
-// plotInfo[pnum]['varShow'][vnum] = 'show';
-// plotInfo[pnum]['varYaxis'][vnum] = 'left';
-// plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
-// //
-// vnum = 2; // 3rd variable
-// plotInfo[pnum]['varUnitIndex'][vnum] = 3; // value is index of unit in processUnits object
-// plotInfo[pnum]['var'][vnum] = 1; // value is variable index in plot data array
-// plotInfo[pnum]['varLabel'][vnum] = 'Rxr 3';
-// // varDataUnits are dimensional units used in copy data table, along with varLabel
-// plotInfo[pnum]['varDataUnits'][vnum] = ''; // processUnits[1]['dataUnits'][4]; // 1st var
-// // varShow values are 'show' to show on plot and legend,
-// // 'tabled' to not show on plot nor legend but list in copy data table
-// // and any other value, e.g., 'hide' to not show on plot but do show in legend
-// // varShow value can be changed by javascript if want to show/hide curve with checkbox
-// plotInfo[pnum]['varShow'][vnum] = 'show';
-// plotInfo[pnum]['varYaxis'][vnum] = 'left';
-// plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
-// //
-// vnum = 3; // 4th variable
-// plotInfo[pnum]['varUnitIndex'][vnum] = 4; // value is index of unit in processUnits object
-// plotInfo[pnum]['var'][vnum] = 1; // value is variable index in plot data array
-// plotInfo[pnum]['varLabel'][vnum] = 'Rxr 4';
-// // varDataUnits are dimensional units used in copy data table, along with varLabel
-// plotInfo[pnum]['varDataUnits'][vnum] = ''; // processUnits[1]['dataUnits'][4]; // 1st var
-// // varShow values are 'show' to show on plot and legend,
-// // 'tabled' to not show on plot nor legend but list in copy data table
-// // and any other value, e.g., 'hide' to not show on plot but do show in legend
-// // varShow value can be changed by javascript if want to show/hide curve with checkbox
-// plotInfo[pnum]['varShow'][vnum] = 'show';
-// plotInfo[pnum]['varYaxis'][vnum] = 'left';
-// plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
-// //

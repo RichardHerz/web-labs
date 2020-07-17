@@ -5,7 +5,7 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// WARNING: in process units, local data array names for plotting must
+// WARNING: in process units, local data array names for plotting must be
 //          'profileData' for ['type'] = 'profile'
 //          'stripData' for ['type'] = 'strip'
 //          'colorCanvasData' for ['type'] = 'canvas'
@@ -34,6 +34,9 @@
 // for plots with x,y pairs added together in unit updateDisplay methods
 // at arbitrary locations, numberPoints statement is optional or value = "" or 0
 // and, usually, plotDataPoints = 1 (true) and plotDataLines = 0 (false)
+//
+// plotInfo[plotIndex]['numberPoints'] value is required to copy plot data
+// to table by interfacer.copyData() method
 
 let plotInfo = {
 
@@ -66,7 +69,7 @@ let plotInfo = {
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     let npts = 200; // special so can use value below at xAxisMax
-    plotInfo[pnum]['numberPoints'] = npts;
+    plotInfo[pnum]['numberPoints'] = npts; // special, required since multiple units on this plot
     // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
     plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
@@ -74,7 +77,7 @@ let plotInfo = {
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
     plotInfo[pnum]['xAxisMin'] = 0;
-    plotInfo[pnum]['xAxisMax'] = npts * simParams.simTimeStep * simParams.simStepRepeats; // numberPoints * ...
+    plotInfo[pnum]['xAxisMax'] = npts * simParams.simTimeStep * simParams.simStepRepeats;
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = 'Reactant Concentration';
     plotInfo[pnum]['yLeftAxisMin'] = 0;

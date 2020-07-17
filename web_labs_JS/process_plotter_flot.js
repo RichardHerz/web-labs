@@ -65,11 +65,18 @@ let plotter = {
     // for plots with fixed number of points at constant x locations
     // filled initially and kept constant, then plot has numberPoints + 1 pts and
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
+    //
     // for labs with x,y pairs added together in unit updateDisplay methods
     // at arbitrary locations, numberPoints statement in process_plot_info.js
     // and values in plotInfo is optional or value = "" or 0 since
     // this.initPlotData will return a valid array for that case
-    let numPlotPoints = plotInfo[plotInfoNum]['numberPoints'];
+    //
+    // numPlotPoints value for purpose of plotter is not critical because
+    // getPlotData adds x,y pairs but need to keep numPlotPoints as argument
+    // of initPlotData because it is used in process units to initialize
+    // their stripData and plotData arrays and plotInfo[plotInfoNum]['numberPoints']
+    // is also needed for interfacer.copyData() method
+    let numPlotPoints;
 
     let varNumbers = plotInfo[plotInfoNum]['var'];
     let numVar = varNumbers.length;
@@ -99,15 +106,18 @@ let plotter = {
         // so have to copy data arrays element by element to get independent copy
         if (plotInfo[plotInfoNum]['type'] == 'profile') {
           // requires units' local array name to be profileData
+          // get actual length of profileData - may change in labs which add
+          // x,y plot pairs as generated at irregular times and locations
           thisNumPts = processUnits[varUnitIndex]['profileData'][n].length;
-          // at least in web lab 9, may not have defined all numPlotPoints
             for (p = 0; p < thisNumPts; p += 1) {
             plotData[v][p][0] = processUnits[varUnitIndex]['profileData'][n][p][0];
             plotData[v][p][1] = processUnits[varUnitIndex]['profileData'][n][p][1];
           }
         } else if (plotInfo[plotInfoNum]['type'] == 'strip') {
           // requires units' local array name to be stripData
-          for (p = 0; p <= numPlotPoints; p += 1) { // NOTE = AT p <=
+          // xxx for (p = 0; p <= numPlotPoints; p += 1) { // NOTE = AT p <=
+          thisNumPts = processUnits[varUnitIndex]['stripData'][n].length;
+          for (p = 0; p < thisNumPts; p += 1) {
             plotData[v][p][0] = processUnits[varUnitIndex]['stripData'][n][p][0];
             plotData[v][p][1] = processUnits[varUnitIndex]['stripData'][n][p][1];
           }
@@ -317,6 +327,13 @@ let plotter = {
     //    index 1 specifies the variable [0 to numVars-1],
     //    index 2 specifies the data point pair [0 to & including numPlotPoints]
     //    index 3 specifies x or y in x,y data point pair [0 & 1]
+    //
+    // numPlotPoints value for purpose of plotter is not critical because
+    // getPlotData adds x,y pairs but need to keep numPlotPoints as argument
+    // of initPlotData because it is used in process units to initialize
+    // their stripData and plotData arrays and plotInfo[plotInfoNum]['numberPoints']
+    // is also needed for interfacer.copyData() method
+    //
     let v;
     let p;
     let plotDataStub = [];

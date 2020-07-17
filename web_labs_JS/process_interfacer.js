@@ -206,9 +206,6 @@ let interfacer = {
     // plotIndex is the index in object plotInfo of the desired plot to copy
     // USES internal function formatNum
     // REQUIRES run button id='button_runButton' & display labels be 'Run' & 'Pause'
-    //
-    // plotInfo[plotIndex]['numberPoints'] value is required to copy plot data
-    // to table by interfacer.copyData() method
 
     // if sim is running, pause the sim
     // copy grabs what is showing on plot when copy button clicked
@@ -328,8 +325,19 @@ let interfacer = {
     let dataName = plotType + 'Data'; // profileData or stripData
     if ((plotType == 'profile') || (plotType == 'strip')) {
       // repeat to make each line in table for each data point
-      let thisNumPts = plotInfo[plotIndex]['numberPoints'];
-      for (k = 0; k <= thisNumPts; k += 1) {
+      //
+      // OLD version - get thisNumPts from plotInfo
+      // WARNING - thisNumPts may have been deleted from some labs plotInfo
+      // let thisNumPts = 1 + plotInfo[plotIndex]['numberPoints'];
+      // console.log('old thisNumPts = ' + thisNumPts);
+      //
+      // NEW version - get thisNumPts from length of data array
+      // all unit vars in one plot must have same data array length
+      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
+      let thisNumPts = processUnits[varUnitIndex][dataName][0].length;
+      // console.log('new thisNumPts = ' + thisNumPts);
+      //
+      for (k = 0; k < thisNumPts; k += 1) {
         // first get x value in [k][0], get it from ['var'][0]
         // x values should be same for all units for this plot
         varIndex = plotInfo[plotIndex]['var'][0];

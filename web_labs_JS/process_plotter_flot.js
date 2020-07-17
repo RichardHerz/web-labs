@@ -56,32 +56,14 @@ let plotter = {
     //
     // uses plotInfo object defined in process_plot_info.js
 
-    let v = 0; // used as index to select the variable
-    let p = 0; // used as index to select data point pair
-    let n = 0; // used as index
-    let sf = 1; // scale factor used below
-    let thisNumPts = 0; // used a couple places below with array .length
-
-    // for plots with fixed number of points at constant x locations
-    // filled initially and kept constant, then plot has numberPoints + 1 pts and
-    // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    //
-    // for labs with x,y pairs added together in unit updateDisplay methods
-    // at arbitrary locations, numberPoints statement in process_plot_info.js
-    // and values in plotInfo is optional or value = "" or 0 since
-    // this.initPlotData will return a valid array for that case
-    //
-    // numPlotPoints value for purpose of plotter is not critical because
-    // getPlotData adds x,y pairs but need to keep numPlotPoints as argument
-    // of initPlotData because it is used in process units to initialize
-    // their stripData and plotData arrays and plotInfo[plotInfoNum]['numberPoints']
-    // is also needed for interfacer.copyData() method
-    let numPlotPoints;
-
+    let v; // used as index to select the variable
+    let p; // used as index to select data point pair
+    let n; // used as index
+    let sf = 1; // scale factor used below and possibly modified
+    let thisNumPts; // used a couple places below with array .length
     let varNumbers = plotInfo[plotInfoNum]['var'];
     let numVar = varNumbers.length;
-    let varUnitIndex;
-    let plotData = this.initPlotData(numVar,numPlotPoints);
+    let plotData = this.initPlotData(numVar);
 
     // get data for plot
     for (v = 0; v < numVar; v += 1) {
@@ -328,11 +310,10 @@ let plotter = {
     //    index 2 specifies the data point pair [0 to & including numPlotPoints]
     //    index 3 specifies x or y in x,y data point pair [0 & 1]
     //
-    // numPlotPoints value for purpose of plotter is not critical because
-    // getPlotData adds x,y pairs but need to keep numPlotPoints as argument
-    // of initPlotData because it is used in process units to initialize
-    // their stripData and plotData arrays and plotInfo[plotInfoNum]['numberPoints']
-    // is also needed for interfacer.copyData() method
+    // numPlotPoints argument for purpose of plotter is optional because
+    // getPlotData adds x,y pairs but
+    // must keep numPlotPoints as argument of initPlotData because it is used
+    // in process units to initialize their stripData and plotData arrays
     //
     let v;
     let p;

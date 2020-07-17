@@ -28,15 +28,26 @@
 // plotInfo[0] is the plot number index (starting at 0)
 
 // for plots with fixed number of points at constant x locations
-// filled initially and kept constant, then plot has numberPoints + 1 pts and
+// filled initially and kept constant, then plot has
+// plotInfo[pnum]['numberPoints'] + 1 pts and
 // set numberPoints < = than width of plot in HTML pixels for fast plotting
+
+// WARNING: all unit variable data arrays on same plot with fixed number
+// of points must have same length of data arrays for that plot
+
+// WARNING: some labs require plotInfo[pnum]['numberPoints'] value to be set
+// here for some plots because the units use it to set number of integration
+// nodes or other values - in those units, set numberPoints <= than width of
+// plot in HTML pixels for fast plotting,
+// whereas, for other labs and plots, plotInfo[pnum]['numberPoints'] is optional
 
 // for plots with x,y pairs added together in unit updateDisplay methods
 // at arbitrary locations, numberPoints statement is optional or value = "" or 0
 // and, usually, plotDataPoints = 1 (true) and plotDataLines = 0 (false)
-//
-// plotInfo[plotIndex]['numberPoints'] value is required to copy plot data
-// to table by interfacer.copyData() method
+
+// interfacer.copyData() method uses length of first data array on plot,
+// not plotInfo[pnum]['numberPoints']
+// plotter object does not use plotInfo[pnum]['numberPoints']
 
 let plotInfo = {
 
@@ -67,9 +78,6 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Reactor Profiles';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_PFR_plot'; // flot.js wants ID with prefix #
-    // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    plotInfo[pnum]['numberPoints'] = processUnits[unum]['numNodes']; // should match numNodes in process unit
-    // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'Position in Reactor';
     plotInfo[pnum]['xAxisTableLabel'] = 'Position'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
@@ -156,9 +164,6 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Heat Exchanger Temperature Profiles';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_T_plot'; // flot.js wants ID with prefix #
-    // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    plotInfo[pnum]['numberPoints'] = processUnits[unum]['numNodes'];
-    // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'Position in Heat Exchanger';
     plotInfo[pnum]['xAxisTableLabel'] = 'Position'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
@@ -265,6 +270,9 @@ let plotInfo = {
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_strip_plot'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     let npts = 400; // special so can use value below at xAxisMax
+    // SPECIAL - ['numberPoints'] is required to be set for this plot because
+    // multiple units are are on this plot and each use this plot's
+    // ['numberPoints'] to set values in the unit
     plotInfo[pnum]['numberPoints'] = npts; // special, required since multiple units on this plot
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
     plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table

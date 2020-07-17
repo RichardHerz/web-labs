@@ -187,15 +187,6 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'SS Conversion';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotSSconversion'; // flot.js wants ID with prefix #
-    // for plots with fixed number of points at constant x locations
-    // filled initially and kept constant, then plot has numberPoints + 1 pts and
-    // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    // for labs with x,y pairs added together in unit updateDisplay methods
-    // at arbitrary locations, numberPoints statement is optional or value = "" or 0
-    // however, plotInfo[plotIndex]['numberPoints'] value is required to copy plot data
-    // to table by interfacer.copyData() method
-    plotInfo[pnum]['numberPoints'] = 0;
-    // plot has numberPoints + 1 pts!
     plotInfo[pnum]['xAxisLabel'] = 'System Feed Reactant Concentration';
     plotInfo[pnum]['xAxisTableLabel'] = 'Feed Conc'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
@@ -256,14 +247,6 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'SS Rate';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotSSrate'; // flot.js wants ID with prefix #
-    // for labs with fixed number of points at constant x locations
-    // filled initially and kept constant, then plot has numberPoints + 1 pts and
-    // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    // for labs with x,y pairs added together in unit updateDisplay methods
-    // at arbitrary locations, numberPoints statement is optional or value = "" or 0
-    // however, plotInfo[plotIndex]['numberPoints'] value is required to copy plot data
-    // to table by interfacer.copyData() method
-    plotInfo[pnum]['numberPoints'] = 0;
     plotInfo[pnum]['xAxisLabel'] = 'Reactant Concentration in Reactor';
     plotInfo[pnum]['xAxisTableLabel'] = 'Conc in Rxr'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis

@@ -72,8 +72,8 @@ canvas {
   position: relative;
   border-color: DodgerBlue;
   left: 10px;
-  width: 700px;
-  height: 1050px;
+  width: 686px;
+  height: 1080px;
   visibility: visible;
   border-width: 1px;
   border-style: dotted;
@@ -137,17 +137,6 @@ canvas {
   border-style: outset;
 }
 
-#button_copyDataButton {
-  position: absolute;
-  left: 326px;
-  top: 258px;
-  width: 104px;
-  height: 24px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-}
-
 #div_PLOTDIV_plotConcentration {
   display: block;
   position: absolute;
@@ -168,12 +157,12 @@ canvas {
   position: absolute;
   left: 40px;
   top: 420px;
-  width: 510px;
+  width: 640px;
   height: 325px;
   visibility: visible;
   border-width: 1px;
-  border-style: none;
-  border-color: DodgerBlue;
+  border-style: dotted;
+  border-color: TomatoRed;
   opacity: 1;
   LCvScrollbar: false;
 }
@@ -181,6 +170,17 @@ canvas {
 #selectReactor {
   top: 0px;
   left: 280px;
+}
+
+#button_copySSconversion {
+  position: absolute;
+  left: 510px;
+  top: 100px;
+  width: 120px;
+  height: 24px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
 }
 
 #div_PLOTDIV_plotSSconversion {
@@ -198,11 +198,37 @@ canvas {
   LCvScrollbar: false;
 }
 
-#div_PLOTDIV_plotSSrate {
+#div_SSrateFrame {
   display: block;
   position: absolute;
   left: 40px;
   top: 750px;
+  width: 640px;
+  height: 325px;
+  visibility: visible;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: TomatoRed;
+  opacity: 1;
+  LCvScrollbar: false;
+}
+
+#button_copySSrate {
+  position: absolute;
+  left: 510px;
+  top: 100px;
+  width: 120px;
+  height: 24px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+}
+
+#div_PLOTDIV_plotSSrate {
+  display: block;
+  position: absolute;
+  left: 10px;
+  top: 10px;
   width: 500px;
   height: 290px;
   visibility: visible;
@@ -213,7 +239,7 @@ canvas {
   LCvScrollbar: false;
 }
 
-/* #div_sizer { 
+/* #div_sizer {
   // use to get width of plotting area so don't have more pts than pixels
   display: block;
   position: absolute;

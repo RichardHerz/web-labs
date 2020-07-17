@@ -113,11 +113,17 @@
         <option value="3">3</option>
         <option value="4" selected='true'>4</option>
       </select>
+      <!-- input argument for copyData() is plot index, not unit index -->
+      <input type="button" id="button_copySSconversion" value="Copy Conversion" onclick="interfacer.copyData(1)">
       <div id="div_PLOTDIV_plotSSconversion">
       </div> <!-- end of div div_PLOTDIV_plotSSconversion -->
     </div> <!-- end of div div_SSconversionFrame -->
-    <div id="div_PLOTDIV_plotSSrate">
-    </div> <!-- end of div div_PLOTDIV_plotSSrate -->
+    <div id='div_SSrateFrame'>
+      <!-- input argument for copyData() is plot index, not unit index -->
+      <input type="button" id="button_copySSrate" value="Copy Rate" onclick="interfacer.copyData(2)">
+      <div id="div_PLOTDIV_plotSSrate">
+      </div> <!-- end of div div_PLOTDIV_plotSSrate -->
+    </div> <!-- end of div div_SSrateFrame  -->
   </div> <!-- end of div div_simFrame -->
   </body>
 </html>

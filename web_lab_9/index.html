@@ -114,19 +114,17 @@
         <option value="3">3</option>
         <option value="4" selected='true'>4</option>
       </select>
-      <!-- input argument for copyData() is plot index, not unit index -->
-      <!-- copier object is defined in file process_units.js -->
+      <!-- input argument for copyData methods is plot index, not unit index -->
       <input type="button" id="button_copySSconversion" value="Copy Conversion"
-        onclick="copier.copyCSTRseriesData(1)">
-        <!-- <input type="button" id="button_copySSconversion" value="Copy Conversion"
-          onclick="interfacer.copyData(1)"> -->
+        onclick="copier.copyCSTRconversionData(1)">
+      <!-- copier object is defined in file process_units.js -->
       <div id="div_PLOTDIV_plotSSconversion">
       </div> <!-- end of div div_PLOTDIV_plotSSconversion -->
     </div> <!-- end of div div_SSconversionFrame -->
     <div id='div_SSrateFrame'>
-      <!-- input argument for copyData() is plot index, not unit index -->
-      <!-- <input type="button" id="button_copySSrate" value="Copy Rate" onclick="interfacer.copyData(2)"> -->
-      <input type="button" id="button_copySSrate" value="Copy Rate" onclick="copier.copyCSTRseriesData(2)">
+      <!-- input argument for copyData methods is plot index, not unit index -->
+      <input type="button" id="button_copySSrate" value="Copy Rate" onclick="copier.copyCSTRrateData(2)">
+      <!-- copier object is defined in file process_units.js -->
       <div id="div_PLOTDIV_plotSSrate">
       </div> <!-- end of div div_PLOTDIV_plotSSrate -->
     </div> <!-- end of div div_SSrateFrame  -->

@@ -80,7 +80,7 @@ function puFEED(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataDefault[v] = 0;
+    this.dataDefault[v] = 1;
     //
     v = 1;
     this.dataHeaders[v] = 'Feed Conc';
@@ -88,7 +88,7 @@ function puFEED(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
-    this.dataDefault[v] = 0;
+    this.dataDefault[v] = 1;
     //
     //
     // END OF INPUT VARS

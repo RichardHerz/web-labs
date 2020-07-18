@@ -227,7 +227,7 @@ let interfacer = {
     let varUnitIndex; // index of unit from which variable is to be obtained
     let tText; // we will put the data into this variable
     let tItemDelimiter = ', &nbsp;';
-    let tVarLabelLen = plotInfo[plotIndex]['varLabel'].length; // length for loops below
+    let tVarLen = plotInfo[plotIndex]['var'].length; // length for loops below
 
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
@@ -303,7 +303,7 @@ let interfacer = {
     // first, x-axis variable name for table
     tText += plotInfo[plotIndex]['xAxisTableLabel'] + tItemDelimiter;
     // then other column names for y-axis variables
-    for (v = 0; v < tVarLabelLen; v += 1) {
+    for (v = 0; v < tVarLen; v += 1) {
       tText += plotInfo[plotIndex]['varLabel'][v];
 
       // tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
@@ -312,7 +312,7 @@ let interfacer = {
         tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
       }
 
-      if (v < (tVarLabelLen - 1)) {
+      if (v < (tVarLen - 1)) {
         tText += tItemDelimiter;
       }
     }
@@ -331,17 +331,9 @@ let interfacer = {
     let dataName = plotType + 'Data'; // profileData or stripData
     if ((plotType == 'profile') || (plotType == 'strip')) {
       // repeat to make each line in table for each data point
-      //
-      // OLD version - get thisNumPts from plotInfo
-      // WARNING - thisNumPts may have been deleted from some labs plotInfo
-      // let thisNumPts = 1 + plotInfo[plotIndex]['numberPoints'];
-      // console.log('old thisNumPts = ' + thisNumPts);
-      //
-      // NEW version - get thisNumPts from length of data array
       // all unit vars in one plot must have same data array length
       varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
       let thisNumPts = processUnits[varUnitIndex][dataName][0].length;
-      // console.log('new thisNumPts = ' + thisNumPts);
       //
       for (k = 0; k < thisNumPts; k += 1) {
         // first get x value in [k][0], get it from ['var'][0]
@@ -350,11 +342,11 @@ let interfacer = {
         varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
         tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][0]) + tItemDelimiter;
           // get y value for each variable in [k][1]
-          for (v = 0; v < tVarLabelLen; v += 1) {
+          for (v = 0; v < tVarLen; v += 1) {
             varIndex = plotInfo[plotIndex]['var'][v];
             varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
             tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][1]); // [k][1] is y value
-            if (v < (tVarLabelLen - 1)) {tText += tItemDelimiter;}
+            if (v < (tVarLen - 1)) {tText += tItemDelimiter;}
           }
         tText += '<br>'; // use <br> not <p> or get empty line between each row
       }

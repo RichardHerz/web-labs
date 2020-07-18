@@ -197,10 +197,13 @@ let plotter = {
       // e.g., { data: y1Data, label: y1DataLabel, yaxis: 1 }
       let newobj = {};
       if (vShow[k] === 'show') {
+        //
         // NOTE: THIS CHECK OF "SHOW" COULD BE MOVED UP INTO
         // getPlotData FUNCTION WHERE DATA SELECTED TO PLOT
-        // XXX UNLESS DO NOT WANT TO USE getPlotData IN FUTURE IN copyData methods 
-        // SINCE BOTH FUNCTIONS ARE CALLED EACH PLOT UPDATE...
+        // SINCE BOTH FUNCTIONS ARE CALLED EACH PLOT UPDATE
+        //
+        // AS LONG AS YOU DO NOT USE getPlotData IN copyData methods
+        //
         // pData is not full profileData nor full stripData
         // pData has the variables specified in plotInfo[pNumber]['var']
         // now want to select the vars in pData with "show" property true

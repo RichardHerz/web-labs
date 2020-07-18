@@ -68,15 +68,34 @@ let simParams = {
       // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
   },
 
+  // // ORIG
+  // // SPECIAL FOR THIS LAB - SELECT REACTOR FOR SS CONVERSION PLOT
+  // // called onchange of html select element id='selectReactor'
+  // selectReactor : function() {
+  //       let p = 1; // plot number
+  //       let rxr = document.getElementById("selectReactor").value;
+  //       plotInfo[p]['varUnitIndex'][0] = rxr;
+  //       // document.getElementById("demo").innerHTML = "You selected: " + rxr;
+  //       let data = plotter.getPlotData(p);
+  //       plotter.plotPlotData(data,p);
+  // }
+
+  // NEW
   // SPECIAL FOR THIS LAB - SELECT REACTOR FOR SS CONVERSION PLOT
   // called onchange of html select element id='selectReactor'
   selectReactor : function() {
-        let p = 1; // plot number
+        let plotIndex = 1;
         let rxr = document.getElementById("selectReactor").value;
-        plotInfo[p]['varUnitIndex'][0] = rxr;
+        let vnum = rxr - 1; // plot variable index 
+        // NEW
+        // hide all vars first
+        for (v = 0; v < 4; v += 1) {
+          plotInfo[plotIndex]['varShow'][v] = 'hide';
+        }
+        plotInfo[plotIndex]['varShow'][vnum] = 'show';
         // document.getElementById("demo").innerHTML = "You selected: " + rxr;
-        let data = plotter.getPlotData(p);
-        plotter.plotPlotData(data,p);
+        let data = plotter.getPlotData(plotIndex);
+        plotter.plotPlotData(data,plotIndex);
   }
 
 }; // END simParams object

@@ -46,7 +46,279 @@ for (let i = 1; i <= numRxrs; i += 1) {
   processUnits[i] = new puCSTR(i);
 }
 
-this.reactionRate = {
+let copier = {
+
+  copyConversionData : function(plotIndex) {
+    // CALLED BY UI COPY DATA BUTTONS DEFINED IN HTML
+    // copies data from plot to new browser tab or popup window - see below
+    //
+    // USES OBJECTS plotInfo, controller, interfacer, simParams
+    // plotIndex is the index in object plotInfo of the desired plot to copy
+    // USES internal function formatNum
+    // REQUIRES run button id='button_runButton' & display labels be 'Run' & 'Pause'
+
+    // if sim is running, pause the sim
+    // copy grabs what is showing on plot when copy button clicked
+    // so want user to be able to take screenshot to compare with data copied
+    // this will let last updateDisplay of updateProcess finish before sim pauses
+    let el = document.getElementById('button_runButton');
+    if (el.value == 'Pause') {
+      // button label is 'Pause', lab is running, call runThisLab to toggle to stop running
+      interfacer.runThisLab(); // toggles running state
+    }
+
+    let n; // index
+    let v; // variable index
+    let k; // points index
+    let numUnits;
+    let numVar;
+    let varValue;
+    let varIndex; // index of selected variable in unit local data array
+    let varUnitIndex; // index of unit from which variable is to be obtained
+    let tText; // we will put the data into this variable
+    let tItemDelimiter = ', &nbsp;';
+    let tVarLen = plotInfo[plotIndex]['var'].length; // length for loops below
+    console.log('new tVarLen = ' + tVarLen);
+
+    tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
+
+    // list current input values
+
+    let timeTOround = controller.simTime;
+    if (simParams.labType == 'Dynamic') {
+      tText += '<p>Simulation time of data capture = ' + timeTOround.toFixed(3) + ' s <br>';
+    } else {
+      // Single or Profile labType
+      // WARNING: must have simParams vars imTimeStep = 1 and simStepRepeats = 1
+      // for simtime to equal # runs between resets
+      tText += '<p>Total runs at time of data capture = ' + timeTOround.toFixed(0) + '<br>';
+    }
+
+    tText += 'Values of input parameters at time of data capture:<br>';
+    // list inputs for all units since, other units may affect these results
+    numUnits = Object.keys(processUnits).length;
+    for (n = 0; n < numUnits; n += 1) {
+      tText += '* ' + processUnits[n]['name'] + '<br>';
+      numVar = processUnits[n]['VarCount'];
+      for (v = 0; v <= numVar; v += 1) { // NOTE: <=
+        if (processUnits[n]['dataQuizInputs']) {
+          // unit has array dataQuizInputs, now check which vars are quiz vars
+          if (processUnits[n]['dataQuizInputs'][v]) {
+            // note 'answered' evaluates as true, so need to test for 'answered'
+            if (processUnits[n]['dataQuizInputs'][v] == 'answered'){
+              // is a ANSWERED quiz variable - display input value
+              varValue = processUnits[n]['dataValues'][v];
+              varValue = this.formatNumToNum(varValue);
+              tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+                      + varValue + '&nbsp;'
+                      + processUnits[n]['dataUnits'][v] + ' * ANSWERED * <br>';
+            } else {
+            // is an UNKNOWN quiz variable - do not display input value
+            tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+                    + '???' + '&nbsp;'
+                    + processUnits[n]['dataUnits'][v] + ' * UNKNOWN * <br>';
+            }
+          } else {
+            // is not a quiz variable - display input value
+            varValue = processUnits[n]['dataValues'][v];
+            varValue = this.formatNumToNum(varValue);
+            tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+                    + varValue + '&nbsp;'
+                    + processUnits[n]['dataUnits'][v] + '<br>';
+          }
+        } else {
+            // unit does NOT have array dataQuizInputs, so show all input values
+            varValue = processUnits[n]['dataValues'][v];
+            varValue = this.formatNumToNum(varValue);
+            tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+                    + varValue + '&nbsp;'
+                    + processUnits[n]['dataUnits'][v] + '<br>';
+        }
+      }
+    }
+    tText += '</p>';
+
+    tText += '<p>' + plotInfo[plotIndex]['title'] + '</p>';
+
+    // NOTE: plotInfo object for lab has varShow option for each variable listed but
+    // copyData tabulates all variables in plotInfo regardless of the varShow value
+    // FROM process_plot_info.js
+    //    varShow values are 'show' to show on plot and legend,
+    //    'tabled' to not show on plot nor legend but list in copy data table
+    //    and any other value, e.g., 'hide' to not show on plot but do show in legend
+    //    varShow value can be changed by javascript if want to show/hide curve with checkbox
+    //    e.g., plotInfo[pnum]['varShow'][vnum] = 'show';
+
+    // column headers
+    tText += '<p>';
+    // first, x-axis variable name for table
+    tText += plotInfo[plotIndex]['xAxisTableLabel'] + tItemDelimiter;
+    // then other column names for y-axis variables
+    for (v = 0; v < tVarLen; v += 1) {
+      tText += plotInfo[plotIndex]['varLabel'][v];
+      tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
+      if (v < (tVarLen - 1)) {
+        tText += tItemDelimiter;
+      }
+    }
+    tText += '</p>';
+
+    // data values must be numbers for .toFixed(2) to work, use Number() conversion
+    // when getting values from input fields
+    //    index 1 specifies the variable [0 to numVars-1],
+    //    index 2 specifies the data point pair [0 to & including numPlotPoints]
+    //    index 3 specifies x or y in x,y data point pair [0 & 1]
+
+    // initiate string that holds the data table
+      tText += '<p>';
+
+    let plotType = plotInfo[plotIndex]['type']; // profile or strip
+    let dataName = plotType + 'Data'; // profileData or stripData
+    if ((plotType == 'profile') || (plotType == 'strip')) {
+      // repeat to make each line in table for each data point
+      //
+      // OLD version - get thisNumPts from plotInfo
+      // WARNING - thisNumPts may have been deleted from some labs plotInfo
+      // let thisNumPts = 1 + plotInfo[plotIndex]['numberPoints'];
+      // console.log('old thisNumPts = ' + thisNumPts);
+      //
+      // NEW version - get thisNumPts from length of data array
+      // all unit vars in one plot must have same data array length
+      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
+      console.log('new varUnitIndex = ' + varUnitIndex);
+      let thisNumPts = processUnits[varUnitIndex][dataName][0].length;
+      console.log('new thisNumPts = ' + thisNumPts);
+      //
+      // NEW
+      let tableData = plotter.getPlotData(plotIndex);
+      console.log('tableData = ' + tableData);
+      //
+      // NEW - all plotInfo[pnum]['var'][vnum] = 0 for this plot,
+      // e.g.,
+      // vnum = 3; // 4th variable
+      // plotInfo[pnum]['varUnitIndex'][vnum] = 4; // value is index of unit in processUnits object
+      // plotInfo[pnum]['var'][vnum] = 0; // value is variable index in unit's plot data array
+      //
+
+      console.log('tableData[3][0][1] ' + formatNum(tableData[3][0][1]) );
+      // console.log('tableData[3][1][1] ' + formatNum(tableData[3][1][1]) );
+
+      for (k = 0; k < thisNumPts; k += 1) {
+        // first get x value in [k][0], get it from ['var'][0]
+        // x values should be same for all units for this plot
+        varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0]; // index of unit
+        varIndex = plotInfo[plotIndex]['var'][0]; // index of var to plot in unit data array
+        tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][0]) + tItemDelimiter;
+          // get y value for each variable in [k][1]
+          for (v = 0; v < tVarLen; v += 1) {
+            // varIndex = plotInfo[plotIndex]['var'][v];
+            // varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
+            // tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][1]); // [k][1] is y value
+            // NEW
+            console.log('v = ' + v);
+            tText += formatNum(tableData[v][k][1]); // [k][1] is y value
+            // tText += formatNum(tableData[v][k][1]); // [k][1] is y value
+            //
+            if (v < (tVarLen - 1)) {tText += tItemDelimiter;}
+          }
+        tText += '<br>'; // use <br> not <p> or get empty line between each row
+      }
+    } else {
+      alert('unknown plot type');
+      return;
+    }
+
+    /*
+
+    plotInfo[pnum]['varUnitIndex'][vnum] = 1; // value is index of unit in processUnits object
+    plotInfo[pnum]['var'][vnum] = 0; // value is variable index in unit's plot data array
+
+    // get data for plot
+    for (v = 0; v < numVar; v += 1) {
+
+      // get unit index and array name for this variable
+      varUnitIndex = plotInfo[plotInfoNum]['varUnitIndex'][v];
+      // get number n of variable listed in unit's data array
+      n = varNumbers[v];
+    ....
+
+    // scale y-axis values if scale factor not equal to 1
+    for (v = 0; v < numVar; v += 1) {
+      sf = plotInfo[plotInfoNum]['varYscaleFactor'][v];
+      thisNumPts = plotData[v].length;
+      if (sf != 1) {
+        for (p = 0; p < thisNumPts; p += 1) {
+          plotData[v][p][1] = sf * plotData[v][p][1];
+        }
+      }
+    }
+    */
+
+    // terminate string that holds the data table
+    tText += '</p>';
+
+    //
+    // for window.open, see http://www.w3schools.com/jsref/met_win_open.asp
+    //
+    // NOTE: window.open VERSION BELOW OPENS NEW POPUP WINDOW - MAY GET HIDDEN
+    //       BEHIND FULL SCREEN BROWSER IF USER CLICKS ON PAGE BEFORE POPUP OPENS
+    dataWindow = window.open('', 'Copy data',
+          'height=600, left=20, resizable=1, scrollbars=1, top=40, width=600');
+    //
+    // NOTE: window.open VERSION BELOW OPENS NEW TAB IN SAME BROWSER WINDOW
+    //       NEED TO ADD TOOLTIP TO BTN AND/OR TEXT OR LINK ON COPY DATA TAB...
+    // dataWindow = window.open('',
+    //       'height=600, left=20, resizable=1, scrollbars=1, top=40, width=600');
+    //
+
+    dataWindow.document.writeln('<html><head><title>Copy data</title></head>' +
+           '<body>' +
+           tText +
+           '</body></html>');
+    dataWindow.document.close();
+
+    function formatNum(nn) {
+      // use this to get fixed number of digits in each column of table
+      // returns number as STRING
+      if (isNaN(nn)) {
+        return nn;
+      }
+      // nn is a number so format with number methods
+      if ((nn > 1000) || (nn < -1000)) {
+        nn = nn.toExponential(4);
+      } else if ((nn > 100) || (nn < -100)) {
+       nn = nn.toFixed(2);
+      } else if ((nn > 10) || (nn < -10)) {
+        nn = nn.toFixed(3);
+      } else if ((nn >= 1) || (nn < -1)) {
+       nn = nn.toFixed(3);
+      } else if ((nn > 0.01) || (nn < -0.01)) {
+        nn = nn.toFixed(4);
+      } else {
+        nn = nn.toExponential(4);
+      }
+      return nn;
+    } // END of sub function formatNum of copyConversionData
+
+  }, // END of function copyConversionData
+
+  formatNumToNum : function(varValue) {
+    // returns number as NUMBER
+    varValue = Number(varValue); // if string input, toExponential throws error
+    if (varValue == 0) {
+      // do nothing, otherwise in else if below, get 0.000e+00
+      } else if (Math.abs(varValue) < 1.0e-3) {
+        varValue = varValue.toExponential(2); // toExponential() returns STRING
+      } else if (Math.abs(varValue) >= 9.999e+3) {
+        varValue = varValue.toExponential(2); // toExponential() returns STRING
+    }
+    varValue = Number(varValue); // return as number
+    return varValue;
+  } // END of function formatNumToNum
+
+} // END of object copier
+
+let reactionRate = {
   // properties and method of this object supply reaction rate to CSTRs
   // same kinetics for all CSTRs
   //
@@ -113,6 +385,6 @@ this.reactionRate = {
     // return rate as negative value for reactant conversion
     return [-rate,rateBranchNEW]
 
-  } // END getRxnRate() method
+  } // END of getRxnRate() method
 
-} // END reactionRate object
+} // END of object reactionRate

@@ -199,6 +199,7 @@ let plotter = {
       if (vShow[k] === 'show') {
         // NOTE: THIS CHECK OF "SHOW" COULD BE MOVED UP INTO
         // getPlotData FUNCTION WHERE DATA SELECTED TO PLOT
+        // XXX UNLESS DO NOT WANT TO USE getPlotData IN FUTURE IN copyData methods 
         // SINCE BOTH FUNCTIONS ARE CALLED EACH PLOT UPDATE...
         // pData is not full profileData nor full stripData
         // pData has the variables specified in plotInfo[pNumber]['var']

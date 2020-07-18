@@ -44,7 +44,11 @@ function puCSTR(pUnitIndex) {
   // *******************************************
 
   this.name = 'process unit CSTR'; // used by interfacer.copyData()
-  this.residenceTime = 100; // used by controller.checkForSteadyState()
+
+  // WARNING: must have residenceTime relatively large (e.g., 1000) or get double
+  //          recording of SS data for some units and miss others such that
+  //          have different data lengths for the different CSTRs
+  this.residenceTime = 1000; // used by controller.checkForSteadyState()
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -274,6 +278,7 @@ function puCSTR(pUnitIndex) {
     // WARNING: too many sig figs will prevent detecting steady state
     //
     // here conc ranges from 0 to 1
+
     let rcs = 1.0e4 * concIn;
     let lcs = 1.0e4 * this.conc;
     rcs = rcs.toFixed(0); // string
@@ -285,6 +290,14 @@ function puCSTR(pUnitIndex) {
     ssCheckSum = newCheckSum; // save current value for use next time
 
     // SPECIAL - update profileData here and not in updateDisplay()
+
+    // WARNING: must have residenceTime relatively large (e.g., 1000) or get
+    //          double recording of SS data for some CSTRs and miss others such
+    //          that have different data lengths for the different CSTRs
+
+    // WARNING: as conversion for a unit is at/near 100% it is not getting
+    //          conversion value added here to profileData array
+
     if ((ssFlag == true) && (controller.ssStartTime == 0)) {
       // this unit at steady state && first time all units are at steady state
       // note ssStartTime will be changed != 0 after this check
@@ -304,6 +317,8 @@ function puCSTR(pUnitIndex) {
         tempArray.push( [feed,conversion] );
         // update the variable being processed
         this.profileData[v] = tempArray;
+
+        console.log('handle SS conversion in rxr ' + (unitIndex - 1) );
 
         // handle SS rate
         //

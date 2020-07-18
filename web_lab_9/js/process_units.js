@@ -48,7 +48,10 @@ for (let i = 1; i <= numRxrs; i += 1) {
 
 let copier = {
 
-  copyConversionData : function(plotIndex) {
+  copyCSTRseriesData : function(plotIndex) {
+
+    console.log('enter copyCSTRseriesData in Web Lab 9, process_units.js');
+
     // CALLED BY UI COPY DATA BUTTONS DEFINED IN HTML
     // copies data from plot to new browser tab or popup window - see below
     //
@@ -78,7 +81,8 @@ let copier = {
     let tText; // we will put the data into this variable
     let tItemDelimiter = ', &nbsp;';
     let tVarLen = plotInfo[plotIndex]['var'].length; // length for loops below
-    console.log('new tVarLen = ' + tVarLen);
+
+    // console.log('new tVarLen = ' + tVarLen);
 
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
@@ -156,7 +160,10 @@ let copier = {
     // then other column names for y-axis variables
     for (v = 0; v < tVarLen; v += 1) {
       tText += plotInfo[plotIndex]['varLabel'][v];
-      tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
+      let tUnits = plotInfo[plotIndex]['varDataUnits'][v];
+      if (tUnits != '') {
+        tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
+      }
       if (v < (tVarLen - 1)) {
         tText += tItemDelimiter;
       }
@@ -185,13 +192,13 @@ let copier = {
       // NEW version - get thisNumPts from length of data array
       // all unit vars in one plot must have same data array length
       varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
-      console.log('new varUnitIndex = ' + varUnitIndex);
+      // console.log('new varUnitIndex = ' + varUnitIndex);
       let thisNumPts = processUnits[varUnitIndex][dataName][0].length;
-      console.log('new thisNumPts = ' + thisNumPts);
+      // console.log('new thisNumPts = ' + thisNumPts);
       //
       // NEW
       let tableData = plotter.getPlotData(plotIndex);
-      console.log('tableData = ' + tableData);
+      // console.log('tableData = ' + tableData);
       //
       // NEW - all plotInfo[pnum]['var'][vnum] = 0 for this plot,
       // e.g.,
@@ -200,7 +207,7 @@ let copier = {
       // plotInfo[pnum]['var'][vnum] = 0; // value is variable index in unit's plot data array
       //
 
-      console.log('tableData[3][0][1] ' + formatNum(tableData[3][0][1]) );
+      // console.log('tableData[3][0][1] ' + formatNum(tableData[3][0][1]) );
       // console.log('tableData[3][1][1] ' + formatNum(tableData[3][1][1]) );
 
       for (k = 0; k < thisNumPts; k += 1) {
@@ -215,7 +222,7 @@ let copier = {
             // varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
             // tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][1]); // [k][1] is y value
             // NEW
-            console.log('v = ' + v);
+            // console.log('v = ' + v);
             tText += formatNum(tableData[v][k][1]); // [k][1] is y value
             // tText += formatNum(tableData[v][k][1]); // [k][1] is y value
             //
@@ -298,9 +305,9 @@ let copier = {
         nn = nn.toExponential(4);
       }
       return nn;
-    } // END of sub function formatNum of copyConversionData
+    } // END of sub function formatNum of copyCSTRseriesData
 
-  }, // END of function copyConversionData
+  }, // END of function copyCSTRseriesData
 
   formatNumToNum : function(varValue) {
     // returns number as NUMBER

@@ -232,7 +232,7 @@ let controller = {
     let span = 0;
     for (p = 0; p < numPlots; p += 1) {
       if (plotInfo[p]['type'] == 'strip') {
-        let xMax = plotInfo[p]['xAxisMax'];
+        let xMax = plotInfo[p]['xAxisMax'] - plotInfo[p]['xAxisMin'];
         if (xMax > span) {span = xMax;}
       }
     }

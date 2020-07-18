@@ -48,7 +48,7 @@ function puCSTR(pUnitIndex) {
   // WARNING: must have residenceTime relatively large (e.g., 1000) or get double
   //          recording of SS data for some units and miss others such that
   //          have different data lengths for the different CSTRs
-  this.residenceTime = 1000; // used by controller.checkForSteadyState()
+  this.residenceTime = 2000; // used by controller.checkForSteadyState()
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -56,6 +56,11 @@ function puCSTR(pUnitIndex) {
   this.profileData = []; // for profile plots, plot script requires this name
   this.stripData = []; // for strip chart plots, plot script requires this name
   // this.colorCanvasData = []; // for color canvas, plot script requires this name
+
+  // SPECIAL - for CSTRs in series, need other reactors to access rxr 1 ssFlag
+  //           all reactors update dataArrays only when rxr 1 is at SS
+  //           so declare ssFlag as public
+  this.ssFlag = false;
 
   // SPECIAL - THESE ARE NOT USED IN CSTR UNITS - NO DIRECT INPUTS FROM HTML
   // // define arrays to hold info for variables
@@ -213,7 +218,9 @@ function puCSTR(pUnitIndex) {
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
-    // SPECIAL - see profileData updates in checkForSteadyState()
+    // SPECIAL - FOR CSTRs in SERIES
+    //           see profileData array updates in checkForSteadyState()
+    //           update stripData arrays here
 
     // HANDLE STRIP CHART DATA
 
@@ -279,67 +286,190 @@ function puCSTR(pUnitIndex) {
     //
     // here conc ranges from 0 to 1
 
-    let rcs = 1.0e4 * concIn;
-    let lcs = 1.0e4 * this.conc;
-    rcs = rcs.toFixed(0); // string
-    lcs = lcs.toFixed(0); // string
-    let newCheckSum = rcs +'.'+ lcs; // concatenate strings, add +'.'+ if desire
-    let oldSScheckSum = ssCheckSum;
-    let ssFlag = false;
-    if (newCheckSum == oldSScheckSum) {ssFlag = true;}
-    ssCheckSum = newCheckSum; // save current value for use next time
+    // SPECIAL - for CSTRs in series, need other reactors to access rxr 1 ssFlag
+    //           all reactors update dataArrays only when rxr 1 is at SS
+    //           so ssFlag was declared above as a public variable
+    //           otherwise, get reactors updating arrays at different times...
+    this.ssFlag = false;
 
-    // SPECIAL - update profileData here and not in updateDisplay()
+    if (unitIndex > 1) {
+      // for CSTRs in series, only use rxr 1 to determine SS
+      // since check sum may never match on others at low conc
+      this.ssFlag = true;
+    } else {
 
-    // WARNING: must have residenceTime relatively large (e.g., 1000) or get
-    //          double recording of SS data for some CSTRs and miss others such
-    //          that have different data lengths for the different CSTRs
+      let rcs = 1.0e4 * concIn;
+      let lcs = 1.0e4 * this.conc;
+      // WARNING: when one number gets < 1000 (conc < 0.1) you don't get 4 digits
+      //          and some numbers seen < 0 AND with low conc, easy to get
+      //          differences across unit even when essentially at SS
+      rcs = rcs.toFixed(0); // string
+      lcs = lcs.toFixed(0); // string
+      let newCheckSum = rcs +'.'+ lcs; // concatenate strings, add +'.'+ if desire
+      let oldSScheckSum = ssCheckSum;
 
-    // WARNING: as conversion for a unit is at/near 100% it is not getting
-    //          conversion value added here to profileData array
+      if (newCheckSum == oldSScheckSum) {
+        this.ssFlag = true;
+      }
+      ssCheckSum = newCheckSum; // save current value for use next time
 
-    if ((ssFlag == true) && (controller.ssStartTime == 0)) {
-      // this unit at steady state && first time all units are at steady state
-      // note ssStartTime will be changed != 0 after this check
+      // console.log('unit = ' + unitIndex + ' newCheckSum = ' + newCheckSum
+      //             + ' old = ' + oldSScheckSum);
 
-      if (feed > 0) {
-        // only add SS values when feed conc > 0
+    } // END OF if (unitIndex > 1)
 
-        // handle SS conversion
-        v = 0;
-        tempArray = this.profileData[v]; // work on one plot variable at a time
-        if (tempArray[0][0] <= 0) {
-          // shift deletes 1st [x,y] pair created on array initialization
-          tempArray.shift();
-        }
-        // add the new [x,y] pair array at end
-        // feed conc to first CSTR, this CSTR's conversion
-        tempArray.push( [feed,conversion] );
-        // update the variable being processed
-        this.profileData[v] = tempArray;
+      // console.log('just before if ((processUnits[1].ssFlag == true)... unitIndex = ' + unitIndex);
 
-        console.log('handle SS conversion in rxr ' + (unitIndex - 1) );
+      // if ((this.ssFlag == true) && (controller.ssStartTime == 0)) {
+      if ((processUnits[1].ssFlag == true) && (controller.ssStartTime == 0)) {
 
-        // handle SS rate
-        //
-        v = 1;
-        tempArray = this.profileData[v]; // work on one plot variable at a time
-        if (tempArray[0][0] <= 0) {
-          // shift deletes 1st [x,y] pair created on array initialization
-          tempArray.shift();
-        }
-        // add the new [x,y] pair array at end
-        // feed conc to first CSTR, this CSTR's conversion
-        let thisRate = -rxnRate;
-        tempArray.push( [this.conc,thisRate] );
-        // update the variable being processed
-        this.profileData[v] = tempArray;
+        // rxr 1 at steady state && first time all units are at steady state
+        // note ssStartTime will be changed != 0 after this check
 
-      } // END OF if (feed > 0)
+        this.updateProfileDataArrays();
 
-    } // END OF if ((ssFlag == true) && (controller.ssStartTime == 0))
+        // console.log('above both true & just before this.updateDataArrays()');
+        // if (processUnits[1].ssFlag == true) {
+        //   this.updateDataArrays();
+        // }
 
-    return ssFlag;
+      } // END OF if ((ssFlag == true) && (controller.ssStartTime == 0))
+
+    return this.ssFlag;
+
   } // END OF checkForSteadyState()
+
+  this.updateProfileDataArrays = function() {
+
+    // console.log('enter this.updateProfileDataArrays(), unitIndex = ' + unitIndex);
+
+    if (feed > 0) {
+      // only add SS values when feed conc > 0
+
+      // handle SS conversion
+      v = 0;
+      tempArray = this.profileData[v]; // work on one plot variable at a time
+      if (tempArray[0][0] <= 0) {
+        // shift deletes 1st [x,y] pair created on array initialization
+        tempArray.shift();
+      }
+      // add the new [x,y] pair array at end
+      // feed conc to first CSTR, this CSTR's conversion
+      tempArray.push( [feed,conversion] );
+      // update the variable being processed
+      this.profileData[v] = tempArray;
+
+      // console.log('handle SS conversion in rxr ' + unitIndex);
+
+      // handle SS rate
+      //
+      v = 1;
+      tempArray = this.profileData[v]; // work on one plot variable at a time
+      if (tempArray[0][0] <= 0) {
+        // shift deletes 1st [x,y] pair created on array initialization
+        tempArray.shift();
+      }
+      // add the new [x,y] pair array at end
+      // feed conc to first CSTR, this CSTR's conversion
+      let thisRate = -rxnRate;
+      tempArray.push( [this.conc,thisRate] );
+      // update the variable being processed
+      this.profileData[v] = tempArray;
+
+    } // END OF if (feed > 0)
+
+  } // END of function updateProfileDataArrays
+
+  // ======== OLDER VERSION SAVED BELOW ===============
+
+  // this.checkForSteadyState = function() {
+  //   // required - called by controller object
+  //   // *IF* NOT used to check for SS *AND* another unit IS checked,
+  //   // which can not be at SS, *THEN* return ssFlag = true to calling unit
+  //   // returns ssFlag, true if this unit at SS, false if not
+  //   // uses and sets ssCheckSum
+  //   // ssCheckSum can be set by reset() and updateUIparams()
+  //   // check for SS in order to save CPU time when sim is at steady state
+  //   // check for SS by checking for any significant change in array end values
+  //   // but wait at least one residence time after the previous check
+  //   // to allow changes to propagate down unit
+  //   //
+  //   // multiply all numbers by a factor to get desired number significant
+  //   // figures to left decimal point so toFixed() does not return string "0.###"
+  //   // WARNING: too many sig figs will prevent detecting steady state
+  //   //
+  //   // here conc ranges from 0 to 1
+  //
+  //   let rcs = 1.0e4 * concIn;
+  //   let lcs = 1.0e4 * this.conc;
+  //   // WARNING: when one number gets < 1000 (conc < 0.1) you don't get 4 digits
+  //   //          and some numbers seen < 0 AND with low conc, easy to get
+  //   //          differences across unit even when essentially at SS
+  //   rcs = rcs.toFixed(0); // string
+  //   lcs = lcs.toFixed(0); // string
+  //   let newCheckSum = rcs +'.'+ lcs; // concatenate strings, add +'.'+ if desire
+  //   let oldSScheckSum = ssCheckSum;
+  //   let ssFlag = false;
+  //   if (newCheckSum == oldSScheckSum) {ssFlag = true;}
+  //   ssCheckSum = newCheckSum; // save current value for use next time
+  //
+  //   console.log('unit = ' + unitIndex + ' newCheckSum = ' + newCheckSum
+  //               + ' old = ' + oldSScheckSum);
+  //
+  //   // SPECIAL - update profileData here and not in updateDisplay()
+  //
+  //   // WARNING: must have residenceTime relatively large (e.g., 1000) or get
+  //   //          double recording of SS data for some CSTRs and miss others such
+  //   //          that have different data lengths for the different CSTRs
+  //
+  //   // WARNING: as conversion for a unit is at/near 100% it is not getting
+  //   //          conversion value added here to profileData array
+  //
+  //   // WARNING: possible fix is, when rxr 1 hits SS, it sends message for
+  //   //          all reactors to handle ss and update plot data array...?
+  //
+  //   if ((ssFlag == true) && (controller.ssStartTime == 0)) {
+  //     // this unit at steady state && first time all units are at steady state
+  //     // note ssStartTime will be changed != 0 after this check
+  //
+  //     if (feed > 0) {
+  //       // only add SS values when feed conc > 0
+  //
+  //       // handle SS conversion
+  //       v = 0;
+  //       tempArray = this.profileData[v]; // work on one plot variable at a time
+  //       if (tempArray[0][0] <= 0) {
+  //         // shift deletes 1st [x,y] pair created on array initialization
+  //         tempArray.shift();
+  //       }
+  //       // add the new [x,y] pair array at end
+  //       // feed conc to first CSTR, this CSTR's conversion
+  //       tempArray.push( [feed,conversion] );
+  //       // update the variable being processed
+  //       this.profileData[v] = tempArray;
+  //
+  //       console.log('handle SS conversion in rxr ' + unitIndex);
+  //
+  //       // handle SS rate
+  //       //
+  //       v = 1;
+  //       tempArray = this.profileData[v]; // work on one plot variable at a time
+  //       if (tempArray[0][0] <= 0) {
+  //         // shift deletes 1st [x,y] pair created on array initialization
+  //         tempArray.shift();
+  //       }
+  //       // add the new [x,y] pair array at end
+  //       // feed conc to first CSTR, this CSTR's conversion
+  //       let thisRate = -rxnRate;
+  //       tempArray.push( [this.conc,thisRate] );
+  //       // update the variable being processed
+  //       this.profileData[v] = tempArray;
+  //
+  //     } // END OF if (feed > 0)
+  //
+  //   } // END OF if ((ssFlag == true) && (controller.ssStartTime == 0))
+  //
+  //   return ssFlag;
+  // } // END OF checkForSteadyState()
 
 } // END puCSTR

@@ -305,7 +305,13 @@ let interfacer = {
     // then other column names for y-axis variables
     for (v = 0; v < tVarLabelLen; v += 1) {
       tText += plotInfo[plotIndex]['varLabel'][v];
-      tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
+
+      // tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
+      let tUnits = plotInfo[plotIndex]['varDataUnits'][v];
+      if (tUnits != '') {
+        tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
+      }
+
       if (v < (tVarLabelLen - 1)) {
         tText += tItemDelimiter;
       }

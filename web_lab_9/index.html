@@ -97,7 +97,8 @@
       <input id="input_setFeedConc_value" value="1" onchange="processUnits[0].updateUIfeedInput()">
       </input>
       <!-- note about range slider: need event onchange for Win IE, oninput for others -->
-      <input type="range" id="range_setFeedConc_slider" min="0" max="1" step="0.01" value="1"
+      <!-- SPECIAL - for CSTRs in series set min=0.1 or won't get SS values recorded -->
+      <input type="range" id="range_setFeedConc_slider" min="0.1" max="1" step="0.01" value="1"
         oninput="processUnits[0].updateUIfeedSlider()"
         onchange="processUnits[0].updateUIfeedSlider()">
       </input>
@@ -116,13 +117,16 @@
       <!-- input argument for copyData() is plot index, not unit index -->
       <!-- copier object is defined in file process_units.js -->
       <input type="button" id="button_copySSconversion" value="Copy Conversion"
-        onclick="copier.copyConversionData(1)">
+        onclick="copier.copyCSTRseriesData(1)">
+        <!-- <input type="button" id="button_copySSconversion" value="Copy Conversion"
+          onclick="interfacer.copyData(1)"> -->
       <div id="div_PLOTDIV_plotSSconversion">
       </div> <!-- end of div div_PLOTDIV_plotSSconversion -->
     </div> <!-- end of div div_SSconversionFrame -->
     <div id='div_SSrateFrame'>
       <!-- input argument for copyData() is plot index, not unit index -->
-      <input type="button" id="button_copySSrate" value="Copy Rate" onclick="interfacer.copyData(2)">
+      <!-- <input type="button" id="button_copySSrate" value="Copy Rate" onclick="interfacer.copyData(2)"> -->
+      <input type="button" id="button_copySSrate" value="Copy Rate" onclick="copier.copyCSTRseriesData(2)">
       <div id="div_PLOTDIV_plotSSrate">
       </div> <!-- end of div div_PLOTDIV_plotSSrate -->
     </div> <!-- end of div div_SSrateFrame  -->

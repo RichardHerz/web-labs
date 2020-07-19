@@ -5,70 +5,29 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// WARNING: in process units, local data array names for plotting must be
-//          'profileData' for ['type'] = 'profile'
-//          'stripData' for ['type'] = 'strip'
-//          'colorCanvasData' for ['type'] = 'canvas'
-
-// ---------- DECLARE PARENT OBJECT TO HOLD PLOT INFO --------
-// --- DEFINITION OF PLOTS: PROFILE, STRIP CHART, & COLOR CANVAS ---
-
-// plotting is called by the controller object and not individual process
-// units in order that a plot may contain data from more than one process unit
-
-// some options may be optional for some plotting packages, such as
-// plotDataSeriesColors for flot.js package, in which case default values will
-// be used by the plotting package
-//
-// plotDataLines default is true (= 1)
-// plotDataPoints default is false (= 0)
-
-// more than one plot can be put one one web page by
-// defining multiple object children, where the first index
-// plotInfo[0] is the plot number index (starting at 0)
-
-// for plots with fixed number of points at constant x locations
-// filled initially and kept constant, then plot has
-// plotInfo[pnum]['numberPoints'] + 1 pts and
-// set numberPoints < = than width of plot in HTML pixels for fast plotting
-
-// WARNING: all unit variable data arrays on same plot with fixed number
-// of points must have same length of data arrays for that plot
-
-// WARNING: some labs require plotInfo[pnum]['numberPoints'] value to be set
-// here for some plots because the units use it to set number of integration
-// nodes or other values - in those units, set numberPoints <= than width of
-// plot in HTML pixels for fast plotting,
-// whereas, for other labs and plots, plotInfo[pnum]['numberPoints'] is optional
-
-// for plots with x,y pairs added together in unit updateDisplay methods
-// at arbitrary locations, numberPoints statement is optional or value = "" or 0
-// and, usually, plotDataPoints = 1 (true) and plotDataLines = 0 (false)
-
-// interfacer.copyData() method uses length of first data array on plot,
-// not plotInfo[pnum]['numberPoints']
-// plotter object does not use plotInfo[pnum]['numberPoints']
+// WARNING:
+//     READ INFO FOR THIS FILE AT THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
+//         https://github.com/RichardHerz/web-labs/wiki/process_plot_info
 
 let plotInfo = {
 
-  // after the openThisLab() function in _main.js calls method initialize()
-  // here, this object will contain a child object for each plot
+  // after the controller.openThisLab() function in process_controller.js calls
+  // method initialize() here, this object will contain a child object for each plot
   //
-  // in _main.js, the function updateDisplay() uses the length of plotInfo
-  // after subtracting 1 for method initialize, in order to plot all the plots;
-  // if you add another method, you need to update the length correction
-  // in updateDisplay()
+  // in process_controller.js, the function controller.updateDisplay() uses the
+  // length of plotInfo after subtracting 1 for method initialize, in order to
+  // plot all the plots; if you add another method, you need to update the
+  // length correction in controller.updateDisplay()
   //
-  // method initialize() is run after each process unit's initialize() method
-  // is run by openThisLab() so that it can use values from the units,
-  // e.g., processUnits[unum]['dataMin'][1];
+  // method plotInfo.initialize() is run after all process units' initialize()
+  // methods are run by controller.openThisLab() so that it can use values from
+  // the units, e.g., processUnits[unum]['dataMin'][1];
 
   initialize : function() {
     //
     // WARNING: some of these object properties may be changed during
     //          operation of the program, e.g., show, scale
     //
-    // --------- below are plots for the reactor ----------------
 
     let unum = 0; // useful when only one unit in plot, processUnits[unum]
 

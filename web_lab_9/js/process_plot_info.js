@@ -313,10 +313,10 @@ let plotInfo = {
     pnum = 2;
     plotInfo[pnum] = new Object();
     plotInfo[pnum]['type'] = 'profile';
-    plotInfo[pnum]['title'] = 'Steady-State Rate as average dimensionless turnover frequency';
+    plotInfo[pnum]['title'] = 'Steady-State Rate as average dimensionless turnover frequency at bulk conc in rxr';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotSSrate'; // flot.js wants ID with prefix #
     plotInfo[pnum]['xAxisLabel'] = 'Reactant Concentration in Reactor';
-    plotInfo[pnum]['xAxisTableLabel'] = 'Conc in Rxr'; // label for copy data table
+    plotInfo[pnum]['xAxisTableLabel'] = 'Bulk conc in Rxr'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true

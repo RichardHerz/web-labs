@@ -608,14 +608,6 @@ processUnits[2] = {
   initialize : function() {
     //
     let v = 0;
-    this.dataHeaders[v] = 'jacketInletT';
-    this.dataInputs[v] = '';
-    this.dataUnits[v] = 'K';
-    this.dataMin[v] = 200;
-    this.dataMax[v] = 500;
-    this.dataDefault[v] = 348;
-    //
-    v = 1;
     this.dataHeaders[v] = 'jacketFlowrate';
     this.dataInputs[v] = 'input_field_enterJacketFlowRate';
     this.dataUnits[v] = 'm3/s';
@@ -629,7 +621,43 @@ processUnits[2] = {
     //
     this.VarCount = v;
     //
+    v = 1;
+    this.dataHeaders[v] = 'jacketInletT';
+    this.dataInputs[v] = '';
+    this.dataUnits[v] = 'K';
+    this.dataMin[v] = 200;
+    this.dataMax[v] = 500;
+    this.dataDefault[v] = 348;
+    this.dataValues[v] = 200;
+    //
   }, // END of initialize()
+
+  // initialize : function() {
+  //   //
+  //   let v = 0;
+  //   this.dataHeaders[v] = 'jacketInletT';
+  //   this.dataInputs[v] = '';
+  //   this.dataUnits[v] = 'K';
+  //   this.dataMin[v] = 200;
+  //   this.dataMax[v] = 500;
+  //   this.dataDefault[v] = 348;
+  //   this.dataValues[v] = 200;
+  //       //
+  //   v = 1;
+  //   this.dataHeaders[v] = 'jacketFlowrate';
+  //   this.dataInputs[v] = 'input_field_enterJacketFlowRate';
+  //   this.dataUnits[v] = 'm3/s';
+  //   this.dataMin[v] = 1e-7;
+  //   this.dataMax[v] = 1;
+  //   this.dataDefault[v] = 1;
+  //   //
+  //   // END OF INPUT VARS
+  //   // record number of input variables, VarCount
+  //   // used, e.g., in copy data to table
+  //   //
+  //   this.VarCount = v;
+  //   //
+  // }, // END of initialize()
 
   reset : function(){
     //
@@ -663,7 +691,7 @@ processUnits[2] = {
       // first index specifies which variable in plot data array
       this.stripData[0][k][0] = kn;
       // y-axis values
-      this.stripData[0][k][1] = this.dataMin[0];
+      this.stripData[0][k][1] = this.dataMin[1];
     }
 
   }, // END reset method
@@ -687,9 +715,9 @@ processUnits[2] = {
     //   is only used in copyData() to report input values
     //
     let unum = this.unitIndex;
-    //
-    // get jacket inlet T from controller command
-    this.flowRate = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+
+    // get jacket flow rate from input fields
+    this.flowRate = this.dataValues[0] = interfacer.getInputValue(unum, 0);
 
   }, // END of updateUIparams()
 

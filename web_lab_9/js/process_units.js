@@ -74,17 +74,15 @@ let copier = {
 
     let n; // index
     let v; // variable index
-    let k; // points index
+    let p; // points index
     let numUnits;
     let numVar;
     let varValue;
     let varIndex; // index of selected variable in unit local data array
-    let varUnitIndex; // index of unit from which variable is to be obtained
     let tText; // we will put the data into this variable
     let tItemDelimiter = ', &nbsp;';
     let tVarLen = plotInfo[plotIndex]['var'].length; // length for loops below
-
-    // console.log('new tVarLen = ' + tVarLen);
+    // console.log('tVarLen = ' + tVarLen);
 
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
@@ -103,19 +101,11 @@ let copier = {
 
     // column headers
     tText += '<p>';
+    // FOR CSTRs IN SERIES REACTION RATE, ONLY TWO COLUMNS
     // first, x-axis variable name for table
     tText += plotInfo[plotIndex]['xAxisTableLabel'] + tItemDelimiter;
-    // then other column names for y-axis variables
-    for (v = 0; v < tVarLen; v += 1) {
-      tText += plotInfo[plotIndex]['varLabel'][v];
-      let tUnits = plotInfo[plotIndex]['varDataUnits'][v];
-      if (tUnits != '') {
-        tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
-      }
-      if (v < (tVarLen - 1)) {
-        tText += tItemDelimiter;
-      }
-    }
+    // then one column name for rate
+    tText += plotInfo[plotIndex]['yLeftAxisLabel'];
     tText += '</p>';
 
     // data values must be numbers for .toFixed(2) to work, use Number() conversion
@@ -131,38 +121,40 @@ let copier = {
     let dataName = plotType + 'Data'; // profileData or stripData
     if ((plotType == 'profile') || (plotType == 'strip')) {
       // repeat to make each line in table for each data point
-      //
-      // OLD version - get thisNumPts from plotInfo
-      // WARNING - thisNumPts may have been deleted from some labs plotInfo
-      // let thisNumPts = 1 + plotInfo[plotIndex]['numberPoints'];
-      // console.log('old thisNumPts = ' + thisNumPts);
-      //
-      // NEW version - get thisNumPts from length of data array
+      // get thisNumPts from length of data array
       // all unit vars in one plot must have same data array length
-      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
-      // console.log('new varUnitIndex = ' + varUnitIndex);
-      let thisNumPts = processUnits[varUnitIndex][dataName][0].length;
+      // console.log('plotIndex = ' + plotIndex);
+      let varUnitIndexNum = plotInfo[plotIndex]['varUnitIndex'][0];
+      // console.log('new varUnitIndexNum = ' + varUnitIndexNum);
+      let thisNumPts = processUnits[varUnitIndexNum][dataName][0].length;
       // console.log('new thisNumPts = ' + thisNumPts);
-      //
+      // console.log('dataName = ' + dataName);
+
       // OPTION - NEXT LINE USES tableData from plotter.getPlotData()
       // let tableData = plotter.getPlotData(plotIndex);
 
-      for (k = 0; k < thisNumPts; k += 1) {
-        // first get x value in [k][0], get it from ['var'][0]
-        // x values should be same for all units for this plot
-        varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0]; // index of unit
-        varIndex = plotInfo[plotIndex]['var'][0]; // index of var to plot in unit data array
-        // PTION - NEXT LINE USES tableData from plotter.getPlotData()
-        // tText += formatNum(tableData[varIndex][k][0]); // [k][0] is x value
-        tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][0]) + tItemDelimiter;
-          // get y value for each variable in [k][1]
-          for (v = 0; v < tVarLen; v += 1) {
-            // PTION - NEXT LINE USES tableData from plotter.getPlotData()
-            // tText += formatNum(tableData[v][k][1]); // [k][1] is y value
-            tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][1]); // [k][1] is y value
-            if (v < (tVarLen - 1)) {tText += tItemDelimiter;}
-          }
-        tText += '<br>'; // use <br> not <p> or get empty line between each row
+      // THIS TABLE FOR CSTRs IN SERIES REACTION RATE IS UNIQUE
+      // FOR CONC,RATE x,y PAIRS, all x values will differ
+      // AND WANT A NEW LINE IN TABLE FOR EACH x,y PAIR
+
+      for (p = 0; p < thisNumPts; p += 1) {
+        // for each point p, there will be tVarLen x,y pairs
+        for (v = 0; v < tVarLen; v += 1) {
+          // get x,y pair in one line for each v (each reactor)
+          // console.log('p = ' + p + ', v = ' + v);
+          varUnitIndexNum = plotInfo[plotIndex]['varUnitIndex'][v]; // = index of unit
+          // console.log('varUnitIndexNum = ' + varUnitIndexNum);
+          varIndex = plotInfo[plotIndex]['var'][v]; // = index of var in unit data array
+          // console.log('varIndex = ' + varIndex);
+          // OPTION - NEXT LINE USES tableData from plotter.getPlotData()
+          // tText += formatNum(tableData[v][p][0]); // [p][0] is x value, [1] is y value
+          tText += formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][0]) + tItemDelimiter; // x value
+          // console.log('x value = ' + formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][0]));
+          tText += formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][1]); // y value
+          // console.log('y value = ' + formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][1]));
+          tText += '<br>'; // use <br> not <p> or get empty line between each row
+        }
+
       }
     } else {
       alert('unknown plot type');
@@ -240,17 +232,15 @@ let copier = {
 
     let n; // index
     let v; // variable index
-    let k; // points index
+    let p; // points index
     let numUnits;
     let numVar;
     let varValue;
     let varIndex; // index of selected variable in unit local data array
-    let varUnitIndex; // index of unit from which variable is to be obtained
     let tText; // we will put the data into this variable
     let tItemDelimiter = ', &nbsp;';
     let tVarLen = plotInfo[plotIndex]['var'].length; // length for loops below
-
-    // console.log('new tVarLen = ' + tVarLen);
+    // console.log('tVarLen = ' + tVarLen);
 
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
@@ -297,35 +287,33 @@ let copier = {
     let dataName = plotType + 'Data'; // profileData or stripData
     if ((plotType == 'profile') || (plotType == 'strip')) {
       // repeat to make each line in table for each data point
-      //
-      // OLD version - get thisNumPts from plotInfo
-      // WARNING - thisNumPts may have been deleted from some labs plotInfo
-      // let thisNumPts = 1 + plotInfo[plotIndex]['numberPoints'];
-      // console.log('old thisNumPts = ' + thisNumPts);
-      //
-      // NEW version - get thisNumPts from length of data array
+      // get thisNumPts from length of data array
       // all unit vars in one plot must have same data array length
-      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
-      // console.log('new varUnitIndex = ' + varUnitIndex);
-      let thisNumPts = processUnits[varUnitIndex][dataName][0].length;
+      // console.log('plotIndex = ' + plotIndex);
+      let varUnitIndexNum = plotInfo[plotIndex]['varUnitIndex'][0];
+      // console.log('new varUnitIndexNum = ' + varUnitIndexNum);
+      let thisNumPts = processUnits[varUnitIndexNum][dataName][0].length;
       // console.log('new thisNumPts = ' + thisNumPts);
-      //
+      // console.log('dataName = ' + dataName);
+
       // OPTION - NEXT LINE USES tableData from plotter.getPlotData()
       // let tableData = plotter.getPlotData(plotIndex);
 
-      for (k = 0; k < thisNumPts; k += 1) {
-        // first get x value in [k][0], get it from ['var'][0]
+      for (p = 0; p < thisNumPts; p += 1) {
+        // first get x value
         // x values should be same for all units for this plot
-        varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0]; // index of unit
+        varUnitIndexNum = plotInfo[plotIndex]['varUnitIndex'][0]; // index of unit
         varIndex = plotInfo[plotIndex]['var'][0]; // index of var to plot in unit data array
-        // PTION - NEXT LINE USES tableData from plotter.getPlotData()
-        // tText += formatNum(tableData[varIndex][k][0]); // [k][0] is x value
-        tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][0]) + tItemDelimiter;
-          // get y value for each variable in [k][1]
+        // OPTION - NEXT LINE USES tableData from plotter.getPlotData()
+        // tText += formatNum(tableData[varIndex][p][0]); // [p][0] is x value, [1] is y value
+        tText += formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][0]) + tItemDelimiter;
+          // get y value for each variable in [p][1]
           for (v = 0; v < tVarLen; v += 1) {
-            // PTION - NEXT LINE USES tableData from plotter.getPlotData()
-            // tText += formatNum(tableData[v][k][1]); // [k][1] is y value
-            tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][1]); // [k][1] is y value
+            // OPTION - NEXT LINE USES tableData from plotter.getPlotData()
+            // tText += formatNum(tableData[v][p][1]); // [p][1] is y value
+            varUnitIndexNum = plotInfo[plotIndex]['varUnitIndex'][v]; // index of unit
+            varIndex = plotInfo[plotIndex]['var'][v]; // index of var to plot in unit data array
+            tText += formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][1]); // [p][1] is y value
             if (v < (tVarLen - 1)) {tText += tItemDelimiter;}
           }
         tText += '<br>'; // use <br> not <p> or get empty line between each row

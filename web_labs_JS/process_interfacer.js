@@ -219,7 +219,7 @@ let interfacer = {
 
     let n; // index
     let v; // variable index
-    let k; // points index
+    let p; // points index
     let numUnits;
     let numVar;
     let varValue;
@@ -335,17 +335,17 @@ let interfacer = {
       varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
       let thisNumPts = processUnits[varUnitIndex][dataName][0].length;
       //
-      for (k = 0; k < thisNumPts; k += 1) {
-        // first get x value in [k][0], get it from ['var'][0]
+      for (p = 0; p < thisNumPts; p += 1) {
+        // first get x value in [p][0], get it from ['var'][0]
         // x values should be same for all units for this plot
         varIndex = plotInfo[plotIndex]['var'][0];
         varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
-        tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][0]) + tItemDelimiter;
-          // get y value for each variable in [k][1]
+        tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][p][0]) + tItemDelimiter;
+          // get y value for each variable in [p][1]
           for (v = 0; v < tVarLen; v += 1) {
             varIndex = plotInfo[plotIndex]['var'][v];
             varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
-            tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][k][1]); // [k][1] is y value
+            tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][p][1]); // [p][1] is y value
             if (v < (tVarLen - 1)) {tText += tItemDelimiter;}
           }
         tText += '<br>'; // use <br> not <p> or get empty line between each row

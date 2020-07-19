@@ -228,28 +228,15 @@ function puCSTR(pUnitIndex) {
     let p = 0; // used as index
     let tempArray = [];
     const numStripPoints = plotInfo[0]['numberPoints'];
-    const numStripVars = 2; // only the variables from this unit
+    const numStripVars = 1; // only the variables from this unit
 
-    // handle reactor conc
+    // handle reactor conc vs. time in strip plot
     v = 0;
     tempArray = this.stripData[v]; // work on one plot variable at a time
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
     tempArray.push( [0,this.conc] );
-    // update the variable being processed
-    this.stripData[v] = tempArray;
-
-    // XXX not needed if do not show dynamic converison strip chart plot
-    // XXX also at array initialization only need 1 var for conc
-    // XXX and above here at numStripVars
-    // handle conversion
-    v = 1;
-    tempArray = this.stripData[v]; // work on one plot variable at a time
-    // delete first and oldest element which is an [x,y] pair array
-    tempArray.shift();
-    // add the new [x.y] pair array at end
-    tempArray.push( [0,conversion] );
     // update the variable being processed
     this.stripData[v] = tempArray;
 

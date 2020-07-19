@@ -109,7 +109,8 @@ let puCatalystLayer = {
   // WARNING: numNodes is accessed  in process_plot_info.js
   numNodes : 50,
 
-  // used for strip charts and also color canvas 
+  // numStripPts used for strip charts and also color canvas
+  // this value is also accessed by plotter_plot_info.js
   numStripPts : 80,
 
   // WARNING: IF INCREASE NUM NODES IN CATALYST LAYER BY A FACTOR THEN HAVE TO

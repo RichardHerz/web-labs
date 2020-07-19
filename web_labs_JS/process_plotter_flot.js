@@ -65,6 +65,9 @@ let plotter = {
     let numVar = varNumbers.length;
 
     // initialize plotData array, which will be loaded with variable values below
+    // this does full initialization for all points for all variables 
+    // WARNING: you must do full initialization for plots which involve more
+    //          than one variable per unit but do it here for all plots
     let plotData;
     if (plotInfo[plotInfoNum]['type'] == 'profile') {
       v = 0;
@@ -326,7 +329,7 @@ let plotter = {
   initPlotData : function(numVars,numPlotPoints) {
     // returns 3D array to hold x,y scatter plot data for multiple variables
     // inputs are list of variables and # of x,y point pairs per variable
-    //    numPlotPoints + 1 elements are generated for plot origin pt
+    // numPlotPoints + 1 elements are generated for plot origin pt
     // returns array with all elements for plot filled with zero
     //    index 1 specifies the variable [0 to numVars-1],
     //    index 2 specifies the data point pair [0 to & including numPlotPoints]

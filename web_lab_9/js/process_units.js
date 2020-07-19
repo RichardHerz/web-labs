@@ -60,7 +60,8 @@ let copier = {
     // USES internal function formatNum
     // REQUIRES run button id='button_runButton' & display labels be 'Run' & 'Pause'
 
-    // console.log('enter copyCSTRrateData in Web Lab 9, process_units.js');
+    // WARNING: this copy data script tables data differently from any other
+    //       copy data script - each x,y pair put on separate line
 
     // if sim is running, pause the sim
     // copy grabs what is showing on plot when copy button clicked
@@ -82,7 +83,6 @@ let copier = {
     let tText; // we will put the data into this variable
     let tItemDelimiter = ', &nbsp;';
     let tVarLen = plotInfo[plotIndex]['var'].length; // length for loops below
-    // console.log('tVarLen = ' + tVarLen);
 
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
@@ -123,35 +123,23 @@ let copier = {
       // repeat to make each line in table for each data point
       // get thisNumPts from length of data array
       // all unit vars in one plot must have same data array length
-      // console.log('plotIndex = ' + plotIndex);
       let varUnitIndexNum = plotInfo[plotIndex]['varUnitIndex'][0];
-      // console.log('new varUnitIndexNum = ' + varUnitIndexNum);
       let thisNumPts = processUnits[varUnitIndexNum][dataName][0].length;
-      // console.log('new thisNumPts = ' + thisNumPts);
-      // console.log('dataName = ' + dataName);
-
-      // OPTION - NEXT LINE USES tableData from plotter.getPlotData()
-      // let tableData = plotter.getPlotData(plotIndex);
-
       // THIS TABLE FOR CSTRs IN SERIES REACTION RATE IS UNIQUE
       // FOR CONC,RATE x,y PAIRS, all x values will differ
       // AND WANT A NEW LINE IN TABLE FOR EACH x,y PAIR
+
+      // WARNING: this copy data script tables data differently from any other
+      //       copy data script - each x,y pair put on separate line
 
       for (p = 0; p < thisNumPts; p += 1) {
         // for each point p, there will be tVarLen x,y pairs
         for (v = 0; v < tVarLen; v += 1) {
           // get x,y pair in one line for each v (each reactor)
-          // console.log('p = ' + p + ', v = ' + v);
           varUnitIndexNum = plotInfo[plotIndex]['varUnitIndex'][v]; // = index of unit
-          // console.log('varUnitIndexNum = ' + varUnitIndexNum);
           varIndex = plotInfo[plotIndex]['var'][v]; // = index of var in unit data array
-          // console.log('varIndex = ' + varIndex);
-          // OPTION - NEXT LINE USES tableData from plotter.getPlotData()
-          // tText += formatNum(tableData[v][p][0]); // [p][0] is x value, [1] is y value
           tText += formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][0]) + tItemDelimiter; // x value
-          // console.log('x value = ' + formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][0]));
           tText += formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][1]); // y value
-          // console.log('y value = ' + formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][1]));
           tText += '<br>'; // use <br> not <p> or get empty line between each row
         }
 
@@ -218,8 +206,6 @@ let copier = {
     // USES internal function formatNum
     // REQUIRES run button id='button_runButton' & display labels be 'Run' & 'Pause'
 
-    // console.log('enter copyCSTRconversionData in Web Lab 9, process_units.js');
-
     // if sim is running, pause the sim
     // copy grabs what is showing on plot when copy button clicked
     // so want user to be able to take screenshot to compare with data copied
@@ -240,7 +226,6 @@ let copier = {
     let tText; // we will put the data into this variable
     let tItemDelimiter = ', &nbsp;';
     let tVarLen = plotInfo[plotIndex]['var'].length; // length for loops below
-    // console.log('tVarLen = ' + tVarLen);
 
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
@@ -289,28 +274,16 @@ let copier = {
       // repeat to make each line in table for each data point
       // get thisNumPts from length of data array
       // all unit vars in one plot must have same data array length
-      // console.log('plotIndex = ' + plotIndex);
       let varUnitIndexNum = plotInfo[plotIndex]['varUnitIndex'][0];
-      // console.log('new varUnitIndexNum = ' + varUnitIndexNum);
       let thisNumPts = processUnits[varUnitIndexNum][dataName][0].length;
-      // console.log('new thisNumPts = ' + thisNumPts);
-      // console.log('dataName = ' + dataName);
-
-      // OPTION - NEXT LINE USES tableData from plotter.getPlotData()
-      // let tableData = plotter.getPlotData(plotIndex);
-
       for (p = 0; p < thisNumPts; p += 1) {
         // first get x value
         // x values should be same for all units for this plot
         varUnitIndexNum = plotInfo[plotIndex]['varUnitIndex'][0]; // index of unit
         varIndex = plotInfo[plotIndex]['var'][0]; // index of var to plot in unit data array
-        // OPTION - NEXT LINE USES tableData from plotter.getPlotData()
-        // tText += formatNum(tableData[varIndex][p][0]); // [p][0] is x value, [1] is y value
         tText += formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][0]) + tItemDelimiter;
           // get y value for each variable in [p][1]
           for (v = 0; v < tVarLen; v += 1) {
-            // OPTION - NEXT LINE USES tableData from plotter.getPlotData()
-            // tText += formatNum(tableData[v][p][1]); // [p][1] is y value
             varUnitIndexNum = plotInfo[plotIndex]['varUnitIndex'][v]; // index of unit
             varIndex = plotInfo[plotIndex]['var'][v]; // index of var to plot in unit data array
             tText += formatNum(processUnits[varUnitIndexNum][dataName][varIndex][p][1]); // [p][1] is y value

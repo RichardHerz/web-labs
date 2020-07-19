@@ -65,7 +65,7 @@ let plotter = {
     let numVar = varNumbers.length;
 
     // initialize plotData array, which will be loaded with variable values below
-    // this does full initialization for all points for all variables 
+    // this does full initialization for all points for all variables
     // WARNING: you must do full initialization for plots which involve more
     //          than one variable per unit but do it here for all plots
     let plotData;
@@ -221,9 +221,8 @@ let plotter = {
         // NOTE: THIS CHECK OF "SHOW" COULD BE MOVED UP INTO
         // getPlotData FUNCTION WHERE DATA SELECTED TO PLOT
         // SINCE BOTH FUNCTIONS ARE CALLED EACH PLOT UPDATE
-        //
-        // AS LONG AS YOU DO NOT USE getPlotData IN copyData methods
-        //
+        // AS LONG AS YOU DO NOT ALSO USE getPlotData IN copyData methods, which
+        // is not good idea anyway since create duplicate array there not needed
         // pData is not full profileData nor full stripData
         // pData has the variables specified in plotInfo[pNumber]['var']
         // now want to select the vars in pData with "show" property true

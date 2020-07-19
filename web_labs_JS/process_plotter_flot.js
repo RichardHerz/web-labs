@@ -63,9 +63,26 @@ let plotter = {
     let thisNumPts; // used a couple places below with array .length
     let varNumbers = plotInfo[plotInfoNum]['var'];
     let numVar = varNumbers.length;
-    let plotData = this.initPlotData(numVar);
 
-    // get data for plot
+    // initialize plotData array, which will be loaded with variable values below
+    let plotData;
+    if (plotInfo[plotInfoNum]['type'] == 'profile') {
+      v = 0;
+      n = varNumbers[v];
+      varUnitIndex = plotInfo[plotInfoNum]['varUnitIndex'][v];
+      thisNumPts = processUnits[varUnitIndex]['profileData'][n].length;
+      plotData = this.initPlotData(numVar, thisNumPts-1); // note thisNumPts-1
+    } else if (plotInfo[plotInfoNum]['type'] == 'strip') {
+      v = 0;
+      n = varNumbers[v];
+      varUnitIndex = plotInfo[plotInfoNum]['varUnitIndex'][v];
+      thisNumPts = processUnits[varUnitIndex]['stripData'][n].length;
+      plotData = this.initPlotData(numVar, thisNumPts-1); // note thisNumPts-1
+    } else {
+      alert('in getPlotData, unknown plot type');
+    }
+
+    // get data for plot and load into plotData array
     for (v = 0; v < numVar; v += 1) {
 
       // get unit index and array name for this variable
@@ -309,15 +326,11 @@ let plotter = {
   initPlotData : function(numVars,numPlotPoints) {
     // returns 3D array to hold x,y scatter plot data for multiple variables
     // inputs are list of variables and # of x,y point pairs per variable
+    //    numPlotPoints + 1 elements are generated for plot origin pt
     // returns array with all elements for plot filled with zero
     //    index 1 specifies the variable [0 to numVars-1],
     //    index 2 specifies the data point pair [0 to & including numPlotPoints]
     //    index 3 specifies x or y in x,y data point pair [0 & 1]
-    //
-    // numPlotPoints argument for purpose of plotter is optional because
-    // getPlotData adds x,y pairs but
-    // must keep numPlotPoints as argument of initPlotData because it is used
-    // in process units to initialize their stripData and plotData arrays
     //
     let v;
     let p;

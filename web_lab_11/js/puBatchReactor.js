@@ -43,7 +43,7 @@ let puBatchReactor = {
   // SEE dataInputs array in initialize() method for input field ID's
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
-  Ca_output_field_ID : "field_Ca_final",
+  cA_output_field_ID : "field_cA_final",
   conversion_output_field_ID  : "field_conversion_final",
   displayReactorContents: '#div_PLOTDIV_reactorContents', // need # because selecting CSS
 
@@ -53,8 +53,8 @@ let puBatchReactor = {
   // define main inputs
   // values will be set in method initialize() calling method updateUIparams()
   Tin : 0, // Temperature
-  Cain : 1, // initial reactant concentration
-  Ca_final : 1, // final reactant concentration
+  cAin : 1, // initial reactant concentration
+  cA_final : 1, // final reactant concentration
   Vol : 0, // volume of reactor contents
   t_final : 0,
   k_300 : 0, // forward rate constant at 300 K
@@ -73,7 +73,7 @@ let puBatchReactor = {
 
   // define arrays to hold output variables
   // these will be filled with initial values in method reset()
-  Ca : [],
+  cA : [],
   time : [],
 
   // define arrays to hold data for plots, color canvas
@@ -121,7 +121,7 @@ let puBatchReactor = {
     this.dataDefault[v] = 300;
     //
     v = 4;
-    this.dataHeaders[v] = 'Ca_init';
+    this.dataHeaders[v] = 'cA_init';
     this.dataInputs[v] = 'input_field_Concentration';
     this.dataUnits[v] = 'mol/m3';
     this.dataMin[v] = 0;
@@ -152,10 +152,10 @@ let puBatchReactor = {
     // OUTPUT VARS
     //
     v = 7;
-    this.dataHeaders[v] = 'Ca_final';
+    this.dataHeaders[v] = 'cA_final';
     this.dataUnits[v] =  'mol/m3';
     this.dataMin[v] = 0;
-    this.dataMax[v] = this.dataMax[4]; // [4] is Ca_init
+    this.dataMax[v] = this.dataMax[4]; // [4] is cA_init
     //
   }, // END of initialize()
 
@@ -173,7 +173,7 @@ let puBatchReactor = {
     // set state variables not set by updateUIparams() to initial settings
 
     for (k = 0; k <= this.numNodes; k += 1) {
-      this.Ca[k] = this.Cain;
+      this.cA[k] = this.cAin;
     }
 
     // initialize profile data array
@@ -199,7 +199,7 @@ let puBatchReactor = {
       // first index specifies which variable
       this.profileData[0][k][0] = kn;
       // y-axis values
-      this.profileData[0][k][1] = 0; // this.dataDefault[4]; // [4] is Cain
+      this.profileData[0][k][1] = 0; // this.dataDefault[4]; // [4] is cAin
     }
 
   }, // end reset
@@ -226,7 +226,7 @@ let puBatchReactor = {
     this.Ea = this.dataValues[1] = interfacer.getInputValue(unum, 1);
     this.nth = this.dataValues[2] = interfacer.getInputValue(unum, 2);
     this.Tin = this.dataValues[3] = interfacer.getInputValue(unum, 3);
-    this.Cain = this.dataValues[4] = interfacer.getInputValue(unum, 4);
+    this.cAin = this.dataValues[4] = interfacer.getInputValue(unum, 4);
     this.Vol= this.dataValues[5] = interfacer.getInputValue(unum, 5);
     this.t_final = this.dataValues[6] = interfacer.getInputValue(unum, 6);
 
@@ -247,7 +247,7 @@ let puBatchReactor = {
     // plotInfo[0]['yLeftAxisMin'] = this.dataMin[9]; // [9] is Trxr
     // plotInfo[0]['yLeftAxisMax'] = this.dataMax[9];
     // plotInfo[0]['yRightAxisMin'] = 0;
-    // plotInfo[0]['yRightAxisMax'] = this.Cain;
+    // plotInfo[0]['yRightAxisMax'] = this.cAin;
     // // adjust color span of spaceTime, color canvas plots
     // plotInfo[1]['varValueMin'] = this.dataMin[9]; // [9] is Trxr
     // plotInfo[1]['varValueMax'] = this.dataMax[9];
@@ -257,7 +257,7 @@ let puBatchReactor = {
     // // also update ONLY inlet values at inlet of reactor in case sim is paused
     // // but do not do full updateDisplay
     // document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
-    // document.getElementById(this.displayReactorLeftConc).innerHTML = this.Cain.toFixed(1);
+    // document.getElementById(this.displayReactorLeftConc).innerHTML = this.cAin.toFixed(1);
 
     // // residence time used for timing checks for steady state
     // // use this for now but should consider voidFrac and Cp's...
@@ -303,13 +303,13 @@ let puBatchReactor = {
     // plot will have numPlotPoints + 1 points - see process_plot_info.js
     for (j=0; j<=this.numPlotPoints; j+=1) {
       this.time[j] =  this.t_final * j/this.numPlotPoints;
-      this.Ca[j] = this.reactBATCHnthSS(this.time[j],kT,this.nth,this.Cain);
+      this.cA[j] = this.reactBATCHnthSS(this.time[j],kT,this.nth,this.cAin);
     }
 
-    this.Ca_final = this.Ca[this.numPlotPoints];
+    this.cA_final = this.cA[this.numPlotPoints];
 
-    // change Ca final output field to visible only after 1st run
-    document.getElementById(this.Ca_output_field_ID).style.visibility = 'visible';
+    // change cA final output field to visible only after 1st run
+    document.getElementById(this.cA_output_field_ID).style.visibility = 'visible';
 
     // change conversion final output field to visible only after 1st run
     document.getElementById(this.conversion_output_field_ID).style.visibility = 'visible';
@@ -319,11 +319,11 @@ let puBatchReactor = {
   updateDisplay : function() {
 
     // note use .toFixed(n) method of object to round number to n decimal points
-    let txt = 'Ca final (mol/m<sup>3</sup>) = ' + this.Ca_final.toFixed(1);
-    document.getElementById(this.Ca_output_field_ID).innerHTML = txt;
+    let txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
+    document.getElementById(this.cA_output_field_ID).innerHTML = txt;
 
     // note use .toFixed(n) method of object to round number to n decimal points
-    let conversion_final = 100 * (1 - this.Ca_final / this.Cain);
+    let conversion_final = 100 * (1 - this.cA_final / this.cAin);
     txt = 'Conversion final (%) = ' + conversion_final.toFixed(1);
     document.getElementById(this.conversion_output_field_ID).innerHTML = txt;
 
@@ -335,9 +335,9 @@ let puBatchReactor = {
     let el = document.querySelector(this.displayReactorContents);
     // el.style.backgroundColor = "rgb(0,0,255)";
     // compute color for this reactantConc
-    let cafinal = this.Ca_final;
-    if (controller.simTime == 0) {cafinal = this.Cain;}
-    let B = Math.round(255 * cafinal / this.Cain); // Blue = reactant
+    let cafinal = this.cA_final;
+    if (controller.simTime == 0) {cafinal = this.cAin;}
+    let B = Math.round(255 * cafinal / this.cAin); // Blue = reactant
     let R = 255 - B; // Red = product
     let colorString = "rgb(" + R + ", 0, " + B + ")";
     // set color for this reactantConc
@@ -355,7 +355,7 @@ let puBatchReactor = {
     // fill array for profile plot
     for (j=0; j<=this.numPlotPoints; j+=1) {
       this.profileData[0][j][0] = this.time[j];
-      this.profileData[0][j][1] = this.Ca[j];
+      this.profileData[0][j][1] = this.cA[j];
     }
 
   }, // end updateDisplay method
@@ -365,32 +365,32 @@ let puBatchReactor = {
     return ssFlag;
   }, // END checkForSteadyState method
 
-  reactBATCHnthSS : function(t,k,n,Cain) {
+  reactBATCHnthSS : function(t,k,n,cAin) {
     // returns conc at time t
-    let Ca;
+    let cA;
     switch(n) {
       case -1:
-        let x = ( Math.pow(Cain,2) - 2 * k * t );
+        let x = ( Math.pow(cAin,2) - 2 * k * t );
         if (x > 0) {
-          Ca = Math.sqrt(x);
+          cA = Math.sqrt(x);
         } else {
-          Ca = 0;
+          cA = 0;
         }
         break;
       case 0:
-        Ca = (Cain - k * t);
-        if (Ca < 0) {Ca = 0};
+        cA = (cAin - k * t);
+        if (cA < 0) {cA = 0};
         break;
       case 1:
-        Ca = Cain * Math.exp(-k * t);
+        cA = cAin * Math.exp(-k * t);
         break;
       case 2:
-        Ca = Cain / (1 + Cain * k * t);
+        cA = cAin / (1 + cAin * k * t);
         break;
       default:
-        Ca = Cain;
+        cA = cAin;
     }
-    return Ca
+    return cA
   } // END reactBATCHnthSS method
 
 }; // END puBatchReactor object

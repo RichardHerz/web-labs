@@ -161,7 +161,7 @@ canvas {
   height: 325px;
   visibility: visible;
   border-width: 1px;
-  border-style: dotted;
+  border-style: none;
   border-color: TomatoRed;
   opacity: 1;
   LCvScrollbar: false;
@@ -207,7 +207,7 @@ canvas {
   height: 325px;
   visibility: visible;
   border-width: 1px;
-  border-style: dotted;
+  border-style: none;
   border-color: TomatoRed;
   opacity: 1;
   LCvScrollbar: false;

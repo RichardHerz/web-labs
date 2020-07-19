@@ -109,6 +109,9 @@ let puCatalystLayer = {
   // WARNING: numNodes is accessed  in process_plot_info.js
   numNodes : 50,
 
+  // used for strip charts and also color canvas 
+  numStripPts : 80,
+
   // WARNING: IF INCREASE NUM NODES IN CATALYST LAYER BY A FACTOR THEN HAVE TO
   // REDUCE size of time steps FOR NUMERICAL STABILITY BY SQUARE OF THE FACTOR
   // AND INCREASE step repeats BY SAME FACTOR IF WANT SAME SIM TIME BETWEEN
@@ -249,7 +252,7 @@ let puCatalystLayer = {
     // initialize local array to hold color-canvas data, e.g., space-time data -
     // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
     this.colorCanvasData = plotter.initColorCanvasArray(1,80,this.numNodes);
-    // the 1 var is rate, numXpts should match strip chart numStripPts
+    // the 1 var is rate, numXpts should match strip chart this.numStripPts
 
     for (k = 0; k <= this.numNodes; k += 1) {
       this.y[k] = 0;
@@ -647,10 +650,10 @@ let puCatalystLayer = {
 
   updateDisplay : function() {
 
-    let k = 0; // used as index
-    let v = 0; // used as index
-    let s = 0; // used as index
-    let t = 0; // used as index
+    let k; // used as index
+    let v; // used as index
+    let s; // used as index
+    let t; // used as index
     let tempArray = []; // for shifting data in strip chart plots
     let tempSpaceData = []; // for shifting data in color canvas plots
 
@@ -718,16 +721,14 @@ let puCatalystLayer = {
     // so they stay the same after updating y-axis values
 
     let numStripVars = 3; // xxx change to use var value
-    // xxx change to get from plotInfo obj in process_plot_info.js
-    let numStripPts = 80;
     let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (v = 0; v < numStripVars; v += 1) {
-      for (p = 0; p <= numStripPts; p += 1) { // note = in p <= numStripPts
-        // note want p <= numStripPts so get # 0 to  # numStripPts of points
+      for (p = 0; p <= this.numStripPts; p += 1) { // note = in p <= this.numStripPts
+        // note want p <= this.numStripPts so get # 0 to  # this.numStripPts of points
         // want next line for newest data at max time
         this.stripData[v][p][0] = p * timeStep;
         // want next line for newest data at zero time
-        // this.stripData[v][p][0] = (numStripPts - p) * timeStep;
+        // this.stripData[v][p][0] = (this.numStripPts - p) * timeStep;
       }
     }
 
@@ -744,8 +745,8 @@ let puCatalystLayer = {
     }
 
     // update the colorCanvasData array
-    // NOTE: used numStripPts so same time span as strip plots in this lab
-    for (t = 0; t < numStripPts; t += 1) { // NOTE < numStripPts, don't do last one here
+    // NOTE: used this.numStripPts so same time span as strip plots in this lab
+    for (t = 0; t < this.numStripPts; t += 1) { // NOTE < this.numStripPts, don't do last one here
       for (s = 0; s <= this.numNodes; s +=1) { // NOTE <= this.numNodes
         tempArray[t][s] = tempArray[t+1][s];
       }
@@ -753,7 +754,7 @@ let puCatalystLayer = {
 
     // now update the last time
     for (s = 0; s <= this.numNodes; s +=1) { // NOTE <= this.numNodes
-      tempArray[numStripPts][s] = tempSpaceData[s];
+      tempArray[this.numStripPts][s] = tempSpaceData[s];
     }
     // update the variable being processed
     this.colorCanvasData[v] = tempArray;

@@ -30,8 +30,9 @@ let plotInfo = {
     //
 
     let unum = 0; // useful when only one unit in plot, processUnits[unum]
-    let pnum = 0; // redefined below
-    let vnum = 0; // redefined below
+    let pnum; // redefined below
+    let vnum; // redefined below
+    let nPts; // used in several places below
 
     // plot 0 info
     pnum = 0;
@@ -178,15 +179,15 @@ let plotInfo = {
     plotInfo[pnum]['title'] = 'Inlet Gas';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_inlet_gas'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    plotInfo[pnum]['numberPoints'] = 80; // WARNING: value used below in xAxisMax & plot 4
-    // plot has numberPoints + 1 pts!
+    nPts = processUnits[unum].numStripPts; // used in several places below
+    plotInfo[pnum]['numberPoints'] = nPts; // WARNING: value used below in xAxisMax & plot 4
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
     plotInfo[pnum]['xAxisTableLabel'] = 'Time'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
     plotInfo[pnum]['xAxisMin'] = 0;
-    plotInfo[pnum]['xAxisMax'] = 80 * simParams.simTimeStep * simParams.simStepRepeats;
+    plotInfo[pnum]['xAxisMax'] = nPts * simParams.simTimeStep * simParams.simStepRepeats;
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = '';
     plotInfo[pnum]['yLeftAxisMin'] = 0;
@@ -238,15 +239,15 @@ let plotInfo = {
     plotInfo[pnum]['title'] = 'Outlet Gas';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_outlet_gas'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    plotInfo[pnum]['numberPoints'] = 80; // WARNING: value used below in xAxisMax
-    // plot has numberPoints + 1 pts!
+    nPts = processUnits[unum].numStripPts; // used in several places below
+    plotInfo[pnum]['numberPoints'] = nPts; // WARNING: value used below in xAxisMax
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
     plotInfo[pnum]['xAxisTableLabel'] = 'Time'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
     plotInfo[pnum]['xAxisMin'] = 0;
-    plotInfo[pnum]['xAxisMax'] = 80 * simParams.simTimeStep * simParams.simStepRepeats;
+    plotInfo[pnum]['xAxisMax'] = nPts * simParams.simTimeStep * simParams.simStepRepeats;
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = '';
     plotInfo[pnum]['yLeftAxisMin'] = 0;

@@ -25,13 +25,13 @@ let plotter = {
     // ----- OBJECT USED TO HOLD PLOT DEFINITIONS BETWEEN DISPLAY UPDATES ---
     //
     // DEFINE plot array used to save complete description of plot between updates
-    // plot array used in function plotPlotData as this.plotArrays['plot'][pNumber]
+    // plot array used in function plotPlotData as this.plotArrays['plot'][pIndex]
     plot : [],
 
     // DEFINE plotFlag array so don't have to generate entire plot
     // everytime want to just change data and not axes, etc.
     // for example, for 4 plots on page, this ran in 60% of time for full refresh
-    // plotFlag array used in function plotPlotData as this.plotArrays['plotFlag'][pNumber]
+    // plotFlag array used in function plotPlotData as this.plotArrays['plotFlag'][pIndex]
     //
     plotFlag : [], // tells whether or not to update only curves or complete plot
 
@@ -49,9 +49,9 @@ let plotter = {
 
   // --------- DEFINE METHODS ---------------
 
-  getPlotData : function(plotInfoNum) {
+  getPlotData : function(plotIndex) {
     //
-    // input argument plotInfoNum refers to plot number in object plotInfo
+    // input argument plotIndex refers to index of plot in object plotInfo
     // which is defined in file process_plot_info.js
     //
     // uses plotInfo object defined in process_plot_info.js
@@ -61,7 +61,7 @@ let plotter = {
     let n; // used as index
     let sf = 1; // scale factor used below and possibly modified
     let thisNumPts; // used a couple places below with array .length
-    let varNumbers = plotInfo[plotInfoNum]['var'];
+    let varNumbers = plotInfo[plotIndex]['var'];
     let numVar = varNumbers.length;
 
     // initialize plotData array, which will be loaded with variable values below
@@ -69,17 +69,13 @@ let plotter = {
     // WARNING: you must do full initialization for plots which involve more
     //          than one variable per unit but do it here for all plots
     let plotData;
-    if (plotInfo[plotInfoNum]['type'] == 'profile') {
+    let plotType = plotInfo[plotIndex]['type']; // profile or strip
+    let dataName = plotType + 'Data'; // profileData or stripData
+    if ((plotType == 'profile') || (plotType == 'strip')) {
       v = 0;
       n = varNumbers[v];
-      varUnitIndex = plotInfo[plotInfoNum]['varUnitIndex'][v];
-      thisNumPts = processUnits[varUnitIndex]['profileData'][n].length;
-      plotData = this.initPlotData(numVar, thisNumPts-1); // note thisNumPts-1
-    } else if (plotInfo[plotInfoNum]['type'] == 'strip') {
-      v = 0;
-      n = varNumbers[v];
-      varUnitIndex = plotInfo[plotInfoNum]['varUnitIndex'][v];
-      thisNumPts = processUnits[varUnitIndex]['stripData'][n].length;
+      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
+      thisNumPts = processUnits[varUnitIndex][dataName][n].length;
       plotData = this.initPlotData(numVar, thisNumPts-1); // note thisNumPts-1
     } else {
       alert('in getPlotData, unknown plot type');
@@ -89,14 +85,14 @@ let plotter = {
     for (v = 0; v < numVar; v += 1) {
 
       // get unit index and array name for this variable
-      varUnitIndex = plotInfo[plotInfoNum]['varUnitIndex'][v];
+      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
       // get number n of variable listed in unit's data array
       n = varNumbers[v];
       // copy variable in array from unit
       // need to do this separately for each variable because they
       // may be from different units
 
-      sf = plotInfo[plotInfoNum]['varYscaleFactor'][v];
+      sf = plotInfo[plotIndex]['varYscaleFactor'][v];
       if (sf != 1) {
         // WARNING - with sf != 1 you want to modify values but not original
         // values and so need an independent copy with copy by value
@@ -106,7 +102,7 @@ let plotter = {
         // plotData, e.g., scaling a var, will change orig data, and that
         // change will be present the next time the scale is applied, etc.
         // so have to copy data arrays element by element to get independent copy
-        if (plotInfo[plotInfoNum]['type'] == 'profile') {
+        if (plotInfo[plotIndex]['type'] == 'profile') {
           // requires units' local array name to be profileData
           // get actual length of profileData - may change in labs which add
           // x,y plot pairs as generated at irregular times and locations
@@ -115,7 +111,7 @@ let plotter = {
             plotData[v][p][0] = processUnits[varUnitIndex]['profileData'][n][p][0];
             plotData[v][p][1] = processUnits[varUnitIndex]['profileData'][n][p][1];
           }
-        } else if (plotInfo[plotInfoNum]['type'] == 'strip') {
+        } else if (plotInfo[plotIndex]['type'] == 'strip') {
           // requires units' local array name to be stripData
           // xxx for (p = 0; p <= numPlotPoints; p += 1) { // NOTE = AT p <=
           thisNumPts = processUnits[varUnitIndex]['stripData'][n].length;
@@ -130,9 +126,9 @@ let plotter = {
         // scale factor sf = 1 so won't be changing original data
         // and so can copy by reference (rather than by value when sf != 1)
         // XXX check to see if this is any faster than copy all by value...
-        if (plotInfo[plotInfoNum]['type'] == 'profile') {
+        if (plotInfo[plotIndex]['type'] == 'profile') {
           plotData[v] = processUnits[varUnitIndex]['profileData'][n];
-        } else if (plotInfo[plotInfoNum]['type'] == 'strip') {
+        } else if (plotInfo[plotIndex]['type'] == 'strip') {
           plotData[v] = processUnits[varUnitIndex]['stripData'][n];
         } else {
           alert('in getPlotData, unknown plot type');
@@ -146,7 +142,7 @@ let plotter = {
 
     // scale y-axis values if scale factor not equal to 1
     for (v = 0; v < numVar; v += 1) {
-      sf = plotInfo[plotInfoNum]['varYscaleFactor'][v];
+      sf = plotInfo[plotIndex]['varYscaleFactor'][v];
       thisNumPts = plotData[v].length;
       if (sf != 1) {
         for (p = 0; p < thisNumPts; p += 1) {
@@ -159,7 +155,7 @@ let plotter = {
 
   }, // END OF function getPlotData
 
-  plotPlotData : function(pData,pNumber) {
+  plotPlotData : function(pData,pIndex) {
 
     // PLOTTING WITH THE FLOT LIBRARY - THIS plotPlotData OBJECT AND
     // ITS METHODS DEPEND ON JQUERY.JS AND JQUERY.FLOT.JS FOR PLOTTING
@@ -172,11 +168,11 @@ let plotter = {
     //     https://github.com/markrcote/flot-axislabels
 
     // input pData holds the data to plot
-    // input pNumber is number of plot as 1st index in plotInfo
+    // input pIndex is index of plot in plotInfo
 
     // get info about the variables
 
-    let plotList = plotInfo[pNumber]['var'];
+    let plotList = plotInfo[pIndex]['var'];
     // plotList is array whose elements are the values of the
     // first index in pData array which holds the x,y values to plot
 
@@ -189,9 +185,9 @@ let plotter = {
     function fGetAxisData(v,k) {
   	  // v = value of element k of plotList array
       // k is index of plotList array
-      yAxis[k] = plotInfo[pNumber]['varYaxis'][k];
-      vShow[k] = plotInfo[pNumber]['varShow'][k];
-      vLabel[k] = plotInfo[pNumber]['varLabel'][k];
+      yAxis[k] = plotInfo[pIndex]['varYaxis'][k];
+      vShow[k] = plotInfo[pIndex]['varShow'][k];
+      vLabel[k] = plotInfo[pIndex]['varLabel'][k];
     }
 
     // put data in form needed by flot.js
@@ -205,7 +201,7 @@ let plotter = {
     //    e.g., plotInfo[pnum]['varShow'][vnum] = 'show';
     // interfacer.copyData tabulates all variables in plotInfo regardless of the varShow value
 
-    let plotCanvasHtmlID = plotInfo[pNumber]['canvas'];
+    let plotCanvasHtmlID = plotInfo[pIndex]['canvas'];
 
     let dataToPlot = [];
     let numVar = plotList.length;
@@ -224,7 +220,7 @@ let plotter = {
         // AS LONG AS YOU DO NOT ALSO USE getPlotData IN copyData methods, which
         // is not good idea anyway since create duplicate array there not needed
         // pData is not full profileData nor full stripData
-        // pData has the variables specified in plotInfo[pNumber]['var']
+        // pData has the variables specified in plotInfo[pIndex]['var']
         // now want to select the vars in pData with "show" property true
         // *BUT* see "else" condition below
         newobj.data = pData[k];
@@ -237,7 +233,7 @@ let plotter = {
         // do not plot this variable
         // *BUT* need to add a single point in case no vars on this axis to show
         // in which case no axis labels will show without this single point
-        newobj.data = [plotInfo[pNumber]['xAxisMax'],plotInfo[pNumber]['yLeftAxisMax']];
+        newobj.data = [plotInfo[pIndex]['xAxisMax'],plotInfo[pIndex]['yLeftAxisMax']];
         newobj.label = vLabel[k];
         if (yAxis[k] === 'right') {newobj.yaxis = 1;} else {newobj.yaxis = 2;}
         dataToPlot[k] = newobj;
@@ -246,33 +242,33 @@ let plotter = {
 
     // set up the plot axis labels and plot legend
 
-    let xShow = plotInfo[pNumber]['xAxisShow'];
-    let xLabel = plotInfo[pNumber]['xAxisLabel'];
-    let xMin= plotInfo[pNumber]['xAxisMin'];
-    let xMax = plotInfo[pNumber]['xAxisMax'];
-    let yLeftLabel = plotInfo[pNumber]['yLeftAxisLabel'];
-    let yLeftMin = plotInfo[pNumber]['yLeftAxisMin'];
-    let yLeftMax = plotInfo[pNumber]['yLeftAxisMax'];
-    let yRightLabel = plotInfo[pNumber]['yRightAxisLabel'];
-    let yRightMin = plotInfo[pNumber]['yRightAxisMin'];
-    let yRightMax = plotInfo[pNumber]['yRightAxisMax'];
-    let plotLegendPosition = plotInfo[pNumber]['plotLegendPosition'];
-    let plotLegendShow = plotInfo[pNumber]['plotLegendShow']; // Boolean 0,1
-    let plotGridBgColor = plotInfo[pNumber]['plotGridBgColor'];
-    let plotDataSeriesColors = plotInfo[pNumber]['plotDataSeriesColors'];
+    let xShow = plotInfo[pIndex]['xAxisShow'];
+    let xLabel = plotInfo[pIndex]['xAxisLabel'];
+    let xMin= plotInfo[pIndex]['xAxisMin'];
+    let xMax = plotInfo[pIndex]['xAxisMax'];
+    let yLeftLabel = plotInfo[pIndex]['yLeftAxisLabel'];
+    let yLeftMin = plotInfo[pIndex]['yLeftAxisMin'];
+    let yLeftMax = plotInfo[pIndex]['yLeftAxisMax'];
+    let yRightLabel = plotInfo[pIndex]['yRightAxisLabel'];
+    let yRightMin = plotInfo[pIndex]['yRightAxisMin'];
+    let yRightMax = plotInfo[pIndex]['yRightAxisMax'];
+    let plotLegendPosition = plotInfo[pIndex]['plotLegendPosition'];
+    let plotLegendShow = plotInfo[pIndex]['plotLegendShow']; // Boolean 0,1
+    let plotGridBgColor = plotInfo[pIndex]['plotGridBgColor'];
+    let plotDataSeriesColors = plotInfo[pIndex]['plotDataSeriesColors'];
     // check if want lines and/or points shown
     // default is lines only
     let plotDataPoints = false;
     let plotDataLines = true;
-    if (typeof plotInfo[pNumber]['plotDataPoints'] == 'undefined') {
+    if (typeof plotInfo[pIndex]['plotDataPoints'] == 'undefined') {
       plotDataPoints = false; // default is false
     } else {
-      plotDataPoints = plotInfo[pNumber]['plotDataPoints'];
+      plotDataPoints = plotInfo[pIndex]['plotDataPoints'];
     }
-    if (typeof plotInfo[pNumber]['plotDataLines'] == 'undefined') {
+    if (typeof plotInfo[pIndex]['plotDataLines'] == 'undefined') {
       plotDataLines = true; // default is true
     } else {
-      plotDataLines = plotInfo[pNumber]['plotDataLines'];
+      plotDataLines = plotInfo[pIndex]['plotDataLines'];
     }
 
     let options = {
@@ -299,7 +295,7 @@ let plotter = {
 
     // check if want to reverse data left-right on x-axis
     // when reversed, xmax is on left, xmin on right
-    if (plotInfo[pNumber]['xAxisReversed']) {
+    if (plotInfo[pIndex]['xAxisReversed']) {
       options.xaxis = {
         transform: function (v) { return -v; },
         inverseTransform: function (v) { return -v; }
@@ -315,12 +311,12 @@ let plotter = {
     // for example, for 4 plots on page, this ran in 60% of time for full refresh
     // see plotter.plotArrays.initialize() for intialization of plot and plotFlag arrays
 
-    if (this.plotArrays['plotFlag'][pNumber] == 0) {
-      this.plotArrays['plotFlag'][pNumber] = 1;
-      this.plotArrays['plot'][pNumber] = $.plot($(plotCanvasHtmlID), dataToPlot, options);
+    if (this.plotArrays['plotFlag'][pIndex] == 0) {
+      this.plotArrays['plotFlag'][pIndex] = 1;
+      this.plotArrays['plot'][pIndex] = $.plot($(plotCanvasHtmlID), dataToPlot, options);
     } else {
-      this.plotArrays['plot'][pNumber].setData(dataToPlot);
-      this.plotArrays['plot'][pNumber].draw();
+      this.plotArrays['plot'][pIndex].setData(dataToPlot);
+      this.plotArrays['plot'][pIndex].draw();
     }
 
   }, // END OF function plotPlotData
@@ -362,26 +358,26 @@ let plotter = {
 
   // *** FUNCTIONS BELOW ARE INDEPENDENT OF FLOT.JS AND OTHER LIBRARIES ***
 
-  plotColorCanvasPlot : function(pNumber) {
+  plotColorCanvasPlot : function(pIndex) {
     // FOR PLOT AND REPLOT OF ENTIRE CANVAS
     // USE plotColorCanvasPixelList for plot and replot of specified pixels
     // generates color plot on html canvas element
     // USES OBJECT plotInfo
-    // input argument pNumber refers to plot info in child pNumber
+    // input argument pIndex refers to plot info in child pIndex
     // of object plotInfo
     // USES function jetColorMap()
     // use this to plot space-time plots as well as other color canvas plots
     // see https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial
 
-    let canvasID = plotInfo[pNumber]['canvas'];
+    let canvasID = plotInfo[pIndex]['canvas'];
     let canvas = document.getElementById(canvasID);
     let context = canvas.getContext('2d');
 
     // copy data from unit local array colorCanvasData to local array colorCanvasData
-    let varUnitIndex = plotInfo[pNumber]['varUnitIndex'];
+    let varUnitIndex = plotInfo[pIndex]['varUnitIndex'];
     // v is the index number of the one variable to plot on the canvas
     // where 0 is first, 1 is second, etc.
-    let v = plotInfo[pNumber]['var'];
+    let v = plotInfo[pIndex]['var'];
 
     // next line REQUIRES unit object array to be named colorCanvasData
     let colorCanvasData = processUnits[varUnitIndex]['colorCanvasData'][v];
@@ -403,14 +399,14 @@ let plotter = {
     let tColor5 = ')';
     let tPixels = canvas.width; // canvas width, height set in HTML canvas element
     let sPixels = canvas.height;
-    let numTimePts = plotInfo[pNumber]['varTimePts'];
-    let numSpacePts = plotInfo[pNumber]['varSpacePts'];
+    let numTimePts = plotInfo[pIndex]['varTimePts'];
+    let numSpacePts = plotInfo[pIndex]['varSpacePts'];
     let tPixelsPerPoint = tPixels/(numTimePts+1); // pixels per point, note +1
     let sPixelsPerPoint = sPixels/numSpacePts; // pixels per point
     // remember these pixels are HTML pixels, not screen pixels
     // do not round these values - if round you will not fill canvas completely
-    let minVarVal = plotInfo[pNumber]['varValueMin'];
-    let maxVarVal = plotInfo[pNumber]['varValueMax'];
+    let minVarVal = plotInfo[pIndex]['varValueMin'];
+    let maxVarVal = plotInfo[pIndex]['varValueMax'];
     let scaledVarVal; // holds variable value scaled 0-1 by minVarVal & maxVarVal
 
     for (t = 0; t <= numTimePts; t += 1) { // NOTE = at t <=
@@ -426,7 +422,7 @@ let plotter = {
         tColor4 = b.toString();
         tColor = tColor1.concat(tColor2,',',tColor3,',',tColor4,tColor5);
         context.fillStyle = tColor;
-        if (plotInfo[pNumber]['xAxisReversed']) {
+        if (plotInfo[pIndex]['xAxisReversed']) {
           // swap directions in plot from that in colorCanvasData array
           x = tPixelsPerPoint * (numTimePts - t);
         } else {
@@ -514,10 +510,10 @@ let plotter = {
     return plotDataStub;
   }, // END of function initColorCanvasArray
 
-  plotColorCanvasPixelList : function(pNumber,xLocArray,yLocArray,small) {
+  plotColorCanvasPixelList : function(pIndex,xLocArray,yLocArray,small) {
     // FOR REPLOT OF LIMITED NUMBER OF PIXELS ON CANVAS
     // USE plotColorCanvasPlot for plot and replot of entire canvas
-    // input argument pNumber refers to plot info in child pNumber
+    // input argument pIndex refers to plot info in child pIndex
     //   of object plotInfo
     // input arguments xLocArray & yLocArray contain x,y and old x,y locations
     //   needing replot and must be 1-element arrays if only 1 value, not scalar
@@ -531,15 +527,15 @@ let plotter = {
     // use this to plot space-time plots as well as other color canvas plots
     // see https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial
 
-    let canvasID = plotInfo[pNumber]['canvas'];
+    let canvasID = plotInfo[pIndex]['canvas'];
     let canvas = document.getElementById(canvasID);
     let context = canvas.getContext('2d');
 
     // copy data from unit local array colorCanvasData to local array colorCanvasData
-    let varUnitIndex = plotInfo[pNumber]['varUnitIndex'];
+    let varUnitIndex = plotInfo[pIndex]['varUnitIndex'];
     // v is the index number of the one variable to plot on the canvas
     // where 0 is first, 1 is second, etc.
-    let v = plotInfo[pNumber]['var'];
+    let v = plotInfo[pIndex]['var'];
 
     // next line REQUIRES unit object array to be named colorCanvasData
     let colorCanvasData = processUnits[varUnitIndex]['colorCanvasData'][v];
@@ -561,14 +557,14 @@ let plotter = {
     let tColor5 = ')';
     let tPixels = canvas.width; // canvas width, height set in HTML canvas element
     let sPixels = canvas.height;
-    let numTimePts = plotInfo[pNumber]['varTimePts'];
-    let numSpacePts = plotInfo[pNumber]['varSpacePts'];
+    let numTimePts = plotInfo[pIndex]['varTimePts'];
+    let numSpacePts = plotInfo[pIndex]['varSpacePts'];
     let tPixelsPerPoint = tPixels/(numTimePts+1); // pixels per point, note +1
     let sPixelsPerPoint = sPixels/numSpacePts; // pixels per
     // remember these pixels are HTML pixels, not screen pixels
     // do not round these values - if round you will not fill canvas completely
-    let minVarVal = plotInfo[pNumber]['varValueMin'];
-    let maxVarVal = plotInfo[pNumber]['varValueMax'];
+    let minVarVal = plotInfo[pIndex]['varValueMin'];
+    let maxVarVal = plotInfo[pIndex]['varValueMax'];
     let scaledVarVal; // holds variable value scaled 0-1 by minVarVal & maxVarVal
 
     // repeat through all old and new x,y locations
@@ -595,7 +591,7 @@ let plotter = {
       tColor4 = b.toString();
       tColor = tColor1.concat(tColor2,',',tColor3,',',tColor4,tColor5);
       context.fillStyle = tColor;
-      if (plotInfo[pNumber]['xAxisReversed']) {
+      if (plotInfo[pIndex]['xAxisReversed']) {
         // swap directions in plot from that in colorCanvasData array
         x = tPixelsPerPoint * (numTimePts - t);
       } else {

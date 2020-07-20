@@ -39,6 +39,10 @@ function puSpiritStill(pUnitIndex) {
   const thisSteamFieldID = 'input_field_enterSteam';
 
   // define additional internal variables
+  const numPlotPts = 250;
+  const numPlotVars = 6; // m/m0, x, y, y2, pT, nT
+  // numPlotPts & numPlotVars can be private because there is only one unit on
+  // the one plot and plotter uses length of public plot data arrays created here
   let x = 0; // ethanol mole fraction in pot liquid
   const x0 = 0.15; // initial ethanol mole fraction in feed to pot, see in reset()
   let y = 0; // ethanol mole fraction in pot vapor
@@ -196,10 +200,7 @@ function puSpiritStill(pUnitIndex) {
     // each unit has its own data arrays for plots and canvases
 
     // initialize strip chart data array
-    // initPlotData(numStripVars,numStripPts)
-    const numStripVars = 6; // m/m0, x, y, y2, pT, nT
-    const numStripPts = plotInfo[0]['numberPoints'];
-    this.stripData = plotter.initPlotData(numStripVars,numStripPts);
+    this.stripData = plotter.initPlotData(numPlotVars,numPlotPts);
 
     if (document.getElementById(thisSteamSliderID)) {
       document.getElementById(thisSteamSliderID).value = this.dataDefault[0];
@@ -498,8 +499,6 @@ function puSpiritStill(pUnitIndex) {
     let v = 0; // used as index
     let p = 0; // used as index
     let tempArray = [];
-    let numStripPoints = plotInfo[0]['numberPoints'];
-    let numStripVars = 6; // only the variables from this unit
 
     // handle vol/feedVol
     v = 0;
@@ -565,13 +564,13 @@ function puSpiritStill(pUnitIndex) {
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
     let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
-    for (v = 0; v < numStripVars; v += 1) {
-      for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
-        // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
+    for (v = 0; v < numPlotVars; v += 1) {
+      for (p = 0; p <= numPlotPts; p += 1) { // note = in p <= numPlotPts
+        // note want p <= numPlotPts so get # 0 to # numPlotPts of points
         // want next line for newest data at max time
         this.stripData[v][p][0] = p * timeStep;
         // want next line for newest data at zero time
-        // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
+        // this.stripData[v][p][0] = (numPlotPts - p) * timeStep;
       }
     }
 

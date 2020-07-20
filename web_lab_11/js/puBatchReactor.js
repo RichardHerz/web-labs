@@ -83,8 +83,9 @@ let puBatchReactor = {
   // define variables which will not be plotted nor saved in copy data table
   //   none here
 
-  // WARNING: numNodes is accessed in process_plot_info.js
-  numPlotPoints : 200, // THIS IS REALLY PLOT POINTS FOR PROFILE & STRIP PLOTS
+  // numPlotPoints can be defined here and not plotInfo because there is only one unit
+  // on the one plot and plotter uses length of public plot data arrays created here
+  numPlotPoints : 200, // THIS IS PLOT POINTS FOR PROFILE & STRIP PLOTS
 
   initialize : function() {
     //

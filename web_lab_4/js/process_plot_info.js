@@ -22,6 +22,8 @@ let plotInfo = {
   // method plotInfo.initialize() is run after all process units' initialize()
   // methods are run by controller.openThisLab() so that it can use values from
   // the units, e.g., processUnits[unum]['dataMin'][1];
+  // all units' reset() methods are then called after all initialize calls
+  // so units' reset methods can use all info in plotInfo
 
   initialize : function() {
     //

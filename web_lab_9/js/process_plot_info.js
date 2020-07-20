@@ -22,6 +22,8 @@ let plotInfo = {
   // method plotInfo.initialize() is run after all process units' initialize()
   // methods are run by controller.openThisLab() so that it can use values from
   // the units, e.g., processUnits[unum]['dataMin'][1];
+  // all units' reset() methods are then called after all initialize calls
+  // so units' reset methods can use all info in plotInfo
 
   initialize : function() {
     //
@@ -45,7 +47,9 @@ let plotInfo = {
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotConcentration'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     let numPts = 563; // special - used below more than once
-    plotInfo[pnum]['numberPoints'] = numPts;
+    // WARNING: require 'numberPoints' here because it is used in multiple units
+    // to create data arrays of same length for this plot
+    plotInfo[pnum]['numberPoints'] = numPts; // required, used in multiple units on this plot
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time >'; // label for copy data table
     plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis

@@ -21,6 +21,7 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Batch history';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
+    // plotInfo[pnum]['numberPoints'] not needed here since only one unit in this plot
     plotInfo[pnum]['xAxisLabel'] = 'time (s)';
     plotInfo[pnum]['xAxisTableLabel'] = 'time (s)'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis

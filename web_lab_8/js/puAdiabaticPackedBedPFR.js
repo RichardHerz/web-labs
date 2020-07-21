@@ -221,12 +221,13 @@ let puAdiabaticPackedBedPFR = {
     }
 
     // initialize profile data array
-    // initPlotData(numProfileVars,numProfilePts)
-    this.profileData = plotter.initPlotData(2,this.numNodes); // holds data for static profile plots
+    let numProfileVars = plotInfo[0]['var'].length; // plot 0 only has reactor unit vars
+    let numProfilePts = this.numNodes;
+    this.profileData = plotter.initPlotData(numProfileVars,numProfilePts); // holds data for static profile plots
 
-    // // initialize strip chart data array
-    // // initPlotData(numStripVars,numStripPts)
-    let numStripVars = 1; // only outlet conc
+    // initialize strip chart data array
+    // plot 5 has vars from 2 units - rxr & hx so can't use ['var'].length
+    let numStripVars = 1; // only outlet conc from this unit on plot 5
     let numStripPts = plotInfo[5]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
 
@@ -238,14 +239,10 @@ let puAdiabaticPackedBedPFR = {
     let kn = 0;
     for (k = 0; k <= this.numNodes; k += 1) {
       kn = k/this.numNodes;
-      // x-axis values
-      // x-axis values will not change during sim
-      // XXX change to get number vars for this plotInfo variable
-      //     so can put in repeat - or better yet, a function
-      //     and same for y-axis below
-      // first index specifies which variable
-      this.profileData[0][k][0] = kn;
-      this.profileData[1][k][0] = kn;
+      // x-axis values will not change
+      for (v = 0; v < numProfileVars; v += 1) {
+        this.profileData[v][k][0] = kn;
+      }
       // y-axis values
       this.profileData[0][k][1] = this.dataDefault[6]; // [6] is TinHX
       this.profileData[1][k][1] = this.dataDefault[4]; // [4] is Cain
@@ -495,8 +492,9 @@ let puAdiabaticPackedBedPFR = {
 
     let v = 0; // used as index
     let p = 0; // used as index
-    let numStripPoints = plotInfo[5]['numberPoints'];
-    let numStripVars = 1; // only the variables from this unit
+    // plot 5 has vars from 2 units - rxr & hx so can't use ['var'].length
+    let numStripVars = 1; // only outlet conc from this unit on plot 5
+    let numStripPts = plotInfo[5]['numberPoints'];
     let nn = this.numNodes;
 
     // handle Rxr Outlet Conc
@@ -513,12 +511,12 @@ let puAdiabaticPackedBedPFR = {
     // so they stay the same after updating y-axis values
     let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (v = 0; v < numStripVars; v += 1) {
-      for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
-        // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
+      for (p = 0; p <= numStripPts; p += 1) { // note = in p <= numStripPts
+        // note want p <= numStripPts so get # 0 to  # numStripPts of points
         // want next line for newest data at max time
         this.stripData[v][p][0] = p * timeStep;
         // want next line for newest data at zero time
-        // this.stripData[v][p][0] = (numStripPoints - p) * timeStep;
+        // this.stripData[v][p][0] = (numStripPts - p) * timeStep;
       }
     }
 

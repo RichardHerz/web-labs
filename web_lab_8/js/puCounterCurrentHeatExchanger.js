@@ -178,11 +178,12 @@ let puCounterCurrentHeatExchanger = {
     this.FlowCold = this.FlowHot;
 
     // initialize profile data array
-    // initPlotData(numProfileVars,numProfilePts)
-    this.profileData = plotter.initPlotData(2,this.numNodes); // holds data for static profile plots
+    let numProfileVars = plotInfo[2]['var'].length; // plot 2 only has HX unit vars
+    let numProfilePts = this.numNodes;
+    this.profileData = plotter.initPlotData(numProfileVars,numProfilePts); // holds data for static profile plots
 
     // // initialize strip chart data array
-    // // initPlotData(numStripVars,numStripPts)
+    // plot 5 has vars from 2 units so can't use ['var'].length 
     let numStripVars = 4; // the 4 end T's of the heat exchanger
     let numStripPts = plotInfo[5]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
@@ -201,12 +202,10 @@ let puCounterCurrentHeatExchanger = {
     let kn = 0;
     for (k=0; k<=this.numNodes; k+=1) {
       kn = k/this.numNodes;
-      // x-axis values
-      // x-axis values will not change during sim
-      // XXX change to get number vars for this array
-      //     so can put in repeat - or better yet, a function
-      //     and same for y-axis below
-      // first index specifies which variable
+      // x-axis values will not change
+      for (v = 0; v < numProfileVars; v += 1) {
+        this.profileData[v][k][0] = kn;
+      }
       this.profileData[0][k][0] = kn;
       this.profileData[1][k][0] = kn;
       // y-axis values
@@ -218,23 +217,12 @@ let puCounterCurrentHeatExchanger = {
 
     let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (k=0; k<=numStripPts; k+=1) {
-      // x-axis values
-      // x-axis values will not change during sim
-      // XXX change to get number vars for this array
-      //     so can put in repeat - or better yet, a function
-      //     and same for y-axis below
-      // first index specifies which variable
-      this.stripData[0][k][0] = k * timeStep;
-      this.stripData[1][k][0] = k * timeStep;
-      this.stripData[2][k][0] = k * timeStep;
-      this.stripData[3][k][0] = k * timeStep;
-      // y-axis values
-      // this.dataMin[1] is, e.g., 320
-      // this.dataDefault[1] is, e.g., 340
-      this.stripData[0][k][1] = this.dataMin[1];
-      this.stripData[1][k][1] = this.dataMin[1];
-      this.stripData[2][k][1] = this.dataMin[1];
-      this.stripData[3][k][1] = this.dataMin[1];
+      for (v = 0; v < numStripVars; v += 1) {
+        // x-axis values will not change
+        this.stripData[v][k][0] = k * timeStep;
+        // y-axis values
+        this.stripData[v][k][1] = this.dataMin[1];
+      }
     }
 
      // update display

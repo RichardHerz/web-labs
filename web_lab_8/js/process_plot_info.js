@@ -48,11 +48,11 @@ let plotInfo = {
     plotInfo[pnum]['xAxisMax'] = 1;
     plotInfo[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = 'Trxr (K)'; // or d'less (T - TinCold)/(TinHot - TinCold)
-    plotInfo[pnum]['yLeftAxisMin'] = 320; // XXX processUnits[unum]['dataMin'][9]; // [9] is Trxr
-    plotInfo[pnum]['yLeftAxisMax'] = 420; // XXX processUnits[unum]['dataMax'][9];
+    plotInfo[pnum]['yLeftAxisMin'] = 320; // or processUnits[unum]['dataMin'][9]; // [9] is Trxr
+    plotInfo[pnum]['yLeftAxisMax'] = 420; // or processUnits[unum]['dataMax'][9];
     plotInfo[pnum]['yRightAxisLabel'] = 'Ca (mol/m3)';
     plotInfo[pnum]['yRightAxisMin'] = 0;
-    plotInfo[pnum]['yRightAxisMax'] = 550; // processUnits[unum]['Cain'];
+    plotInfo[pnum]['yRightAxisMax'] = 550; // or processUnits[unum]['Cain'];
     plotInfo[pnum]['plotLegendShow'] = 1;  // Boolean, '' or 0 for no show, 1 or "show"
     plotInfo[pnum]['plotLegendPosition'] = 'nw';
     plotInfo[pnum]['plotGridBgColor'] = 'white';
@@ -111,8 +111,8 @@ let plotInfo = {
     // varTimePts & varSpacePts must match values used in unit array colorCanvasData
     plotInfo[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
     plotInfo[pnum]['varSpacePts'] = 1;
-    plotInfo[pnum]['varValueMin'] = 320; // processUnits[unum]['dataMin'][9]; // [9] is Trxr
-    plotInfo[pnum]['varValueMax'] = 420; // processUnits[unum]['dataMax'][9];
+    plotInfo[pnum]['varValueMin'] = 320; // or processUnits[unum]['dataMin'][9]; // [9] is Trxr
+    plotInfo[pnum]['varValueMax'] = 420; // or processUnits[unum]['dataMax'][9];
     plotInfo[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
 
     // --------- below are plots for the heat exchanger ----------------
@@ -134,8 +134,8 @@ let plotInfo = {
     plotInfo[pnum]['xAxisMax'] = 1;
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = 'T (K)'; // or d'less (T - TinCold)/(TinHot - TinCold)
-    plotInfo[pnum]['yLeftAxisMin'] = 320; // processUnits[unum]['dataMin'][1]; // [1] is TinCold
-    plotInfo[pnum]['yLeftAxisMax'] = 450; // processUnits[unum]['dataMax'][0]; // [0] is TinHot
+    plotInfo[pnum]['yLeftAxisMin'] = 320; // or processUnits[unum]['dataMin'][1]; // [1] is TinCold
+    plotInfo[pnum]['yLeftAxisMax'] = 450; // or processUnits[unum]['dataMax'][0]; // [0] is TinHot
     plotInfo[pnum]['yRightAxisLabel'] = 'yRight';
     plotInfo[pnum]['yRightAxisMin'] = 0;
     plotInfo[pnum]['yRightAxisMax'] = 1;
@@ -198,8 +198,8 @@ let plotInfo = {
     // varTimePts & varSpacePts must match values used in unit array colorCanvasData
     plotInfo[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
     plotInfo[pnum]['varSpacePts'] = 1;
-    plotInfo[pnum]['varValueMin'] = 320; // processUnits[unum]['dataMin'][1]; // [1] is TinCold
-    plotInfo[pnum]['varValueMax'] = 450; // processUnits[unum]['dataMax'][0]; // [0] is TinHot
+    plotInfo[pnum]['varValueMin'] = 320; // or processUnits[unum]['dataMin'][1]; // [1] is TinCold
+    plotInfo[pnum]['varValueMax'] = 450; // or processUnits[unum]['dataMax'][0]; // [0] is TinHot
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
 
     // plot 4 info
@@ -214,8 +214,8 @@ let plotInfo = {
     // varTimePts & varSpacePts must match values used in unit array colorCanvasData
     plotInfo[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
     plotInfo[pnum]['varSpacePts'] = 1;
-    plotInfo[pnum]['varValueMin'] = 320; // processUnits[unum]['dataMin'][1]; // [1] is TinCold
-    plotInfo[pnum]['varValueMax'] = 450; // processUnits[unum]['dataMax'][0]; // [0] is TinHot
+    plotInfo[pnum]['varValueMin'] = 320; // or processUnits[unum]['dataMin'][1]; // [1] is TinCold
+    plotInfo[pnum]['varValueMax'] = 450; // or processUnits[unum]['dataMax'][0]; // [0] is TinHot
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
 
     // --------- below is the strip chart plot of heat exchanger end T's ----------------
@@ -240,11 +240,11 @@ let plotInfo = {
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
     plotInfo[pnum]['xAxisMin'] = 0;
-    plotInfo[pnum]['xAxisMax'] = npts * simParams.simTimeStep * simParams.simStepRepeats; // numberPoints * ...
+    plotInfo[pnum]['xAxisMax'] = npts * simParams.simTimeStep * simParams.simStepRepeats;
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = 'T (K)'; // or d'less (T - TinCold)/(TinHot - TinCold)
-    plotInfo[pnum]['yLeftAxisMin'] = 320; // processUnits[unum]['dataMin'][1]; // [1] is TinCold
-    plotInfo[pnum]['yLeftAxisMax'] = 450; // processUnits[unum]['dataMax'][0]; // [0] is TinHot
+    plotInfo[pnum]['yLeftAxisMin'] = 320; // or processUnits[unum]['dataMin'][1]; // [1] is TinCold
+    plotInfo[pnum]['yLeftAxisMax'] = 450; // or processUnits[unum]['dataMax'][0]; // [0] is TinHot
     plotInfo[pnum]['yRightAxisLabel'] = 'Rxr Out Conc (mol/m3)';
     plotInfo[pnum]['yRightAxisMin'] = 0;
     plotInfo[pnum]['yRightAxisMax'] = 600;

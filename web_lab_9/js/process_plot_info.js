@@ -6,32 +6,12 @@
 */
 
 // INSTRUCTIONS:
-//     READ INFO FOR THIS FILE AT THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
-//         https://github.com/RichardHerz/web-labs/wiki/process_plot_info
+//     READ THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
+//     https://github.com/RichardHerz/web-labs/wiki/process_plot_info
 
 let plotInfo = {
 
-  // after the controller.openThisLab() function in process_controller.js calls
-  // method initialize() here, this object will contain a child object for each plot
-  //
-  // in process_controller.js, the function controller.updateDisplay() uses the
-  // length of plotInfo after subtracting 1 for method initialize, in order to
-  // plot all the plots; if you add another method, you need to update the
-  // length correction in controller.updateDisplay()
-  //
-  // method plotInfo.initialize() is run after all process units' initialize()
-  // methods are run by controller.openThisLab() so that it can use values from
-  // the units, e.g., processUnits[unum]['dataMin'][1];
-  // all units' reset() methods are then called after all initialize calls
-  // so units' reset methods can use all info in plotInfo
-
   initialize : function() {
-    //
-    // WARNING: some of these object properties may be changed during
-    //          operation of the program, e.g., show, scale
-    //
-
-    // let unum = 0; // useful when only one unit in plot, processUnits[unum]
 
     // SPECIAL FOR THIS LAB
     // SET HTML select TO MATCH SS CONVERSION PLOT 1 REACTOR VAR 0
@@ -152,6 +132,7 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Steady-State Conversion after each reactor based on feed concentration';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotSSconversion'; // flot.js wants ID with prefix #
+    // plotInfo[pnum]['numberPoints'] not needed here since only one unit in this plot
     plotInfo[pnum]['xAxisLabel'] = 'System Feed Reactant Concentration';
     plotInfo[pnum]['xAxisTableLabel'] = 'Feed Conc'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
@@ -194,24 +175,7 @@ let plotInfo = {
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //
-    // ORIG - only list one variable here and change plotInfo[pnum]['varUnitIndex'][vnum]
-    // value (unit index) with menu button on conversion plot
-    //
-    // vnum = 0; // 1st variable
-    // plotInfo[pnum]['varUnitIndex'][vnum] = 4; // value is index of unit in processUnits object
-    // plotInfo[pnum]['var'][vnum] = 0; // value is variable index in plot data array
-    // plotInfo[pnum]['varLabel'][vnum] = '';
-    // // varDataUnits are dimensional units used in copy data table, along with varLabel
-    // plotInfo[pnum]['varDataUnits'][vnum] = ''; // processUnits[1]['dataUnits'][4]; // 1st var
-    // // varShow values are 'show' to show on plot and legend,
-    // // 'tabled' to not show on plot nor legend but list in copy data table
-    // // and any other value, e.g., 'hide' to not show on plot but do show in legend
-    // // varShow value can be changed by javascript if want to show/hide curve with checkbox
-    // plotInfo[pnum]['varShow'][vnum] = 'show';
-    // plotInfo[pnum]['varYaxis'][vnum] = 'left';
-    // plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
-    // //
-    // NEW - list all variables so can copy all to table but select which one
+    // list all variables so can copy all to table but select which one
     // to show with show param
     //
     vnum = 0; // 1st variable
@@ -277,6 +241,7 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Steady-State Rate as average dimensionless turnover frequency at bulk conc in rxr';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotSSrate'; // flot.js wants ID with prefix #
+    // plotInfo[pnum]['numberPoints'] not needed here since only one unit in this plot
     plotInfo[pnum]['xAxisLabel'] = 'Reactant Concentration in Reactor';
     plotInfo[pnum]['xAxisTableLabel'] = 'Bulk conc in Rxr'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis

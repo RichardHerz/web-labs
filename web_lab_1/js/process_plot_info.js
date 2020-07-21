@@ -6,32 +6,12 @@
 */
 
 // INSTRUCTIONS:
-//     READ INFO FOR THIS FILE AT THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
-//         https://github.com/RichardHerz/web-labs/wiki/process_plot_info
+//     READ THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
+//     https://github.com/RichardHerz/web-labs/wiki/process_plot_info
 
 let plotInfo = {
 
-  // after the controller.openThisLab() function in process_controller.js calls
-  // method initialize() here, this object will contain a child object for each plot
-  //
-  // in process_controller.js, the function controller.updateDisplay() uses the
-  // length of plotInfo after subtracting 1 for method initialize, in order to
-  // plot all the plots; if you add another method, you need to update the
-  // length correction in controller.updateDisplay()
-  //
-  // method plotInfo.initialize() is run after all process units' initialize()
-  // methods are run by controller.openThisLab() so that it can use values from
-  // the units, e.g., processUnits[unum]['dataMin'][1];
-  // all units' reset() methods are then called after all initialize calls
-  // so units' reset methods can use all info in plotInfo
-
   initialize : function() {
-    //
-    // WARNING: some of these object properties may be changed during
-    //          operation of the program, e.g., show, scale
-    //
-
-    // let unum = 0; // useful when only one unit in plot, processUnits[unum]
 
     // plot 0 info
     let pnum = 0;

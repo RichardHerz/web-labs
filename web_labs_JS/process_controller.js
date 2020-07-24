@@ -183,7 +183,11 @@ let controller = {
         // profile (static x,y) or strip chart (scolling x,y)
         let data = plotter.getPlotData(p);
         plotter.plotPlotData(data,p);
-      } else {
+      } else if (ptype == 'single') {
+        // NEW FOR LAB TYPE SINGLE - UNDER DEVELOPMENT 
+        let data = plotter.getPlotDataSingle(p);
+        plotter.plotPlotDataSingle(data,p);
+      } else  {
         // plotting must be handled by a unit's updateDisplay
         // no plotting here
       }

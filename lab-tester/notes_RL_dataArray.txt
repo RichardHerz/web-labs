@@ -1,0 +1,35 @@
+notes on DESKTOP RL dataArray 
+
+From below, it looks like the style I don't have now is desktop RL type "S" for single point. 
+
+looks like I can just do something similar to desktop RL - record input as well as output vars in a new style of dataArray, maybe?, and add a dataSwitcher array if wish to have a copy data to table - maybe instead of adding new table column for each input changed, add to header the run number at which changes occured and the new value... 
+
+Probably going to have a new type of plotInfo plot, where change with JS code which var is x var and which is y. 
+
+Do I need a new type of data array? in current one, each variable at each point has an x and y value. For new web type "S" may only have the one [0] value. Then need a new getPlotData that collects the x and y values. Would I only have one y on the plot as in desktop RL? Or would it be OK to have two or more? 
+
+------
+type "S, collection of single x,y plot pairs - all input and output variables were added to dataArray for each run 
+
+This allowed x-y menu buttons on plots to select and plot either input or output values 
+
+list dataSwitcher had 0 or 1 for each input value so could keep track of what values to have columns for in data tables 
+
+input variables that were changed had columns added to the table saved for one data set - other inputs listed at top? or maybe only could see when table saved to disk? 
+
+In WEB LABS, I only save the output values for current profile and strip plots, similar only to desktop RL's profile labs 
+
+------
+type "P" profile labs - all input and output variables added to line 1 of dataArray, only the output values added to following lines (line-item list used vs. array notation) - input values were constant during run 
+
+This is similar to Web Labs profileData arrays now and new lab 11.
+
+----- 
+type "D" dynamic labs were handled differently 
+
+unless saving data to disk during run, only output values over span of plot were saved (check this)
+
+this is like my stripData arrays 
+
+When saving data to disk, two disk files were written. The header file with initial values of all inputs and sim times and new values when any inputs were changed. In the main output file, all output data were written to disk. 
+

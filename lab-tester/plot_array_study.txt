@@ -1,0 +1,54 @@
+  // method plotInfo.initialize() is run after all process units' initialize()
+  // methods are run by controller.openThisLab() so that it can use values from
+  // the units, e.g., processUnits[unum]['dataMin'][1];
+  // all units' reset() methods are then called after all initialize calls
+  // so units' reset methods can use all info in plotInfo 
+  
+PLOTTER - plotColorCanvasPlot 
+	
+	let numTimePts = plotInfo[pIndex]['varTimePts'];
+    let numSpacePts = plotInfo[pIndex]['varSpacePts']; 
+  
+  LAB 11 - pu - OBJECT 
+
+  // numPlotPoints can be defined here and not plotInfo because there is only one unit
+  // on the one plot and plotter uses length of public plot data arrays created here
+  numPlotPoints : 200, // THIS IS PLOT POINTS FOR PROFILE & STRIP PLOTS
+  
+  LAB 10 - pu CONSTRUCTOR FUNCTION 
+
+  // define additional internal variables
+  const numPlotPts = 250;
+  const numPlotVars = 6; // m/m0, x, y, y2, pT, nT
+  // numPlotPts & numPlotVars can be private because there is only one unit on
+  // the one plot and plotter uses length of public plot data arrays created here
+  
+LAB 9 - plotInfo - CSTRs in series 
+
+    plot 0 
+    
+	// set numberPoints < = than width of plot in HTML pixels for fast plotting
+    let numPts = 563; // special - used below more than once
+    // WARNING: require 'numberPoints' here because it is used in multiple units
+    // to create data arrays of same length for this plot
+    plotInfo[pnum]['numberPoints'] = numPts; // required, used in multiple units on this plot
+    
+LAB 9 - puCSTR & Feed unit - reset 
+
+    const numStripPts = plotInfo[0]['numberPoints']; 
+    
+LAB 8 - plotInfo 
+
+	plot 5 
+	
+    // set numberPoints < = than width of plot in HTML pixels for fast plotting
+    let npts = 400; // special so can use value below at xAxisMax
+    // WARNING: require 'numberPoints' here because it is used in multiple units 
+    // to create data arrays of same length for this plot 
+    plotInfo[pnum]['numberPoints'] = npts; // required in multiple units on this plot
+    
+	plot 1, 3, and 4 - color canvas 
+	
+	plotInfo[pnum]['varTimePts'] = processUnits[unum]['numNodes']; 
+	
+	

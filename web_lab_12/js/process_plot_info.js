@@ -18,24 +18,37 @@ let plotInfo = {
     // plot 0 info
     let pnum = 0;
     plotInfo[pnum] = new Object();
-    plotInfo[pnum]['type'] = 'profile';
+    plotInfo[pnum]['type'] = 'single';
     plotInfo[pnum]['title'] = 'Batch history';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
     // plotInfo[pnum]['numberPoints'] not needed here since only one unit in this plot
-    plotInfo[pnum]['xAxisLabel'] = 'time (s)';
-    plotInfo[pnum]['xAxisTableLabel'] = 'time (s)'; // label for copy data table
+
+    // SPECIAL FOR LAB TYPE SINGLE
+    // xVar and yVar selected by HTML menu buttons
+    // xxx set to fixed values for development
+    let xVar = 6;
+    let yVar = 8;
+    plotInfo[pnum][xVar] = xVar;
+    plotInfo[pnum][xVar] = yVar;
+
+    plotInfo[pnum]['xAxisLabel'] = processUnits[unum]['dataHeaders'][xVar];
+    plotInfo[pnum]['xAxisTableLabel'] = processUnits[unum]['dataHeaders'][xVar];
+
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
-    plotInfo[pnum]['xAxisMin'] = 0;
-    plotInfo[pnum]['xAxisMax'] = 1000;
+    plotInfo[pnum]['xAxisMin'] = processUnits[unum]['dataMin'][xVar];
+    plotInfo[pnum]['xAxisMax'] = processUnits[unum]['dataMax'][xVar]
+
     plotInfo[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
-    plotInfo[pnum]['yLeftAxisLabel'] = 'cA (mol/m3)';
-    plotInfo[pnum]['yLeftAxisMin'] = processUnits[unum]['dataMin'][4];
-    plotInfo[pnum]['yLeftAxisMax'] = processUnits[unum]['dataMax'][4];
-    plotInfo[pnum]['yRightAxisLabel'] = 'cA (mol/m3)';
+    plotInfo[pnum]['yLeftAxisLabel'] = processUnits[unum]['dataHeaders'][yVar];
+    plotInfo[pnum]['yLeftAxisMin'] = processUnits[unum]['dataMin'][yVar];
+    plotInfo[pnum]['yLeftAxisMax'] = processUnits[unum]['dataMax'][yVar];
+
+    plotInfo[pnum]['yRightAxisLabel'] = '';
     plotInfo[pnum]['yRightAxisMin'] = 0;
-    plotInfo[pnum]['yRightAxisMax'] = processUnits[unum]['cAin'];
+    plotInfo[pnum]['yRightAxisMax'] = 1;
+
     plotInfo[pnum]['plotLegendShow'] = 1;  // Boolean, '' or 0 for no show, 1 or "show"
     plotInfo[pnum]['plotLegendPosition'] = 'nw';
     plotInfo[pnum]['plotGridBgColor'] = 'white';
@@ -45,6 +58,11 @@ let plotInfo = {
     // for all color names to hex see https://www.w3schools.com/colors/colors_picker.asp
     plotInfo[pnum]['plotDataSeriesColors'] = ['#420420','#1e90ff']; // optional, in variable order 0, 1, etc.
     // ['#ff6347','#1e90ff'] is Tomato and DodgerBlue, #420420 is black
+
+    // SPECIAL FOR LAB TYPE SINGLE
+    plotInfo[pnum]['plotDataPoints'] = 1; // 0 false, 1 true, default is false
+    plotInfo[pnum]['plotDataLines'] = 0; // 0 false, 1 true, default is true
+
     //
     // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
     // WARNING: all below with prefix 'var' must have same number of child objects,
@@ -56,14 +74,20 @@ let plotInfo = {
     plotInfo[pnum]['varShow'] = [];
     plotInfo[pnum]['varYaxis'] = [];
     plotInfo[pnum]['varYscaleFactor'] = [];
+
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //
+    // XXX SPECIAL FOR LAB TYPE SINGLE
+    //     list one variable for now
+    //     later set values from plot menu buttons
+    //
     vnum = 0; // 1st variable
+    // XXX SPECIAL for lab type single - use 1st variable as xVar
     plotInfo[pnum]['varUnitIndex'][vnum] = unum;
-    plotInfo[pnum]['var'][vnum] = 0;
-    plotInfo[pnum]['varLabel'][vnum] = 'cA';
-    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][4];
+    plotInfo[pnum]['var'][vnum] = yVar;
+    plotInfo[pnum]['varLabel'][vnum] = processUnits[unum]['dataHeaders'][yVar];
+    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][yVar];
     plotInfo[pnum]['varShow'][vnum] = 'show';
     plotInfo[pnum]['varYaxis'][vnum] = 'left';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;

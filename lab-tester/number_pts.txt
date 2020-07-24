@@ -1,0 +1,41 @@
+DONE: labs 0-7, 8, 9, 
+
+=================================================== 
+  
+  PLACE THIS AFTER CANVAS ['canvas'] IN ALL LABS WHERE ['numberPoints'] IS NOT NEEDED 
+  
+      // plotInfo[pnum]['numberPoints'] not needed here since only one unit in this plot 
+
+===================================================
+
+LAB 8 - plot 5 - SPECIAL - REQUIRES numberPoints 
+
+    unum = 1;
+    // MULTIPLE UNITS in this plot... 
+    // first 4 vars here from HX unit 1 USE THIS unum value, 
+    // 5th var from reactor unit 0 does not 
+
+    // set numberPoints < = than width of plot in HTML pixels for fast plotting
+    let npts = 400; // special so can use value below at xAxisMax
+    // WARNING: require 'numberPoints' here because it is used in multiple units
+    // to create data arrays of same length for this plot
+    plotInfo[pnum]['numberPoints'] = npts; // special, required since multiple units on this plot                
+    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
+    
+LAB 8 - plot 1 - COLOR CANVAS PLOT - never has numberPoints 
+
+    pnum = 1;
+    plotInfo[pnum] = new Object();
+    plotInfo[pnum]['type'] = 'canvas';
+    plotInfo[pnum]['title'] = 'reactor color canvas';
+    plotInfo[pnum]['canvas'] = 'canvas_CANVAS_reactor'; // without prefix #
+    // for canvas type, all data comes from one process unit and one local array
+    plotInfo[pnum]['varUnitIndex'] = unum; // index of unit in processUnits object
+    plotInfo[pnum]['var'] = 0; // variable number in array spaceTimeData, 0, 1, etc.
+    // varTimePts & varSpacePts must match values used in unit array colorCanvasData
+    plotInfo[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
+    plotInfo[pnum]['varSpacePts'] = 1;
+    plotInfo[pnum]['varValueMin'] = 320; // or processUnits[unum]['dataMin'][9]; // [9] is Trxr
+    plotInfo[pnum]['varValueMax'] = 420; // or processUnits[unum]['dataMax'][9];
+    plotInfo[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
+    

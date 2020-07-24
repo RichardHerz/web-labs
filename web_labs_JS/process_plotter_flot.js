@@ -49,6 +49,336 @@ let plotter = {
 
   // --------- DEFINE METHODS ---------------
 
+  // ------ START OF NEW FOR LAB TYPE SINGLE - UNDER CONSTRUCTION -----
+
+  getPlotDataSingle : function(plotIndex) {
+    //
+    // input argument plotIndex refers to index of plot in object plotInfo
+    // which is defined in file process_plot_info.js
+    //
+    // uses plotInfo object defined in process_plot_info.js
+
+    let v; // used as index to select the variable
+    let p; // used as index to select data point pair
+    let n; // used as index
+    let sf = 1; // scale factor used below and possibly modified
+    let thisNumPts; // used a couple places below with array .length
+    let varNumbers = plotInfo[plotIndex]['var'];
+    let numVar = varNumbers.length;
+
+    // NEW FOR LAB TYPE SINGLE
+    let xVar;
+    let yVar;
+
+    // initialize plotData array, which will be loaded with variable values below
+    // this does full initialization for all points for all variables
+    // WARNING: you must do full initialization for plots which involve more
+    //          than one variable per unit but do it here for all plots
+    let plotData = []; // this function will fill and return plotData
+    let plotType = plotInfo[plotIndex]['type']; // profile or strip
+    let dataName = plotType + 'Data'; // profileData or stripData
+    if ((plotType == 'profile') || (plotType == 'strip')) {
+      v = 0;
+      n = varNumbers[v];
+      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
+      thisNumPts = processUnits[varUnitIndex][dataName][n].length;
+      plotData = this.initPlotData(numVar, thisNumPts-1); // note thisNumPts-1
+    } else if (plotType == 'single') {
+      // NEW FOR PLOT TYPE SINGLE - UNDER DEVELOPMENT
+      // assume only plotting one y var and that both x & y var from same unit
+      // need to get x and y var from plot menu buttons
+      // for development, just specify two here fixed here & same in plotInfo
+      xVar = 6;
+      yVar = 8;
+      dataName = 'profileData'; // xxx for now use profileData
+      // may be able to move varUnitIndex above this IF since common for now...
+      v = 0;
+      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
+      thisNumPts = processUnits[varUnitIndex][dataName][v].length;
+      plotData = this.initPlotData(numVar, thisNumPts-1); // note thisNumPts-1
+    } else {
+      alert('in getPlotData, unknown plot type');
+    }
+
+    // get data for plot and load into plotData array
+    for (v = 0; v < numVar; v += 1) {
+
+      // get unit index and array name for this variable
+      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
+      // get number n of variable listed in unit's data array
+      n = varNumbers[v];
+      // copy variable in array from unit
+      // need to do this separately for each variable because they
+      // may be from different units
+
+      sf = plotInfo[plotIndex]['varYscaleFactor'][v];
+      if (sf != 1) {
+        // WARNING - with sf != 1 you want to modify values but not original
+        // values and so need an independent copy with copy by value
+        // you can't make independent copy simply using the next line
+        //    NO >> plotData[v] = processUnits[varUnitIndex]['stripData'][n];
+        // this just references plotData to orig data and any changes in
+        // plotData, e.g., scaling a var, will change orig data, and that
+        // change will be present the next time the scale is applied, etc.
+        // so have to copy data arrays element by element to get independent copy
+        if (plotInfo[plotIndex]['type'] == 'profile') {
+          // requires units' local array name to be profileData
+          // get actual length of profileData - may change in labs which add
+          // x,y plot pairs as generated at irregular times and locations
+          thisNumPts = processUnits[varUnitIndex]['profileData'][n].length;
+            for (p = 0; p < thisNumPts; p += 1) {
+            plotData[v][p][0] = processUnits[varUnitIndex]['profileData'][n][p][0];
+            plotData[v][p][1] = processUnits[varUnitIndex]['profileData'][n][p][1];
+          }
+        } else if (plotInfo[plotIndex]['type'] == 'strip') {
+          // requires units' local array name to be stripData
+          // xxx for (p = 0; p <= numPlotPoints; p += 1) { // NOTE = AT p <=
+          thisNumPts = processUnits[varUnitIndex]['stripData'][n].length;
+          for (p = 0; p < thisNumPts; p += 1) {
+            plotData[v][p][0] = processUnits[varUnitIndex]['stripData'][n][p][0];
+            plotData[v][p][1] = processUnits[varUnitIndex]['stripData'][n][p][1];
+          }
+        } else if (plotInfo[plotIndex]['type'] == 'single') {
+          // SPECIAL FOR PLOT TYPE SINGLE
+          // v in this FOR should only be 0
+          for (p = 0; p < thisNumPts; p += 1) {
+            plotData[v][p][0] = processUnits[varUnitIndex]['profileData'][xVar][p][0];
+            plotData[v][p][1] = processUnits[varUnitIndex]['profileData'][yVar][p][1];
+          }
+        } else {
+          alert('in getPlotData, unknown plot type');
+        }
+      } else {
+        // scale factor sf = 1 so won't be changing original data
+        // and so can copy by reference (rather than by value when sf != 1)
+        // XXX check to see if this is any faster than copy all by value...
+        if (plotInfo[plotIndex]['type'] == 'profile') {
+          plotData[v] = processUnits[varUnitIndex]['profileData'][n];
+        } else if (plotInfo[plotIndex]['type'] == 'strip') {
+          plotData[v] = processUnits[varUnitIndex]['stripData'][n];
+        } else if (plotInfo[plotIndex]['type'] == 'single') {
+          // SPECIAL FOR PLOT TYPE SINGLE
+          // v in this FOR should only be 0
+          // EVEN WITH sf = 1 HAVE TO COPY x and y by value since separate
+          xVar = 6;
+          yVar = 8;
+          dataName = 'profileData'; // xxx for now use profileData
+          for (p = 0; p < thisNumPts; p += 1) {
+            console.log('numVar = ' + numVar + ' thisNumPts = ' + thisNumPts);
+            console.log('v = ' + v + ' p = ' + p);
+            console.log('varUnitIndex = ' + varUnitIndex);
+            console.log('dataName = ' + dataName);
+            console.log('xVar = ' + xVar + ' yVar = ' + yVar);
+            console.log('processUnits[varUnitIndex][dataName][xVar][p][0] = ' + processUnits[varUnitIndex][dataName][xVar][p][0]);
+
+// xxx this line is OK
+            console.log('processUnits[varUnitIndex][dataName][yVar] = ' + processUnits[varUnitIndex][dataName][yVar]);
+
+console.log('p = ' + p);
+
+// xxx cannot read property [0] of undefined next line
+            console.log('processUnits[varUnitIndex][dataName][yVar][p] = ' + processUnits[varUnitIndex][dataName][yVar][p]);
+
+// xxx cannot read property [0] of undefined next line
+            console.log('processUnits[varUnitIndex][dataName][yVar][p][0] = ' + processUnits[varUnitIndex][dataName][yVar][p][0]);
+
+            plotData[v][p][0] = processUnits[varUnitIndex][dataName][xVar][p][0];
+            plotData[v][p][1] = processUnits[varUnitIndex][dataName][yVar][p][0];
+          }
+        } else {
+          alert('in getPlotData, unknown plot type');
+        }
+      }
+
+      // NOTE: if I go back to earlier scheme I might be able to use some of the
+      // strategy here in copying entire let vectors in order to eliminate
+      // some steps in this 'for' repeat...
+
+    } // END OF for (v = 0; v < numVar; v += 1)
+
+    // scale y-axis values if scale factor not equal to 1
+    for (v = 0; v < numVar; v += 1) {
+      sf = plotInfo[plotIndex]['varYscaleFactor'][v];
+      thisNumPts = plotData[v].length;
+      if (sf != 1) {
+        for (p = 0; p < thisNumPts; p += 1) {
+          plotData[v][p][1] = sf * plotData[v][p][1];
+        }
+      }
+    }
+
+    return plotData;
+
+  }, // END OF function getPlotDataSingle
+
+  plotPlotDataSingle : function(pData,pIndex) {
+
+    // PLOTTING WITH THE FLOT LIBRARY - THIS plotPlotData OBJECT AND
+    // ITS METHODS DEPEND ON JQUERY.JS AND JQUERY.FLOT.JS FOR PLOTTING
+
+    // SEE WEB SITE OF flot.js
+    //     http://www.flotcharts.org/
+    // SEE DOCUMENTATION FOR flot.js
+    //     https://github.com/flot/flot/blob/master/API.md
+    // axisLabels REQUIRES LIBRARY flot.axislabels.js, SEE
+    //     https://github.com/markrcote/flot-axislabels
+
+    // input pData holds the data to plot
+    // input pIndex is index of plot in plotInfo
+
+    // get info about the variables
+
+    let plotList = plotInfo[pIndex]['var'];
+    // plotList is array whose elements are the values of the
+    // first index in pData array which holds the x,y values to plot
+
+    let k = 0; // used as index in plotList
+    let v = 0; // value of element k in plotList
+    let vLabel = []; // array to hold variable names for plot legend
+    let yAxis = []; // array to hold y-axis, "left" or "right"
+    let vShow = []; // array to hold "show", "tabled", or empty or other, e.g., "hide"
+    plotList.forEach(fGetAxisData);
+    function fGetAxisData(v,k) {
+  	  // v = value of element k of plotList array
+      // k is index of plotList array
+      yAxis[k] = plotInfo[pIndex]['varYaxis'][k];
+      vShow[k] = plotInfo[pIndex]['varShow'][k];
+      vLabel[k] = plotInfo[pIndex]['varLabel'][k];
+    }
+
+    // put data in form needed by flot.js
+
+    // NOTE: plotInfo object for lab has varShow option for each variable listed
+    // COMMENT FROM process_plot_info.js
+    //    varShow values are 'show' to show on plot and legend,
+    //    'tabled' to not show on plot nor legend but list in copy data table
+    //    and any other value, e.g., 'hide' to not show on plot but do show in legend
+    //    varShow value can be changed by javascript if want to show/hide curve with checkbox
+    //    e.g., plotInfo[pnum]['varShow'][vnum] = 'show';
+    // interfacer.copyData tabulates all variables in plotInfo regardless of the varShow value
+
+    let plotCanvasHtmlID = plotInfo[pIndex]['canvas'];
+
+    let dataToPlot = [];
+    let numVar = plotList.length;
+    let numToShow = 0; // index for variables to show on plot
+    // KEEP numToShow as well as for index k because not all k vars will show!
+    // only variables with property "show" will appear on plot
+    for (k = 0; k < numVar; k += 1) {
+      // add object for each plot variable to array dataToPlot
+      // e.g., { data: y1Data, label: y1DataLabel, yaxis: 1 }
+      let newobj = {};
+      if (vShow[k] === 'show') {
+        //
+        // NOTE: THIS CHECK OF "SHOW" COULD BE MOVED UP INTO
+        // getPlotData FUNCTION WHERE DATA SELECTED TO PLOT
+        // SINCE BOTH FUNCTIONS ARE CALLED EACH PLOT UPDATE
+        // AS LONG AS YOU DO NOT ALSO USE getPlotData IN copyData methods, which
+        // is not good idea anyway since create duplicate array there not needed
+        // pData is not full profileData nor full stripData
+        // pData has the variables specified in plotInfo[pIndex]['var']
+        // now want to select the vars in pData with "show" property true
+        // *BUT* see "else" condition below
+        newobj.data = pData[k];
+        newobj.label = vLabel[k];
+        if (yAxis[k] === 'right') {newobj.yaxis = 1;} else {newobj.yaxis = 2;}
+        dataToPlot[k] = newobj;
+      } else if (vShow[k] == 'tabled') {
+        // do not plot this variable and do not add to legend
+      } else {
+        // do not plot this variable
+        // *BUT* need to add a single point in case no vars on this axis to show
+        // in which case no axis labels will show without this single point
+        newobj.data = [plotInfo[pIndex]['xAxisMax'],plotInfo[pIndex]['yLeftAxisMax']];
+        newobj.label = vLabel[k];
+        if (yAxis[k] === 'right') {newobj.yaxis = 1;} else {newobj.yaxis = 2;}
+        dataToPlot[k] = newobj;
+      }
+    } // END OF for (k = 0; k < numVar; k += 1) {
+
+    // set up the plot axis labels and plot legend
+
+    let xShow = plotInfo[pIndex]['xAxisShow'];
+    let xLabel = plotInfo[pIndex]['xAxisLabel'];
+    let xMin= plotInfo[pIndex]['xAxisMin'];
+    let xMax = plotInfo[pIndex]['xAxisMax'];
+    let yLeftLabel = plotInfo[pIndex]['yLeftAxisLabel'];
+    let yLeftMin = plotInfo[pIndex]['yLeftAxisMin'];
+    let yLeftMax = plotInfo[pIndex]['yLeftAxisMax'];
+    let yRightLabel = plotInfo[pIndex]['yRightAxisLabel'];
+    let yRightMin = plotInfo[pIndex]['yRightAxisMin'];
+    let yRightMax = plotInfo[pIndex]['yRightAxisMax'];
+    let plotLegendPosition = plotInfo[pIndex]['plotLegendPosition'];
+    let plotLegendShow = plotInfo[pIndex]['plotLegendShow']; // Boolean 0,1
+    let plotGridBgColor = plotInfo[pIndex]['plotGridBgColor'];
+    let plotDataSeriesColors = plotInfo[pIndex]['plotDataSeriesColors'];
+    // check if want lines and/or points shown
+    // default is lines only
+    let plotDataPoints = false;
+    let plotDataLines = true;
+    if (typeof plotInfo[pIndex]['plotDataPoints'] == 'undefined') {
+      plotDataPoints = false; // default is false
+    } else {
+      plotDataPoints = plotInfo[pIndex]['plotDataPoints'];
+    }
+    if (typeof plotInfo[pIndex]['plotDataLines'] == 'undefined') {
+      plotDataLines = true; // default is true
+    } else {
+      plotDataLines = plotInfo[pIndex]['plotDataLines'];
+    }
+
+    let options = {
+      // axisLabels REQUIRES LIBRARY flot.axislabels.js, SEE
+      //     https://github.com/markrcote/flot-axislabels
+      axisLabels : {show: true},
+      xaxes: [ { show: xShow, min: xMin, max: xMax, axisLabel: xLabel } ],
+      yaxes: [
+      // yaxis object listed first is "yaxis: 1" in dataToPlot, second is 2
+        {position: 'right', min: yRightMin, max: yRightMax, axisLabel: yRightLabel },
+        {position: 'left', min: yLeftMin, max: yLeftMax, axisLabel: yLeftLabel },
+      ],
+      legend: { show: plotLegendShow },
+      legend: { position: plotLegendPosition },
+      grid: { backgroundColor: plotGridBgColor },
+      series: {
+        lines: { show: plotDataLines },
+        points: { show: plotDataPoints,
+                  radius: 2,
+                }
+      },
+      colors: plotDataSeriesColors
+    };
+
+    // check if want to reverse data left-right on x-axis
+    // when reversed, xmax is on left, xmin on right
+    if (plotInfo[pIndex]['xAxisReversed']) {
+      options.xaxis = {
+        transform: function (v) { return -v; },
+        inverseTransform: function (v) { return -v; }
+      };
+    }
+
+    // only draw plot with axes and all options the first time
+    // after that just setData and re-draw
+    //
+    // this.plotArrays['plot'] array saves data for each plot between display updates
+    // this.plotArrays['plotFlag'] array tells whether or not to redraw axes & labels
+    //
+    // for example, for 4 plots on page, this ran in 60% of time for full refresh
+    // see plotter.plotArrays.initialize() for intialization of plot and plotFlag arrays
+
+    if (this.plotArrays['plotFlag'][pIndex] == 0) {
+      this.plotArrays['plotFlag'][pIndex] = 1;
+      this.plotArrays['plot'][pIndex] = $.plot($(plotCanvasHtmlID), dataToPlot, options);
+    } else {
+      this.plotArrays['plot'][pIndex].setData(dataToPlot);
+      this.plotArrays['plot'][pIndex].draw();
+    }
+
+  }, // END OF function plotPlotDataSingle
+
+  // ------ END OF NEW FOR LAB TYPE SINGLE - UNDER CONSTRUCTION -----
+
   getPlotData : function(plotIndex) {
     //
     // input argument plotIndex refers to index of plot in object plotInfo

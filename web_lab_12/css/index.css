@@ -109,10 +109,10 @@ canvas {
   width: 280px;
   height: 202px;
   visibility: visible;
-  border-style: none;
-  opacity: 1;
-  border-width: 2px;
   background-color: rgba(255, 255, 255, 1);
+  opacity: 1;
+  border-style: none;
+  border-width: 2px;
   LCthreeD: false;
   LCshowBorder: false;
 }
@@ -133,20 +133,6 @@ canvas {
   LCthreeD: false;
   LCshowBorder: true;
   LCvScrollbar: false;
-}
-
-#selectXvar {
-  display: block;
-  position: absolute;
-  left: 10px;
-  top: 300px;
-}
-
-#selectYvar {
-  display: block;
-  position: absolute;
-  left: 10px;
-  top: 400px;
 }
 
 #field_run_count {
@@ -350,8 +336,8 @@ border-style: solid;
   display: block;
   position: absolute;
   border-color: DodgerBlue;
-  left: 342px;
-  top: 39px;
+  left: 362px;
+  top: 56px;
   width: 450px;
   height: 500px;
   visibility: visible;
@@ -362,6 +348,41 @@ border-style: solid;
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: false;
+}
+
+#selectXvar {
+  display: block;
+  position: absolute;
+  left: 186px;
+  top: 230px;
+  width: 90px;
+  height: 20px;
+}
+
+#selectYvar {
+  display: block;
+  position: absolute;
+  left: -64px;
+  top: 98px;
+  width: 90px;
+}
+
+#div_plot_Y_label_cover {
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 60px;
+  width: 20px;
+  height: 120px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  opacity: 1;
+  border-width: 0px;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: false;
+  LCshowBorder: true;
+  LCvScrollbar: false;
 }
 
 #div_PLOTDIV_plotData {

@@ -66,27 +66,33 @@ let simParams = {
       // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
   },
 
-  // SPECIAL FOR THIS LAB
-  // called onchange of html select element id='selectXvar'
-  // these values should agree with initial selected values in html
+  // SPECIAL - LAB TYPE SINGLE
+  // assume only one unit and one plot in this lab
+  // these xVar, yVar values should agree with initial selected values in html
   // can't use document.getElementById() because this script loads before html
   xVar : 6,
   yVar : 8,
-
-  // xxx THESE NEED WORK - NEED TO SET PLOT AXES MIN-MAX at least...
-
+  // called onchange of html select element id='selectXvar'
   selectXvar : function() {
         this.xVar = document.getElementById("selectXvar").value;
-        let plotIndex = 0; // assume only one plot on this page
-        let data = plotter.getPlotData(plotIndex);
-        plotter.plotPlotData(data,plotIndex);
+        let pnum = 0; // plot index, assume only one plot on this page
+        let unum = 0; // unit index, assume only one unit on this page
+        plotInfo[pnum]['xAxisMin'] = processUnits[unum]['dataMin'][this.xVar];
+        plotInfo[pnum]['xAxisMax'] = processUnits[unum]['dataMax'][this.xVar];
+        let data = plotter.getPlotData(pnum);
+        plotter.plotArrays['plotFlag'][pnum] = 0; // force axes redraw
+        plotter.plotPlotData(data, pnum);
   },
   // called onchange of html select element id='selectYvar'
   selectYvar : function() {
         this.yVar = document.getElementById("selectYvar").value;
-        let plotIndex = 0; // assume only one plot on this page
-        let data = plotter.getPlotData(plotIndex);
-        plotter.plotPlotData(data,plotIndex);
+        let pnum = 0; // plot index, assume only one plot on this page
+        let unum = 0; // unit index, assume only one unit on this page
+        plotInfo[pnum]['yLeftAxisMin'] = processUnits[unum]['dataMin'][this.yVar];
+        plotInfo[pnum]['yLeftAxisMax'] = processUnits[unum]['dataMax'][this.yVar];
+        let data = plotter.getPlotData(pnum);
+        plotter.plotArrays['plotFlag'][pnum] = 0; // force axes redraw
+        plotter.plotPlotData(data, pnum);
   },
 
 }; // END simParams object

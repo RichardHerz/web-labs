@@ -77,12 +77,11 @@ let plotInfo = {
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //
-    // XXX SPECIAL FOR LAB TYPE SINGLE
-    //     list one variable for now
-    //     later set values from plot menu buttons
+    // SPECIAL FOR LAB TYPE SINGLE
+    //     list one variable (only one var per plot, at least for now)
+    //     values will be changed by javascript
     //
     vnum = 0; // 1st variable
-    // XXX SPECIAL for lab type single - use 1st variable as xVar
     plotInfo[pnum]['varUnitIndex'][vnum] = unum;
     plotInfo[pnum]['var'][vnum] = yVar;
     plotInfo[pnum]['varLabel'][vnum] = processUnits[unum]['dataHeaders'][yVar];

@@ -51,7 +51,7 @@ let plotter = {
 
   // ------ START OF NEW FOR LAB TYPE SINGLE - UNDER CONSTRUCTION -----
 
-  getPlotDataSingle : function(plotIndex) {
+  getPlotData : function(plotIndex) {
     //
     // input argument plotIndex refers to index of plot in object plotInfo
     // which is defined in file process_plot_info.js
@@ -141,6 +141,7 @@ let plotter = {
         } else if (plotInfo[plotIndex]['type'] == 'single') {
           // SPECIAL FOR PLOT TYPE SINGLE
           // v in this FOR should only be 0
+          thisNumPts = processUnits[varUnitIndex]['profileData'][n].length;
           for (p = 0; p < thisNumPts; p += 1) {
             plotData[v][p][0] = processUnits[varUnitIndex]['profileData'][xVar][p][0];
             plotData[v][p][1] = processUnits[varUnitIndex]['profileData'][yVar][p][1];
@@ -159,29 +160,12 @@ let plotter = {
         } else if (plotInfo[plotIndex]['type'] == 'single') {
           // SPECIAL FOR PLOT TYPE SINGLE
           // v in this FOR should only be 0
-          // EVEN WITH sf = 1 HAVE TO COPY x and y by value since separate
+          // EVEN WITH sf = 1 HAVE TO COPY x and y by value since separate vars
           xVar = 6;
           yVar = 8;
           dataName = 'profileData'; // xxx for now use profileData
+          thisNumPts = processUnits[varUnitIndex][dataName][n].length;
           for (p = 0; p < thisNumPts; p += 1) {
-            console.log('numVar = ' + numVar + ' thisNumPts = ' + thisNumPts);
-            console.log('v = ' + v + ' p = ' + p);
-            console.log('varUnitIndex = ' + varUnitIndex);
-            console.log('dataName = ' + dataName);
-            console.log('xVar = ' + xVar + ' yVar = ' + yVar);
-            console.log('processUnits[varUnitIndex][dataName][xVar][p][0] = ' + processUnits[varUnitIndex][dataName][xVar][p][0]);
-
-// xxx this line is OK
-            console.log('processUnits[varUnitIndex][dataName][yVar] = ' + processUnits[varUnitIndex][dataName][yVar]);
-
-console.log('p = ' + p);
-
-// xxx cannot read property [0] of undefined next line
-            console.log('processUnits[varUnitIndex][dataName][yVar][p] = ' + processUnits[varUnitIndex][dataName][yVar][p]);
-
-// xxx cannot read property [0] of undefined next line
-            console.log('processUnits[varUnitIndex][dataName][yVar][p][0] = ' + processUnits[varUnitIndex][dataName][yVar][p][0]);
-
             plotData[v][p][0] = processUnits[varUnitIndex][dataName][xVar][p][0];
             plotData[v][p][1] = processUnits[varUnitIndex][dataName][yVar][p][0];
           }
@@ -209,9 +193,9 @@ console.log('p = ' + p);
 
     return plotData;
 
-  }, // END OF function getPlotDataSingle
+  }, // END OF function getPlotData
 
-  plotPlotDataSingle : function(pData,pIndex) {
+  plotPlotData: function(pData,pIndex) {
 
     // PLOTTING WITH THE FLOT LIBRARY - THIS plotPlotData OBJECT AND
     // ITS METHODS DEPEND ON JQUERY.JS AND JQUERY.FLOT.JS FOR PLOTTING
@@ -375,11 +359,11 @@ console.log('p = ' + p);
       this.plotArrays['plot'][pIndex].draw();
     }
 
-  }, // END OF function plotPlotDataSingle
+  }, // END OF function plotPlotData
 
   // ------ END OF NEW FOR LAB TYPE SINGLE - UNDER CONSTRUCTION -----
 
-  getPlotData : function(plotIndex) {
+  getPlotDataORIG : function(plotIndex) {
     //
     // input argument plotIndex refers to index of plot in object plotInfo
     // which is defined in file process_plot_info.js
@@ -485,7 +469,7 @@ console.log('p = ' + p);
 
   }, // END OF function getPlotData
 
-  plotPlotData : function(pData,pIndex) {
+  plotPlotDataORIG : function(pData,pIndex) {
 
     // PLOTTING WITH THE FLOT LIBRARY - THIS plotPlotData OBJECT AND
     // ITS METHODS DEPEND ON JQUERY.JS AND JQUERY.FLOT.JS FOR PLOTTING

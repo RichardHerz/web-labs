@@ -60,7 +60,8 @@ let puBatchReactorSinglePt = {
   k_300 : 0, // forward rate constant at 300 K
   Ea : 0, // activation energy
   nth : 0, // reaction order (-1, 0, 1, 2)
-  conversion : -1, // -1 to get initialization point off plot, reactant conversion
+  conversion : 0,
+  runCount : 0,
 
   // define arrays to hold info for variables
   // these will be filled with values below in method initialize()
@@ -353,8 +354,8 @@ let puBatchReactorSinglePt = {
 
     // WARNING: must have simParams vars imTimeStep = 1 and simStepRepeats = 1
     // for simtime to equal # runs between resets
-    let runCount = controller.simTime.toFixed(0); // use next & a line below
-    document.getElementById("field_run_count").innerHTML = "Total runs = " + runCount;
+    this.runCount = controller.simTime.toFixed(0); // use next & a line below
+    document.getElementById("field_run_count").innerHTML = "Total runs = " + this.runCount;
 
     // set reactor contents color to final color
     let el = document.querySelector(this.displayReactorContents);
@@ -379,25 +380,32 @@ let puBatchReactorSinglePt = {
     // plotInfo[0]['xAxisMax'] = this.t_final;
 
     // SPECIAL FOR LAB TYPE SINGLE
-    const numProfileVars = 10;
-    for (v = 0; v < numProfileVars; v += 1) {
-      tempArray = this.profileData[v]; // work on one plot variable at a time
+    // reset on open lab adds -1,-1 points in first element of array
+    // then don't want updateDisplay on open lab and
+    // before any runs made to add points
+    if (this.runCount > 0) {
       let tx;
-      let ty = 0; // arbitrary value - single plot just gets tx
-      if (v == 0) {tx = this.k_300}
-      else if (v == 1) {tx = this.Ea}
-      else if (v == 2) {tx = this.nth}
-      else if (v == 3) {tx = this.Tin}
-      else if (v == 4) {tx = this.cAin}
-      else if (v == 5) {tx = this.Vol}
-      else if (v == 6) {tx = this.t_final}
-      else if (v == 7) {tx = this.cA_final}
-      else if (v == 8) {tx = this.conversion}
-      else if (v == 9) {tx = this.runCount}
-      // add the new [x,y] pair array at end
-      tempArray.push( [tx,ty] );
-      // update the variable being processed
-      this.profileData[v] = tempArray;
+      const ty = 0; // arbitrary value - single plot just gets tx
+      const numProfileVars = 10; // xxx get this from a property
+      for (v = 0; v < numProfileVars; v += 1) {
+        tempArray = this.profileData[v]; // work on one plot variable at a time
+        // delete first x,y pair -1,-1 on 1st run
+        if (this.runCount == 1) {tempArray.shift();}
+        if (v == 0) {tx = this.k_300}
+        else if (v == 1) {tx = this.Ea}
+        else if (v == 2) {tx = this.nth}
+        else if (v == 3) {tx = this.Tin}
+        else if (v == 4) {tx = this.cAin}
+        else if (v == 5) {tx = this.Vol}
+        else if (v == 6) {tx = this.t_final}
+        else if (v == 7) {tx = this.cA_final}
+        else if (v == 8) {tx = this.conversion}
+        else if (v == 9) {tx = this.runCount}
+        // add the new [x,y] pair array at end
+        tempArray.push( [tx,ty] );
+        // update the variable being processed
+        this.profileData[v] = tempArray;
+      }
     }
 
   }, // end updateDisplay method

@@ -184,9 +184,9 @@ let controller = {
         let data = plotter.getPlotData(p);
         plotter.plotPlotData(data,p);
       } else if (ptype == 'single') {
-        // NEW FOR LAB TYPE SINGLE - UNDER DEVELOPMENT 
-        let data = plotter.getPlotDataSingle(p);
-        plotter.plotPlotDataSingle(data,p);
+        // NEW FOR LAB TYPE SINGLE
+        let data = plotter.getPlotData(p);
+        plotter.plotPlotData(data,p);
       } else  {
         // plotting must be handled by a unit's updateDisplay
         // no plotting here

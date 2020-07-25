@@ -66,4 +66,27 @@ let simParams = {
       // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
   },
 
+  // SPECIAL FOR THIS LAB
+  // called onchange of html select element id='selectXvar'
+  // these values should agree with initial selected values in html
+  // can't use document.getElementById() because this script loads before html
+  xVar : 6,
+  yVar : 8,
+
+  // xxx THESE NEED WORK - NEED TO SET PLOT AXES MIN-MAX at least...
+
+  selectXvar : function() {
+        this.xVar = document.getElementById("selectXvar").value;
+        let plotIndex = 0; // assume only one plot on this page
+        let data = plotter.getPlotData(plotIndex);
+        plotter.plotPlotData(data,plotIndex);
+  },
+  // called onchange of html select element id='selectYvar'
+  selectYvar : function() {
+        this.yVar = document.getElementById("selectYvar").value;
+        let plotIndex = 0; // assume only one plot on this page
+        let data = plotter.getPlotData(plotIndex);
+        plotter.plotPlotData(data,plotIndex);
+  },
+
 }; // END simParams object

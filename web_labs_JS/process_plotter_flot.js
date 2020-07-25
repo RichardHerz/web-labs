@@ -66,9 +66,14 @@ let plotter = {
     let varNumbers = plotInfo[plotIndex]['var'];
     let numVar = varNumbers.length;
 
-    // NEW FOR LAB TYPE SINGLE
-    let xVar;
-    let yVar;
+    let xVar; // used for plot type single
+    let yVar; // used for plot type single
+    // xxx not sure why this IF did not seem to work...
+    // xxx needed to get separately in a couple places below...
+    // if (plotInfo[plotIndex]['type'] == 'single') {
+      // let xVar = simParams.xVar;
+      // let yVar = simParams.yVar;
+    // }
 
     // initialize plotData array, which will be loaded with variable values below
     // this does full initialization for all points for all variables
@@ -88,9 +93,7 @@ let plotter = {
       // assume only plotting one y var and that both x & y var from same unit
       // need to get x and y var from plot menu buttons
       // for development, just specify two here fixed here & same in plotInfo
-      xVar = 6;
-      yVar = 8;
-      dataName = 'profileData'; // xxx for now use profileData
+      dataName = 'profileData';
       // may be able to move varUnitIndex above this IF since common for now...
       v = 0;
       varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
@@ -141,6 +144,8 @@ let plotter = {
         } else if (plotInfo[plotIndex]['type'] == 'single') {
           // SPECIAL FOR PLOT TYPE SINGLE
           // v in this FOR should only be 0
+          xVar = simParams.xVar;
+          yVar = simParams.yVar;
           thisNumPts = processUnits[varUnitIndex]['profileData'][n].length;
           for (p = 0; p < thisNumPts; p += 1) {
             plotData[v][p][0] = processUnits[varUnitIndex]['profileData'][xVar][p][0];
@@ -161,8 +166,8 @@ let plotter = {
           // SPECIAL FOR PLOT TYPE SINGLE
           // v in this FOR should only be 0
           // EVEN WITH sf = 1 HAVE TO COPY x and y by value since separate vars
-          xVar = 6;
-          yVar = 8;
+          xVar = simParams.xVar;
+          yVar = simParams.yVar;
           dataName = 'profileData'; // xxx for now use profileData
           thisNumPts = processUnits[varUnitIndex][dataName][n].length;
           for (p = 0; p < thisNumPts; p += 1) {

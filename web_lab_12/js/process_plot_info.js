@@ -25,11 +25,8 @@ let plotInfo = {
 
     // SPECIAL FOR LAB TYPE SINGLE
     // xVar and yVar selected by HTML menu buttons
-    // xxx set to fixed values for development
-    let xVar = 6;
-    let yVar = 8;
-    plotInfo[pnum][xVar] = xVar;
-    plotInfo[pnum][xVar] = yVar;
+    let xVar = simParams.xVar;
+    let yVar = simParams.yVar;
 
     plotInfo[pnum]['xAxisLabel'] = processUnits[unum]['dataHeaders'][xVar];
     plotInfo[pnum]['xAxisTableLabel'] = processUnits[unum]['dataHeaders'][xVar];
@@ -49,7 +46,9 @@ let plotInfo = {
     plotInfo[pnum]['yRightAxisMin'] = 0;
     plotInfo[pnum]['yRightAxisMax'] = 1;
 
-    plotInfo[pnum]['plotLegendShow'] = 1;  // Boolean, '' or 0 for no show, 1 or "show"
+// xxx 0 not working to not show legend...
+    plotInfo[pnum]['plotLegendShow'] = 0;  // Boolean, '' or 0 for no show, 1 or "show"
+
     plotInfo[pnum]['plotLegendPosition'] = 'nw';
     plotInfo[pnum]['plotGridBgColor'] = 'white';
     // colors can be specified rgb, rgba, hex, and color names

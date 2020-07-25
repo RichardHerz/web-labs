@@ -135,6 +135,20 @@ canvas {
   LCvScrollbar: false;
 }
 
+#selectXvar {
+  display: block;
+  position: absolute;
+  left: 10px;
+  top: 300px;
+}
+
+#selectYvar {
+  display: block;
+  position: absolute;
+  left: 10px;
+  top: 400px;
+}
+
 #field_run_count {
   position: absolute;
   left: 170px;

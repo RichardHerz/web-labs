@@ -97,7 +97,7 @@ let puBatchReactorSinglePt = {
     let v = 0;
     this.dataHeaders[v] = 'k_300';
     this.dataInputs[v] = 'input_field_RateConstant';
-    this.dataUnits[v] = '(units depend on order)';
+    this.dataUnits[v] = 'units depend on order';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
     this.dataDefault[v] = 1.0e-7;
@@ -111,7 +111,7 @@ let puBatchReactorSinglePt = {
     this.dataDefault[v] = 100;
     //
     v = 2;
-    this.dataHeaders[v] = 'Reaction Order';
+    this.dataHeaders[v] = 'order';
     this.dataInputs[v] = 'input_field_ReactionOrder';
     this.dataUnits[v] = '';
     this.dataMin[v] = -1;
@@ -119,7 +119,7 @@ let puBatchReactorSinglePt = {
     this.dataDefault[v] = 1;
     //
     v = 3;
-    this.dataHeaders[v] = 'Temperature';
+    this.dataHeaders[v] = 'T';
     this.dataInputs[v] = 'input_field_Temperature';
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 50;
@@ -181,14 +181,6 @@ let puBatchReactorSinglePt = {
     // reset function will use whatever last values user has entered.
 
     this.updateUIparams(); // this first, then set other values as needed
-
-    // set state variables not set by updateUIparams() to initial settings
-
-// xxx
-    // for (k = 0; k <= this.numNodes; k += 1) {
-    //   this.cA[k] = this.cAin;
-    // }
-
     // initialize profile data array
     // initPlotData(numProfileVars,numProfilePts)
     // SPECIAL FOR LAB TYPE SINGLE - save all input and output vars and runCount
@@ -201,28 +193,6 @@ let puBatchReactorSinglePt = {
       this.profileData[v][0][0] = -1;
       this.profileData[v][0][1] = -1;
     }
-
-    // // initialize strip chart data array
-    // // plotter.initPlotData(numStripVars,numStripPts)
-    // this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
-
-    // // initialize local array to hold color-canvas data, e.g., space-time data -
-    // // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
-
-// xxx
-    // let kn;
-    // for (k = 0; k <= this.numPlotPoints; k += 1) {
-    //   kn = k;
-    //   // x-axis values
-    //   // x-axis values will not change during sim
-    //   // XXX change to get number vars for this plotInfo variable
-    //   //     so can put in repeat - or better yet, a function
-    //   //     and same for y-axis below
-    //   // first index specifies which variable
-    //   this.profileData[0][k][0] = kn;
-    //   // y-axis values
-    //   this.profileData[0][k][1] = 0; // this.dataDefault[4]; // [4] is cAin
-    // }
 
   }, // end reset
 
@@ -261,48 +231,6 @@ let puBatchReactorSinglePt = {
     }
     this.nth = x;
     document.getElementById(this.dataInputs[2]).value = this.nth;
-
-// xxx
-    // // // adjust axis of profile plot
-    // plotter['plotArrays']['plotFlag'][0] = 0;  // so axes will refresh
-    // plotInfo[0]['xAxisMax'] = this.t_final;
-
-    // plotInfo[0]['yLeftAxisMin'] = this.dataMin[9]; // [9] is Trxr
-    // plotInfo[0]['yLeftAxisMax'] = this.dataMax[9];
-    // plotInfo[0]['yRightAxisMin'] = 0;
-    // plotInfo[0]['yRightAxisMax'] = this.cAin;
-    // // adjust color span of spaceTime, color canvas plots
-    // plotInfo[1]['varValueMin'] = this.dataMin[9]; // [9] is Trxr
-    // plotInfo[1]['varValueMax'] = this.dataMax[9];
-    // plotInfo[2]['varValueMin'] = this.dataMin[9];
-    // plotInfo[2]['varValueMax'] = this.dataMax[9];
-
-    // // also update ONLY inlet values at inlet of reactor in case sim is paused
-    // // but do not do full updateDisplay
-    // document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
-    // document.getElementById(this.displayReactorLeftConc).innerHTML = this.cAin.toFixed(1);
-
-    // // residence time used for timing checks for steady state
-    // // use this for now but should consider voidFrac and Cp's...
-    // this.residenceTime = this.Wcat / this.densCat / this.Flowrate;
-
-    // // UPDATE UNIT TIME STEP AND UNIT REPEATS
-    //
-    // // FIRST, compute spaceTime = residence time between two nodes in hot tube, also
-    // //                          = space time of equivalent single mixing cell
-    // let spaceTime = (Length / this.numNodes) / VelocHot; // (s)
-    //
-    // // SECOND, estimate unitTimeStep
-    // // do NOT change simParams.simTimeStep here
-    // this.unitTimeStep = spaceTime / 15;
-    //
-    // // THIRD, get integer number of unitStepRepeats
-    // this.unitStepRepeats = Math.round(simParams.simTimeStep / this.unitTimeStep);
-    // // min value of unitStepRepeats is 1 or get divide by zero error
-    // if (this.unitStepRepeats <= 0) {this.unitStepRepeats = 1;}
-    //
-    // // FOURTH and finally, recompute unitTimeStep with integer number unitStepRepeats
-    // this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
   }, // end of updateUIparams()
 

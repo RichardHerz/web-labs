@@ -51,12 +51,15 @@ let simParams = {
     // WARNING: NEED LITERAL, e.g., "field_run_counter" below
     //      e.g., this.runCounterFieldID does NOT work
     //
-    $.post(this.runLoggerURL,{webAppNumber: "11, Batch reactor, isothermal, nth order reaction"})
-      .done(
-        function(data) {
-          // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>";
-        } // END OF function(data)
-      ) // END OF .done(
+    // currently using simTime as runCount ( run count )
+    if (controller.simTime < 2) {
+      $.post(this.runLoggerURL,{webAppNumber: "12, Batch reactor, isothermal, nth order reaction, labType single"})
+        .done(
+          function(data) {
+            // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>";
+          } // END OF function(data)
+        ) // END OF .done(
+    } // END OF if (controller.simTime < 2)
   }, // END OF updateRunCount
 
   updateCurrentRunCountDisplay : function() {

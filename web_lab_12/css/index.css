@@ -219,7 +219,7 @@ canvas {
 
 #input_field_ReactionTime {
   position: absolute;
-  left: 208px;
+  left: 200px;
   top: 102px;
   width: 72px;
   height: 22px;
@@ -252,7 +252,7 @@ border-style: solid;
 
 #input_field_Volume {
   position: absolute;
-  left: 208px;
+  left: 200px;
   top: 69px;
   width: 72px;
   height: 22px;
@@ -285,7 +285,7 @@ border-style: solid;
 
 #input_field_Concentration {
   position: absolute;
-  left: 208px;
+  left: 200px;
   top: 37px;
   width: 72px;
   height: 22px;
@@ -318,7 +318,7 @@ border-style: solid;
 
 #input_field_Temperature {
   position: absolute;
-  left: 208px;
+  left: 200px;
   top: 5px;
   width: 72px;
   height: 22px;
@@ -377,7 +377,7 @@ border-style: solid;
   visibility: visible;
   background-color: rgb(255,255,255);
   opacity: 1;
-  border-width: 1px;
+  border-width: 0px;
   border-style: dotted;
   border-color: DodgerBlue;
   LCthreeD: false;
@@ -510,7 +510,7 @@ border-style: solid;
 
 #input_field_RateConstant {
   position: absolute;
-  left: 208px;
+  left: 200px;
   top: 12px;
   width: 72px;
   height: 22px;
@@ -526,7 +526,7 @@ border-style: solid;
 
 #input_field_ActivationEnergy {
   position: absolute;
-  left: 208px;
+  left: 200px;
   top: 43px;
   width: 72px;
   height: 22px;
@@ -544,7 +544,7 @@ border-style: solid;
   position: absolute;
   left: 4px;
   top: 32px;
-  width: 200px;
+  width: 192px;
   height: 32px;
   border-width: 1px;
   visibility: visible;
@@ -559,7 +559,7 @@ border-style: solid;
 
 #input_field_ReactionOrder {
   position: absolute;
-  left: 208px;
+  left: 200px;
   top: 75px;
   width: 72px;
   height: 22px;
@@ -577,7 +577,7 @@ border-style: solid;
   position: absolute;
   left: 4px;
   top: 64px;
-  width: 200px;
+  width: 192px;
   height: 32px;
   border-width: 1px;
   visibility: visible;

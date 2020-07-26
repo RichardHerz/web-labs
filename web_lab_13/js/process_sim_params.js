@@ -70,7 +70,7 @@ let simParams = {
   },
 
   // SPECIAL - LAB TYPE SINGLE
-  // assume only one unit and one plot in this lab
+  // assume only one unit and one plot type 'single' in this lab
   // these xVar, yVar values should agree with initial selected values in html
   // can't use document.getElementById() because this script loads before html
   xVar : 6,
@@ -78,8 +78,8 @@ let simParams = {
   // called onchange of html select element id='selectXvar'
   selectXvar : function() {
         this.xVar = document.getElementById("selectXvar").value;
-        let pnum = 0; // plot index, assume only one plot on this page
         let unum = 0; // unit index, assume only one unit on this page
+        let pnum = 1; // plot index, assume only one plot type 'single' on this page
         plotInfo[pnum]['xAxisMin'] = processUnits[unum]['dataMin'][this.xVar];
         plotInfo[pnum]['xAxisMax'] = processUnits[unum]['dataMax'][this.xVar];
         let data = plotter.getPlotData(pnum);
@@ -89,8 +89,8 @@ let simParams = {
   // called onchange of html select element id='selectYvar'
   selectYvar : function() {
         this.yVar = document.getElementById("selectYvar").value;
-        let pnum = 0; // plot index, assume only one plot on this page
         let unum = 0; // unit index, assume only one unit on this page
+        let pnum = 1; // plot index, assume only one plot type 'single' on this page
         plotInfo[pnum]['yLeftAxisMin'] = processUnits[unum]['dataMin'][this.yVar];
         plotInfo[pnum]['yLeftAxisMax'] = processUnits[unum]['dataMax'][this.yVar];
         let data = plotter.getPlotData(pnum);

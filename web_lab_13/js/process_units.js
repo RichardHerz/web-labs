@@ -37,8 +37,8 @@ let processUnits = new Object();
 // WARNING: if reorder unit index numbers, then need to edit
 //   those numbers in each unit's inputs array
 
-processUnits[0] = puBatchReactorSinglePt;
+processUnits[0] = puBatchReactorNthOrder;
 processUnits[0].unitIndex = 0;
 
 // clear separate process units for garbage collection
-puBatchReactorSinglePt = null;
+puBatchReactorNthOrder = null;

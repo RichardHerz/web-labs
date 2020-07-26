@@ -16,10 +16,10 @@
 
 // -------------------------------------------------------------------
 
-let puBatchReactorSinglePt = {
+let puBatchReactorNthOrder = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
-  name : 'Batch Reactor - Single Pt',
+  name : 'Batch Reactor - nth order reaction',
 
   // for other info shared with other units and objects, see public properties
   // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
@@ -45,6 +45,8 @@ let puBatchReactorSinglePt = {
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
   cA_output_field_ID : "field_cA_final",
   conversion_output_field_ID  : "field_conversion_final",
+  cA_output_field_ID_profile : "field_cA_final_profile",
+  conversion_output_field_ID_profile  : "field_conversion_final_profile",
   displayReactorContents: '#div_PLOTDIV_reactorContents', // need # because selecting CSS
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -76,32 +78,30 @@ let puBatchReactorSinglePt = {
   // SPECIAL FOR LAB TYPE SINGLE
   dataValuesORIG : [],
 
-  // define arrays to hold output variables
+  // define arrays to hold output variables for profile plot
   // these will be filled with initial values in method reset()
-
-  // xxx
-  // cA : [],
-  // time : [],
+  cA : [],
+  time : [],
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
   profileData : [], // for profile plots, plot script requires this name
 
   // SPECIAL FOR LAB TYPE SINGLE - will be loaded in reset()
+  singleData : [], // for single point plots, plot script requires this name
   dataSwitcher : [], // for copy data - list only inputs in table that changed
 
   // define variables which will not be plotted nor saved in copy data table
   //   none here
 
-// xxx
-  // // numPlotPoints can be defined here and not plotInfo because there is only one unit
-  // // on the one plot and plotter uses length of public plot data arrays created here
-  // numPlotPoints : 200, // THIS IS PLOT POINTS FOR PROFILE & STRIP PLOTS
+  // numPlotPoints can be defined here and not plotInfo because there is only one unit
+  // on the one plot and plotter uses length of public plot data arrays created here
+  numPlotPoints : 200, // THIS IS PLOT POINTS FOR PROFILE & STRIP PLOTS
 
   initialize : function() {
     //
     let v = 0;
-    this.dataHeaders[v] = 'k_300';
+    this.dataHeaders[v] = 'k_300K';
     this.dataInputs[v] = 'input_field_RateConstant';
     this.dataUnits[v] = 'units depend on order';
     this.dataMin[v] = 0;
@@ -190,14 +190,14 @@ let puBatchReactorSinglePt = {
     // initialize profile data array
     // initPlotData(numProfileVars,numProfilePts)
     // SPECIAL FOR LAB TYPE SINGLE - save all input and output vars and runCount
-    const numProfileVars = 10;
-    const numProfilePts = 0; // 0+1 points will be filled here
-    this.profileData = plotter.initPlotData(numProfileVars,numProfilePts);
+    const numSingleVars = 10;
+    const numSinglePts = 0; // 0+1 points will be filled here
+    this.singleData = plotter.initPlotData(numSingleVars,numSinglePts);
     // SPECIAL CASE - move initial [0,0] x,y points off plots
     // order of 3 indices is var, point, x-y
-    for (v = 0; v < numProfileVars; v += 1) {
-      this.profileData[v][0][0] = -1;
-      this.profileData[v][0][1] = -1;
+    for (v = 0; v < numSingleVars; v += 1) {
+      this.singleData[v][0][0] = -1;
+      this.singleData[v][0][1] = -1;
     }
 
     // SPECIAL FOR LAB TYPE SINGLE
@@ -261,6 +261,31 @@ let puBatchReactorSinglePt = {
       }
     }
 
+    // SPECIAL for cA vs. time profile plot
+    // if t_final value changes, set values so
+    // plot axes redraw with new x axis max for new t_final
+    v = 6; // 6 for t_final
+    if (this.dataValuesORIG[v] != this.dataValues[v]) {
+      let plotIndex = 0;
+      plotInfo[plotIndex]['xAxisMax'] = this.t_final;
+      // force axis redraw
+      plotter['plotArrays']['plotFlag'][plotIndex] = 0;
+    }
+
+    // FOR PROFILE PLOT
+    // for this lab, initialize profile data array each run
+    // plotter.initPlotData(numProfileVars,numProfilePts)
+    this.profileData = plotter.initPlotData(1,this.numPlotPoints); // holds data for static profile plots
+    let kn;
+    for (k = 0; k <= this.numPlotPoints; k += 1) {
+      kn = k;
+      // x-axis values
+      // first index specifies which variable
+      this.profileData[0][k][0] = kn;
+      // y-axis values
+      this.profileData[0][k][1] = 0;
+    }
+
     // ensure order nth has values -1,0,1,2
     let x = Math.round(this.nth);
     if (x < -1) {
@@ -290,12 +315,11 @@ let puBatchReactorSinglePt = {
     // this reactor is ISOTHERMAL so only need to compute k at reaction T once
     kT = this.k_300 * Math.exp(EaOverRg/300 - EaOverRg/this.Tin);
 
-// xxx
-    // // plot will have numPlotPoints + 1 points - see process_plot_info.js
-    // for (j=0; j<=this.numPlotPoints; j+=1) {
-    //   this.time[j] =  this.t_final * j/this.numPlotPoints;
-    //   this.cA[j] = this.reactBATCHnthSS(this.time[j],kT,this.nth,this.cAin);
-    // }
+    // plot will have numPlotPoints + 1 points - see process_plot_info.js
+    for (j=0; j<=this.numPlotPoints; j+=1) {
+      this.time[j] =  this.t_final * j/this.numPlotPoints;
+      this.cA[j] = this.reactBATCHnthSS(this.time[j],kT,this.nth,this.cAin);
+    }
 
     // SPECIAL LAB TYPE SINGLE - only need to compute final values
     this.cA_final = this.reactBATCHnthSS(this.t_final,kT,this.nth,this.cAin);
@@ -306,6 +330,12 @@ let puBatchReactorSinglePt = {
 
     // change conversion final output field to visible only after 1st run
     document.getElementById(this.conversion_output_field_ID).style.visibility = 'visible';
+
+    // change cA final output field to visible only after 1st run
+    document.getElementById(this.cA_output_field_ID_profile).style.visibility = 'visible';
+
+    // change conversion final output field to visible only after 1st run
+    document.getElementById(this.conversion_output_field_ID_profile).style.visibility = 'visible';
 
   }, // end updateState method
 
@@ -318,6 +348,14 @@ let puBatchReactorSinglePt = {
     // note use .toFixed(n) method of object to round number to n decimal points
     txt = 'Conversion final (%) = ' + this.conversion.toFixed(1);
     document.getElementById(this.conversion_output_field_ID).innerHTML = txt;
+
+    // note use .toFixed(n) method of object to round number to n decimal points
+    txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
+    document.getElementById(this.cA_output_field_ID_profile).innerHTML = txt;
+
+    // note use .toFixed(n) method of object to round number to n decimal points
+    txt = 'Conversion final (%) = ' + this.conversion.toFixed(1);
+    document.getElementById(this.conversion_output_field_ID_profile).innerHTML = txt;
 
     // WARNING: must have simParams vars imTimeStep = 1 and simStepRepeats = 1
     // for simtime to equal # runs between resets
@@ -338,13 +376,14 @@ let puBatchReactorSinglePt = {
 
     // HANDLE PROFILE PLOT DATA
 
-    // XXX CONSIDER RE-ORDERING LAST TWO INDEXES IN profileData SO CAN USE
-    //     SIMPLE ASSIGNMENT FOR ALL Y VALUES, e.g.,
-    // profileData[0][1][n] = y;
+    // in updateUIparams, have already prepared to change x-axis max
+    // after change in t_final on next plot redraw
 
-// xxx
-    // // set x-axis max on plot
-    // plotInfo[0]['xAxisMax'] = this.t_final;
+    // fill array for profile plot
+    for (j=0; j<=this.numPlotPoints; j+=1) {
+      this.profileData[0][j][0] = this.time[j];
+      this.profileData[0][j][1] = this.cA[j];
+    }
 
     // SPECIAL FOR LAB TYPE SINGLE
     // reset on open lab adds -1,-1 points in first element of array
@@ -353,9 +392,9 @@ let puBatchReactorSinglePt = {
     if (this.runCount > 0) {
       let tx;
       const ty = 0; // arbitrary value - single plot just gets tx
-      const numProfileVars = 10; // xxx get this from a property
-      for (v = 0; v < numProfileVars; v += 1) {
-        tempArray = this.profileData[v]; // work on one plot variable at a time
+      const numSingleVars = 10; // xxx get this from a property
+      for (v = 0; v < numSingleVars; v += 1) {
+        tempArray = this.singleData[v]; // work on one plot variable at a time
         // delete first x,y pair -1,-1 on 1st run
         if (this.runCount == 1) {tempArray.shift();}
         if (v == 0) {tx = this.k_300}
@@ -371,7 +410,7 @@ let puBatchReactorSinglePt = {
         // add the new [x,y] pair array at end
         tempArray.push( [tx,ty] );
         // update the variable being processed
-        this.profileData[v] = tempArray;
+        this.singleData[v] = tempArray;
       }
     }
 

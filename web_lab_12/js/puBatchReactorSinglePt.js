@@ -85,7 +85,7 @@ let puBatchReactorSinglePt = {
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
-  profileData : [], // for profile plots, plot script requires this name
+  singleData : [], // for profile plots, plot script requires this name
 
   // SPECIAL FOR LAB TYPE SINGLE - will be loaded in reset()
   dataSwitcher : [], // for copy data - list only inputs in table that changed
@@ -101,7 +101,7 @@ let puBatchReactorSinglePt = {
   initialize : function() {
     //
     let v = 0;
-    this.dataHeaders[v] = 'k_300';
+    this.dataHeaders[v] = 'k_300K';
     this.dataInputs[v] = 'input_field_RateConstant';
     this.dataUnits[v] = 'units depend on order';
     this.dataMin[v] = 0;
@@ -192,12 +192,12 @@ let puBatchReactorSinglePt = {
     // SPECIAL FOR LAB TYPE SINGLE - save all input and output vars and runCount
     const numProfileVars = 10;
     const numProfilePts = 0; // 0+1 points will be filled here
-    this.profileData = plotter.initPlotData(numProfileVars,numProfilePts);
+    this.singleData = plotter.initPlotData(numProfileVars,numProfilePts);
     // SPECIAL CASE - move initial [0,0] x,y points off plots
     // order of 3 indices is var, point, x-y
     for (v = 0; v < numProfileVars; v += 1) {
-      this.profileData[v][0][0] = -1;
-      this.profileData[v][0][1] = -1;
+      this.singleData[v][0][0] = -1;
+      this.singleData[v][0][1] = -1;
     }
 
     // SPECIAL FOR LAB TYPE SINGLE
@@ -336,16 +336,6 @@ let puBatchReactorSinglePt = {
     // set color for this reactantConc
     el.style.backgroundColor = colorString; // backgroundColor NOT background-color
 
-    // HANDLE PROFILE PLOT DATA
-
-    // XXX CONSIDER RE-ORDERING LAST TWO INDEXES IN profileData SO CAN USE
-    //     SIMPLE ASSIGNMENT FOR ALL Y VALUES, e.g.,
-    // profileData[0][1][n] = y;
-
-// xxx
-    // // set x-axis max on plot
-    // plotInfo[0]['xAxisMax'] = this.t_final;
-
     // SPECIAL FOR LAB TYPE SINGLE
     // reset on open lab adds -1,-1 points in first element of array
     // then don't want updateDisplay on open lab and
@@ -355,7 +345,7 @@ let puBatchReactorSinglePt = {
       const ty = 0; // arbitrary value - single plot just gets tx
       const numProfileVars = 10; // xxx get this from a property
       for (v = 0; v < numProfileVars; v += 1) {
-        tempArray = this.profileData[v]; // work on one plot variable at a time
+        tempArray = this.singleData[v]; // work on one plot variable at a time
         // delete first x,y pair -1,-1 on 1st run
         if (this.runCount == 1) {tempArray.shift();}
         if (v == 0) {tx = this.k_300}
@@ -371,7 +361,7 @@ let puBatchReactorSinglePt = {
         // add the new [x,y] pair array at end
         tempArray.push( [tx,ty] );
         // update the variable being processed
-        this.profileData[v] = tempArray;
+        this.singleData[v] = tempArray;
       }
     }
 

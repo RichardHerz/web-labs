@@ -90,7 +90,7 @@ let puBatchReactor = {
   initialize : function() {
     //
     let v = 0;
-    this.dataHeaders[v] = 'k_300';
+    this.dataHeaders[v] = 'k_300K';
     this.dataInputs[v] = 'input_field_RateConstant';
     this.dataUnits[v] = '(units depend on order)';
     this.dataMin[v] = 0;
@@ -180,15 +180,6 @@ let puBatchReactor = {
     // initialize profile data array
     // plotter.initPlotData(numProfileVars,numProfilePts)
     this.profileData = plotter.initPlotData(1,this.numPlotPoints); // holds data for static profile plots
-
-    // // initialize strip chart data array
-    // // plotter.initPlotData(numStripVars,numStripPts)
-    // this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
-
-    // // initialize local array to hold color-canvas data, e.g., space-time data -
-    // // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
-    // this.colorCanvasData = plotter.initColorCanvasArray(2,this.numNodes,1);
-
     let kn;
     for (k = 0; k <= this.numPlotPoints; k += 1) {
       kn = k;
@@ -345,13 +336,6 @@ let puBatchReactor = {
     el.style.backgroundColor = colorString; // backgroundColor NOT background-color
 
     // HANDLE PROFILE PLOT DATA
-
-    // XXX CONSIDER RE-ORDERING LAST TWO INDEXES IN profileData SO CAN USE
-    //     SIMPLE ASSIGNMENT FOR ALL Y VALUES, e.g.,
-    // profileData[0][1][n] = y;
-
-    // set x-axis max on plot
-    plotInfo[0]['xAxisMax'] = this.t_final;
 
     // fill array for profile plot
     for (j=0; j<=this.numPlotPoints; j+=1) {

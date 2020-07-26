@@ -120,7 +120,7 @@ let puAdiabaticPackedBedPFR = {
   initialize : function() {
     //
     let v = 0;
-    this.dataHeaders[v] = 'Kf300';
+    this.dataHeaders[v] = 'k_300K';
     this.dataInputs[v] = 'input_field_Kf300';
     this.dataUnits[v] = 'm3/kg/s';
     this.dataMin[v] = 0;

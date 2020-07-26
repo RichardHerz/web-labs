@@ -420,7 +420,7 @@ border-style: solid;
   font-size: 16px;
 }
 
-#div_plotFrame_singlePt {
+#div_plotFrame_single {
   display: block;
   position: absolute;
   border-color: DodgerBlue;
@@ -491,7 +491,7 @@ border-style: solid;
   LCvScrollbar: false;
 }
 
-#div_PLOTDIV_singlePt {
+#div_PLOTDIV_single {
   display: block;
   position: absolute;
   left: 64px;
@@ -509,7 +509,7 @@ border-style: solid;
   LCvScrollbar: false;
 }
 
-#button_copyData_singlePt {
+#button_copyData_single {
   position: absolute;
   left: 146px;
   top: 278px;

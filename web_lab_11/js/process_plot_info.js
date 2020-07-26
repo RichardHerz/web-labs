@@ -36,7 +36,7 @@ let plotInfo = {
     plotInfo[pnum]['yRightAxisLabel'] = 'cA (mol/m3)';
     plotInfo[pnum]['yRightAxisMin'] = 0;
     plotInfo[pnum]['yRightAxisMax'] = processUnits[unum]['cAin'];
-    plotInfo[pnum]['plotLegendShow'] = 1;  // Boolean, '' or 0 for no show, 1 or "show"
+    plotInfo[pnum]['plotLegendShow'] = 0;  // Boolean, '' or 0 for no show, 1 or "show"
     plotInfo[pnum]['plotLegendPosition'] = 'nw';
     plotInfo[pnum]['plotGridBgColor'] = 'white';
     // colors can be specified rgb, rgba, hex, and color names

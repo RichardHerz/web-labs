@@ -91,18 +91,20 @@
       <p id="field_cA_final"></p>
       <p id="field_conversion_final"></p>
    </div> <!-- end of div div_controller -->
-   <p id="field_RateConstantLABEL">
-      Enter k at 300 K
-   </p>
-   <input id="input_field_RateConstant" value="1e-2" onchange="interfacer.updateUIparams()">
-   <input id="input_field_ActivationEnergy" value="60" onchange="interfacer.updateUIparams()">
-   <p id="field_ActivationEnergyLABEL">
-      Enter Ea (kJ/mol)
-   </p>
-   <input id="input_field_ReactionOrder" value="1" onchange="interfacer.updateUIparams()">
-   <p id="field_ReactionOrderLABEL">
-      Enter reaction order (-1,0,1,2)
-   </p>
+   <div id="div_reactionParams">
+     <p id="field_RateConstantLABEL">
+        Enter k at 300 K
+     </p>
+     <input id="input_field_RateConstant" value="1e-2" onchange="interfacer.updateUIparams()">
+     <input id="input_field_ActivationEnergy" value="60" onchange="interfacer.updateUIparams()">
+     <p id="field_ActivationEnergyLABEL">
+        Enter Ea (kJ/mol)
+     </p>
+     <input id="input_field_ReactionOrder" value="1" onchange="interfacer.updateUIparams()">
+     <p id="field_ReactionOrderLABEL">
+        Enter reaction order (-1,0,1,2)
+     </p>
+  </div> <!-- end of div div_reactionParams -->
 </div> <!-- end of div div_simFrame -->
 </body>
 </html>

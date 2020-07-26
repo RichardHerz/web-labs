@@ -21,7 +21,7 @@
 
   <!-- load SPECIFIC JAVASCRIPT for this lab -->
   <script language="javascript" src="js/process_sim_params.js" type="text/javascript"></script>
-  <script language="javascript" src="js/puBatchReactor.js" type="text/javascript"></script>
+  <script language="javascript" src="js/puBatchReactorSinglePt.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_units.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_plot_info.js" type="text/javascript"></script>
 
@@ -59,11 +59,11 @@
       <img id="image_reactorImage" src="images/reactor.png">
          <div id="div_PLOTDIV_reactorContents">
          </div> <!-- end of div div_PLOTDIV_reactorContents -->
-   </div> <!-- end of div div_reactor -->
+  </div> <!-- end of div div_reactor -->
    <p id="field_run_count"></p>
    <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="interfacer.resetThisLab()">
    <input type="button" id="button_runButton" value="Run" value="Run" onclick="interfacer.runThisLab()">
-   <div id="div_operatingParams">
+  <div id="div_operatingParams">
       <p id="field_ReactionTimeLABEL">
             Enter reaction time (s)
       </p>
@@ -80,30 +80,66 @@
             Enter Temperature (K)
       </p>
       <input id="input_field_Temperature" value="300" onchange="interfacer.updateUIparams()">
-   </div> <!-- end of div div_operatingParams -->
-   <div id="div_plotFrame_profile">
-      <div id="div_PLOTDIV_profile">
-      </div> <!-- end of div div_PLOTDIV_profile -->
-      <input type="button" id="button_copyData_profile" value="Copy data" value="Copy data" onclick="interfacer.copyData(0)">
-      <!-- <p> id="field_JacketFeedTTempLABEL" MAY HAVE css visibility:hidden on open page; changed by unit_5.changeMode -->
-      <!-- input id="input_field_JacketFeedTTemp" MAY BE type="hidden" on open page; changed by unit_5.changeMode -->
-      <!-- end "div_RADIO_group_Controller" -->
-      <p id="field_cA_final_profile"></p>
-      <p id="field_conversion_final_profile"></p>
-   </div> <!-- end of div div_plotFrame_profile -->
-   <div id="div_reactionParams">
-     <p id="field_RateConstantLABEL">
-        Enter k at 300 K
-     </p>
-     <input id="input_field_RateConstant" value="1e-2" onchange="interfacer.updateUIparams()">
-     <input id="input_field_ActivationEnergy" value="60" onchange="interfacer.updateUIparams()">
-     <p id="field_ActivationEnergyLABEL">
-        Enter Ea (kJ/mol)
-     </p>
-     <input id="input_field_ReactionOrder" value="1" onchange="interfacer.updateUIparams()">
-     <p id="field_ReactionOrderLABEL">
-        Enter reaction order (-1,0,1,2)
-     </p>
+  </div> <!-- end of div div_operatingParams -->
+  <div id="div_plotFrame_profile">
+     <div id="div_PLOTDIV_profile">
+     </div> <!-- end of div div_PLOTDIV_profile -->
+     <input type="button" id="button_copyData_profile" value="Copy data" value="Copy data" onclick="interfacer.copyData(0)">
+     <!-- <p> id="field_JacketFeedTTempLABEL" MAY HAVE css visibility:hidden on open page; changed by unit_5.changeMode -->
+     <!-- input id="input_field_JacketFeedTTemp" MAY BE type="hidden" on open page; changed by unit_5.changeMode -->
+     <!-- end "div_RADIO_group_Controller" -->
+     <p id="field_cA_final_profile"></p>
+     <p id="field_conversion_final_profile"></p>
+  </div> <!-- end of div div_plotFrame_profile -->
+  <div id="div_plotFrame_singlePt">
+    <div id="div_PLOTDIV_singlePt">
+    </div> <!-- end of div div_PLOTDIV_singlePt -->
+    <div id="div_plot_X_label_cover"></div>
+    <div id="div_plot_Y_label_cover"></div>
+    <select id='selectXvar' onchange="simParams.selectXvar()">
+      <option value="0">k_300</option>
+      <option value="1">Ea</option>
+      <option value="2">order</option>
+      <option value="3">T</option>
+      <option value="4">cA_initial</option>
+      <option value="5">Vol</option>
+      <option value="6" selected='true'>t_final</option>
+      <option value="7">cA_final</option>
+      <option value="8">conversion</option>
+      <option value="9">run count</option>
+    </select>
+    <select id='selectYvar' onchange="simParams.selectYvar()">
+      <option value="0">k_300</option>
+      <option value="1">Ea</option>
+      <option value="2">order</option>
+      <option value="3">T</option>
+      <option value="4">cA_initial</option>
+      <option value="5">Vol</option>
+      <option value="6">t_final</option>
+      <option value="7">cA_final</option>
+      <option value="8" selected='true'>conversion</option>
+      <option value="9">run count</option>
+    </select>
+    <input type="button" id="button_copyData_singlePt" value="Copy data" value="Copy data" onclick="interfacer.copyDataSingle(0)">
+    <!-- <p> id="field_JacketFeedTTempLABEL" MAY HAVE css visibility:hidden on open page; changed by unit_5.changeMode -->
+    <!-- input id="input_field_JacketFeedTTemp" MAY BE type="hidden" on open page; changed by unit_5.changeMode -->
+    <!-- end "div_RADIO_group_Controller" -->
+    <p id="field_cA_final"></p>
+    <p id="field_conversion_final"></p>
+  </div> <!-- end of div div_plotFrame_singlePt -->
+  <div id="div_reactionParams">
+    <p id="field_RateConstantLABEL">
+      Enter k at 300 K
+    </p>
+    <input id="input_field_RateConstant" value="1e-2" onchange="interfacer.updateUIparams()">
+    <input id="input_field_ActivationEnergy" value="60" onchange="interfacer.updateUIparams()">
+    <p id="field_ActivationEnergyLABEL">
+      Enter Ea (kJ/mol)
+    </p>
+    <input id="input_field_ReactionOrder" value="1" onchange="interfacer.updateUIparams()">
+    <p id="field_ReactionOrderLABEL">
+      Enter reaction order (-1,0,1,2)
+    </p>
   </div> <!-- end of div div_reactionParams -->
 </div> <!-- end of div div_simFrame -->
 </body>

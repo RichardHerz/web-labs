@@ -332,7 +332,7 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#div_controller {
+#div_plotFrame_singlePt {
   display: block;
   position: absolute;
   border-color: DodgerBlue;
@@ -367,6 +367,24 @@ border-style: solid;
   width: 90px;
 }
 
+#div_plot_X_label_cover {
+  display: block;
+  position: absolute;
+  left: 248px;
+  top: 228px;
+  width: 94px;
+  height: 24px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  opacity: 1;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: false;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
 #div_plot_Y_label_cover {
   display: block;
   position: absolute;
@@ -385,7 +403,7 @@ border-style: solid;
   LCvScrollbar: false;
 }
 
-#div_PLOTDIV_plotData {
+#div_PLOTDIV_singlePt {
   display: block;
   position: absolute;
   left: 64px;
@@ -403,7 +421,7 @@ border-style: solid;
   LCvScrollbar: false;
 }
 
-#button_copyDataButton {
+#button_copyData_singlePt {
   position: absolute;
   left: 146px;
   top: 278px;

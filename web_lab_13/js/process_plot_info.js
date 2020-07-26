@@ -73,7 +73,6 @@ let plotInfo = {
     plotInfo[pnum]['varShow'] = [];
     plotInfo[pnum]['varYaxis'] = [];
     plotInfo[pnum]['varYscaleFactor'] = [];
-
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //
@@ -90,6 +89,62 @@ let plotInfo = {
     plotInfo[pnum]['varYaxis'][vnum] = 'left';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
+    // ---------------------------------------------------
+    //
+    // plot 1 info
+    pnum = 1;
+    plotInfo[pnum] = new Object();
+    plotInfo[pnum]['type'] = 'profile';
+    plotInfo[pnum]['title'] = 'Batch history';
+    plotInfo[pnum]['canvas'] = '#div_PLOTDIV_profile'; // flot.js wants ID with prefix #
+    // plotInfo[pnum]['numberPoints'] not needed here since only one unit in this plot
+    plotInfo[pnum]['xAxisLabel'] = 'time (s)';
+    plotInfo[pnum]['xAxisTableLabel'] = 'time (s)'; // label for copy data table
+    // xAxisShow false does not show numbers, nor label, nor grid for x-axis
+    // might be better to cover numbers if desire not to show numbers
+    plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
+    plotInfo[pnum]['xAxisMin'] = 0;
+    plotInfo[pnum]['xAxisMax'] = 1000;
+    plotInfo[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
+    plotInfo[pnum]['yLeftAxisLabel'] = 'cA (mol/m3)';
+    plotInfo[pnum]['yLeftAxisMin'] = processUnits[unum]['dataMin'][4];
+    plotInfo[pnum]['yLeftAxisMax'] = processUnits[unum]['dataMax'][4];
+    plotInfo[pnum]['yRightAxisLabel'] = 'cA (mol/m3)';
+    plotInfo[pnum]['yRightAxisMin'] = 0;
+    plotInfo[pnum]['yRightAxisMax'] = processUnits[unum]['cAin'];
+    plotInfo[pnum]['plotLegendShow'] = 0;  // Boolean, '' or 0 for no show, 1 or "show"
+    plotInfo[pnum]['plotLegendPosition'] = 'nw';
+    plotInfo[pnum]['plotGridBgColor'] = 'white';
+    // colors can be specified rgb, rgba, hex, and color names
+    // for flot.js colors, only basic color names appear to work, e.g., white, blue, red
+    // for all html color names to hex see http://www.color-hex.com
+    // for all color names to hex see https://www.w3schools.com/colors/colors_picker.asp
+    plotInfo[pnum]['plotDataSeriesColors'] = ['#420420','#1e90ff']; // optional, in variable order 0, 1, etc.
+    // ['#ff6347','#1e90ff'] is Tomato and DodgerBlue, #420420 is black
+    //
+    // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
+    // WARNING: all below with prefix 'var' must have same number of child objects,
+    // one for each variable placed on plot
+    plotInfo[pnum]['varUnitIndex'] = [];
+    plotInfo[pnum]['var'] = [];
+    plotInfo[pnum]['varLabel'] = [];
+    plotInfo[pnum]['varDataUnits'] = [];
+    plotInfo[pnum]['varShow'] = [];
+    plotInfo[pnum]['varYaxis'] = [];
+    plotInfo[pnum]['varYscaleFactor'] = [];
+    //
+    // ADD SETTINGS FOR EACH VARIABLE
+    //
+    vnum = 0; // 1st variable
+    plotInfo[pnum]['varUnitIndex'][vnum] = unum;
+    plotInfo[pnum]['var'][vnum] = 0;
+    plotInfo[pnum]['varLabel'][vnum] = 'cA';
+    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][4];
+    plotInfo[pnum]['varShow'][vnum] = 'show';
+    plotInfo[pnum]['varYaxis'][vnum] = 'left';
+    plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
+    //
+
   } // end initialize method of plotInfo
 
 }; // end of object plotInfo

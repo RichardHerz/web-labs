@@ -420,6 +420,147 @@ border-style: solid;
   font-size: 16px;
 }
 
+#div_plotFrame_singlePt {
+  display: block;
+  position: absolute;
+  border-color: DodgerBlue;
+  left: 298px;
+  top: 410px;
+  width: 498px;
+  height: 350px;
+  visibility: visible;
+  border-width: 1px;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+}
+
+#selectXvar {
+  display: block;
+  position: absolute;
+  left: 250px;
+  top: 230px;
+  width: 90px;
+  height: 20px;
+}
+
+#selectYvar {
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 98px;
+  width: 90px;
+}
+
+#div_plot_X_label_cover {
+  display: block;
+  position: absolute;
+  left: 248px;
+  top: 228px;
+  width: 94px;
+  height: 24px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  opacity: 1;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: false;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#div_plot_Y_label_cover {
+  display: block;
+  position: absolute;
+  left: 64px;
+  top: 60px;
+  width: 20px;
+  height: 120px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  opacity: 1;
+  border-width: 0px;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: false;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#div_PLOTDIV_singlePt {
+  display: block;
+  position: absolute;
+  left: 64px;
+  top: 0px;
+  width: 430px;
+  height: 248px;
+  visibility: visible;
+  border-width: 0px;
+  border-style: outset;
+  opacity: 1;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: false;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#button_copyData_singlePt {
+  position: absolute;
+  left: 146px;
+  top: 278px;
+  width: 104px;
+  height: 24px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#field_cA_final {
+  position: absolute;
+  left: 264px;
+  top: 260px;
+  width: 220px;
+  height: 32px;
+  text-align : right;
+  border-width: 1px;
+  /* set style.visbility = 'visible' at end updateState */
+  visibility: hidden;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#field_conversion_final {
+  position: absolute;
+  left: 264px;
+  top: 290px;
+  width: 220px;
+  height: 32px;
+  text-align : right;
+  border-width: 1px;
+  /* set style.visbility = 'visible' at end updateState */
+  visibility: hidden;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
 #div_reactionParams {
   display: block;
   position: absolute;

@@ -20,7 +20,7 @@ let plotInfo = {
     plotInfo[pnum] = new Object();
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Batch history';
-    plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
+    plotInfo[pnum]['canvas'] = '#div_PLOTDIV_profile'; // flot.js wants ID with prefix #
     // plotInfo[pnum]['numberPoints'] not needed here since only one unit in this plot
     plotInfo[pnum]['xAxisLabel'] = 'time (s)';
     plotInfo[pnum]['xAxisTableLabel'] = 'time (s)'; // label for copy data table

@@ -16,10 +16,10 @@
 
 // -------------------------------------------------------------------
 
-let puBatchReactor = {
+let puBatchReactorSinglePt = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
-  name : 'Batch Reactor',
+  name : 'Batch Reactor - Single Pt',
 
   // for other info shared with other units and objects, see public properties
   // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
@@ -43,8 +43,8 @@ let puBatchReactor = {
   // SEE dataInputs array in initialize() method for input field ID's
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
-  cA_output_field_ID : "field_cA_final_profile",
-  conversion_output_field_ID  : "field_conversion_final_profile",
+  cA_output_field_ID : "field_cA_final",
+  conversion_output_field_ID  : "field_conversion_final",
   displayReactorContents: '#div_PLOTDIV_reactorContents', // need # because selecting CSS
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -60,6 +60,8 @@ let puBatchReactor = {
   k_300 : 0, // forward rate constant at 300 K
   Ea : 0, // activation energy
   nth : 0, // reaction order (-1, 0, 1, 2)
+  conversion : 0,
+  runCount : 0,
 
   // define arrays to hold info for variables
   // these will be filled with values below in method initialize()
@@ -71,28 +73,37 @@ let puBatchReactor = {
   dataDefault : [],
   dataValues : [],
 
+  // SPECIAL FOR LAB TYPE SINGLE
+  dataValuesORIG : [],
+
   // define arrays to hold output variables
   // these will be filled with initial values in method reset()
-  cA : [],
-  time : [],
+
+  // xxx
+  // cA : [],
+  // time : [],
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
   profileData : [], // for profile plots, plot script requires this name
 
+  // SPECIAL FOR LAB TYPE SINGLE - will be loaded in reset()
+  dataSwitcher : [], // for copy data - list only inputs in table that changed
+
   // define variables which will not be plotted nor saved in copy data table
   //   none here
 
-  // numPlotPoints can be defined here and not plotInfo because there is only one unit
-  // on the one plot and plotter uses length of public plot data arrays created here
-  numPlotPoints : 200, // THIS IS PLOT POINTS FOR PROFILE & STRIP PLOTS
+// xxx
+  // // numPlotPoints can be defined here and not plotInfo because there is only one unit
+  // // on the one plot and plotter uses length of public plot data arrays created here
+  // numPlotPoints : 200, // THIS IS PLOT POINTS FOR PROFILE & STRIP PLOTS
 
   initialize : function() {
     //
     let v = 0;
     this.dataHeaders[v] = 'k_300';
     this.dataInputs[v] = 'input_field_RateConstant';
-    this.dataUnits[v] = '(units depend on order)';
+    this.dataUnits[v] = 'units depend on order';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1000;
     this.dataDefault[v] = 1.0e-7;
@@ -106,7 +117,7 @@ let puBatchReactor = {
     this.dataDefault[v] = 100;
     //
     v = 2;
-    this.dataHeaders[v] = 'Reaction Order';
+    this.dataHeaders[v] = 'order';
     this.dataInputs[v] = 'input_field_ReactionOrder';
     this.dataUnits[v] = '';
     this.dataMin[v] = -1;
@@ -114,7 +125,7 @@ let puBatchReactor = {
     this.dataDefault[v] = 1;
     //
     v = 3;
-    this.dataHeaders[v] = 'Temperature';
+    this.dataHeaders[v] = 'T';
     this.dataInputs[v] = 'input_field_Temperature';
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 50;
@@ -158,6 +169,12 @@ let puBatchReactor = {
     this.dataMin[v] = 0;
     this.dataMax[v] = this.dataMax[4]; // [4] is cA_init
     //
+    v = 8;
+    this.dataHeaders[v] = 'conversion';
+    this.dataUnits[v] = "%";
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 100;
+    //
   }, // END of initialize()
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -170,37 +187,30 @@ let puBatchReactor = {
     // reset function will use whatever last values user has entered.
 
     this.updateUIparams(); // this first, then set other values as needed
-
-    // set state variables not set by updateUIparams() to initial settings
-
-    for (k = 0; k <= this.numNodes; k += 1) {
-      this.cA[k] = this.cAin;
+    // initialize profile data array
+    // initPlotData(numProfileVars,numProfilePts)
+    // SPECIAL FOR LAB TYPE SINGLE - save all input and output vars and runCount
+    const numProfileVars = 10;
+    const numProfilePts = 0; // 0+1 points will be filled here
+    this.profileData = plotter.initPlotData(numProfileVars,numProfilePts);
+    // SPECIAL CASE - move initial [0,0] x,y points off plots
+    // order of 3 indices is var, point, x-y
+    for (v = 0; v < numProfileVars; v += 1) {
+      this.profileData[v][0][0] = -1;
+      this.profileData[v][0][1] = -1;
     }
 
-    // initialize profile data array
-    // plotter.initPlotData(numProfileVars,numProfilePts)
-    this.profileData = plotter.initPlotData(1,this.numPlotPoints); // holds data for static profile plots
-
-    // // initialize strip chart data array
-    // // plotter.initPlotData(numStripVars,numStripPts)
-    // this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
-
-    // // initialize local array to hold color-canvas data, e.g., space-time data -
-    // // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
-    // this.colorCanvasData = plotter.initColorCanvasArray(2,this.numNodes,1);
-
-    let kn;
-    for (k = 0; k <= this.numPlotPoints; k += 1) {
-      kn = k;
-      // x-axis values
-      // x-axis values will not change during sim
-      // XXX change to get number vars for this plotInfo variable
-      //     so can put in repeat - or better yet, a function
-      //     and same for y-axis below
-      // first index specifies which variable
-      this.profileData[0][k][0] = kn;
-      // y-axis values
-      this.profileData[0][k][1] = 0; // this.dataDefault[4]; // [4] is cAin
+    // SPECIAL FOR LAB TYPE SINGLE
+    // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
+    // inputs and 1's for all outputs - inputs may change in updateUIparams()
+    let tlen = this.VarCount; // last v of inputs, which start at v=0
+    for (v = 0; v <= tlen; v += 1) {
+      this.dataSwitcher[v] = 0;
+    }
+    // want to always list outputs
+    tleno = this.dataHeaders.length;
+    for (v = tlen+1; v < tleno; v += 1){
+      this.dataSwitcher[v] = 1;
     }
 
   }, // end reset
@@ -221,6 +231,17 @@ let puBatchReactor = {
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
+
+    // SPECIAL FOR LAB TYPE SINGLE
+    // need to get which values have changed, so save original values
+    this.dataValuesORIG[0] = this.k_300;
+    this.dataValuesORIG[1] = this.Ea;
+    this.dataValuesORIG[2] = this.nth;
+    this.dataValuesORIG[3] = this.Tin;
+    this.dataValuesORIG[4] = this.cAin;
+    this.dataValuesORIG[5] = this.Vol;
+    this.dataValuesORIG[6] = this.t_final;
+
     let unum = this.unitIndex;
     //
     this.k_300 = this.dataValues[0] = interfacer.getInputValue(unum, 0);
@@ -228,8 +249,17 @@ let puBatchReactor = {
     this.nth = this.dataValues[2] = interfacer.getInputValue(unum, 2);
     this.Tin = this.dataValues[3] = interfacer.getInputValue(unum, 3);
     this.cAin = this.dataValues[4] = interfacer.getInputValue(unum, 4);
-    this.Vol= this.dataValues[5] = interfacer.getInputValue(unum, 5);
+    this.Vol = this.dataValues[5] = interfacer.getInputValue(unum, 5);
     this.t_final = this.dataValues[6] = interfacer.getInputValue(unum, 6);
+
+    // SPECIAL FOR LAB TYPE SINGLE
+    // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
+    // inputs and 1's for all outputs - inputs may change in updateUIparams()
+    for (v = 0; v < 7; v += 1) {
+      if (this.dataValuesORIG[v] != this.dataValues[v]) {
+        this.dataSwitcher[v] = 1;
+      }
+    }
 
     // ensure order nth has values -1,0,1,2
     let x = Math.round(this.nth);
@@ -240,47 +270,6 @@ let puBatchReactor = {
     }
     this.nth = x;
     document.getElementById(this.dataInputs[2]).value = this.nth;
-
-    // // adjust axis of profile plot
-    plotter['plotArrays']['plotFlag'][0] = 0;  // so axes will refresh
-    plotInfo[0]['xAxisMax'] = this.t_final;
-
-    // plotInfo[0]['yLeftAxisMin'] = this.dataMin[9]; // [9] is Trxr
-    // plotInfo[0]['yLeftAxisMax'] = this.dataMax[9];
-    // plotInfo[0]['yRightAxisMin'] = 0;
-    // plotInfo[0]['yRightAxisMax'] = this.cAin;
-    // // adjust color span of spaceTime, color canvas plots
-    // plotInfo[1]['varValueMin'] = this.dataMin[9]; // [9] is Trxr
-    // plotInfo[1]['varValueMax'] = this.dataMax[9];
-    // plotInfo[2]['varValueMin'] = this.dataMin[9];
-    // plotInfo[2]['varValueMax'] = this.dataMax[9];
-
-    // // also update ONLY inlet values at inlet of reactor in case sim is paused
-    // // but do not do full updateDisplay
-    // document.getElementById(this.displayReactorLeftT).innerHTML = this.Tin.toFixed(1) + ' K';
-    // document.getElementById(this.displayReactorLeftConc).innerHTML = this.cAin.toFixed(1);
-
-    // // residence time used for timing checks for steady state
-    // // use this for now but should consider voidFrac and Cp's...
-    // this.residenceTime = this.Wcat / this.densCat / this.Flowrate;
-
-    // // UPDATE UNIT TIME STEP AND UNIT REPEATS
-    //
-    // // FIRST, compute spaceTime = residence time between two nodes in hot tube, also
-    // //                          = space time of equivalent single mixing cell
-    // let spaceTime = (Length / this.numNodes) / VelocHot; // (s)
-    //
-    // // SECOND, estimate unitTimeStep
-    // // do NOT change simParams.simTimeStep here
-    // this.unitTimeStep = spaceTime / 15;
-    //
-    // // THIRD, get integer number of unitStepRepeats
-    // this.unitStepRepeats = Math.round(simParams.simTimeStep / this.unitTimeStep);
-    // // min value of unitStepRepeats is 1 or get divide by zero error
-    // if (this.unitStepRepeats <= 0) {this.unitStepRepeats = 1;}
-    //
-    // // FOURTH and finally, recompute unitTimeStep with integer number unitStepRepeats
-    // this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
 
   }, // end of updateUIparams()
 
@@ -301,13 +290,16 @@ let puBatchReactor = {
     // this reactor is ISOTHERMAL so only need to compute k at reaction T once
     kT = this.k_300 * Math.exp(EaOverRg/300 - EaOverRg/this.Tin);
 
-    // plot will have numPlotPoints + 1 points - see process_plot_info.js
-    for (j=0; j<=this.numPlotPoints; j+=1) {
-      this.time[j] =  this.t_final * j/this.numPlotPoints;
-      this.cA[j] = this.reactBATCHnthSS(this.time[j],kT,this.nth,this.cAin);
-    }
+// xxx
+    // // plot will have numPlotPoints + 1 points - see process_plot_info.js
+    // for (j=0; j<=this.numPlotPoints; j+=1) {
+    //   this.time[j] =  this.t_final * j/this.numPlotPoints;
+    //   this.cA[j] = this.reactBATCHnthSS(this.time[j],kT,this.nth,this.cAin);
+    // }
 
-    this.cA_final = this.cA[this.numPlotPoints];
+    // SPECIAL LAB TYPE SINGLE - only need to compute final values
+    this.cA_final = this.reactBATCHnthSS(this.t_final,kT,this.nth,this.cAin);
+    this.conversion = 100 * (1 - this.cA_final / this.cAin);
 
     // change cA final output field to visible only after 1st run
     document.getElementById(this.cA_output_field_ID).style.visibility = 'visible';
@@ -324,13 +316,13 @@ let puBatchReactor = {
     document.getElementById(this.cA_output_field_ID).innerHTML = txt;
 
     // note use .toFixed(n) method of object to round number to n decimal points
-    let conversion_final = 100 * (1 - this.cA_final / this.cAin);
-    txt = 'Conversion final (%) = ' + conversion_final.toFixed(1);
+    txt = 'Conversion final (%) = ' + this.conversion.toFixed(1);
     document.getElementById(this.conversion_output_field_ID).innerHTML = txt;
 
     // WARNING: must have simParams vars imTimeStep = 1 and simStepRepeats = 1
     // for simtime to equal # runs between resets
-    document.getElementById("field_run_count").innerHTML = "Total runs = " + controller.simTime.toFixed(0);
+    this.runCount = controller.simTime.toFixed(0); // use next & a line below
+    document.getElementById("field_run_count").innerHTML = "Total runs = " + this.runCount;
 
     // set reactor contents color to final color
     let el = document.querySelector(this.displayReactorContents);
@@ -350,13 +342,37 @@ let puBatchReactor = {
     //     SIMPLE ASSIGNMENT FOR ALL Y VALUES, e.g.,
     // profileData[0][1][n] = y;
 
-    // set x-axis max on plot
-    plotInfo[0]['xAxisMax'] = this.t_final;
+// xxx
+    // // set x-axis max on plot
+    // plotInfo[0]['xAxisMax'] = this.t_final;
 
-    // fill array for profile plot
-    for (j=0; j<=this.numPlotPoints; j+=1) {
-      this.profileData[0][j][0] = this.time[j];
-      this.profileData[0][j][1] = this.cA[j];
+    // SPECIAL FOR LAB TYPE SINGLE
+    // reset on open lab adds -1,-1 points in first element of array
+    // then don't want updateDisplay on open lab and
+    // before any runs made to add points
+    if (this.runCount > 0) {
+      let tx;
+      const ty = 0; // arbitrary value - single plot just gets tx
+      const numProfileVars = 10; // xxx get this from a property
+      for (v = 0; v < numProfileVars; v += 1) {
+        tempArray = this.profileData[v]; // work on one plot variable at a time
+        // delete first x,y pair -1,-1 on 1st run
+        if (this.runCount == 1) {tempArray.shift();}
+        if (v == 0) {tx = this.k_300}
+        else if (v == 1) {tx = this.Ea}
+        else if (v == 2) {tx = this.nth}
+        else if (v == 3) {tx = this.Tin}
+        else if (v == 4) {tx = this.cAin}
+        else if (v == 5) {tx = this.Vol}
+        else if (v == 6) {tx = this.t_final}
+        else if (v == 7) {tx = this.cA_final}
+        else if (v == 8) {tx = this.conversion}
+        else if (v == 9) {tx = this.runCount}
+        // add the new [x,y] pair array at end
+        tempArray.push( [tx,ty] );
+        // update the variable being processed
+        this.profileData[v] = tempArray;
+      }
     }
 
   }, // end updateDisplay method

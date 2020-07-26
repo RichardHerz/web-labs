@@ -81,9 +81,10 @@
       </p>
       <input id="input_field_Temperature" value="300" onchange="interfacer.updateUIparams()">
   </div> <!-- end of div div_operatingParams -->
-  <div id="div_controller">
-    <div id="div_PLOTDIV_plotData">
-    </div> <!-- end of div div_PLOTDIV_plotData -->
+  <div id="div_plotFrame_singlePt">
+    <div id="div_PLOTDIV_singlePt">
+    </div> <!-- end of div div_PLOTDIV_singlePt -->
+    <div id="div_plot_X_label_cover"></div>
     <div id="div_plot_Y_label_cover"></div>
     <select id='selectXvar' onchange="simParams.selectXvar()">
       <option value="0">k_300</option>
@@ -109,13 +110,13 @@
       <option value="8" selected='true'>conversion</option>
       <option value="9">run count</option>
     </select>
-    <input type="button" id="button_copyDataButton" value="Copy data" value="Copy data" onclick="interfacer.copyDataSingle(0)">
+    <input type="button" id="button_copyData_singlePt" value="Copy data" value="Copy data" onclick="interfacer.copyDataSingle(0)">
     <!-- <p> id="field_JacketFeedTTempLABEL" MAY HAVE css visibility:hidden on open page; changed by unit_5.changeMode -->
     <!-- input id="input_field_JacketFeedTTemp" MAY BE type="hidden" on open page; changed by unit_5.changeMode -->
     <!-- end "div_RADIO_group_Controller" -->
     <p id="field_cA_final"></p>
     <p id="field_conversion_final"></p>
-  </div> <!-- end of div div_controller -->
+  </div> <!-- end of div div_plotFrame_singlePt -->
   <div id="div_reactionParams">
     <p id="field_RateConstantLABEL">
       Enter k at 300 K

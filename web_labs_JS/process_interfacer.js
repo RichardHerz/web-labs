@@ -568,18 +568,17 @@ let interfacer = {
       tText += 'run #' + tItemDelimiter;
       // then other column names for y-axis variables
       for (v = 0; v < tVarLen; v += 1) {
-        // tText += plotInfo[plotIndex]['varLabel'][v];
-        tText += processUnits[varUnitIndex]['dataHeaders'][v];
-        // tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
-        let tUnits = processUnits[varUnitIndex]['dataUnits'][v];
-        if (tUnits != '') {
-          tText += ' (' + tUnits + ')';
-        }
-
-        if (v < (tVarLen - 1)) {
-          tText += tItemDelimiter;
-        }
-      }
+        if (processUnits[varUnitIndex]['dataSwitcher'][v] == 1) {
+          tText += processUnits[varUnitIndex]['dataHeaders'][v];
+          let tUnits = processUnits[varUnitIndex]['dataUnits'][v];
+          if (tUnits != '') {
+            tText += ' (' + tUnits + ')';
+          }
+          if (v < (tVarLen - 1)) {
+            tText += tItemDelimiter;
+          }
+        } // END OF if (processUnits[varUnitIndex]['dataSwitcher'][v] = 1)
+      } // END OF for (v = 0; v < tVarLen; v += 1)
       tText += '</p>';
       // repeat to make each line in table for each data point
       // all unit vars in one plot must have same data array length
@@ -588,8 +587,10 @@ let interfacer = {
         tText += processUnits[varUnitIndex][dataName][tVarLen][p][0] + tItemDelimiter;
         // for lab type 'single' get x value for each variable in [p][0]
         for (v = 0; v < tVarLen; v += 1) {
-          tText += formatNum(processUnits[varUnitIndex][dataName][v][p][0]);
-          if (v < (tVarLen - 1)) {tText += tItemDelimiter;}
+          if (processUnits[varUnitIndex]['dataSwitcher'][v] == 1) {
+            tText += formatNum(processUnits[varUnitIndex][dataName][v][p][0]);
+            if (v < (tVarLen - 1)) {tText += tItemDelimiter;}
+          }
         }
         tText += '<br>'; // use <br> not <p> or get empty line between each row
       }

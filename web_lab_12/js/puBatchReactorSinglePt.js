@@ -73,6 +73,9 @@ let puBatchReactorSinglePt = {
   dataDefault : [],
   dataValues : [],
 
+  // SPECIAL FOR LAB TYPE SINGLE
+  dataValuesORIG : [],
+
   // define arrays to hold output variables
   // these will be filled with initial values in method reset()
 
@@ -83,6 +86,9 @@ let puBatchReactorSinglePt = {
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
   profileData : [], // for profile plots, plot script requires this name
+
+  // SPECIAL FOR LAB TYPE SINGLE - will be loaded in reset()
+  dataSwitcher : [], // for copy data - list only inputs in table that changed
 
   // define variables which will not be plotted nor saved in copy data table
   //   none here
@@ -194,6 +200,19 @@ let puBatchReactorSinglePt = {
       this.profileData[v][0][1] = -1;
     }
 
+    // SPECIAL FOR LAB TYPE SINGLE
+    // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
+    // inputs and 1's for all outputs - inputs may change in updateUIparams()
+    let tlen = this.VarCount; // last v of inputs, which start at v=0
+    for (v = 0; v <= tlen; v += 1) {
+      this.dataSwitcher[v] = 0;
+    }
+    // want to always list outputs
+    tleno = this.dataHeaders.length;
+    for (v = tlen+1; v < tleno; v += 1){
+      this.dataSwitcher[v] = 1;
+    }
+
   }, // end reset
 
   updateUIparams : function() {
@@ -212,6 +231,17 @@ let puBatchReactorSinglePt = {
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
+
+    // SPECIAL FOR LAB TYPE SINGLE
+    // need to get which values have changed, so save original values
+    this.dataValuesORIG[0] = this.k_300;
+    this.dataValuesORIG[1] = this.Ea;
+    this.dataValuesORIG[2] = this.nth;
+    this.dataValuesORIG[3] = this.Tin;
+    this.dataValuesORIG[4] = this.cAin;
+    this.dataValuesORIG[5] = this.Vol;
+    this.dataValuesORIG[6] = this.t_final;
+
     let unum = this.unitIndex;
     //
     this.k_300 = this.dataValues[0] = interfacer.getInputValue(unum, 0);
@@ -219,8 +249,17 @@ let puBatchReactorSinglePt = {
     this.nth = this.dataValues[2] = interfacer.getInputValue(unum, 2);
     this.Tin = this.dataValues[3] = interfacer.getInputValue(unum, 3);
     this.cAin = this.dataValues[4] = interfacer.getInputValue(unum, 4);
-    this.Vol= this.dataValues[5] = interfacer.getInputValue(unum, 5);
+    this.Vol = this.dataValues[5] = interfacer.getInputValue(unum, 5);
     this.t_final = this.dataValues[6] = interfacer.getInputValue(unum, 6);
+
+    // SPECIAL FOR LAB TYPE SINGLE
+    // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
+    // inputs and 1's for all outputs - inputs may change in updateUIparams()
+    for (v = 0; v < 7; v += 1) {
+      if (this.dataValuesORIG[v] != this.dataValues[v]) {
+        this.dataSwitcher[v] = 1;
+      }
+    }
 
     // ensure order nth has values -1,0,1,2
     let x = Math.round(this.nth);

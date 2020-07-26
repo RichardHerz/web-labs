@@ -88,13 +88,13 @@ canvas {
   display: block;
   position: absolute;
   border-color: DodgerBlue;
-  left: 8px;
+  left: 14px;
   top: 193px;
   width: 288px;
   height: 210px;
   visibility: visible;
   border-width: 1px;
-  border-style: dotted;
+  border-style: none;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
   LCvScrollbar: false;
@@ -188,11 +188,11 @@ canvas {
   border-color: DodgerBlue;
   left: 8px;
   top: 52px;
-  width: 286px;
+  width: 284px;
   height: 138px;
   visibility: visible;
   border-width: 1px;
-  border-style: dotted;
+  border-style: none;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
   LCvScrollbar: false;
@@ -203,7 +203,7 @@ canvas {
 #field_ReactionTimeLABEL {
   position: absolute;
   left: 4px;
-  top: 90px;
+  top: 86px;
   width: 200px;
   height: 32px;
   border-width: 1px;
@@ -336,13 +336,13 @@ border-style: solid;
   display: block;
   position: absolute;
   border-color: DodgerBlue;
-  left: 298px;
+  left: 362px;
   top: 56px;
-  width: 498px;
-  height: 350px;
+  width: 450px;
+  height: 500px;
   visibility: visible;
   border-width: 1px;
-  border-style: dotted;
+  border-style: none;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
   LCvScrollbar: false;
@@ -353,7 +353,7 @@ border-style: solid;
 #selectXvar {
   display: block;
   position: absolute;
-  left: 250px;
+  left: 186px;
   top: 230px;
   width: 90px;
   height: 20px;
@@ -362,7 +362,7 @@ border-style: solid;
 #selectYvar {
   display: block;
   position: absolute;
-  left: 0px;
+  left: -64px;
   top: 98px;
   width: 90px;
 }
@@ -370,7 +370,7 @@ border-style: solid;
 #div_plot_Y_label_cover {
   display: block;
   position: absolute;
-  left: 64px;
+  left: 0px;
   top: 60px;
   width: 20px;
   height: 120px;
@@ -388,7 +388,7 @@ border-style: solid;
 #div_PLOTDIV_plotData {
   display: block;
   position: absolute;
-  left: 64px;
+  left: 0px;
   top: 0px;
   width: 430px;
   height: 248px;
@@ -405,7 +405,7 @@ border-style: solid;
 
 #button_copyDataButton {
   position: absolute;
-  left: 146px;
+  left: 82px;
   top: 278px;
   width: 104px;
   height: 24px;
@@ -417,9 +417,108 @@ border-style: solid;
   LCshowBorder: true;
 }
 
+#field_RateConstantLABEL {
+  position: absolute;
+  left: 12px;
+  top: 405px;
+  width: 200px;
+  height: 32px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#input_field_RateConstant {
+  position: absolute;
+  left: 216px;
+  top: 421px;
+  width: 72px;
+  height: 22px;
+border-width: 1px;
+  visibility: visible;
+border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#input_field_ActivationEnergy {
+  position: absolute;
+  left: 216px;
+  top: 453px;
+  width: 72px;
+  height: 22px;
+border-width: 1px;
+  visibility: visible;
+border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#field_ActivationEnergyLABEL {
+  position: absolute;
+  left: 12px;
+  top: 437px;
+  width: 200px;
+  height: 32px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#input_field_ReactionOrder {
+  position: absolute;
+  left: 216px;
+  top: 485px;
+  width: 72px;
+  height: 22px;
+border-width: 1px;
+  visibility: visible;
+border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#field_ReactionOrderLABEL {
+  position: absolute;
+  left: 12px;
+  top: 468px;
+  width: 200px;
+  height: 32px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
 #field_cA_final {
   position: absolute;
-  left: 264px;
+  left: 200px;
   top: 260px;
   width: 220px;
   height: 32px;
@@ -438,7 +537,7 @@ border-style: solid;
 
 #field_conversion_final {
   position: absolute;
-  left: 264px;
+  left: 200px;
   top: 290px;
   width: 220px;
   height: 32px;
@@ -446,123 +545,6 @@ border-style: solid;
   border-width: 1px;
   /* set style.visbility = 'visible' at end updateState */
   visibility: hidden;
-  border-style: none;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
-}
-
-#div_reactionParams {
-  display: block;
-  position: absolute;
-  border-color: DodgerBlue;
-  left: 8px;
-  top: 404px;
-  width: 286px;
-  height: 138px;
-  visibility: visible;
-  border-width: 1px;
-  border-style: dotted;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 0);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-}
-
-#field_RateConstantLABEL {
-  position: absolute;
-  left: 4px;
-  top: 0px;
-  width: 200px;
-  height: 32px;
-  border-width: 1px;
-  visibility: visible;
-  border-style: none;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
-}
-
-#input_field_RateConstant {
-  position: absolute;
-  left: 208px;
-  top: 12px;
-  width: 72px;
-  height: 22px;
-border-width: 1px;
-  visibility: visible;
-border-style: solid;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: true;
-}
-
-#input_field_ActivationEnergy {
-  position: absolute;
-  left: 208px;
-  top: 43px;
-  width: 72px;
-  height: 22px;
-border-width: 1px;
-  visibility: visible;
-border-style: solid;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: true;
-}
-
-#field_ActivationEnergyLABEL {
-  position: absolute;
-  left: 4px;
-  top: 32px;
-  width: 200px;
-  height: 32px;
-  border-width: 1px;
-  visibility: visible;
-  border-style: none;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
-}
-
-#input_field_ReactionOrder {
-  position: absolute;
-  left: 208px;
-  top: 75px;
-  width: 72px;
-  height: 22px;
-border-width: 1px;
-  visibility: visible;
-border-style: solid;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: true;
-}
-
-#field_ReactionOrderLABEL {
-  position: absolute;
-  left: 4px;
-  top: 64px;
-  width: 200px;
-  height: 32px;
-  border-width: 1px;
-  visibility: visible;
   border-style: none;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);

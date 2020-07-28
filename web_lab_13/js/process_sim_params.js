@@ -62,7 +62,7 @@ let simParams = {
     //
     // currently using simTime as runCount ( run count )
     if (controller.simTime < 2) {
-      $.post(this.runLoggerURL,{webAppNumber: "13, Batch reactor, isothermal, nth order reaction, labType single"})
+      $.post(this.runLoggerURL,{webAppNumber: "13, Batch reactor, isothermal, nth order reaction"})
         .done(
           function(data) {
             // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>";

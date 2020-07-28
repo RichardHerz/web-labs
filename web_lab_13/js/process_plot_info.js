@@ -77,7 +77,7 @@ let plotInfo = {
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_single'; // flot.js wants ID with prefix #
     // plotInfo[pnum]['numberPoints'] not needed here since only one unit in this plot
 
-    // SPECIAL FOR LAB TYPE SINGLE
+    // SPECIAL FOR PLOT TYPE SINGLE
     // xVar and yVar selected by HTML menu buttons
     let xVar = simParams.xVar;
     let yVar = simParams.yVar;
@@ -108,7 +108,7 @@ let plotInfo = {
     plotInfo[pnum]['plotDataSeriesColors'] = ['#420420','#1e90ff']; // optional, in variable order 0, 1, etc.
     // ['#ff6347','#1e90ff'] is Tomato and DodgerBlue, #420420 is black
 
-    // SPECIAL FOR LAB TYPE SINGLE
+    // SPECIAL FOR PLOT TYPE SINGLE
     plotInfo[pnum]['plotDataPoints'] = 1; // 0 false, 1 true, default is false
     plotInfo[pnum]['plotDataLines'] = 0; // 0 false, 1 true, default is true
 
@@ -126,7 +126,7 @@ let plotInfo = {
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //
-    // SPECIAL FOR LAB TYPE SINGLE
+    // SPECIAL FOR PLOT TYPE SINGLE
     //     list one variable (only one var per plot, at least for now)
     //     values will be changed by javascript
     //

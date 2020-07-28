@@ -1,4 +1,4 @@
-sup {
+0px;sup {
   font-size: smaller;
 }
 
@@ -57,9 +57,9 @@ canvas {
  width: 368px;
  height: 122px;
  visibility: visible;
- border-width: 1px;
+ border-width: 0px;
  background-color: rgb(255,255,255);
- border-style: none;
+ border-style: dotted;
  opacity: 1;
  LCvScrollbar: false;
  LCthreeD: true;
@@ -73,7 +73,7 @@ canvas {
   left: 10px;
   top: 20px;
   width: 797px;
-  height: 544px;
+  height: 764px;
   visibility: visible;
   border-width: 1px;
   border-style: dotted;
@@ -93,7 +93,7 @@ canvas {
   width: 286px;
   height: 210px;
   visibility: visible;
-  border-width: 1px;
+  border-width: 0px;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
@@ -142,10 +142,9 @@ canvas {
   width: 160px;
   height: 22px;
   text-align : left;
-  border-width: 1px;
-  /* set style.visbility = 'visible' at end updateState */
   visibility: visible;
-  border-style: none;
+  border-width: 0px;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -191,7 +190,7 @@ canvas {
   width: 286px;
   height: 138px;
   visibility: visible;
-  border-width: 1px;
+  border-width: 0px;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
@@ -206,9 +205,9 @@ canvas {
   top: 90px;
   width: 200px;
   height: 32px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -223,9 +222,9 @@ canvas {
   top: 102px;
   width: 72px;
   height: 22px;
-border-width: 1px;
+  border-width: 1px;
   visibility: visible;
-border-style: solid;
+  border-style: solid;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -239,9 +238,9 @@ border-style: solid;
   top: 53px;
   width: 181px;
   height: 32px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -272,9 +271,9 @@ border-style: solid;
   top: 21px;
   width: 194px;
   height: 28px;
-  border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-width: 0px;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -305,9 +304,9 @@ border-style: solid;
   top: -12px;
   width: 195px;
   height: 32px;
-  border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-width: 0px;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -322,9 +321,9 @@ border-style: solid;
   top: 5px;
   width: 72px;
   height: 22px;
-border-width: 1px;
+  border-width: 1px;
   visibility: visible;
-border-style: solid;
+  border-style: solid;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -341,13 +340,32 @@ border-style: solid;
   width: 498px;
   height: 350px;
   visibility: visible;
-  border-width: 1px;
+  border-width: 0px;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: false;
+}
+
+#field_old_data_notice_profile {
+  display: block;
+  position: absolute;
+  left: 30px;
+  top: 266px;
+  width: 100px;
+  height: 24px;
+  visibility: visible;
+  text-align: right;
+  border-width: 0px;
+  border-style: outset;
+  opacity: 1;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: false;
+  LCshowBorder: true;
+  LCvScrollbar: false;
 }
 
 #div_PLOTDIV_profile {
@@ -389,10 +407,10 @@ border-style: solid;
   width: 220px;
   height: 32px;
   text-align : right;
-  border-width: 1px;
+  border-width: 0px;
   /* set style.visbility = 'visible' at end updateState */
   visibility: hidden;
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -408,10 +426,10 @@ border-style: solid;
   width: 220px;
   height: 32px;
   text-align : right;
-  border-width: 1px;
   /* set style.visbility = 'visible' at end updateState */
   visibility: hidden;
-  border-style: none;
+  border-width: 0px;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -429,13 +447,32 @@ border-style: solid;
   width: 498px;
   height: 350px;
   visibility: visible;
-  border-width: 1px;
+  border-width: 0px;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: false;
+}
+
+#field_old_data_notice_single {
+  display: block;
+  position: absolute;
+  left: 30px;
+  top: 266px;
+  width: 100px;
+  height: 24px;
+  visibility: visible;
+  text-align: right;
+  border-width: 0px;
+  border-style: outset;
+  opacity: 1;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: false;
+  LCshowBorder: true;
+  LCvScrollbar: false;
 }
 
 #selectXvar {
@@ -530,7 +567,7 @@ border-style: solid;
   width: 220px;
   height: 32px;
   text-align : right;
-  border-width: 1px;
+  border-width: 0px;
   /* set style.visbility = 'visible' at end updateState */
   visibility: hidden;
   border-style: none;
@@ -549,7 +586,7 @@ border-style: solid;
   width: 220px;
   height: 32px;
   text-align : right;
-  border-width: 1px;
+  border-width: 0px;
   /* set style.visbility = 'visible' at end updateState */
   visibility: hidden;
   border-style: none;
@@ -570,7 +607,7 @@ border-style: solid;
   width: 286px;
   height: 138px;
   visibility: visible;
-  border-width: 1px;
+  border-width: 0px;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
@@ -618,9 +655,9 @@ border-style: solid;
   top: 43px;
   width: 72px;
   height: 22px;
-border-width: 1px;
+  border-width: 1px;
   visibility: visible;
-border-style: solid;
+  border-style: solid;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -634,9 +671,9 @@ border-style: solid;
   top: 32px;
   width: 192px;
   height: 32px;
-  border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-width: 0px;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -651,9 +688,9 @@ border-style: solid;
   top: 75px;
   width: 72px;
   height: 22px;
-border-width: 1px;
+  border-width: 1px;
   visibility: visible;
-border-style: solid;
+  border-style: solid;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -667,9 +704,9 @@ border-style: solid;
   top: 64px;
   width: 192px;
   height: 32px;
-  border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-width: 0px;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;

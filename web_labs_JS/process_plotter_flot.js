@@ -69,8 +69,8 @@ let plotter = {
 
     let xVar; // used for plot type single
     let yVar; // used for plot type single
-    // xxx not sure why this IF did not seem to work...
-    // xxx needed to get separately in a couple places below...
+    // not sure why this IF did not seem to work...
+    // needed to get separately in two places below...
     // if (plotInfo[plotIndex]['type'] == 'single') {
       // let xVar = simParams.xVar;
       // let yVar = simParams.yVar;
@@ -82,23 +82,12 @@ let plotter = {
     //          than one variable per unit but do it here for all plots
     let plotData = []; // this function will fill and return plotData
     let plotType = plotInfo[plotIndex]['type']; // profile or strip
-    dataName = plotType + 'Data'; // profileData or stripData
-    if ((plotType == 'profile') || (plotType == 'strip')) {
+    dataName = plotType + 'Data';
+    if ((plotType == 'profile') || (plotType == 'strip') || (plotType == 'single')) {
       v = 0;
       n = varNumbers[v];
       varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
       thisNumPts = processUnits[varUnitIndex][dataName][n].length;
-      plotData = this.initPlotData(numVar, thisNumPts-1); // note thisNumPts-1
-    } else if (plotType == 'single') {
-      // NEW FOR PLOT TYPE SINGLE - UNDER DEVELOPMENT
-      // assume only plotting one y var and that both x & y var from same unit
-      // need to get x and y var from plot menu buttons
-      // for development, just specify two here fixed here & same in plotInfo
-      // may be able to move varUnitIndex above this IF since common for now...
-      v = 0;
-      dataName = 'singleData';
-      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
-      thisNumPts = processUnits[varUnitIndex][dataName][v].length;
       plotData = this.initPlotData(numVar, thisNumPts-1); // note thisNumPts-1
     } else {
       alert('in getPlotData, unknown plot type');
@@ -180,10 +169,6 @@ let plotter = {
           alert('in getPlotData, unknown plot type');
         }
       }
-
-      // NOTE: if I go back to earlier scheme I might be able to use some of the
-      // strategy here in copying entire let vectors in order to eliminate
-      // some steps in this 'for' repeat...
 
     } // END OF for (v = 0; v < numVar; v += 1)
 
@@ -278,8 +263,8 @@ let plotter = {
         // do not plot this variable and do not add to legend
       } else {
         // do not plot this variable
-        // *BUT* need to add a single point in case no vars on this axis to show
-        // in which case no axis labels will show without this single point
+        // *BUT* need to add one point in case no vars on this axis to show
+        // in which case no axis labels will show without this point
         newobj.data = [plotInfo[pIndex]['xAxisMax'],plotInfo[pIndex]['yLeftAxisMax']];
         newobj.label = vLabel[k];
         if (yAxis[k] === 'right') {newobj.yaxis = 1;} else {newobj.yaxis = 2;}

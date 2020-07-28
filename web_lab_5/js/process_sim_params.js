@@ -23,6 +23,12 @@ let simParams = {
 
   title : 'Bioreactor Control', // title of simulation
 
+  // valid values for labType are 'Dynamic' (default), or any other value
+  // if not specified or set to '', 0, or false, then gets set to 'Dynamic' in controller
+  // if then set to 'Dynamic', then controller.updateProcess is called repeatedly on Run
+  // if is set to any other value, controller.updateProcess is called once on Run
+  labType : 'Dynamic',
+
   runButtonID : "button_runButton", // required for interface object methods
   // URLs for methods updateRunCount and updateCurrentRunCountDisplay below
   runLoggerURL : "../webAppRunLog.lc",
@@ -34,6 +40,7 @@ let simParams = {
 
   simStepRepeats : 10, // integer number of unit updates between display updates
   simTimeStep : 0.1, // time step value, simulation time, of main repeat
+  simTimeUnits: 'hr', // used in interfacer.copyData for table
 
   // individual units may do more steps in one unit updateState()
   // see individual units for any unitTimeStep and unitStepRepeats

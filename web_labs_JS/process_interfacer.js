@@ -209,6 +209,12 @@ let interfacer = {
     // USES internal function formatNum
     // REQUIRES run button id='button_runButton' & display labels be 'Run' & 'Pause'
 
+    // if oldDataFlag is true, return so script will not continue
+    // if simParams.oldDataFlag not set by lab, script will continue
+    if (simParams.oldDataFlag == 1) {
+      return;
+    }
+
     // if sim is running, pause the sim
     // copy grabs what is showing on plot when copy button clicked
     // so want user to be able to take screenshot to compare with data copied
@@ -236,12 +242,17 @@ let interfacer = {
     // list current input values
 
     let timeTOround = controller.simTime;
-    if (simParams.labType == 'Dynamic') {
-      // xxx ' s <br>' to ' <br>' because can't assume time units are seconds,
-      // xxx e.g., time units in bioreactor are hours
-      tText += '<p>Simulation time of data capture = ' + timeTOround.toFixed(3) + ' <br>';
+    let timeUnits = '&nbsp;' ;
+    if (simParams.simTimeUnits) {
+      timeUnits += simParams.simTimeUnits;
     } else {
-      // Single or Profile labType
+      // add default seconds
+      timeUnits += 's';
+    }
+    if (simParams.labType == 'Dynamic') {
+      tText += '<p>Simulation time of data capture = ' + timeTOround.toFixed(3)
+               + timeUnits + '<br>';
+    } else {
       // WARNING: must have simParams vars imTimeStep = 1 and simStepRepeats = 1
       // for simtime to equal # runs between resets
       tText += '<p>Total runs at time of data capture = ' + timeTOround.toFixed(0) + '<br>';

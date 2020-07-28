@@ -49,11 +49,9 @@ let controller = {
 
   openThisLab : function() {
 
-    // XXX need more work here to validate values including empty value
-    // check labType and set to default Dynamic if does not exist
     if (simParams.labType) {
       // simParams.labType exists
-      // valid values are Single, Profile, Dynamic
+      // 'Dynamic' or any other value
     } else {
       // does not exist, set to default Dynamic
       simParams.labType = 'Dynamic';
@@ -179,15 +177,11 @@ let controller = {
       if (ptype == 'canvas') {
         // space-time, color-canvas plot
         plotter.plotColorCanvasPlot(p);
-      } else if ((ptype == 'profile') || (ptype == 'strip')) {
+      } else if ((ptype == 'profile') || (ptype == 'strip') || (ptype == 'single')) {
         // profile (static x,y) or strip chart (scolling x,y)
         let data = plotter.getPlotData(p);
         plotter.plotPlotData(data,p);
-      } else if (ptype == 'single') {
-        // NEW FOR LAB TYPE SINGLE
-        let data = plotter.getPlotData(p);
-        plotter.plotPlotData(data,p);
-      } else  {
+      } else {
         // plotting must be handled by a unit's updateDisplay
         // no plotting here
       }

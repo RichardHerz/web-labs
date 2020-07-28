@@ -47,6 +47,8 @@ let puBatchReactorNthOrder = {
   conversion_output_field_ID  : "field_conversion_final",
   cA_output_field_ID_profile : "field_cA_final_profile",
   conversion_output_field_ID_profile  : "field_conversion_final_profile",
+  old_data_notice_ID_profile : "field_old_data_notice_profile",
+  old_data_notice_ID_single : "field_old_data_notice_single",
   displayReactorContents: '#div_PLOTDIV_reactorContents', // need # because selecting CSS
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -75,7 +77,7 @@ let puBatchReactorNthOrder = {
   dataDefault : [],
   dataValues : [],
 
-  // SPECIAL FOR LAB TYPE SINGLE
+  // SPECIAL FOR PLOT TYPE SINGLE
   dataValuesORIG : [],
 
   // define arrays to hold output variables for profile plot
@@ -87,7 +89,7 @@ let puBatchReactorNthOrder = {
   // these will be filled with initial values in method reset()
   profileData : [], // for profile plots, plot script requires this name
 
-  // SPECIAL FOR LAB TYPE SINGLE - will be loaded in reset()
+  // SPECIAL FOR PLOT TYPE SINGLE - will be loaded in reset()
   singleData : [], // for single point plots, plot script requires this name
   dataSwitcher : [], // for copy data - list only inputs in table that changed
 
@@ -175,6 +177,11 @@ let puBatchReactorNthOrder = {
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
     //
+
+    // initialize profile data array
+    // plotter.initPlotData(numProfileVars,numProfilePts)
+    this.profileData = plotter.initPlotData(1,this.numPlotPoints); // holds data for static profile plots
+
   }, // END of initialize()
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -187,9 +194,15 @@ let puBatchReactorNthOrder = {
     // reset function will use whatever last values user has entered.
 
     this.updateUIparams(); // this first, then set other values as needed
-    // initialize profile data array
-    // initPlotData(numProfileVars,numProfilePts)
-    // SPECIAL FOR LAB TYPE SINGLE - save all input and output vars and runCount
+
+    // clear plot type profile data sources,
+    // since profileData array gets reloaded in updateDisplay
+    for (p = 0; p <= this.numPlotPoints; p += 1) {
+      this.time[p] =  0;
+      this.cA[p] = 0;
+    }
+
+    // SPECIAL FOR PLOT TYPE 'single' - save all input and output vars and runCount
     const numSingleVars = 10;
     const numSinglePts = 0; // 0+1 points will be filled here
     this.singleData = plotter.initPlotData(numSingleVars,numSinglePts);
@@ -200,7 +213,7 @@ let puBatchReactorNthOrder = {
       this.singleData[v][0][1] = -1;
     }
 
-    // SPECIAL FOR LAB TYPE SINGLE
+    // SPECIAL FOR PLOT TYPE 'single'
     // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
     // inputs and 1's for all outputs - inputs may change in updateUIparams()
     let tlen = this.VarCount; // last v of inputs, which start at v=0
@@ -212,6 +225,17 @@ let puBatchReactorNthOrder = {
     for (v = tlen+1; v < tleno; v += 1){
       this.dataSwitcher[v] = 1;
     }
+
+    this.runCount = 0;
+    this.cA_final = this.cAin;
+    this.conversion = 0;
+
+    // set oldDataFlag = 1 on reset to deactivate copy data buttons
+    // since no runs made and plots have been cleared
+    simParams.oldDataFlag = 1; // 0 for no old data, 1 for old data on plot
+    // but clear fields since plots have been cleard
+    document.getElementById(this.old_data_notice_ID_profile).innerHTML = '';
+    document.getElementById(this.old_data_notice_ID_single).innerHTML = '';
 
   }, // end reset
 
@@ -232,7 +256,7 @@ let puBatchReactorNthOrder = {
     //   is only used in copyData() to report input values
     //
 
-    // SPECIAL FOR LAB TYPE SINGLE
+    // SPECIAL FOR PLOT TYPE SINGLE
     // need to get which values have changed, so save original values
     this.dataValuesORIG[0] = this.k_300;
     this.dataValuesORIG[1] = this.Ea;
@@ -252,12 +276,17 @@ let puBatchReactorNthOrder = {
     this.Vol = this.dataValues[5] = interfacer.getInputValue(unum, 5);
     this.t_final = this.dataValues[6] = interfacer.getInputValue(unum, 6);
 
-    // SPECIAL FOR LAB TYPE SINGLE
+    // SPECIAL FOR PLOT TYPE SINGLE
     // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
     // inputs and 1's for all outputs - inputs may change in updateUIparams()
     for (v = 0; v < 7; v += 1) {
       if (this.dataValuesORIG[v] != this.dataValues[v]) {
         this.dataSwitcher[v] = 1;
+        if (controller.simTime > 0) {
+          simParams.oldDataFlag = 1; // 0 for no old data, 1 for old data on plot
+          document.getElementById(this.old_data_notice_ID_profile).innerHTML = 'Old Data';
+          document.getElementById(this.old_data_notice_ID_single).innerHTML = 'Old Data';
+        }
       }
     }
 
@@ -270,20 +299,6 @@ let puBatchReactorNthOrder = {
       plotInfo[plotIndex]['xAxisMax'] = this.t_final;
       // force axis redraw
       plotter['plotArrays']['plotFlag'][plotIndex] = 0;
-    }
-
-    // FOR PROFILE PLOT
-    // for this lab, initialize profile data array each run
-    // plotter.initPlotData(numProfileVars,numProfilePts)
-    this.profileData = plotter.initPlotData(1,this.numPlotPoints); // holds data for static profile plots
-    let kn;
-    for (k = 0; k <= this.numPlotPoints; k += 1) {
-      kn = k;
-      // x-axis values
-      // first index specifies which variable
-      this.profileData[0][k][0] = kn;
-      // y-axis values
-      this.profileData[0][k][1] = 0;
     }
 
     // ensure order nth has values -1,0,1,2
@@ -321,7 +336,7 @@ let puBatchReactorNthOrder = {
       this.cA[j] = this.reactBATCHnthSS(this.time[j],kT,this.nth,this.cAin);
     }
 
-    // SPECIAL LAB TYPE SINGLE - only need to compute final values
+    // SPECIAL FOR PLOT TYPE SINGLE - compute final values
     this.cA_final = this.reactBATCHnthSS(this.t_final,kT,this.nth,this.cAin);
     this.conversion = 100 * (1 - this.cA_final / this.cAin);
 
@@ -336,6 +351,10 @@ let puBatchReactorNthOrder = {
 
     // change conversion final output field to visible only after 1st run
     document.getElementById(this.conversion_output_field_ID_profile).style.visibility = 'visible';
+
+    simParams.oldDataFlag = 0; // 0 for no old data, 1 for old data on plot
+    document.getElementById(this.old_data_notice_ID_profile).innerHTML = '';
+    document.getElementById(this.old_data_notice_ID_single).innerHTML = '';
 
   }, // end updateState method
 
@@ -385,7 +404,7 @@ let puBatchReactorNthOrder = {
       this.profileData[0][j][1] = this.cA[j];
     }
 
-    // SPECIAL FOR LAB TYPE SINGLE
+    // SPECIAL FOR PLOT TYPE SINGLEd
     // reset on open lab adds -1,-1 points in first element of array
     // then don't want updateDisplay on open lab and
     // before any runs made to add points
@@ -395,7 +414,7 @@ let puBatchReactorNthOrder = {
       const numSingleVars = 10; // xxx get this from a property
       for (v = 0; v < numSingleVars; v += 1) {
         tempArray = this.singleData[v]; // work on one plot variable at a time
-        // delete first x,y pair -1,-1 on 1st run
+        // delete first x,y pair 0,0 on 1st run
         if (this.runCount == 1) {tempArray.shift();}
         if (v == 0) {tx = this.k_300}
         else if (v == 1) {tx = this.Ea}

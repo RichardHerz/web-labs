@@ -23,7 +23,11 @@ let simParams = {
 
   title : 'Batch Reactor, isothermal, nth order reaction', // title of simulation
 
-  labType : 'Single', // valid values are: Single, Profile, Dynamic (default)
+  // valid values for labType are 'Dynamic' (default), or any other value
+  // if not specified or set to '', 0, or false, then gets set to 'Dynamic' in controller
+  // if then set to 'Dynamic', then controller.updateProcess is called repeatedly on Run
+  // if is set to any other value, controller.updateProcess is called once on Run
+  labType : 'Static',
 
   runButtonID : "button_runButton", // for functions to run, reset, copy data
   // URLs for methods updateRunCount and updateCurrentRunCountDisplay below
@@ -43,6 +47,11 @@ let simParams = {
   // set updateDisplayTimingMs to 50 ms because runs too fast on fast desktop
   // and 50 ms gives about same speed as 0 ms on my laptop
   updateDisplayTimingMs : 100, // real time milliseconds between display updates
+
+  // set oldDataFlag to 1 initially so copy data buttons don't run script before
+  // any data is present - set simParams.oldDataFlag = 0 in unit updateState
+  // to activate copy data buttons
+  oldDataFlag : 1, // 0 for no old data, 1 for old data on plot
 
   // WARNING: NEED LITERAL, e.g., "field_run_counter" in methods below
   //      e.g., this.runCounterFieldID does NOT work
@@ -69,7 +78,7 @@ let simParams = {
       // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
   },
 
-  // SPECIAL - LAB TYPE SINGLE
+  // SPECIAL - LAB TYPE NOT DYNAMIC 
   // assume only one unit and one plot type 'single' in this lab
   // these xVar, yVar values should agree with initial selected values in html
   // can't use document.getElementById() because this script loads before html

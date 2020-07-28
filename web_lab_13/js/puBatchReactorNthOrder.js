@@ -107,8 +107,8 @@ let puBatchReactorNthOrder = {
     this.dataInputs[v] = 'input_field_RateConstant';
     this.dataUnits[v] = 'units depend on order';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 1000;
-    this.dataDefault[v] = 1.0e-7;
+    this.dataMax[v] = 1;
+    this.dataDefault[v] = 1.0e-2;
     //
     v = 1;
     this.dataHeaders[v] = 'Ea';
@@ -139,7 +139,7 @@ let puBatchReactorNthOrder = {
     this.dataInputs[v] = 'input_field_Concentration';
     this.dataUnits[v] = 'mol/m3';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 1000;
+    this.dataMax[v] = 10;
     this.dataDefault[v] = 500;
     //
     v = 5;

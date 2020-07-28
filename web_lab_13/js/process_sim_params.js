@@ -62,7 +62,7 @@ let simParams = {
     //
     // currently using simTime as runCount ( run count )
     if (controller.simTime < 2) {
-      $.post(this.runLoggerURL,{webAppNumber: "12, Batch reactor, isothermal, nth order reaction, labType single"})
+      $.post(this.runLoggerURL,{webAppNumber: "13, Batch reactor, isothermal, nth order reaction, labType single"})
         .done(
           function(data) {
             // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>";
@@ -78,7 +78,7 @@ let simParams = {
       // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
   },
 
-  // SPECIAL - LAB TYPE NOT DYNAMIC 
+  // SPECIAL - LAB TYPE NOT DYNAMIC
   // assume only one unit and one plot type 'single' in this lab
   // these xVar, yVar values should agree with initial selected values in html
   // can't use document.getElementById() because this script loads before html

@@ -284,11 +284,19 @@ let puBatchReactorNthOrder = {
         this.dataSwitcher[v] = 1;
         if (controller.simTime > 0) {
           simParams.oldDataFlag = 1; // 0 for no old data, 1 for old data on plot
-          document.getElementById(this.old_data_notice_ID_profile).innerHTML = 'Old Data';
-          document.getElementById(this.old_data_notice_ID_single).innerHTML = 'Old Data';
         }
       }
     }
+    if (simParams.oldDataFlag == 1) {
+      // 0 for no old data, 1 for old data on plot
+      document.getElementById(this.old_data_notice_ID_profile).innerHTML = 'Old Data';
+      document.getElementById(this.old_data_notice_ID_single).innerHTML = 'Old Data';
+    }
+    // xxx I tried to wait some delay before displaying old run notices in case
+    // user makes an immediate run so don't get flash of notice BUT
+    // THIS HAD NO DELAY BEFORE DISPLAY: setTimeout(this.displayOldRunNotice(), 2000);
+    // where the lines above were in the function AND if delay worked, function would need
+    // to have had a check that simParams.oldDataFlag was still = 1 when it executed...
 
     // SPECIAL for cA vs. time profile plot
     // if t_final value changes, set values so
@@ -466,6 +474,6 @@ let puBatchReactorNthOrder = {
         cA = cAin;
     }
     return cA
-  } // END reactBATCHnthSS method
+  }, // END reactBATCHnthSS method
 
 }; // END puBatchReactor object

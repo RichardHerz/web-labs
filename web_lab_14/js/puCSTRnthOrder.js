@@ -16,10 +16,10 @@
 
 // -------------------------------------------------------------------
 
-let puBatchReactorNthOrder = {
+let puCSTRnthOrder = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
-  name : 'Batch Reactor - nth order reaction',
+  name : 'CSTR - nth order reaction',
 
   // for other info shared with other units and objects, see public properties
   // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
@@ -476,4 +476,4 @@ let puBatchReactorNthOrder = {
     return cA
   }, // END reactBATCHnthSS method
 
-}; // END puBatchReactor object
+}; // END puCSTRnthOrder object

@@ -284,19 +284,20 @@ let puBatchReactorNthOrder = {
         this.dataSwitcher[v] = 1;
         if (controller.simTime > 0) {
           simParams.oldDataFlag = 1; // 0 for no old data, 1 for old data on plot
-        }
-      }
-    }
-    if (simParams.oldDataFlag == 1) {
-      // 0 for no old data, 1 for old data on plot
-      document.getElementById(this.old_data_notice_ID_profile).innerHTML = 'Old Data';
-      document.getElementById(this.old_data_notice_ID_single).innerHTML = 'Old Data';
-    }
-    // xxx I tried to wait some delay before displaying old run notices in case
-    // user makes an immediate run so don't get flash of notice BUT
-    // THIS HAD NO DELAY BEFORE DISPLAY: setTimeout(this.displayOldRunNotice(), 2000);
-    // where the lines above were in the function AND if delay worked, function would need
-    // to have had a check that simParams.oldDataFlag was still = 1 when it executed...
+          // wait some time before displaying old data notice and check to make
+          // sure the flag is still set in order to avoid display flashing
+          // when user makes a run right after making a change
+          // NOTE: tried several attempts including external function but this
+          // was the only way I could get it to work
+          setTimeout(function(){
+            if (simParams.oldDataFlag == 1) {
+              document.getElementById(processUnits[0].old_data_notice_ID_profile).innerHTML = 'Old Data';
+              document.getElementById(processUnits[0].old_data_notice_ID_single).innerHTML = 'Old Data';
+            }
+          }, 2000); // wait 2000 ms, END OF setTimeout
+        } // END OF if (controller.simTime > 0)
+      } // END OF if (this.dataValuesORIG[v] != this.dataValues[v])
+    } // END OF for (v = 0; v < 7; v += 1) 
 
     // SPECIAL for cA vs. time profile plot
     // if t_final value changes, set values so

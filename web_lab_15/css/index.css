@@ -331,12 +331,138 @@ border-style: solid;
   LCshowBorder: true;
 }
 
+#div_plotFrame_profile {
+  display: block;
+  position: absolute;
+  border-color: DodgerBlue;
+  left: 298px;
+  top: 56px;
+  width: 498px;
+  height: 350px;
+  visibility: visible;
+  border-width: 0px;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+}
+
+#field_old_data_notice_profile {
+  display: block;
+  position: absolute;
+  left: 30px;
+  top: 266px;
+  width: 100px;
+  height: 24px;
+  visibility: visible;
+  text-align: right;
+  border-width: 0px;
+  border-style: outset;
+  opacity: 1;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: false;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#div_PLOTDIV_profile {
+  display: block;
+  position: absolute;
+  left: 64px;
+  top: 0px;
+  width: 430px;
+  height: 248px;
+  visibility: visible;
+  border-width: 0px;
+  border-style: outset;
+  opacity: 1;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: false;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#button_copyData_profile {
+  position: absolute;
+  left: 146px;
+  top: 278px;
+  width: 104px;
+  height: 24px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#field_spaceTime_profile {
+  position: absolute;
+  left: 264px;
+  top: 260px;
+  width: 220px;
+  height: 32px;
+  text-align : right;
+  border-width: 0px;
+  /* set style.visbility = 'visible' at end updateState */
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#field_cA_final_profile {
+  position: absolute;
+  left: 264px;
+  top: 286px;
+  width: 220px;
+  height: 32px;
+  text-align : right;
+  border-width: 0px;
+  /* set style.visbility = 'visible' at end updateState */
+  visibility: hidden;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#field_conversion_final_profile {
+  position: absolute;
+  left: 264px;
+  top: 320px;
+  width: 220px;
+  height: 32px;
+  text-align : right;
+  /* set style.visbility = 'visible' at end updateState */
+  visibility: hidden;
+  border-width: 0px;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
 #div_plotFrame_single {
   display: block;
   position: absolute;
   border-color: DodgerBlue;
   left: 298px;
-  top: 100px;
+  top: 410px;
   width: 498px;
   height: 350px;
   visibility: visible;
@@ -462,7 +588,7 @@ border-style: solid;
   text-align : right;
   border-width: 0px;
   /* set style.visbility = 'visible' at end updateState */
-  visibility: hidden;
+  visibility: visible;
   border-style: none;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);

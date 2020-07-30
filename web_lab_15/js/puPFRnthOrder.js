@@ -16,10 +16,10 @@
 
 // -------------------------------------------------------------------
 
-let puBatchReactorNthOrder = {
+let puPFRnthOrder = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
-  name : 'Batch Reactor - nth order reaction',
+  name : 'PFR - Plug Flow Reactor - nth order reaction',
 
   // for other info shared with other units and objects, see public properties
   // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
@@ -43,12 +43,17 @@ let puBatchReactorNthOrder = {
   // SEE dataInputs array in initialize() method for input field ID's
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
+  spaceTime_output_field_ID : "field_spaceTime",
   cA_output_field_ID : "field_cA_final",
   conversion_output_field_ID  : "field_conversion_final",
+
+  spaceTime_output_field_ID_profile : "field_spaceTime_profile",
   cA_output_field_ID_profile : "field_cA_final_profile",
   conversion_output_field_ID_profile  : "field_conversion_final_profile",
+
   old_data_notice_ID_profile : "field_old_data_notice_profile",
   old_data_notice_ID_single : "field_old_data_notice_single",
+
   displayReactorContents: '#div_PLOTDIV_reactorContents', // need # because selecting CSS
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -60,7 +65,9 @@ let puBatchReactorNthOrder = {
   cAin : 1, // initial reactant concentration
   cA_final : 1, // final reactant concentration
   Vol : 0, // volume of reactor contents
+  flowRate : 0, // flow rate through reactor
   t_final : 0,
+  spaceTime : 0,
   k_300 : 0, // forward rate constant at 300 K
   Ea : 0, // activation energy
   nth : 0, // reaction order (-1, 0, 1, 2)
@@ -147,16 +154,16 @@ let puBatchReactorNthOrder = {
     this.dataInputs[v] = 'input_field_Volume';
     this.dataUnits[v] = 'm3';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 10000;
+    this.dataMax[v] = 1000;
     this.dataDefault[v] = 4.0e-3;
     //
     v = 6;
-    this.dataHeaders[v] = 't_final';
-    this.dataInputs[v] = 'input_field_ReactionTime';
-    this.dataUnits[v] = 's';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 1000;
-    this.dataDefault[v] = 100;
+    this.dataHeaders[v] = 'flow rate';
+    this.dataInputs[v] = 'input_field_flowRate';
+    this.dataUnits[v] = 'm3/s';
+    this.dataMin[v] = 1; // MUST BE > 0 or DIVIDE BY ZERO in calc of space time
+    this.dataMax[v] = 100;
+    this.dataDefault[v] = 1;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -166,12 +173,18 @@ let puBatchReactorNthOrder = {
     // OUTPUT VARS
     //
     v = 7;
+    this.dataHeaders[v] = 'space time';
+    this.dataUnits[v] =  's';
+    this.dataMin[v] = this.dataMin[5] / this.dataMax[6];
+    this.dataMax[v] = this.dataMax[5] / this.dataMin[6];
+    //
+    v = 8;
     this.dataHeaders[v] = 'cA_final';
     this.dataUnits[v] =  'mol/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = this.dataMax[4]; // [4] is cA_init
     //
-    v = 8;
+    v = 9;
     this.dataHeaders[v] = 'conversion';
     this.dataUnits[v] = "%";
     this.dataMin[v] = 0;
@@ -264,7 +277,10 @@ let puBatchReactorNthOrder = {
     this.dataValuesORIG[3] = this.Tin;
     this.dataValuesORIG[4] = this.cAin;
     this.dataValuesORIG[5] = this.Vol;
-    this.dataValuesORIG[6] = this.t_final;
+    this.dataValuesORIG[6] = this.flowRate;
+
+    // SPECIAL FOR PFR
+    this.dataValuesORIG[7] = this.spaceTime;
 
     let unum = this.unitIndex;
     //
@@ -274,7 +290,12 @@ let puBatchReactorNthOrder = {
     this.Tin = this.dataValues[3] = interfacer.getInputValue(unum, 3);
     this.cAin = this.dataValues[4] = interfacer.getInputValue(unum, 4);
     this.Vol = this.dataValues[5] = interfacer.getInputValue(unum, 5);
-    this.t_final = this.dataValues[6] = interfacer.getInputValue(unum, 6);
+    this.flowRate = this.dataValues[6] = interfacer.getInputValue(unum, 6);
+
+    // SPECIAL FOR PFR
+    this.t_final = this.Vol / this.flowRate;
+    this.spaceTime = this.t_final;
+    this.dataValues[7] = this.t_final;
 
     // SPECIAL FOR PLOT TYPE SINGLE
     // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
@@ -301,7 +322,7 @@ let puBatchReactorNthOrder = {
     // SPECIAL for cA vs. time profile plot
     // if t_final value changes, set values so
     // plot axes redraw with new x axis max for new t_final
-    v = 6; // 6 for t_final
+    v = 7; // 7 for t_final = PFR spaceTime
     if (this.dataValuesORIG[v] != this.dataValues[v]) {
       let plotIndex = 0;
       plotInfo[plotIndex]['xAxisMax'] = this.t_final;
@@ -338,6 +359,10 @@ let puBatchReactorNthOrder = {
     // this reactor is ISOTHERMAL so only need to compute k at reaction T once
     kT = this.k_300 * Math.exp(EaOverRg/300 - EaOverRg/this.Tin);
 
+    // SPECIAL FOR PFR
+    this.t_final = this.Vol / this.flowRate;
+    this.spaceTime = this.t_final;
+
     // plot will have numPlotPoints + 1 points - see process_plot_info.js
     for (j=0; j<=this.numPlotPoints; j+=1) {
       this.time[j] =  this.t_final * j/this.numPlotPoints;
@@ -345,14 +370,21 @@ let puBatchReactorNthOrder = {
     }
 
     // SPECIAL FOR PLOT TYPE SINGLE - compute final values
+    // reactBATCHnthSS also works for PFR
     this.cA_final = this.reactBATCHnthSS(this.t_final,kT,this.nth,this.cAin);
     this.conversion = 100 * (1 - this.cA_final / this.cAin);
+
+    // change space time output field to visible only after 1st run
+    document.getElementById(this.spaceTime_output_field_ID).style.visibility = 'visible';
 
     // change cA final output field to visible only after 1st run
     document.getElementById(this.cA_output_field_ID).style.visibility = 'visible';
 
     // change conversion final output field to visible only after 1st run
     document.getElementById(this.conversion_output_field_ID).style.visibility = 'visible';
+
+    // change space time output field to visible only after 1st run
+    document.getElementById(this.spaceTime_output_field_ID_profile).style.visibility = 'visible';
 
     // change cA final output field to visible only after 1st run
     document.getElementById(this.cA_output_field_ID_profile).style.visibility = 'visible';
@@ -369,12 +401,20 @@ let puBatchReactorNthOrder = {
   updateDisplay : function() {
 
     // note use .toFixed(n) method of object to round number to n decimal points
-    let txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
+    let txt = 'space time (s) = ' + this.spaceTime.toFixed(1);
+    document.getElementById(this.spaceTime_output_field_ID).innerHTML = txt;
+
+    // note use .toFixed(n) method of object to round number to n decimal points
+    txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
     document.getElementById(this.cA_output_field_ID).innerHTML = txt;
 
     // note use .toFixed(n) method of object to round number to n decimal points
     txt = 'Conversion final (%) = ' + this.conversion.toFixed(1);
     document.getElementById(this.conversion_output_field_ID).innerHTML = txt;
+
+    // note use .toFixed(n) method of object to round number to n decimal points
+    txt = 'space time (s) = ' + this.spaceTime.toFixed(1);
+    document.getElementById(this.spaceTime_output_field_ID_profile).innerHTML = txt;
 
     // note use .toFixed(n) method of object to round number to n decimal points
     txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
@@ -477,4 +517,4 @@ let puBatchReactorNthOrder = {
     return cA
   }, // END reactBATCHnthSS method
 
-}; // END puBatchReactor object
+}; // END puPFRnthOrder object

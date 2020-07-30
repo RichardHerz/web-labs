@@ -64,22 +64,19 @@
    <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="interfacer.resetThisLab()">
    <input type="button" id="button_runButton" value="Run" value="Run" onclick="interfacer.runThisLab()">
   <div id="div_operatingParams">
-      <p id="field_ReactionTimeLABEL">
-            Enter reaction time (s)
-      </p>
+
+      <p id="field_ReactionTimeLABEL">Enter reaction time (s)</p>
       <input id="input_field_ReactionTime" value="100" onchange="interfacer.updateUIparams()">
-      <p id="field_VolumeLABEL">
-            Enter Volume (m<sup shift="-4">3</sup>)
-      </p>
+
+      <p id="field_VolumeLABEL">Enter Volume (m<sup shift="-4">3</sup></p>
       <input id="input_field_Volume" value="100" onchange="interfacer.updateUIparams()">
-      <p id="field_ConcentrationLABEL">
-            Enter reactant conc (mol/m3)
-      </p>
+
+      <p id="field_ConcentrationLABEL">Enter reactant conc (mol/m3)</p>
       <input id="input_field_Concentration" value="10" onchange="interfacer.updateUIparams()">
-      <p id="field_TempertureLABEL">
-            Enter Temperature (K)
-      </p>
+
+      <p id="field_TempertureLABEL">Enter Temperature (K)</p>
       <input id="input_field_Temperature" value="300" onchange="interfacer.updateUIparams()">
+
   </div> <!-- end of div div_operatingParams -->
   <div id="div_plotFrame_profile">
     <p id="field_old_data_notice_profile"></p>
@@ -106,7 +103,6 @@
       <option value="6" selected='true'>t_final</option>
       <option value="7">cA_final</option>
       <option value="8">conversion</option>
-      <option value="9">run count</option>
     </select>
     <select id='selectYvar' onchange="simParams.selectYvar()">
       <option value="0">k_300</option>
@@ -118,27 +114,26 @@
       <option value="6">t_final</option>
       <option value="7">cA_final</option>
       <option value="8" selected='true'>conversion</option>
-      <option value="9">run count</option>
     </select>
     <!-- copyData method argument below is plot index in plotInfo -->
     <input type="button" id="button_copyData_single" value="Copy data" value="Copy data" onclick="interfacer.copyData(1)">
     <p id="field_cA_final"></p>
     <p id="field_conversion_final"></p>
   </div> <!-- end of div div_plotFrame_single -->
+
   <div id="div_reactionParams">
-    <p id="field_RateConstantLABEL">
-      Enter k at 300 K
-    </p>
+
+    <p id="field_RateConstantLABEL">Enter k at 300 K</p>
     <input id="input_field_RateConstant" value="1e-2" onchange="interfacer.updateUIparams()">
+
+    <p id="field_ActivationEnergyLABEL">Enter Ea (kJ/mol)</p>
     <input id="input_field_ActivationEnergy" value="60" onchange="interfacer.updateUIparams()">
-    <p id="field_ActivationEnergyLABEL">
-      Enter Ea (kJ/mol)
-    </p>
+
+    <p id="field_ReactionOrderLABEL">Enter reaction order (-1,0,1,2)</p>
     <input id="input_field_ReactionOrder" value="1" onchange="interfacer.updateUIparams()">
-    <p id="field_ReactionOrderLABEL">
-      Enter reaction order (-1,0,1,2)
-    </p>
+
   </div> <!-- end of div div_reactionParams -->
+
 </div> <!-- end of div div_simFrame -->
 </body>
 </html>

@@ -43,11 +43,12 @@ let puCSTRnthOrder = {
   // SEE dataInputs array in initialize() method for input field ID's
 
   // DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, used in updateDisplay() method
+  spaceTime_output_field_ID : "field_spaceTime",
   cA_output_field_ID : "field_cA_final",
   conversion_output_field_ID  : "field_conversion_final",
-  cA_output_field_ID_profile : "field_cA_final_profile",
-  conversion_output_field_ID_profile  : "field_conversion_final_profile",
-  old_data_notice_ID_profile : "field_old_data_notice_profile",
+  // cA_output_field_ID_profile : "field_cA_final_profile",
+  // conversion_output_field_ID_profile  : "field_conversion_final_profile",
+  // old_data_notice_ID_profile : "field_old_data_notice_profile",
   old_data_notice_ID_single : "field_old_data_notice_single",
   displayReactorContents: '#div_PLOTDIV_reactorContents', // need # because selecting CSS
 
@@ -60,7 +61,8 @@ let puCSTRnthOrder = {
   cAin : 1, // initial reactant concentration
   cA_final : 1, // final reactant concentration
   Vol : 0, // volume of reactor contents
-  t_final : 0,
+  flowRate : 0, // flow rate through reactor
+  spaceTime : 0,
   k_300 : 0, // forward rate constant at 300 K
   Ea : 0, // activation energy
   nth : 0, // reaction order (-1, 0, 1, 2)
@@ -80,14 +82,14 @@ let puCSTRnthOrder = {
   // SPECIAL FOR PLOT TYPE SINGLE
   dataValuesORIG : [],
 
-  // define arrays to hold output variables for profile plot
-  // these will be filled with initial values in method reset()
-  cA : [],
-  time : [],
+  // // define arrays to hold output variables for profile plot
+  // // these will be filled with initial values in method reset()
+  // cA : [],
+  // time : [],
 
-  // define arrays to hold data for plots, color canvas
-  // these will be filled with initial values in method reset()
-  profileData : [], // for profile plots, plot script requires this name
+  // // define arrays to hold data for plots, color canvas
+  // // these will be filled with initial values in method reset()
+  // profileData : [], // for profile plots, plot script requires this name
 
   // SPECIAL FOR PLOT TYPE SINGLE - will be loaded in reset()
   singleData : [], // for single point plots, plot script requires this name
@@ -96,9 +98,9 @@ let puCSTRnthOrder = {
   // define variables which will not be plotted nor saved in copy data table
   //   none here
 
-  // numPlotPoints can be defined here and not plotInfo because there is only one unit
-  // on the one plot and plotter uses length of public plot data arrays created here
-  numPlotPoints : 200, // THIS IS PLOT POINTS FOR PROFILE & STRIP PLOTS
+  // // numPlotPoints can be defined here and not plotInfo because there is only one unit
+  // // on the one plot and plotter uses length of public plot data arrays created here
+  // numPlotPoints : 200, // THIS IS PLOT POINTS FOR PROFILE & STRIP PLOTS
 
   initialize : function() {
     //
@@ -147,16 +149,16 @@ let puCSTRnthOrder = {
     this.dataInputs[v] = 'input_field_Volume';
     this.dataUnits[v] = 'm3';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 10000;
+    this.dataMax[v] = 1000;
     this.dataDefault[v] = 4.0e-3;
     //
     v = 6;
-    this.dataHeaders[v] = 't_final';
-    this.dataInputs[v] = 'input_field_ReactionTime';
-    this.dataUnits[v] = 's';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 1000;
-    this.dataDefault[v] = 100;
+    this.dataHeaders[v] = 'flow rate';
+    this.dataInputs[v] = 'input_field_flowRate';
+    this.dataUnits[v] = 'm3/s';
+    this.dataMin[v] = 1; // MUST BE > 0 or DIVIDE BY ZERO in calc of space time
+    this.dataMax[v] = 100;
+    this.dataDefault[v] = 1;
     //
     // END OF INPUT VARS
     // record number of input variables, VarCount
@@ -166,21 +168,27 @@ let puCSTRnthOrder = {
     // OUTPUT VARS
     //
     v = 7;
+    this.dataHeaders[v] = 'space time';
+    this.dataUnits[v] =  's';
+    this.dataMin[v] = this.dataMin[5] / this.dataMax[6];
+    this.dataMax[v] = this.dataMax[5] / this.dataMin[6];
+    //
+    v = 8;
     this.dataHeaders[v] = 'cA_final';
     this.dataUnits[v] =  'mol/m3';
     this.dataMin[v] = 0;
     this.dataMax[v] = this.dataMax[4]; // [4] is cA_init
     //
-    v = 8;
+    v = 9;
     this.dataHeaders[v] = 'conversion';
     this.dataUnits[v] = "%";
     this.dataMin[v] = 0;
     this.dataMax[v] = 100;
     //
 
-    // initialize profile data array
-    // plotter.initPlotData(numProfileVars,numProfilePts)
-    this.profileData = plotter.initPlotData(1,this.numPlotPoints); // holds data for static profile plots
+    // // initialize profile data array
+    // // plotter.initPlotData(numProfileVars,numProfilePts)
+    // this.profileData = plotter.initPlotData(1,this.numPlotPoints); // holds data for static profile plots
 
   }, // END of initialize()
 
@@ -195,15 +203,15 @@ let puCSTRnthOrder = {
 
     this.updateUIparams(); // this first, then set other values as needed
 
-    // clear plot type profile data sources,
-    // since profileData array gets reloaded in updateDisplay
-    for (p = 0; p <= this.numPlotPoints; p += 1) {
-      this.time[p] =  0;
-      this.cA[p] = 0;
-    }
+    // // clear plot type profile data sources,
+    // // since profileData array gets reloaded in updateDisplay
+    // for (p = 0; p <= this.numPlotPoints; p += 1) {
+    //   this.time[p] =  0;
+    //   this.cA[p] = 0;
+    // }
 
     // SPECIAL FOR PLOT TYPE 'single' - save all input and output vars and runCount
-    const numSingleVars = 10;
+    const numSingleVars = 11;
     const numSinglePts = 0; // 0+1 points will be filled here
     this.singleData = plotter.initPlotData(numSingleVars,numSinglePts);
     // SPECIAL CASE - move initial [0,0] x,y points off plots
@@ -234,7 +242,7 @@ let puCSTRnthOrder = {
     // since no runs made and plots have been cleared
     simParams.oldDataFlag = 1; // 0 for no old data, 1 for old data on plot
     // but clear fields since plots have been cleard
-    document.getElementById(this.old_data_notice_ID_profile).innerHTML = '';
+    // document.getElementById(this.old_data_notice_ID_profile).innerHTML = '';
     document.getElementById(this.old_data_notice_ID_single).innerHTML = '';
 
   }, // end reset
@@ -264,7 +272,7 @@ let puCSTRnthOrder = {
     this.dataValuesORIG[3] = this.Tin;
     this.dataValuesORIG[4] = this.cAin;
     this.dataValuesORIG[5] = this.Vol;
-    this.dataValuesORIG[6] = this.t_final;
+    this.dataValuesORIG[6] = this.flowRate;
 
     let unum = this.unitIndex;
     //
@@ -274,12 +282,12 @@ let puCSTRnthOrder = {
     this.Tin = this.dataValues[3] = interfacer.getInputValue(unum, 3);
     this.cAin = this.dataValues[4] = interfacer.getInputValue(unum, 4);
     this.Vol = this.dataValues[5] = interfacer.getInputValue(unum, 5);
-    this.t_final = this.dataValues[6] = interfacer.getInputValue(unum, 6);
+    this.flowRate = this.dataValues[6] = interfacer.getInputValue(unum, 6);
 
     // SPECIAL FOR PLOT TYPE SINGLE
     // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
     // inputs and 1's for all outputs - inputs may change in updateUIparams()
-    for (v = 0; v < 7; v += 1) {
+    for (v = 0; v <= this.VarCount; v += 1) {
       if (this.dataValuesORIG[v] != this.dataValues[v]) {
         this.dataSwitcher[v] = 1;
         if (controller.simTime > 0) {
@@ -290,7 +298,7 @@ let puCSTRnthOrder = {
           // NOTE: tried several ways but this was the only one I could get to work
           setTimeout(function(){
             if (simParams.oldDataFlag == 1) {
-              document.getElementById(processUnits[0].old_data_notice_ID_profile).innerHTML = 'Old Data';
+              // document.getElementById(processUnits[0].old_data_notice_ID_profile).innerHTML = 'Old Data';
               document.getElementById(processUnits[0].old_data_notice_ID_single).innerHTML = 'Old Data';
             }
           }, 2000); // wait 2000 ms, END OF setTimeout
@@ -298,16 +306,16 @@ let puCSTRnthOrder = {
       } // END OF if (this.dataValuesORIG[v] != this.dataValues[v])
     } // END OF for (v = 0; v < 7; v += 1)
 
-    // SPECIAL for cA vs. time profile plot
-    // if t_final value changes, set values so
-    // plot axes redraw with new x axis max for new t_final
-    v = 6; // 6 for t_final
-    if (this.dataValuesORIG[v] != this.dataValues[v]) {
-      let plotIndex = 0;
-      plotInfo[plotIndex]['xAxisMax'] = this.t_final;
-      // force axis redraw
-      plotter['plotArrays']['plotFlag'][plotIndex] = 0;
-    }
+    // // SPECIAL for cA vs. time profile plot
+    // // if t_final value changes, set values so
+    // // plot axes redraw with new x axis max for new t_final
+    // v = 6; // 6 for t_final
+    // if (this.dataValuesORIG[v] != this.dataValues[v]) {
+    //   let plotIndex = 0;
+    //   plotInfo[plotIndex]['xAxisMax'] = this.t_final;
+    //   // force axis redraw
+    //   plotter['plotArrays']['plotFlag'][plotIndex] = 0;
+    // }
 
     // ensure order nth has values -1,0,1,2
     let x = Math.round(this.nth);
@@ -338,15 +346,21 @@ let puCSTRnthOrder = {
     // this reactor is ISOTHERMAL so only need to compute k at reaction T once
     kT = this.k_300 * Math.exp(EaOverRg/300 - EaOverRg/this.Tin);
 
-    // plot will have numPlotPoints + 1 points - see process_plot_info.js
-    for (j=0; j<=this.numPlotPoints; j+=1) {
-      this.time[j] =  this.t_final * j/this.numPlotPoints;
-      this.cA[j] = this.reactBATCHnthSS(this.time[j],kT,this.nth,this.cAin);
-    }
+    // // plot will have numPlotPoints + 1 points - see process_plot_info.js
+    // for (j=0; j<=this.numPlotPoints; j+=1) {
+    //   this.time[j] =  this.t_final * j/this.numPlotPoints;
+    //   this.cA[j] = this.reactBATCHnthSS(this.time[j],kT,this.nth,this.cAin);
+    // }
+
+    // SPECIAL FOR CSTR
+    this.spaceTime = this.Vol / this.flowRate;
 
     // SPECIAL FOR PLOT TYPE SINGLE - compute final values
-    this.cA_final = this.reactBATCHnthSS(this.t_final,kT,this.nth,this.cAin);
+    this.cA_final = this.reactCSTRnthSS(this.spaceTime,kT,this.nth,this.cAin);
     this.conversion = 100 * (1 - this.cA_final / this.cAin);
+
+    // change space time output field to visible only after 1st run
+    document.getElementById(this.spaceTime_output_field_ID).style.visibility = 'visible';
 
     // change cA final output field to visible only after 1st run
     document.getElementById(this.cA_output_field_ID).style.visibility = 'visible';
@@ -354,14 +368,14 @@ let puCSTRnthOrder = {
     // change conversion final output field to visible only after 1st run
     document.getElementById(this.conversion_output_field_ID).style.visibility = 'visible';
 
-    // change cA final output field to visible only after 1st run
-    document.getElementById(this.cA_output_field_ID_profile).style.visibility = 'visible';
+    // // change cA final output field to visible only after 1st run
+    // document.getElementById(this.cA_output_field_ID_profile).style.visibility = 'visible';
 
-    // change conversion final output field to visible only after 1st run
-    document.getElementById(this.conversion_output_field_ID_profile).style.visibility = 'visible';
+    // // change conversion final output field to visible only after 1st run
+    // document.getElementById(this.conversion_output_field_ID_profile).style.visibility = 'visible';
 
     simParams.oldDataFlag = 0; // 0 for no old data, 1 for old data on plot
-    document.getElementById(this.old_data_notice_ID_profile).innerHTML = '';
+    // document.getElementById(this.old_data_notice_ID_profile).innerHTML = '';
     document.getElementById(this.old_data_notice_ID_single).innerHTML = '';
 
   }, // end updateState method
@@ -369,22 +383,26 @@ let puCSTRnthOrder = {
   updateDisplay : function() {
 
     // note use .toFixed(n) method of object to round number to n decimal points
-    let txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
+    let txt = 'space time (s) = ' + this.spaceTime.toFixed(1);
+    document.getElementById(this.spaceTime_output_field_ID).innerHTML = txt;
+
+    // note use .toFixed(n) method of object to round number to n decimal points
+    txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
     document.getElementById(this.cA_output_field_ID).innerHTML = txt;
 
     // note use .toFixed(n) method of object to round number to n decimal points
     txt = 'Conversion final (%) = ' + this.conversion.toFixed(1);
     document.getElementById(this.conversion_output_field_ID).innerHTML = txt;
 
-    // note use .toFixed(n) method of object to round number to n decimal points
-    txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
-    document.getElementById(this.cA_output_field_ID_profile).innerHTML = txt;
+    // // note use .toFixed(n) method of object to round number to n decimal points
+    // txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
+    // document.getElementById(this.cA_output_field_ID_profile).innerHTML = txt;
 
-    // note use .toFixed(n) method of object to round number to n decimal points
-    txt = 'Conversion final (%) = ' + this.conversion.toFixed(1);
-    document.getElementById(this.conversion_output_field_ID_profile).innerHTML = txt;
+    // // note use .toFixed(n) method of object to round number to n decimal points
+    // txt = 'Conversion final (%) = ' + this.conversion.toFixed(1);
+    // document.getElementById(this.conversion_output_field_ID_profile).innerHTML = txt;
 
-    // WARNING: must have simParams vars imTimeStep = 1 and simStepRepeats = 1
+    // WARNING: must have simParams vars simTimeStep = 1 and simStepRepeats = 1
     // for simtime to equal # runs between resets
     this.runCount = controller.simTime.toFixed(0); // use next & a line below
     document.getElementById("field_run_count").innerHTML = "Total runs = " + this.runCount;
@@ -406,11 +424,11 @@ let puCSTRnthOrder = {
     // in updateUIparams, have already prepared to change x-axis max
     // after change in t_final on next plot redraw
 
-    // fill array for profile plot
-    for (j=0; j<=this.numPlotPoints; j+=1) {
-      this.profileData[0][j][0] = this.time[j];
-      this.profileData[0][j][1] = this.cA[j];
-    }
+    // // fill array for profile plot
+    // for (j=0; j<=this.numPlotPoints; j+=1) {
+    //   this.profileData[0][j][0] = this.time[j];
+    //   this.profileData[0][j][1] = this.cA[j];
+    // }
 
     // SPECIAL FOR PLOT TYPE SINGLEd
     // reset on open lab adds -1,-1 points in first element of array
@@ -419,7 +437,7 @@ let puCSTRnthOrder = {
     if (this.runCount > 0) {
       let tx;
       const ty = 0; // arbitrary value - single plot just gets tx
-      const numSingleVars = 10; // xxx get this from a property
+      const numSingleVars = 11;
       for (v = 0; v < numSingleVars; v += 1) {
         tempArray = this.singleData[v]; // work on one plot variable at a time
         // delete first x,y pair 0,0 on 1st run
@@ -430,10 +448,11 @@ let puCSTRnthOrder = {
         else if (v == 3) {tx = this.Tin}
         else if (v == 4) {tx = this.cAin}
         else if (v == 5) {tx = this.Vol}
-        else if (v == 6) {tx = this.t_final}
-        else if (v == 7) {tx = this.cA_final}
-        else if (v == 8) {tx = this.conversion}
-        else if (v == 9) {tx = this.runCount}
+        else if (v == 6) {tx = this.flowRate}
+        else if (v == 7) {tx = this.spaceTime}
+        else if (v == 8) {tx = this.cA_final}
+        else if (v == 9) {tx = this.conversion}
+        else if (v == 10) {tx = this.runCount}
         // add the new [x,y] pair array at end
         tempArray.push( [tx,ty] );
         // update the variable being processed
@@ -448,32 +467,48 @@ let puCSTRnthOrder = {
     return ssFlag;
   }, // END checkForSteadyState method
 
-  reactBATCHnthSS : function(t,k,n,cAin) {
-    // returns conc at time t
+// NOTE: possible multiple SS with order -1 so need to add cAold
+// BUT MAYBE THIS ONLY for rate going to order +1 at low conc...?
+  reactCSTRnthSS : function(t,k,n,cAin) {
+    // returns conc at space time t
     let cA;
+    let x;
+    let y;
     switch(n) {
       case -1:
-        let x = ( Math.pow(cAin,2) - 2 * k * t );
-        if (x > 0) {
-          cA = Math.sqrt(x);
+        // if Cin >= (4*k*tau)^0.5 then
+        //   put (Cin + (Cin^2 - 4*k*tau)^0.5)/2 into cHighSS
+        // else
+        //   put 0 into cHighSS
+        // end if
+        x = Math.sqrt(4*k*t); // (4*k*tau)^0.5
+        if (cAin >= x) { // if Cin >= (4*k*tau)^0.5 then
+          y = Math.pow(cAin, 2) - 4*k*t ; // Cin^2 - 4*k*tau
+          y = Math.sqrt(y); // (Cin^2 - 4*k*tau)^0.5
+          cA = (cAin + y)/2; // (Cin + (Cin^2 - 4*k*tau)^0.5)/2
         } else {
           cA = 0;
         }
         break;
       case 0:
+        // same for batch and cstr
         cA = (cAin - k * t);
         if (cA < 0) {cA = 0};
         break;
       case 1:
-        cA = cAin * Math.exp(-k * t);
+        // put Cin/(1 + k*tau) into Cout
+        cA = cAin / (1 + k*t);
         break;
       case 2:
-        cA = cAin / (1 + cAin * k * t);
+        // put (-1 + (1 + 4*k*tau*Cin)^0.5)/(2*k*tau) into Cout
+        x = 1 + 4*k*t*cAin; // (1 + 4*k*tau*Cin)
+        x = Math.sqrt(x); // (1 + 4*k*tau*Cin)^0.5
+        cA = (-1 + x)/(2*k*t); //(-1 + (1 + 4*k*tau*Cin)^0.5)/(2*k*tau)
         break;
       default:
         cA = cAin;
     }
     return cA
-  }, // END reactBATCHnthSS method
+  }, // END reactCSTRnthSS method
 
 }; // END puCSTRnthOrder object

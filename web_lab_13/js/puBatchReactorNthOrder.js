@@ -279,7 +279,7 @@ let puBatchReactorNthOrder = {
     // SPECIAL FOR PLOT TYPE SINGLE
     // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
     // inputs and 1's for all outputs - inputs may change in updateUIparams()
-    for (v = 0; v < 7; v += 1) {
+    for (v = 0; v <= this.VarCount; v += 1) {
       if (this.dataValuesORIG[v] != this.dataValues[v]) {
         this.dataSwitcher[v] = 1;
         if (controller.simTime > 0) {
@@ -384,7 +384,7 @@ let puBatchReactorNthOrder = {
     txt = 'Conversion final (%) = ' + this.conversion.toFixed(1);
     document.getElementById(this.conversion_output_field_ID_profile).innerHTML = txt;
 
-    // WARNING: must have simParams vars imTimeStep = 1 and simStepRepeats = 1
+    // WARNING: must have simParams vars simTimeStep = 1 and simStepRepeats = 1
     // for simtime to equal # runs between resets
     this.runCount = controller.simTime.toFixed(0); // use next & a line below
     document.getElementById("field_run_count").innerHTML = "Total runs = " + this.runCount;
@@ -419,7 +419,7 @@ let puBatchReactorNthOrder = {
     if (this.runCount > 0) {
       let tx;
       const ty = 0; // arbitrary value - single plot just gets tx
-      const numSingleVars = 10; // xxx get this from a property
+      let numSingleVars = 10;
       for (v = 0; v < numSingleVars; v += 1) {
         tempArray = this.singleData[v]; // work on one plot variable at a time
         // delete first x,y pair 0,0 on 1st run

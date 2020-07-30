@@ -40,6 +40,7 @@ let simParams = {
 
   simStepRepeats : 1, // integer number of unit updates between display updates
   simTimeStep : 1, // time step value, simulation time, of main repeat
+  simTimeUnits : 's',
 
   // individual units may do more steps in one unit updateState()
   // see individual units for any unitTimeStep and unitStepRepeats
@@ -82,13 +83,13 @@ let simParams = {
   // assume only one unit and one plot type 'single' in this lab
   // these xVar, yVar values should agree with initial selected values in html
   // can't use document.getElementById() because this script loads before html
-  xVar : 6,
-  yVar : 8,
+  xVar : 7,
+  yVar : 9,
   // called onchange of html select element id='selectXvar'
   selectXvar : function() {
         this.xVar = document.getElementById("selectXvar").value;
         let unum = 0; // unit index, assume only one unit on this page
-        let pnum = 1; // plot index, assume only one plot type 'single' on this page
+        let pnum = 0; // plot index, assume only one plot type 'single' on this page
         plotInfo[pnum]['xAxisMin'] = processUnits[unum]['dataMin'][this.xVar];
         plotInfo[pnum]['xAxisMax'] = processUnits[unum]['dataMax'][this.xVar];
         let data = plotter.getPlotData(pnum);
@@ -99,7 +100,7 @@ let simParams = {
   selectYvar : function() {
         this.yVar = document.getElementById("selectYvar").value;
         let unum = 0; // unit index, assume only one unit on this page
-        let pnum = 1; // plot index, assume only one plot type 'single' on this page
+        let pnum = 0; // plot index, assume only one plot type 'single' on this page
         plotInfo[pnum]['yLeftAxisMin'] = processUnits[unum]['dataMin'][this.yVar];
         plotInfo[pnum]['yLeftAxisMax'] = processUnits[unum]['dataMax'][this.yVar];
         let data = plotter.getPlotData(pnum);

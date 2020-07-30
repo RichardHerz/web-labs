@@ -106,7 +106,8 @@ canvas {
   position: absolute;
   left: 4px;
   top: 4px;
-  width: 280px;
+  /* width was 280 */
+  width: 260px;
   height: 202px;
   visibility: visible;
   background-color: rgba(255, 255, 255, 1);
@@ -120,10 +121,14 @@ canvas {
 #div_PLOTDIV_reactorContents {
   display: block;
   position: absolute;
-  left: 97px;
-  top: 88px;
-  width: 106px;
-  height: 67px;
+  /* left was 97 */
+  left: 190px;
+  /* top was 88 */
+  top: 168px;
+  /* width was 106 */
+  width: 80px;
+  /* height was 67 */
+  height: 20px;
   visibility: visible;
   border-width: 0px;
   border-style: outset;
@@ -336,7 +341,8 @@ border-style: solid;
   position: absolute;
   border-color: DodgerBlue;
   left: 298px;
-  top: 56px;
+  /* top was 56 */
+  top: 30px;
   width: 498px;
   height: 350px;
   visibility: visible;
@@ -409,7 +415,7 @@ border-style: solid;
   text-align : right;
   border-width: 0px;
   /* set style.visbility = 'visible' at end updateState */
-  visibility: visible;
+  visibility: hidden;
   border-style: none;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);

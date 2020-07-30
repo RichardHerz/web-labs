@@ -348,11 +348,11 @@ let puBatchReactorNthOrder = {
     this.cA_final = this.reactBATCHnthSS(this.t_final,kT,this.nth,this.cAin);
     this.conversion = 100 * (1 - this.cA_final / this.cAin);
 
-    // change cA final output field to visible only after 1st run
-    document.getElementById(this.cA_output_field_ID).style.visibility = 'visible';
-
-    // change conversion final output field to visible only after 1st run
-    document.getElementById(this.conversion_output_field_ID).style.visibility = 'visible';
+    // // change cA final output field to visible only after 1st run
+    // document.getElementById(this.cA_output_field_ID).style.visibility = 'visible';
+    //
+    // // change conversion final output field to visible only after 1st run
+    // document.getElementById(this.conversion_output_field_ID).style.visibility = 'visible';
 
     // change cA final output field to visible only after 1st run
     document.getElementById(this.cA_output_field_ID_profile).style.visibility = 'visible';
@@ -368,13 +368,13 @@ let puBatchReactorNthOrder = {
 
   updateDisplay : function() {
 
-    // note use .toFixed(n) method of object to round number to n decimal points
-    let txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
-    document.getElementById(this.cA_output_field_ID).innerHTML = txt;
-
-    // note use .toFixed(n) method of object to round number to n decimal points
-    txt = 'Conversion final (%) = ' + this.conversion.toFixed(1);
-    document.getElementById(this.conversion_output_field_ID).innerHTML = txt;
+    // // note use .toFixed(n) method of object to round number to n decimal points
+    // let txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);
+    // document.getElementById(this.cA_output_field_ID).innerHTML = txt;
+    //
+    // // note use .toFixed(n) method of object to round number to n decimal points
+    // txt = 'Conversion final (%) = ' + this.conversion.toFixed(1);
+    // document.getElementById(this.conversion_output_field_ID).innerHTML = txt;
 
     // note use .toFixed(n) method of object to round number to n decimal points
     txt = 'cA final (mol/m<sup>3</sup>) = ' + this.cA_final.toFixed(1);

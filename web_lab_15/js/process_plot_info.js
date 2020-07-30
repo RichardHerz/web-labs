@@ -22,13 +22,13 @@ let plotInfo = {
     plotInfo[pnum]['title'] = 'PFR - Plug Flow Reactor history';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_profile'; // flot.js wants ID with prefix #
     // plotInfo[pnum]['numberPoints'] not needed here since only one unit in this plot
-    plotInfo[pnum]['xAxisLabel'] = 'time in reactor (s)';
-    plotInfo[pnum]['xAxisTableLabel'] = 'time in reactor(s)'; // label for copy data table
+    plotInfo[pnum]['xAxisLabel'] = 'position down reactor (%)';
+    plotInfo[pnum]['xAxisTableLabel'] = 'position (%)'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
     plotInfo[pnum]['xAxisMin'] = 0;
-    plotInfo[pnum]['xAxisMax'] = 1000;
+    plotInfo[pnum]['xAxisMax'] = 100;
     plotInfo[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = 'cA (mol/m3)';
     plotInfo[pnum]['yLeftAxisMin'] = processUnits[unum]['dataMin'][4];

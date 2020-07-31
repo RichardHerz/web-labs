@@ -177,6 +177,12 @@ let controller = {
       if (ptype == 'canvas') {
         // space-time, color-canvas plot
         plotter.plotColorCanvasPlot(p);
+        if (simParams.labType != 'Dynamic') {
+          // plot color canvas again for better color saturation 
+          for (k = 0; k < 5; k += 1) {
+            plotter.plotColorCanvasPlot(p);
+          }
+        }
       } else if ((ptype == 'profile') || (ptype == 'strip') || (ptype == 'single')) {
         // profile (static x,y) or strip chart (scolling x,y)
         let data = plotter.getPlotData(p);

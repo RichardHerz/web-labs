@@ -118,7 +118,7 @@ canvas {
   LCshowBorder: false;
 }
 
-#div_PLOTDIV_reactorContents {
+#div_PLOTDIV_reactorOutlet {
   display: block;
   position: absolute;
   /* left was 97 */
@@ -138,6 +138,20 @@ canvas {
   LCthreeD: false;
   LCshowBorder: true;
   LCvScrollbar: false;
+}
+
+#canvas_CANVAS_reactor {
+  position: absolute;
+  left: 103px;
+  top: 72px;
+ /* canvas element width & height must be set in HTML and not in CSS */
+  visibility: visible;
+  border-width: 1px;
+  background-color: rgb(255,252,0);
+  border-style: solid;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
 }
 
 #field_run_count {

@@ -55,30 +55,31 @@
   </p>
 </div> <!-- end of div div_page_header -->
 <div id="div_simFrame">
-   <div id="div_reactor">
+  <div id="div_reactor">
       <img id="image_reactorImage" src="images/pfr-reactor.png">
-         <div id="div_PLOTDIV_reactorContents">
-         </div> <!-- end of div div_PLOTDIV_reactorContents -->
+      <!-- <div id="div_PLOTDIV_reactorOutlet"></div> -->
+      <canvas id="canvas_CANVAS_reactor" width="60" height="66"></canvas> <!-- canvas for colormap graphic -->
+      <!-- canvas element width & height must be specified here in HTML and not in CSS -->
   </div> <!-- end of div div_reactor -->
-   <p id="field_run_count"></p>
-   <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="interfacer.resetThisLab()">
-   <input type="button" id="button_runButton" value="Run" value="Run" onclick="interfacer.runThisLab()">
+  <p id="field_run_count"></p>
+  <input type="button" id="button_resetButton" value="Reset" value="Reset" onclick="interfacer.resetThisLab()">
+  <input type="button" id="button_runButton" value="Run" value="Run" onclick="interfacer.runThisLab()">
 
    <div id="div_operatingParams">
 
-       <p id="field_flowRateLABEL">Enter flow rate (m<sup shift="-4">3</sup>/s)</p>
-       <input id="input_field_flowRate" value="1" onchange="interfacer.updateUIparams()">
+    <p id="field_flowRateLABEL">Enter flow rate (m<sup shift="-4">3</sup>/s)</p>
+    <input id="input_field_flowRate" value="1" onchange="interfacer.updateUIparams()">
 
-       <p id="field_VolumeLABEL">Enter volume (m<sup shift="-4">3</sup>)</p>
-       <input id="input_field_Volume" value="100" onchange="interfacer.updateUIparams()">
+    <p id="field_VolumeLABEL">Enter volume (m<sup shift="-4">3</sup>)</p>
+    <input id="input_field_Volume" value="100" onchange="interfacer.updateUIparams()">
 
-       <p id="field_ConcentrationLABEL">Enter reactant conc (mol/m3)</p>
-       <input id="input_field_Concentration" value="10" onchange="interfacer.updateUIparams()">
+    <p id="field_ConcentrationLABEL">Enter reactant conc (mol/m3)</p>
+    <input id="input_field_Concentration" value="10" onchange="interfacer.updateUIparams()">
 
-       <p id="field_TemperatureLABEL">Enter Temperature (K)</p>
-       <input id="input_field_Temperature" value="300" onchange="interfacer.updateUIparams()">
+    <p id="field_TemperatureLABEL">Enter Temperature (K)</p>
+    <input id="input_field_Temperature" value="300" onchange="interfacer.updateUIparams()">
 
-   </div> <!-- end of div div_operatingParams -->
+  </div> <!-- end of div div_operatingParams -->
 
   <div id="div_plotFrame_profile">
     <p id="field_old_data_notice_profile"></p>

@@ -139,6 +139,21 @@ let plotInfo = {
     plotInfo[pnum]['varYaxis'][vnum] = 'left';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
+    // plot 3 info
+    pnum = 2;
+    plotInfo[pnum] = new Object();
+    plotInfo[pnum]['type'] = 'canvas';
+    plotInfo[pnum]['title'] = 'reactor color canvas';
+    plotInfo[pnum]['canvas'] = 'canvas_CANVAS_reactor'; // without prefix #
+    // for canvas type, all data comes from one process unit and one local array
+    plotInfo[pnum]['varUnitIndex'] = unum; // index of unit in processUnits object
+    plotInfo[pnum]['var'] = 0; // variable number in array spaceTimeData, 0, 1, etc.
+    // varTimePts & varSpacePts must match values used in unit array colorCanvasData
+    plotInfo[pnum]['varTimePts'] = 0; // 0 + 1 = actual number of x values to fill
+    plotInfo[pnum]['varSpacePts'] = processUnits[unum]['numPlotPoints'];
+    plotInfo[pnum]['varValueMin'] = processUnits[unum]['dataMin'][4]; // [4] is cAin
+    plotInfo[pnum]['varValueMax'] = processUnits[unum]['dataMax'][4];
+    plotInfo[pnum]['xAxisReversed'] = 0; // 0 false, 1 true, when true, xmax on left
 
   } // end initialize method of plotInfo
 

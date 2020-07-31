@@ -54,7 +54,7 @@ let puPFRnthOrder = {
   old_data_notice_ID_profile : "field_old_data_notice_profile",
   old_data_notice_ID_single : "field_old_data_notice_single",
 
-  displayReactorContents: '#div_PLOTDIV_reactorContents', // need # because selecting CSS
+  displayReactorContents: '#div_PLOTDIV_reactorOutlet', // need # because selecting CSS
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
   // ***   EXCEPT TO HTML ID'S IN method initialize(), array dataInputs    ***
@@ -94,6 +94,7 @@ let puPFRnthOrder = {
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
   profileData : [], // for profile plots, plot script requires this name
+  colorCanvasData : [], // for color canvas plots, plot script requires this name
 
   // SPECIAL FOR PLOT TYPE SINGLE - will be loaded in reset()
   singleData : [], // for single point plots, plot script requires this name
@@ -194,6 +195,10 @@ let puPFRnthOrder = {
     // plotter.initPlotData(numProfileVars,numProfilePts)
     this.profileData = plotter.initPlotData(1,this.numPlotPoints); // holds data for static profile plots
 
+    // initialize local array to hold color-canvas data, e.g., space-time data -
+    // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
+    this.colorCanvasData = plotter.initColorCanvasArray(1,0,this.numPlotPoints);
+
   }, // END of initialize()
 
   // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
@@ -210,7 +215,7 @@ let puPFRnthOrder = {
     // clear plot type profile data sources,
     // since profileData array gets reloaded in updateDisplay
     for (p = 0; p <= this.numPlotPoints; p += 1) {
-      this.posDownRxr[p] =  0;
+      this.posDownRxr[p] = 0;
       this.cA[p] = 0;
     }
 
@@ -248,6 +253,14 @@ let puPFRnthOrder = {
     // but clear fields since plots have been cleard
     document.getElementById(this.old_data_notice_ID_profile).innerHTML = '';
     document.getElementById(this.old_data_notice_ID_single).innerHTML = '';
+
+    // initialize profile data array
+    // plotter.initPlotData(numProfileVars,numProfilePts)
+    this.profileData = plotter.initPlotData(1,this.numPlotPoints); // holds data for static profile plots
+
+    // initialize local array to hold color-canvas data, e.g., space-time data -
+    // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
+    this.colorCanvasData = plotter.initColorCanvasArray(1,0,this.numPlotPoints);
 
   }, // end reset
 
@@ -418,17 +431,17 @@ let puPFRnthOrder = {
     this.runCount = controller.simTime.toFixed(0); // use next & a line below
     document.getElementById("field_run_count").innerHTML = "Total runs = " + this.runCount;
 
-    // set reactor contents color to final color
-    let el = document.querySelector(this.displayReactorContents);
-    // el.style.backgroundColor = "rgb(0,0,255)";
-    // compute color for this reactantConc
-    let cafinal = this.cA_final;
-    if (controller.simTime == 0) {cafinal = this.cAin;}
-    let B = Math.round(255 * cafinal / this.cAin); // Blue = reactant
-    let R = 255 - B; // Red = product
-    let colorString = "rgb(" + R + ", 0, " + B + ")";
-    // set color for this reactantConc
-    el.style.backgroundColor = colorString; // backgroundColor NOT background-color
+    // // set reactor contents color to final color
+    // let el = document.querySelector(this.displayReactorContents);
+    // // el.style.backgroundColor = "rgb(0,0,255)";
+    // // compute color for this reactantConc
+    // let cafinal = this.cA_final;
+    // if (controller.simTime == 0) {cafinal = this.cAin;}
+    // let B = Math.round(255 * cafinal / this.cAin); // Blue = reactant
+    // let R = 255 - B; // Red = product
+    // let colorString = "rgb(" + R + ", 0, " + B + ")";
+    // // set color for this reactantConc
+    // el.style.backgroundColor = colorString; // backgroundColor NOT background-color
 
     // HANDLE PROFILE PLOT DATA
 
@@ -466,6 +479,17 @@ let puPFRnthOrder = {
         // update the variable being processed
         this.singleData[v] = tempArray;
       }
+    }
+
+    // HANDLE COLOR CANVAS DATA - HERE FOR PFR CONC vs. POSITION
+    // IN THIS LAB
+    //   the data vs. node is vertical, not horizontal
+    //   and horizontal strip is all the same
+    //   so when initialize colorCanvasData array, take this into account
+    //   and want max cA=cAin to be blue in jet colormap, min cA=0 to be red
+    // colorCanvasData[v][x][y]
+    for (n=0; n<=this.numPlotPoints; n+=1) {
+      this.colorCanvasData[0][0][n] = this.cAin - this.cA[n];
     }
 
   }, // end updateDisplay method

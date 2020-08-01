@@ -281,6 +281,13 @@ border-style: solid;
   font-size: 16px;
 }
 
+#div_rlnoticetext {
+  position: relative;
+  width: 640px;
+  padding-top: 100px;
+  font-size: 0.7em;
+}
+
 /* example @media for responsive design */
 /* requires meta viewport element in HTML head */
 @media(max-width: 640px) {

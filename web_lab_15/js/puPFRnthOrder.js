@@ -488,8 +488,16 @@ let puPFRnthOrder = {
     //   so when initialize colorCanvasData array, take this into account
     //   and want max cA=cAin to be blue in jet colormap, min cA=0 to be red
     // colorCanvasData[v][x][y]
-    for (n=0; n<=this.numPlotPoints; n+=1) {
-      this.colorCanvasData[0][0][n] = this.cAin - this.cA[n];
+    if (this.runCount == 0) {
+      // want to have blue reactant in reactor at start & after reset
+      // even though have cleared cA line from strip plot
+      for (n=0; n<=this.numPlotPoints; n+=1) {
+        this.colorCanvasData[0][0][n] = this.cAin;
+      }
+    } else {
+      for (n=0; n<=this.numPlotPoints; n+=1) {
+        this.colorCanvasData[0][0][n] = this.cA[n];
+      }
     }
 
   }, // end updateDisplay method

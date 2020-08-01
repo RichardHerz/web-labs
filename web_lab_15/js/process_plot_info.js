@@ -145,6 +145,7 @@ let plotInfo = {
     plotInfo[pnum]['type'] = 'canvas';
     plotInfo[pnum]['title'] = 'reactor color canvas';
     plotInfo[pnum]['canvas'] = 'canvas_CANVAS_reactor'; // without prefix #
+    plotInfo[pnum]['colorMap'] = 'redBlueColorMap'; // default is jetColorMap
     // for canvas type, all data comes from one process unit and one local array
     plotInfo[pnum]['varUnitIndex'] = unum; // index of unit in processUnits object
     plotInfo[pnum]['var'] = 0; // variable number in array spaceTimeData, 0, 1, etc.

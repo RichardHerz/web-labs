@@ -394,7 +394,7 @@ let plotter = {
     // USES OBJECT plotInfo
     // input argument pIndex refers to plot info in child pIndex
     // of object plotInfo
-    // USES function jetColorMap()
+    // USES function jetColorMap() or redBlueColorMap()
     // use this to plot space-time plots as well as other color canvas plots
     // see https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial
 
@@ -416,7 +416,7 @@ let plotter = {
     let r;
     let g;
     let b;
-    let jet;
+    let cmap;
     let x;
     let y;
     // below we have to convert computed color values
@@ -441,10 +441,14 @@ let plotter = {
     for (t = 0; t <= numTimePts; t += 1) { // NOTE = at t <=
       for (s = 0; s < numSpacePts; s += 1) {
         scaledVarVal = (colorCanvasData[t][s] - minVarVal) / (maxVarVal - minVarVal);
-        jet = this.jetColorMap(scaledVarVal); // scaledVarVal should be scaled 0 to 1
-        r = jet[0];
-        g = jet[1];
-        b = jet[2];
+        if (plotInfo[pIndex]['colorMap'] == 'redBlueColorMap') {
+          cmap = this.redBlueColorMap(scaledVarVal); // scaledVarVal should be scaled 0 to 1
+        } else {
+          cmap = this.jetColorMap(scaledVarVal); // scaledVarVal should be scaled 0 to 1
+        }
+        r = cmap[0];
+        g = cmap[1];
+        b = cmap[2];
         // we have to convert computed color values to string for fillStyle
         tColor2 = r.toString();
         tColor3 = g.toString();
@@ -464,6 +468,20 @@ let plotter = {
     } // end of outer FOR repeat
 
   }, // END of function plotColorCanvasPlot
+
+  redBlueColorMap : function(n) {
+    // input n should be value between 0 and 1
+    // rgb output array values will be 0-255
+    // use to simulate conc of blue reactant in converting to red product
+    // n = 1 is all blue, n = 0 is all red, all green values = 0
+    //
+    if (n<0) {n = 0;}
+    if (n>1) {n = 1;}
+    let b = Math.round(255*n); // Blue = reactant
+    let r = 255 - b; // Red = product
+    let g = 0;
+    return [r,g,b];
+  }, // ENG OF function redBlueColorMap
 
   jetColorMap : function(n) {
     // input n should be value between 0 and 1
@@ -552,7 +570,7 @@ let plotter = {
     // SEE "if (colorCanvasData[t][s] < 0)" for pixels marked negative
     //    as used in ant swarm project
     // USES OBJECT plotInfo and PROCESS UNIT's colorCanvasData array
-    // USES function jetColorMap()
+    // USES function jetColorMap() or redBlueColorMap()
     // use this to plot space-time plots as well as other color canvas plots
     // see https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial
 
@@ -574,7 +592,7 @@ let plotter = {
     let r;
     let g;
     let b;
-    let jet;
+    let cmap;
     let x;
     let y;
     // below we have to convert computed color values
@@ -609,11 +627,14 @@ let plotter = {
         // new location
         scaledVarVal = (colorCanvasData[t][s] - minVarVal) / (maxVarVal - minVarVal);
       }
-
-      jet = this.jetColorMap(scaledVarVal); // scaledVarVal should be scaled 0 to 1
-      r = jet[0];
-      g = jet[1];
-      b = jet[2];
+      if (plotInfo[pIndex]['colorMap'] == 'redBlueColorMap') {
+        cmap = this.redBlueColorMap(scaledVarVal); // scaledVarVal should be scaled 0 to 1
+      } else {
+        cmap = this.jetColorMap(scaledVarVal); // scaledVarVal should be scaled 0 to 1
+      }
+      r = cmap[0];
+      g = cmap[1];
+      b = cmap[2];
       // we have to convert computed color values to string for fillStyle
       tColor2 = r.toString();
       tColor3 = g.toString();

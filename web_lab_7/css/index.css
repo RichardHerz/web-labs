@@ -617,13 +617,6 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#div_rlnoticetext {
-  position: relative;
-  width: 640px;
-  padding-top: 100px;
-  font-size: 0.7em;
-}
-
 /* example @media for responsive design */
 /* requires meta viewport element in HTML head */
 @media(min-width: 640px) {

@@ -43,3 +43,10 @@ html input[type="button"]:hover {
 html input[type="button"]:active {
   background-color: rgb(177, 150, 254);
 }
+
+#div_rlnoticetext {
+  position: relative;
+  width: 640px;
+  padding-top: 50px;
+  font-size: 0.7em;
+}

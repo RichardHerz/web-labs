@@ -1,9 +1,14 @@
-#div_rlnoticetext {
-  position: relative;
-  width: 640px;
-  padding-top: 100px;
-  font-size: 0.7em;
-}
+
+
+  <meta name='description' author='Richard Herz'>
+  <meta name="description" content="The Reactor Lab provides interactive chemical reactor
+  simulations for students of chemistry, chemical engineering, and especially chemical reaction
+  engineering or CRE. The simulations can be used by individuals, or by students in high school,
+  college and university-level courses. Web Labs and desktop versions of ReactorLab and SimzLab,
+  including PureWaterLab, are available. All software is provided free of charge and all code is
+  open source and available at our GitHub site, github.com/RichardHerz. The modular code is
+  structured to allow construction of new simulations of chemical reactors and other systems."/>
+  
 
 <div id="div_rlnoticetext"><p>
   The Reactor Lab provides interactive chemical reactor
@@ -23,16 +28,4 @@
   University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>,
   in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>.
 </p></div>
-
-
-  <meta name='description' author='Richard Herz'>
-  <meta name="description" content="The Reactor Lab provides interactive chemical reactor
-  simulations for students of chemistry, chemical engineering, and especially chemical reaction
-  engineering or CRE. The simulations can be used by individuals, or by students in high school,
-  college and university-level courses. Web Labs and desktop versions of ReactorLab and SimzLab,
-  including PureWaterLab, are available. All software is provided free of charge and all code is
-  open source and available at our GitHub site, github.com/RichardHerz. The modular code is
-  structured to allow construction of new simulations of chemical reactors and other systems."/>
-  
-The Reactor Lab provides interactive chemical reactor simulations for students of chemistry, chemical engineering, and especially chemical reaction engineering or CRE. The simulations can be used by individuals, or by students in high school, college and university-level courses. Web Labs and desktop versions of ReactorLab and SimzLab, including PureWaterLab, are available. All software is provided free of charge and all code is open source and available at our GitHub site, github.com/RichardHerz. The modular code is structured to allow construction of new simulations of chemical reactors and other systems. 
 

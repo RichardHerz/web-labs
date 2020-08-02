@@ -5,14 +5,22 @@
 
   <title>Web Labs at ReactorLab.net</title>
 
+  <!--
+    Design, text, images and code by Richard K. Herz, 2017-2020
+    Copyrights held by Richard K. Herz
+    Licensed for use under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.en.html
+  -->
+
   <meta name='description' author='Richard Herz'>
   <meta name="description" content="The Reactor Lab provides interactive chemical reactor
   simulations for students of chemistry, chemical engineering, and especially chemical reaction
   engineering or CRE. The simulations can be used by individuals, or by students in high school,
   college and university-level courses. Web Labs and desktop versions of ReactorLab and SimzLab,
   including PureWaterLab, are available. All software is provided free of charge and all code is
-  open source and available at our GitHub site, github.com/RichardHerz. The modular code is
-  structured to allow construction of new simulations of chemical reactors and other systems."/>
+  open source and available at our GitHub site, github.com/RichardHerz. The code is structured
+  to allow fast construction of new simulations of chemical reactors and other systems."/>
+  
   <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
   <!-- ID used to modify with Javascript after initial loading - OR EDIT HERE -->
   <!-- suggest use content width = div_simFrame width + 2 * div_simFrame left, and no scale -->
@@ -139,23 +147,8 @@
     </svg>
 
   </div> <!-- end of div div_simFrame-->
-  <div id="div_rlnoticetext"><p>
-    The Reactor Lab provides interactive chemical reactor
-    simulations for students of chemistry, chemical engineering, and especially chemical
-    reaction engineering or CRE. The web site is
-    <a href="http://reactorlab.net/">http://reactorlab.net/</a>. The labs
-    can be used by individuals, or by students in high school, college and
-    university-level courses.
-    <a href="http://reactorlab.net/web-labs/">Web Labs</a> and
-    <a href="http://reactorlab.net/download/">desktop versions</a> of ReactorLab and SimzLab,
-    including PureWaterLab, are available.
-    All software is provided free of charge and all code is open source and available
-    at our GitHub site <a href="https://github.com/RichardHerz">https://github.com/RichardHerz</a>.
-    The modular code is structured to allow construction of new simulations of
-    chemical reactors and other systems.
-    The author of Reactor Lab is Richard K. Herz, emeritus professor at the
-    University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>,
-    in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>.
-  </p></div>
+  <!-- div_rlnoticetext filled by interfacer.resetThisLab()
+  and formatted by web_labs_CSS/common.css -->
+  <div id="div_rlnoticetext"></div>
 </body>
 </html>

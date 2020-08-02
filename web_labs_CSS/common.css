@@ -46,7 +46,8 @@ html input[type="button"]:active {
 
 #div_rlnoticetext {
   position: relative;
-  width: 640px;
+  width: 608px;
   padding-top: 50px;
-  font-size: 0.7em;
+  font-style: normal;
+  font-size: 0.8em;
 }

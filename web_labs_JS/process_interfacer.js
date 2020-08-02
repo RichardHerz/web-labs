@@ -51,6 +51,7 @@ let interfacer = {
     // CALLED BY UI RESET BUTTON DEFINED IN HTML
     // USES OBJECTS simParams, controller
     //
+
     clearInterval(this.timerID);
     controller.resetSimTime();
     // reset all units
@@ -63,6 +64,26 @@ let interfacer = {
     let el = document.getElementById('button_runButton');
     el.value = 'Run';
     // do NOT update process nor display again here (will take one step)
+
+    let txt = 'The Reactor Lab provides interactive chemical reactor '
+      + 'simulations for students of chemistry, chemical engineering, and especially chemical '
+      + 'reaction engineering or CRE. The web site is '
+      + '<a href="http://reactorlab.net/">http://reactorlab.net</a>. The labs '
+      + 'can be used by individuals, or by high school, college and university students. '
+      + '<a href="http://reactorlab.net/web-labs/">Web Labs</a> and '
+      + '<a href="http://reactorlab.net/download/">desktop versions</a> of ReactorLab and SimzLab, '
+      + 'including PureWaterLab, are available. '
+      + 'The lab is provided free of charge and all code is open source and available '
+      + 'at <a href="https://github.com/RichardHerz">our GitHub site</a>. '
+      + 'The code is structured to allow fast construction of new simulations of reactors and other systems. '
+      + 'The author of Reactor Lab is Richard K. Herz, emeritus professor of chemical engineering '
+      + 'at the University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>, '
+      + 'in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>. '
+      + 'Please let us know if you use the Lab or the code. Thanks! '
+      + '<a href="mailto://rherz@ucsd.edu/"">rherz@ucsd.edu</a>';
+    document.getElementById('div_rlnoticetext').innerHTML = txt;
+    // see web_labs_CSS/common.css file for formatting on page
+
   }, // END OF function resetThisLab
 
   getInputValue : function(u,v) {

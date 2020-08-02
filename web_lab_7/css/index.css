@@ -71,10 +71,8 @@ canvas {
   position: relative;
   border-color: DodgerBlue;
   left: 5px;
-  /* top: 61px; */
-  width: 380px;
-  /* height: 375px; */
-  height: 370px;
+  width: 390px;
+  height: 380px;
   visibility: visible;
   border-width: 1px;
   background-color: rgb(255,255,255);
@@ -292,15 +290,16 @@ canvas {
   font-size: 14px;
 }
 
+/* see this div below @media(min-width: 640px) */
+/* @media sets position for wide screen */
+/* this sets position for narrow screen */
 #div_input_fields_group {
   display: block;
   position: relative;
   border-color: DodgerBlue;
   left: 13px;
-  /* top: 367px; */
-  width: 285px;
-  /* height: 275px; */
-  height: 270px;
+  width: 330px;
+  height: 260px;
   visibility: visible;
   border-width: 1px;
   background-color: rgb(255,255,255);
@@ -622,7 +621,7 @@ border-style: solid;
 @media(min-width: 640px) {
   #div_input_fields_group {
     position: absolute;
-    top: 141px;
+    top: 154px;
     left: 400px;
   }
 }

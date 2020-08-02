@@ -318,12 +318,13 @@ canvas {
   border-color: DodgerBlue;
   left: 12px;
   /* top: 358px; */
-  width: 285px;
-  height: 271px;
+  width: 288px;
+  height: 340px;
   visibility: visible;
-  border-width: 1px;
+  border-width: 0px;
+  border-color: Tomato;
   background-color: rgb(255,255,255);
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   LCvScrollbar: false;
   LCthreeD: true;

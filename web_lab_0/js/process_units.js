@@ -18,24 +18,13 @@
 
 // -------------------------------------------------------------------
 
+// ===================================================================
+// SPECIAL FOR THIS LAB
+//    see class Ant definition at bottom this file
+//    used to construct new ants in processUnits[0].initialize() below
+// ===================================================================
+
 let processUnits = new Object();
-// assign process unit objects to this object
-// as indexed child objects in order to allow object controller
-// to access them in a repeat with numeric index
-// the numeric order of process units does not affect the simulation
-// contents must be only the process units as child objects
-// child objects optionally can be defined in separate script files, which
-// makes them easier to edit,
-// then inserted into processUnits, e.g.,
-// USING CONSTRUCTOR FUNCTION...
-//   processUnits[0] = new puHeatExchanger(0); // [] and () index # must match
-// OR USING OBJECT
-//   processUnits[0] = puHeatExchanger; // puHeatExchanger is an object
-//   processUnits[0].unitIndex = 0; // assign unitIndex to match processUnits index
-// then object cleared for garbage collection, e.g.,
-//   puHeatExchanger = null; // puHeatExchanger is an object
-// WARNING: if reorder unit index numbers, then need to edit
-//   those numbers in each unit's inputs array
 
 processUnits[0] = {
   //
@@ -110,7 +99,9 @@ processUnits[0] = {
 
   ants : [], // the little dot objects swarming around the arena
 
-  initialize : function() {
+  // BOTH LINES BELOW WORK (Flanagan, 6.10.5, 7th ed., p. 149)
+  // initialize : function() {
+  initialize() {
     //
     let v = 0;
     this.dataHeaders[v] = 'N'; // number swarm objects
@@ -135,54 +126,6 @@ processUnits[0] = {
     // this.dataMin[v] = 200;
     // this.dataMax[v] = 500;
     //
-
-    function Ant(newX, newY, newDX, newDY) {
-      // x = 0 is at left, xmax is at right of color canvas display
-      // y = 0 is at top, ymax is at bottom
-      // 1st 4 can be decimal to allow for more movement angles
-      this.x  = newX;
-      this.y = newY;
-      this.dx = newDX;
-      this.dy = newDY;
-      // 2nd 4 must be integer for colorCanvasData array indexes
-      // need to do rounding here because need to save old x,y to
-      // clear old position on color canvas display
-      this.xi = newX;
-      this.yi = newY;
-      this.oldXi = newX;
-      this.oldYi = newY;
-      this.move = function() {
-        let xmax = processUnits[0].numNodes;
-        let ymax = -1 + processUnits[0].numNodes;
-        // save current position so can clear it on color canvas display
-        this.oldXi = this.xi;
-        this.oldYi = this.yi;
-        // update x and y
-        let xnew = this.x + this.dx;
-        let ynew = this.y + this.dy;
-        // bounce if hit walls
-        // here specular reflection - real ants may not do this!
-        if (xnew > xmax) {
-          xnew = 2 * xmax - xnew;
-          this.dx = -this.dx; // reverse direction
-        } else if (xnew < 0) {
-          xnew = -xnew;
-          this.dx = -this.dx; // reverse direction
-        }
-        this.x = xnew;
-        if (ynew > ymax) {
-          ynew = 2*ymax - ynew;
-          this.dy = -this.dy; // reverse direction
-        } else if (ynew < 0) {
-          ynew = -ynew;
-          this.dy = -this.dy; // reverse direction
-        }
-        this.y = ynew;
-        // floor to integer for array indexes since allow decimal dx and dy
-        this.xi = Math.floor(this.x);
-        this.yi = Math.floor(this.y);
-      } // END this move method
-    } // END Ant constructor
 
     // make a bunch of new Ants
     for (i = 0; i < this.N; i += 1) {
@@ -425,3 +368,58 @@ processUnits[0] = {
   } // END OF checkForSteadyState()
 
 }; // END unit 0
+
+class Ant {
+
+  constructor(newX, newY, newDX, newDY) {
+    // x = 0 is at left, xmax is at right of color canvas display
+    // y = 0 is at top, ymax is at bottom
+    // 1st 4 can be decimal to allow for more movement angles
+    this.x  = newX;
+    this.y = newY;
+    this.dx = newDX;
+    this.dy = newDY;
+    this.xi = newX;
+    this.yi = newY;
+    this.oldXi = newX;
+    this.oldYi = newY;
+  } // END Ant constructor
+
+  // 2nd 4 must be integer for colorCanvasData array indexes
+  // need to do rounding here because need to save old x,y to
+  // clear old position on color canvas display
+
+  // NOTE: this does NOT work here >>  this.move = function() {
+  move() {
+    
+    let xmax = processUnits[0].numNodes;
+    let ymax = -1 + processUnits[0].numNodes;
+    // save current position so can clear it on color canvas display
+    this.oldXi = this.xi;
+    this.oldYi = this.yi;
+    // update x and y
+    let xnew = this.x + this.dx;
+    let ynew = this.y + this.dy;
+    // bounce if hit walls
+    // here specular reflection - real ants may not do this!
+    if (xnew > xmax) {
+      xnew = 2 * xmax - xnew;
+      this.dx = -this.dx; // reverse direction
+    } else if (xnew < 0) {
+      xnew = -xnew;
+      this.dx = -this.dx; // reverse direction
+    }
+    this.x = xnew;
+    if (ynew > ymax) {
+      ynew = 2*ymax - ynew;
+      this.dy = -this.dy; // reverse direction
+    } else if (ynew < 0) {
+      ynew = -ynew;
+      this.dy = -this.dy; // reverse direction
+    }
+    this.y = ynew;
+    // floor to integer for array indexes since allow decimal dx and dy
+    this.xi = Math.floor(this.x);
+    this.yi = Math.floor(this.y);
+  } // END this move method
+} // END OF class Ant definition

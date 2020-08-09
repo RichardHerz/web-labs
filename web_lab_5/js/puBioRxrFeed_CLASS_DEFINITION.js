@@ -18,6 +18,13 @@ class puBioRxrFeed {
 
   initialize() {
 
+  // *****************************************
+  //       define INPUT CONNECTIONS
+  // *****************************************
+
+  // define this unit's variables that are to receive input values from other units
+  this.concCommand = 0; // input command from controller process unit
+
   // *******************************************
   //  define OUTPUT CONNECTIONS to other units
   // *******************************************

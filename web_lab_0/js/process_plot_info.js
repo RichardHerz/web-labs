@@ -11,7 +11,9 @@
 
 let plotInfo = {
 
-  initialize : function() {
+  // BOTH LINES BELOW WORK (Flanagan, 6.10.5, 7th ed., p. 149)
+  // initialize : function() {
+  initialize() {
 
     let unum = 0; // useful when only one unit in plot, processUnits[unum]
 

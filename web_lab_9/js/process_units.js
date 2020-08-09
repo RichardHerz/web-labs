@@ -31,7 +31,7 @@ let processUnits = new Object();
 // child objects optionally can be defined in separate script files, which
 // makes them easier to edit,
 // then inserted into processUnits, e.g.,
-// USING CONSTRUCTOR FUNCTION...
+// USING CONSTRUCTOR FUNCTION OR CLASS DEFINITION...
 //   processUnits[0] = new puHeatExchanger(0); // [] and () index # must match
 // OR USING OBJECT
 //   processUnits[0] = puHeatExchanger; // puHeatExchanger is an object

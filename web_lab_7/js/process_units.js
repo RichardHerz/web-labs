@@ -27,7 +27,7 @@ let processUnits = new Object();
 // child objects optionally can be defined in separate script files, which
 // makes them easier to edit,
 // then inserted into processUnits, e.g.,
-// USING CONSTRUCTOR FUNCTION...
+// USING CONSTRUCTOR FUNCTION OR CLASS DEFINITION...
 //   processUnits[0] = new puHeatExchanger(0); // [] and () index # must match
 // OR USING OBJECT
 //   processUnits[0] = puHeatExchanger; // puHeatExchanger is an object
@@ -35,7 +35,7 @@ let processUnits = new Object();
 // then object cleared for garbage collection, e.g.,
 //   puHeatExchanger = null; // puHeatExchanger is an object
 // WARNING: if reorder unit index numbers, then need to edit
-//   those numbers in each unit's inputs array 
+//   those numbers in each unit's inputs array
 
 processUnits[0] = puPlugFlowReactor;
 processUnits[0].unitIndex = 0;

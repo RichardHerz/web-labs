@@ -1,22 +1,19 @@
-class puBioRxrFeed {
-
-  constructor(pUnitIndex) {
-    this.unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
-    // unitIndex used in this object's updateUIparams() method
-  }
-
-  // *****************************************
-  //    define and get INPUT CONNECTIONS
-  // *****************************************
-
-  updateInputs() {
-    this.concCommand = processUnits[2].command;
-  }
-
+function puBioRxrFeed(pUnitIndex) {
+  // constructor function for process unit
+  //
   // for other info shared with other units and objects, see public properties
   // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
 
-  initialize() {
+  // *****************************************
+  //       define INPUT CONNECTIONS
+  // *****************************************
+
+  // define this unit's variables that are to receive input values from other units
+  let concCommand = 0; // input command from controller process unit
+
+  this.updateInputs = function() {
+    concCommand = processUnits[2].command;
+  }
 
   // *******************************************
   //  define OUTPUT CONNECTIONS to other units
@@ -29,13 +26,13 @@ class puBioRxrFeed {
   //        define PRIVATE properties
   // *******************************************
 
-  // let unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
-  // // unitIndex used in this object's updateUIparams() method
+  let unitIndex = pUnitIndex; // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
 
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
-  this.ssCheckSum = 0; // used in checkForSteadyState() method
+  let ssCheckSum = 0; // used in checkForSteadyState() method
 
   // *******************************************
   //         define PUBLIC properties
@@ -70,7 +67,7 @@ class puBioRxrFeed {
   //        define PRIVILEGED methods
   // *****************************************
 
-
+  this.initialize = function() {
     //
     // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
     //
@@ -94,7 +91,7 @@ class puBioRxrFeed {
 
   } // END of initialize() method
 
-reset() {
+  this.reset = function() {
     //
     // On 1st load or reload page, the html file fills the fields with html file
     // values and calls reset, which needs updateUIparams to get values in fields.
@@ -110,7 +107,7 @@ reset() {
     controller.ssFlag = false;
 
     // set to zero ssCheckSum used to check for steady state by this unit
-    this.ssCheckSum = 0;
+    ssCheckSum = 0;
 
     // each unit has its own data arrays for plots and canvases
 
@@ -125,7 +122,7 @@ reset() {
 
   } // END of reset() method
 
-  updateUIparams() {
+  this.updateUIparams = function() {
     //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
@@ -134,7 +131,7 @@ reset() {
      // after change in UI params when previously at steady state
      controller.resetSSflagsFalse();
      // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
-     this.ssCheckSum = 1;
+     ssCheckSum = 1;
 
     // function getInputValue() is defined in file process_interfacer.js
     // getInputValue(unit # in processUnits object, variable # in dataInputs array)
@@ -142,13 +139,13 @@ reset() {
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
-    let unum = this.unitIndex;
+    let unum = unitIndex;
     //
     this.flowRate = this.dataValues[0] = interfacer.getInputValue(unum, 0);
 
   } // END of updateUIparams() method
 
-updateState() {
+  this.updateState = function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
     // SURE THAT VARIABLE IS NOT ALSO USED TO UPDATE ANOTHER STATE VARIABLE HERE -
@@ -158,12 +155,12 @@ updateState() {
     // WARNING: this method must NOT contain references to other units!
     //          get info from other units ONLY in updateInputs() method
 
-    this.conc = this.concCommand;
+    this.conc = concCommand;
 
   } // END of updateState() method
 
-  updateDisplay() {
-    // update disply elements which only depend on this process unit
+  this.updateDisplay = function() {
+    // update display elements which only depend on this process unit
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
@@ -210,7 +207,7 @@ updateState() {
 
   } // END of updateDisplay() method
 
-  checkForSteadyState() {
+  this.checkForSteadyState = function() {
     // required - called by controller object
     // returns ssFlag, true if this unit at SS, false if not
     // *IF* NOT used to check for SS *AND* another unit IS checked,
@@ -218,10 +215,10 @@ updateState() {
     // HOWEVER, if this unit has UI inputs, need to be able to return false
     let ssFlag = true;
     // ssCheckSum set != 0 on updateUIparams() execution
-    if (this.ssCheckSum != 0) {
+    if (ssCheckSum != 0) {
       ssFlag = false;
     }
-    this.ssCheckSum = 0;
+    ssCheckSum = 0;
     return ssFlag;
   } // END of checkForSteadyState() method
 

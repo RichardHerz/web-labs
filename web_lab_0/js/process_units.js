@@ -112,10 +112,10 @@ processUnits[0] = {
     this.dataDefault[v] = 200;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
-    this.VarCount = v;
+    this.varCount = v;
     //
     // OUTPUT VARS
     //
@@ -391,7 +391,7 @@ class Ant {
 
   // NOTE: this does NOT work here >>  this.move = function() {
   move() {
-    
+
     let xmax = processUnits[0].numNodes;
     let ymax = -1 + processUnits[0].numNodes;
     // save current position so can clear it on color canvas display

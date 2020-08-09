@@ -72,7 +72,7 @@ let puCoCounterHeatExchanger = {
   Ucoef : 0,
   Area : 0,
   Diam : 0,
-  VarCount : 0, // number of input variables
+  varCount : 0, // number of input variables
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -203,9 +203,9 @@ let puCoCounterHeatExchanger = {
     this.dataDefault[v] = 0.15;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table in _plotter.js
-    this.VarCount = v;
+    this.varCount = v;
     //
     // OUTPUT VARS
     //

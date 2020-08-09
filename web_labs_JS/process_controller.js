@@ -57,17 +57,15 @@ let controller = {
       simParams.labType = 'Dynamic';
     }
 
-    // initialize array to hold any quiz input variables hidden from user
-
-    // XXX seem like this array initialization should go into a initialize
-    // Xxx method of interfacer, which is then called here
-    interfacer.quizInputArray = interfacer.initializeQuizArrays();
+    // initialize interfacer
+    interfacer.initialize();
 
     // initialize variables in each process unit
     // the order of the numeric index of process units does not affect the simulation
-    for (let n in processUnits) {
-      processUnits[n].initialize();
+    for (let u in processUnits) {
+      processUnits[u].initialize();
     }
+
     // initialize plotInfo to define plots after initialize units
     //    in order to allow plotInfo to use values from units,
     //    e.g., dataUnits of output vars
@@ -76,10 +74,12 @@ let controller = {
     plotter.plotArrays.initialize();
     interfacer.resetThisLab(); // defined in process_interfacer.js
     simParams.updateCurrentRunCountDisplay(); // defined in process_sim_params.js
+
   }, // END OF function openThisLab
 
   updateProcess : function() {
-    // called periodically by setInterval in interfacer.runThisLab
+    // called once by interfacer.runThisLab for non-dynamic labs
+    // called periodically by interfacer.runThisLab for dynamic labs
 
     // update simTime = simulation time elapsed
     // done before simStepRepeats of all units, so
@@ -100,7 +100,7 @@ let controller = {
     // latest real time at which updateDisplay must occur in order
     // to maintain correspondence between sim time and real time
 
-    for (i = 0; i < simParams.simStepRepeats; i += 1) {
+    for (let i = 0; i < simParams.simStepRepeats; i++) {
       controller.updateProcessUnits();
     }
 
@@ -130,16 +130,18 @@ let controller = {
       return;
     }
 
+    let u; // unit index
+
     // FIRST, have all units update their unit input connections
-    for (let n in processUnits) {
-      processUnits[n].updateInputs();
+    for (u in processUnits) {
+      processUnits[u].updateInputs();
     }
 
     // NOTE: UI params are updated whenever UI changes by HTML input actions
 
     // SECOND, have all units update their state
-    for (let n in processUnits) {
-        processUnits[n].updateState();
+    for (u in processUnits) {
+        processUnits[u].updateState();
     }
 
   }, // END OF function updateProcessUnits
@@ -158,8 +160,8 @@ let controller = {
     }
 
     // DISPLAY ALL UNITS BUT DO NOT STEP
-    for (let n in processUnits) {
-      processUnits[n].updateDisplay();
+    for (let u in processUnits) {
+      processUnits[u].updateDisplay();
     }
 
     // UPDATE PLOTS HERE AND NOT IN PROCESS UNITS IN ORDER TO ALLOW
@@ -177,8 +179,9 @@ let controller = {
         plotter.plotColorCanvasPlot(p);
         if (simParams.labType != 'Dynamic') {
           // plot color canvas again for better color saturation
+          // in non-dynamic labs - do not slow down dynamic labs
           let numSatReps = 5; // 5 is max to have effect
-          for (k = 0; k < numSatReps; k += 1) {
+          for (let k = 0; k < numSatReps; k++) {
             plotter.plotColorCanvasPlot(p);
           }
         }
@@ -257,10 +260,11 @@ let controller = {
     // if all stay constant this check could be moved out of here
     // so only done once, but here allows unit residence times to change
 
+    let u; // unit index
     let resTime = 0;
-    for (let n in processUnits) {
-      if (processUnits[n]['residenceTime'] > resTime) {
-        resTime = processUnits[n]['residenceTime'];
+    for (u in processUnits) {
+      if (processUnits[u]['residenceTime'] > resTime) {
+        resTime = processUnits[u]['residenceTime'];
       }
     }
 
@@ -271,8 +275,8 @@ let controller = {
       let thisFlag = true; // changes to false if any unit not at steady state
       let thisCheck = true;
 
-      for (let n in processUnits) {
-        thisCheck = processUnits[n].checkForSteadyState();
+      for (u in processUnits) {
+        thisCheck = processUnits[u].checkForSteadyState();
         if (thisCheck == false){
           // result returned by unit is not true
           thisFlag = false;

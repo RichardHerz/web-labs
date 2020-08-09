@@ -190,9 +190,9 @@ let puPlugFlowReactor = {
     this.dataDefault[v] = 355;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table in _plotter.js
-    this.VarCount = v;
+    this.varCount = v;
     //
     // OUTPUT VARS
     //

@@ -46,6 +46,25 @@ let interfacer = {
 
   }, // END OF function runThisLab
 
+  initialize : function() {
+    // called by controller.openThisLab
+    // initialize array to hold any quiz input variables hidden from user
+    this.quizInputArray = initializeQuizArrays();
+
+    function initializeQuizArrays() {
+      // initialize a 2D array to hold quiz input values
+      // first index length must be fixed and here is number of process units
+      // second index length can be changed later and
+      // values are undefined or quiz input value
+      let arrayStub = [];
+      for (let u in processUnits) {
+        arrayStub[u] = [];
+      }
+      return arrayStub;
+    } // END OF sub function initializeQuizArrays
+
+  }, // END OF function initialize
+
   resetThisLab : function() {
     // REQUIRES run button id='button_runButton' & display labels be 'Run' & 'Pause'
     // CALLED BY UI RESET BUTTON DEFINED IN HTML
@@ -55,9 +74,8 @@ let interfacer = {
     clearInterval(this.timerID);
     controller.resetSimTime();
     // reset all units
-    let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
-      processUnits[n].reset();
+    for (let u in processUnits) {
+      processUnits[u].reset();
     }
     controller.resetSSflagsFalse();
     controller.updateDisplay();
@@ -138,32 +156,16 @@ let interfacer = {
     // Could be called from onclick or onchange in HTML element, if desired.
     // Alternative: in HTML input tag onchange, send updateUIparams() to
     // specific unit involved in that input.
-    //
-    let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
-      processUnits[n].updateUIparams();
+    for (let u in processUnits) {
+      processUnits[u].updateUIparams();
     }
   },  // END OF function updateUIparams
-
-  initializeQuizArrays : function() {
-    // called by controller.openThisLab
-    // initialize a 2D array to hold quiz input values
-    // first index length must be fixed and here is number of process units
-    // second index length can be changed later and
-    // values are undefined or quiz input value
-    let arrayStub = [];
-    let numUnits = Object.keys(processUnits).length;
-    for (u = 0; u < numUnits; u += 1) {
-      arrayStub[u] = [];
-    }
-    return arrayStub;
-  }, // END OF function initializeQuizArrays
 
   initializeQuizVars : function(u,qv) {
     // inputs are unit index, array of quiz variable indexes in that unit
     let v;
     let qval;
-    for (n = 0; n < qv.length; n += 1) {
+    for (let n in qv) {
       v = qv[n];
       processUnits[u]['dataQuizInputs'][v] = true; // checked in interfacer.copyData
       qval = processUnits[u]['dataMin'][v] // line continues below...
@@ -243,7 +245,7 @@ let interfacer = {
       interfacer.runThisLab(); // toggles running state
     }
 
-    let n; // index
+    let u; // unit index
     let v; // variable index
     let p; // points index
     let numUnits;
@@ -278,43 +280,42 @@ let interfacer = {
 
     tText += 'Values of input parameters at time of data capture:<br>';
     // list inputs for all units since, other units may affect these results
-    numUnits = Object.keys(processUnits).length;
-    for (n = 0; n < numUnits; n += 1) {
-      tText += '* ' + processUnits[n]['name'] + '<br>';
-      numVar = processUnits[n]['VarCount'];
-      for (v = 0; v <= numVar; v += 1) { // NOTE: <=
-        if (processUnits[n]['dataQuizInputs']) {
+    for (u in processUnits) {
+      tText += '* ' + processUnits[u]['name'] + '<br>';
+      numVar = processUnits[u]['varCount'];
+      for (v = 0; v <= numVar; v++) { // NOTE: <=
+        if (processUnits[u]['dataQuizInputs']) {
           // unit has array dataQuizInputs, now check which vars are quiz vars
-          if (processUnits[n]['dataQuizInputs'][v]) {
+          if (processUnits[u]['dataQuizInputs'][v]) {
             // note 'answered' evaluates as true, so need to test for 'answered'
-            if (processUnits[n]['dataQuizInputs'][v] == 'answered'){
+            if (processUnits[u]['dataQuizInputs'][v] == 'answered'){
               // is a ANSWERED quiz variable - display input value
-              varValue = processUnits[n]['dataValues'][v];
+              varValue = processUnits[u]['dataValues'][v];
               varValue = this.formatNumToNum(varValue);
-              tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+              tText += '&nbsp; &nbsp;' + processUnits[u]['dataHeaders'][v] + ' = '
                       + varValue + '&nbsp;'
-                      + processUnits[n]['dataUnits'][v] + ' * ANSWERED * <br>';
+                      + processUnits[u]['dataUnits'][v] + ' * ANSWERED * <br>';
             } else {
             // is an UNKNOWN quiz variable - do not display input value
-            tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+            tText += '&nbsp; &nbsp;' + processUnits[u]['dataHeaders'][v] + ' = '
                     + '???' + '&nbsp;'
-                    + processUnits[n]['dataUnits'][v] + ' * UNKNOWN * <br>';
+                    + processUnits[u]['dataUnits'][v] + ' * UNKNOWN * <br>';
             }
           } else {
             // is not a quiz variable - display input value
-            varValue = processUnits[n]['dataValues'][v];
+            varValue = processUnits[u]['dataValues'][v];
             varValue = this.formatNumToNum(varValue);
-            tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+            tText += '&nbsp; &nbsp;' + processUnits[u]['dataHeaders'][v] + ' = '
                     + varValue + '&nbsp;'
-                    + processUnits[n]['dataUnits'][v] + '<br>';
+                    + processUnits[u]['dataUnits'][v] + '<br>';
           }
         } else {
             // unit does NOT have array dataQuizInputs, so show all input values
-            varValue = processUnits[n]['dataValues'][v];
+            varValue = processUnits[u]['dataValues'][v];
             varValue = this.formatNumToNum(varValue);
-            tText += '&nbsp; &nbsp;' + processUnits[n]['dataHeaders'][v] + ' = '
+            tText += '&nbsp; &nbsp;' + processUnits[u]['dataHeaders'][v] + ' = '
                     + varValue + '&nbsp;'
-                    + processUnits[n]['dataUnits'][v] + '<br>';
+                    + processUnits[u]['dataUnits'][v] + '<br>';
         }
       }
     }
@@ -348,7 +349,7 @@ let interfacer = {
       // first, x-axis variable name for table
       tText += plotInfo[plotIndex]['xAxisTableLabel'] + tItemDelimiter;
       // then other column names for y-axis variables
-      for (v = 0; v < tVarLen; v += 1) {
+      for (v = 0; v < tVarLen; v++) {
         tText += plotInfo[plotIndex]['varLabel'][v];
 
         // tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
@@ -367,14 +368,14 @@ let interfacer = {
       varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
       let thisNumPts = processUnits[varUnitIndex][dataName][0].length;
       //
-      for (p = 0; p < thisNumPts; p += 1) {
+      for (p = 0; p < thisNumPts; p++) {
         // first get x value in [p][0], get it from ['var'][0]
         // x values should be same for all units for this plot
         varIndex = plotInfo[plotIndex]['var'][0];
         varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
         tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][p][0]) + tItemDelimiter;
           // get y value for each variable in [p][1]
-          for (v = 0; v < tVarLen; v += 1) {
+          for (v = 0; v < tVarLen; v++) {
             varIndex = plotInfo[plotIndex]['var'][v];
             varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
             tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][p][1]); // [p][1] is y value
@@ -393,7 +394,7 @@ let interfacer = {
       // first, run count
       tText += 'run #' + tItemDelimiter;
       // then other column names for y-axis variables
-      for (v = 0; v < tVarLen; v += 1) {
+      for (v = 0; v < tVarLen; v++) {
         if (processUnits[varUnitIndex]['dataSwitcher'][v] == 1) {
           tText += processUnits[varUnitIndex]['dataHeaders'][v];
           let tUnits = processUnits[varUnitIndex]['dataUnits'][v];
@@ -404,15 +405,15 @@ let interfacer = {
             tText += tItemDelimiter;
           }
         } // END OF if (processUnits[varUnitIndex]['dataSwitcher'][v] = 1)
-      } // END OF for (v = 0; v < tVarLen; v += 1)
+      } // END OF for (v = 0; v < tVarLen; v++)
       tText += '</p>';
       // repeat to make each line in table for each data point
       // all unit vars in one plot must have same data array length
-      for (p = 0; p < thisNumPts; p += 1) {
+      for (p = 0; p < thisNumPts; p++) {
         // in first column, list the run count (formatNum throws error for it)
         tText += processUnits[varUnitIndex][dataName][tVarLen][p][0] + tItemDelimiter;
         // for lab type 'single' get x value for each variable in [p][0]
-        for (v = 0; v < tVarLen; v += 1) {
+        for (v = 0; v < tVarLen; v++) {
           if (processUnits[varUnitIndex]['dataSwitcher'][v] == 1) {
             tText += formatNum(processUnits[varUnitIndex][dataName][v][p][0]);
             if (v < (tVarLen - 1)) {tText += tItemDelimiter;}

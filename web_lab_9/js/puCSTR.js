@@ -89,10 +89,10 @@ function puCSTR(pUnitIndex) {
     // SPECIAL - nothing needed for this unit
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
-    // SPECIAL - not used this unit: this.VarCount = v;
+    // SPECIAL - not used this unit: this.varCount = v;
     //
     // OPTIONAL - add entries for output variables if want to use min-max to
     //            constrain values in updateState or dimensional units in plotInfo

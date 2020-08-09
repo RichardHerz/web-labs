@@ -107,10 +107,10 @@ processUnits[0] = {
     this.dataMax[v] = 500;
     this.dataDefault[v] = 300;
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
-    this.VarCount = v;
+    this.varCount = v;
     //
   }, // END of initialize()
 
@@ -315,10 +315,10 @@ processUnits[1] = {
     this.dataDefault[v] = -250
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
-    this.VarCount = v;
+    this.varCount = v;
     //
     // OUTPUT VARS
     //
@@ -616,10 +616,10 @@ processUnits[2] = {
     this.dataDefault[v] = 1;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
-    this.VarCount = v;
+    this.varCount = v;
     //
     v = 1;
     this.dataHeaders[v] = 'jacketInletT';
@@ -652,10 +652,10 @@ processUnits[2] = {
   //   this.dataDefault[v] = 1;
   //   //
   //   // END OF INPUT VARS
-  //   // record number of input variables, VarCount
+  //   // record number of input variables, varCount
   //   // used, e.g., in copy data to table
   //   //
-  //   this.VarCount = v;
+  //   this.varCount = v;
   //   //
   // }, // END of initialize()
 
@@ -871,10 +871,10 @@ processUnits[3] = {
     this.dataDefault[v] = 20;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
-    this.VarCount = v;
+    this.varCount = v;
     //
     // OUTPUT VARS
     //
@@ -1135,12 +1135,12 @@ processUnits[4] = {
     document.getElementById("radio_controllerMANUAL").checked = true;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
     // SPECIAL - use v-1 to not report manualCommand in copy data table header
     //           but need manualCommand as input var to get from html input
-    this.VarCount = v-1;
+    this.varCount = v-1;
     //
     // OUTPUT VARS
     //

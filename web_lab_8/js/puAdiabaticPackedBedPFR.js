@@ -177,11 +177,11 @@ let puAdiabaticPackedBedPFR = {
     this.dataDefault[v] = this.dataMin[v];
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
     // *** use v-1 here since TinHX only used to initialize & reset plots
-    this.VarCount = v-1;
+    this.varCount = v-1;
     //
     // OUTPUT VARS
     //

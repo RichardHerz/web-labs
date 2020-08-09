@@ -37,10 +37,9 @@ let plotter = {
 
     initialize : function() {
       // called by controller.openThisLab()
-      // uses length of plotInfo so must be called after plotInfo has been initialized
-      let npl = Object.keys(plotInfo).length; // number of plots
+      // uses plotInfo so must be called after plotInfo has been initialized
       this.plotFlag = [0];
-      for (p = 1; p < npl; p += 1) {
+      for (let p in plotInfo) {
         this.plotFlag.push(0);
       }
     } // END of method initialize()
@@ -94,7 +93,7 @@ let plotter = {
     }
 
     // get data for plot and load into plotData array
-    for (v = 0; v < numVar; v += 1) {
+    for (v = 0; v < numVar; v++) {
 
       // get unit index and array name for this variable
       varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
@@ -119,15 +118,15 @@ let plotter = {
           // get actual length of profileData - may change in labs which add
           // x,y plot pairs as generated at irregular times and locations
           thisNumPts = processUnits[varUnitIndex]['profileData'][n].length;
-            for (p = 0; p < thisNumPts; p += 1) {
+            for (p = 0; p < thisNumPts; p++) {
             plotData[v][p][0] = processUnits[varUnitIndex]['profileData'][n][p][0];
             plotData[v][p][1] = processUnits[varUnitIndex]['profileData'][n][p][1];
           }
         } else if (plotInfo[plotIndex]['type'] == 'strip') {
           // requires units' local array name to be stripData
-          // xxx for (p = 0; p <= numPlotPoints; p += 1) { // NOTE = AT p <=
+          // xxx for (p = 0; p <= numPlotPoints; p++) { // NOTE = AT p <=
           thisNumPts = processUnits[varUnitIndex]['stripData'][n].length;
-          for (p = 0; p < thisNumPts; p += 1) {
+          for (p = 0; p < thisNumPts; p++) {
             plotData[v][p][0] = processUnits[varUnitIndex]['stripData'][n][p][0];
             plotData[v][p][1] = processUnits[varUnitIndex]['stripData'][n][p][1];
           }
@@ -138,7 +137,7 @@ let plotter = {
           yVar = simParams.yVar;
           dataName = 'singleData';
           thisNumPts = processUnits[varUnitIndex][dataName][n].length;
-          for (p = 0; p < thisNumPts; p += 1) {
+          for (p = 0; p < thisNumPts; p++) {
             plotData[v][p][0] = processUnits[varUnitIndex][dataName][xVar][p][0];
             plotData[v][p][1] = processUnits[varUnitIndex][dataName][yVar][p][1];
           }
@@ -161,7 +160,7 @@ let plotter = {
           yVar = simParams.yVar;
           dataName = 'singleData';
           thisNumPts = processUnits[varUnitIndex][dataName][n].length;
-          for (p = 0; p < thisNumPts; p += 1) {
+          for (p = 0; p < thisNumPts; p++) {
             plotData[v][p][0] = processUnits[varUnitIndex][dataName][xVar][p][0];
             plotData[v][p][1] = processUnits[varUnitIndex][dataName][yVar][p][0];
           }
@@ -170,14 +169,14 @@ let plotter = {
         }
       }
 
-    } // END OF for (v = 0; v < numVar; v += 1)
+    } // END OF for (v = 0; v < numVar; v++)
 
     // scale y-axis values if scale factor not equal to 1
-    for (v = 0; v < numVar; v += 1) {
+    for (v = 0; v < numVar; v++) {
       sf = plotInfo[plotIndex]['varYscaleFactor'][v];
       thisNumPts = plotData[v].length;
       if (sf != 1) {
-        for (p = 0; p < thisNumPts; p += 1) {
+        for (p = 0; p < thisNumPts; p++) {
           plotData[v][p][1] = sf * plotData[v][p][1];
         }
       }
@@ -240,7 +239,7 @@ let plotter = {
     let numToShow = 0; // index for variables to show on plot
     // KEEP numToShow as well as for index k because not all k vars will show!
     // only variables with property "show" will appear on plot
-    for (k = 0; k < numVar; k += 1) {
+    for (k = 0; k < numVar; k++) {
       // add object for each plot variable to array dataToPlot
       // e.g., { data: y1Data, label: y1DataLabel, yaxis: 1 }
       let newobj = {};
@@ -270,7 +269,7 @@ let plotter = {
         if (yAxis[k] === 'right') {newobj.yaxis = 1;} else {newobj.yaxis = 2;}
         dataToPlot[k] = newobj;
       }
-    } // END OF for (k = 0; k < numVar; k += 1) {
+    } // END OF for (k = 0; k < numVar; k++) {
 
     // set up the plot axis labels and plot legend
 
@@ -362,9 +361,9 @@ let plotter = {
     let v;
     let p;
     let plotDataStub = [];
-    for (v = 0; v < numVars; v += 1) {
+    for (v = 0; v < numVars; v++) {
       plotDataStub[v] = [];
-      for (p = 0; p <= numPlotPoints; p += 1) { // NOTE = AT p <=
+      for (p = 0; p <= numPlotPoints; p++) { // NOTE = AT p <=
         plotDataStub[v][p] = [];
         plotDataStub[v][p][0] = 0;
         plotDataStub[v][p][1] = 0;
@@ -438,8 +437,8 @@ let plotter = {
     let maxVarVal = plotInfo[pIndex]['varValueMax'];
     let scaledVarVal; // holds variable value scaled 0-1 by minVarVal & maxVarVal
 
-    for (t = 0; t <= numTimePts; t += 1) { // NOTE = at t <=
-      for (s = 0; s < numSpacePts; s += 1) {
+    for (t = 0; t <= numTimePts; t++) { // NOTE = at t <=
+      for (s = 0; s < numSpacePts; s++) {
         scaledVarVal = (colorCanvasData[t][s] - minVarVal) / (maxVarVal - minVarVal);
         if (plotInfo[pIndex]['colorMap'] == 'redBlueColorMap') {
           cmap = this.redBlueColorMap(scaledVarVal); // scaledVarVal should be scaled 0 to 1
@@ -545,11 +544,11 @@ let plotter = {
     let x;
     let y;
     let plotDataStub = [];
-    for (v = 0; v < numVars; v += 1) {
+    for (v = 0; v < numVars; v++) {
       plotDataStub[v] = [];
-        for (x = 0; x <= numXpts; x += 1) { // NOTE = AT <=
+        for (x = 0; x <= numXpts; x++) { // NOTE = AT <=
         plotDataStub[v][x] = [];
-        for (y = 0; y < numYpts; y += 1) {
+        for (y = 0; y < numYpts; y++) {
           plotDataStub[v][x][y] = 0;
         }
       }
@@ -615,7 +614,7 @@ let plotter = {
     let scaledVarVal; // holds variable value scaled 0-1 by minVarVal & maxVarVal
 
     // repeat through all old and new x,y locations
-    for (i=0; i < xLocArray.length; i +=1) {
+    for (i=0; i < xLocArray.length; i++) {
       t = xLocArray[i];
       s = yLocArray[i];
 
@@ -664,7 +663,7 @@ let plotter = {
         context.fillRect(x,y,tPixelsPerPoint,sPixelsPerPoint);
       }
 
-    } // END for (i=0; i < xLocArray.length; i +=1)
+    } // END for (i=0; i < xLocArray.length; i++)
 
   }, // END of function plotColorCanvasPixelList
 

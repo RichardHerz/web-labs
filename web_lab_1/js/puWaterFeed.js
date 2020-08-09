@@ -84,13 +84,13 @@ function puWaterFeed(pUnitIndex) {
     this.dataDefault[v] = 2;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
     // SPECIAL - copyData will not show flowRate as input param but will
     //           display all readings in a data column from stripData as plot
-    //           vars so set VarCount to -1 so no display as input param
-    this.VarCount = -1;
+    //           vars so set varCount to -1 so no display as input param
+    this.varCount = -1;
     //
     // OPTIONAL - add entries for output variables if want to use min-max to
     //            constrain values in updateState or dimensional units in plotInfo

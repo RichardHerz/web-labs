@@ -112,12 +112,12 @@ function puBioRxrController(pUnitIndex) {
     document.getElementById("radio_controllerMANUAL").checked = true;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
     // special, use v-1 to not report manualCommand in copy data table header
     // but need manualCommand as input var to get from html input
-    this.VarCount = v-1;
+    this.varCount = v-1;
     //
     // OPTIONAL - add entries for output variables if want to use min-max to
     //            constrain values in updateState or dimensional units in plotInfo

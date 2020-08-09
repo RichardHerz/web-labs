@@ -66,7 +66,7 @@ let puCounterCurrentHeatExchanger = {
   FlowHot : 0,
   FlowCold : 0,
   UAcoef : 0,
-  VarCount : 0, // number of input variables
+  varCount : 0, // number of input variables
 
   // define arrays to hold info for variables
   // these will be filled with values in method initialize()
@@ -138,9 +138,9 @@ let puCounterCurrentHeatExchanger = {
     this.dataDefault[v] = 20;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
-    this.VarCount = v;
+    this.varCount = v;
     //
     // OUTPUT VARS
     //
@@ -183,7 +183,7 @@ let puCounterCurrentHeatExchanger = {
     this.profileData = plotter.initPlotData(numProfileVars,numProfilePts); // holds data for static profile plots
 
     // // initialize strip chart data array
-    // plot 5 has vars from 2 units so can't use ['var'].length 
+    // plot 5 has vars from 2 units so can't use ['var'].length
     let numStripVars = 4; // the 4 end T's of the heat exchanger
     let numStripPts = plotInfo[5]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots

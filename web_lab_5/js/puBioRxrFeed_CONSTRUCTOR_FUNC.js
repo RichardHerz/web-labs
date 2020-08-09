@@ -80,10 +80,10 @@ function puBioRxrFeed(pUnitIndex) {
     this.dataDefault[v] = 0.2;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
-    this.VarCount = v;
+    this.varCount = v;
     //
     // OPTIONAL - add entries for output variables if want to use min-max to
     //            constrain values in updateState or dimensional units in plotInfo

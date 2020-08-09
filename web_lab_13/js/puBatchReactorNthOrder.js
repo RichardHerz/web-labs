@@ -159,9 +159,9 @@ let puBatchReactorNthOrder = {
     this.dataDefault[v] = 100;
     //
     // END OF INPUT VARS
-    // record number of input variables, VarCount
+    // record number of input variables, varCount
     // used, e.g., in copy data to table in _plotter.js
-    this.VarCount = v;
+    this.varCount = v;
     //
     // OUTPUT VARS
     //
@@ -216,7 +216,7 @@ let puBatchReactorNthOrder = {
     // SPECIAL FOR PLOT TYPE 'single'
     // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
     // inputs and 1's for all outputs - inputs may change in updateUIparams()
-    let tlen = this.VarCount; // last v of inputs, which start at v=0
+    let tlen = this.varCount; // last v of inputs, which start at v=0
     for (v = 0; v <= tlen; v += 1) {
       this.dataSwitcher[v] = 0;
     }
@@ -279,7 +279,7 @@ let puBatchReactorNthOrder = {
     // SPECIAL FOR PLOT TYPE SINGLE
     // dataSwitcher is array with 0's for unchanged inputs, 1's for changed
     // inputs and 1's for all outputs - inputs may change in updateUIparams()
-    for (v = 0; v <= this.VarCount; v += 1) {
+    for (v = 0; v <= this.varCount; v += 1) {
       if (this.dataValuesORIG[v] != this.dataValues[v]) {
         this.dataSwitcher[v] = 1;
         if (controller.simTime > 0) {

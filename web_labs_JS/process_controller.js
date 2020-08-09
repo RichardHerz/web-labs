@@ -58,11 +58,14 @@ let controller = {
     }
 
     // initialize array to hold any quiz input variables hidden from user
+
+    // XXX seem like this array initialization should go into a initialize
+    // Xxx method of interfacer, which is then called here
     interfacer.quizInputArray = interfacer.initializeQuizArrays();
+
     // initialize variables in each process unit
     // the order of the numeric index of process units does not affect the simulation
-    let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n in processUnits) {
       processUnits[n].initialize();
     }
     // initialize plotInfo to define plots after initialize units
@@ -127,17 +130,15 @@ let controller = {
       return;
     }
 
-    let numUnits = Object.keys(processUnits).length; // number of units
-
     // FIRST, have all units update their unit input connections
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n in processUnits) {
       processUnits[n].updateInputs();
     }
 
     // NOTE: UI params are updated whenever UI changes by HTML input actions
 
     // SECOND, have all units update their state
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n in processUnits) {
         processUnits[n].updateState();
     }
 
@@ -157,8 +158,7 @@ let controller = {
     }
 
     // DISPLAY ALL UNITS BUT DO NOT STEP
-    let numUnits = Object.keys(processUnits).length; // number of units
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n in processUnits) {
       processUnits[n].updateDisplay();
     }
 
@@ -170,16 +170,15 @@ let controller = {
     // REDRAW OF THE PLOT (plotPlotData) IS SLOW STEP IN MANY SIMULATIONS
 
     // GET AND PLOT ALL PLOTS defined in object plotInfo
-    let numPlots = Object.keys(plotInfo).length;
-    numPlots = numPlots - 1; // subtract method initialize(), which is counted in length
-    for (p = 0; p < numPlots; p += 1) {
+    for (let p in plotInfo) {
       let ptype = plotInfo[p]['type'];
       if (ptype == 'canvas') {
         // space-time, color-canvas plot
         plotter.plotColorCanvasPlot(p);
         if (simParams.labType != 'Dynamic') {
           // plot color canvas again for better color saturation
-          for (k = 0; k < 5; k += 1) {
+          let numSatReps = 5; // 5 is max to have effect
+          for (k = 0; k < numSatReps; k += 1) {
             plotter.plotColorCanvasPlot(p);
           }
         }
@@ -191,7 +190,7 @@ let controller = {
         // plotting must be handled by a unit's updateDisplay
         // no plotting here
       }
-    }
+    } // END OF for (let p in plotInfo)
 
     // check and set ssFlag to true if at steady state
     // do this here in updateDisplay rather than each process update
@@ -231,10 +230,8 @@ let controller = {
   },
 
   getStripPlotSpan : function() {
-    let numPlots = Object.keys(plotInfo).length; // number of plots
-    numPlots = numPlots - 1; // correct for initialize member of plotInfo
     let span = 0;
-    for (p = 0; p < numPlots; p += 1) {
+    for (let p in plotInfo) {
       if (plotInfo[p]['type'] == 'strip') {
         let xMax = plotInfo[p]['xAxisMax'] - plotInfo[p]['xAxisMin'];
         if (xMax > span) {span = xMax;}
@@ -259,9 +256,9 @@ let controller = {
     // get longest residence time in all units
     // if all stay constant this check could be moved out of here
     // so only done once, but here allows unit residence times to change
-    let numUnits = Object.keys(processUnits).length; // number of units
+
     let resTime = 0;
-    for (n = 0; n < numUnits; n += 1) {
+    for (let n in processUnits) {
       if (processUnits[n]['residenceTime'] > resTime) {
         resTime = processUnits[n]['residenceTime'];
       }
@@ -273,7 +270,8 @@ let controller = {
       // get ssFlag from each unit
       let thisFlag = true; // changes to false if any unit not at steady state
       let thisCheck = true;
-      for (n = 0; n < numUnits; n += 1) {
+
+      for (let n in processUnits) {
         thisCheck = processUnits[n].checkForSteadyState();
         if (thisCheck == false){
           // result returned by unit is not true

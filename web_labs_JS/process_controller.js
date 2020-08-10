@@ -57,9 +57,6 @@ let controller = {
       simParams.labType = 'Dynamic';
     }
 
-    // initialize interfacer
-    interfacer.initialize();
-
     // initialize variables in each process unit
     // the order of the numeric index of process units does not affect the simulation
     for (let u in processUnits) {

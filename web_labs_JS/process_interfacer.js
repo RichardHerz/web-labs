@@ -11,8 +11,6 @@ let interfacer = {
 
   timerID : 0, // used by setInterval & clearInterval in runThisLab & resetThisLab
 
-  quizInputArray : [],
-
   runThisLab : function() {
     // TOGGLES between running (button label 'Pause') & paused (button label 'Run')
     // REQUIRES run button id='button_runButton' & display labels be 'Run' & 'Pause'
@@ -27,7 +25,7 @@ let interfacer = {
       if (simParams.labType == 'Dynamic') {
         // change button label to 'Pause'
         el.value = 'Pause'; // REQUIRES run button id="button_runButton"
-        // repeat calling updateProcess to run lab - use no () after .updateProcess
+        // repeat calling updateProcess to run Dynamic labtype - no () after .updateProcess
         this.timerID = setInterval(controller.updateProcess,simParams.updateDisplayTimingMs);
       } else {
         // lapType is Single or Profile
@@ -45,25 +43,6 @@ let interfacer = {
     } // END OF if (el.value == 'Run')
 
   }, // END OF function runThisLab
-
-  initialize : function() {
-    // called by controller.openThisLab
-    // initialize array to hold any quiz input variables hidden from user
-    this.quizInputArray = initializeQuizArrays();
-
-    function initializeQuizArrays() {
-      // initialize a 2D array to hold quiz input values
-      // first index length must be fixed and here is number of process units
-      // second index length can be changed later and
-      // values are undefined or quiz input value
-      let arrayStub = [];
-      for (let u in processUnits) {
-        arrayStub[u] = [];
-      }
-      return arrayStub;
-    } // END OF sub function initializeQuizArrays
-
-  }, // END OF function initialize
 
   resetThisLab : function() {
     // REQUIRES run button id='button_runButton' & display labels be 'Run' & 'Pause'
@@ -165,13 +144,16 @@ let interfacer = {
     // inputs are unit index, array of quiz variable indexes in that unit
     let v;
     let qval;
+    this.quizInputArray = initializeQuizArray(); // subfunction of this function
     for (let n in qv) {
       v = qv[n];
       processUnits[u]['dataQuizInputs'][v] = true; // checked in interfacer.copyData
       qval = processUnits[u]['dataMin'][v] // line continues below...
         + Math.random() // line continues below...
         * (processUnits[u]['dataMax'][v] - processUnits[u]['dataMin'][v]);
-      // XXX trouble with this for DelH heat of reaction - get ave = 0
+      //
+      // XXX not good for DelH heat of reaction - get ave = 0
+      //
       // format number so don't get zillions of places after decimal place
       // digits in small numbers won't affect answer check & will format on display
       if (Math.abs(qval) >= 10){
@@ -180,10 +162,21 @@ let interfacer = {
         qval = qval.toFixed(1); // toFixed returns qval as STRING
         qval = Number(qval); // so convert back to Number
       }
-      // put u,v,qval into quizInputArray
-      // and not html input field so user can't inspect html for qval
       this.quizInputArray[u][v] = qval;
     }
+
+    function initializeQuizArray() {
+      // initialize a 2D array to hold quiz input values
+      // first index length must be fixed and here is number of process units
+      // second index length can be changed later and
+      // values are undefined or quiz input value
+      let arrayStub = [];
+      for (let u in processUnits) {
+        arrayStub[u] = [];
+      }
+      return arrayStub;
+    } // END OF sub function initializeQuizArray
+
   }, // END OF function initializeQuizVars
 
   checkQuizAnswer : function(u,v) {
@@ -200,7 +193,10 @@ let interfacer = {
       let varValue = this.quizInputArray[u][v];
       varValue = this.formatNumToNum(varValue);
       txt = "You entered: " + varAnswer + " correct is " + varValue;
-      if ((varAnswer >= 0.8 * varValue) && (varAnswer <= 1.2 * varValue)){
+      // heats of rxn can be < 0 so compare absolute values
+      let absVarAnswer = Math.abs(varAnswer);
+      let absVarValue = Math.abs(varValue);
+      if ((absVarAnswer >= 0.8 * absVarValue) && (absVarAnswer <= 1.2 * absVarValue)){
         alert("Good! " + txt);
         // put the value in the input field
         let el = document.getElementById(processUnits[u]['dataInputs'][v]);

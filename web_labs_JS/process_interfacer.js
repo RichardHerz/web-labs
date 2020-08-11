@@ -28,7 +28,7 @@ let interfacer = {
         // repeat calling updateProcess to run Dynamic labtype - no () after .updateProcess
         this.timerID = setInterval(controller.updateProcess,simParams.updateDisplayTimingMs);
       } else {
-        // lapType is Single or Profile
+        // lapType is Static or other non-Dynamic
         // update process once
         controller.updateProcess();
       }
@@ -152,7 +152,9 @@ let interfacer = {
         + Math.random() // line continues below...
         * (processUnits[u]['dataMax'][v] - processUnits[u]['dataMin'][v]);
       //
-      // XXX not good for DelH heat of reaction - get ave = 0
+      // XXX not good for DelH heat of reaction - get ave = 0 and half endothermic
+      //     maybe detect DelH when dataMin < 0 and skew toward positive values?
+      //     or check dataHeaders, though name could change in future...?
       //
       // format number so don't get zillions of places after decimal place
       // digits in small numbers won't affect answer check & will format on display

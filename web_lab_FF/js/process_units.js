@@ -52,23 +52,9 @@ processUnits[0] = {
 
   // INPUT CONNECTIONS TO THIS UNIT FROM HTML UI CONTROLS, see updateUIparams below
 
-  // DEFINE MAIN PARAMETERS
-  // values will be set in method initialize()
+    // SPECIAL - none for this unit
 
-  // N : 0, // (d'less), number of trees to construct
-
-  // define arrays to hold info for variables
-  // these will be filled with values in method initialize()
-  dataHeaders : [], // variable names
-  dataInputs : [], // input field ID's
-  dataUnits : [],
-  dataMin : [],
-  dataMax : [],
-  dataDefault : [],
-  dataValues : [],
-
-  // define arrays to hold output variables
-  // these will be filled with initial values in method reset()
+  // *******************************************
 
   // define arrays to hold data for plots, color canvas
   // these will be filled with initial values in method reset()
@@ -80,11 +66,6 @@ processUnits[0] = {
   // WARNING: see special handling for time step in this unit's updateInputs method
   unitStepRepeats : 1,
   unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
-
-  // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
-  // REDUCE size of time steps FOR NUMERICAL STABILITY BY SQUARE OF THE FACTOR
-  // AND INCREASE step repeats BY SAME FACTOR IF WANT SAME SIM TIME BETWEEN
-  // DISPLAY UPDATES
 
   // define variables which will not be plotted nor saved in copy data table
   //   none here
@@ -122,11 +103,11 @@ processUnits[0] = {
         this.trees[x][y].temperature = 300;
       }
     }
+
+    // SET AN IGNITION POINT
     this.trees[20][20].temperature = 600;
 
   }, // END of initialize()
-
-  // *** NO LITERAL REFERENCES TO OTHER UNITS OR HTML ID'S BELOW THIS LINE ***
 
   reset : function(){
     //
@@ -175,11 +156,16 @@ processUnits[0] = {
     //          get info from other units ONLY in updateInputs() method
     //
 
-    // have one adjustable param from HTML UI at this point, N
-
-    // // console.log('enter updateState');
-
+    // first, get rates of change of mass and temperature over field
+    // at current state
     let xymax = this.numNodes;
+    for (let x = 0; x <= xymax; x++) {
+      for (let y = 0; y <= xymax; y++) {
+        this.trees[x][y].updateRates();
+      }
+    }
+
+    // second, update mass and temperature state
     for (let x = 0; x <= xymax; x++) {
       for (let y = 0; y <= xymax; y++) {
         this.trees[x][y].updateState();
@@ -189,8 +175,6 @@ processUnits[0] = {
   }, // end updateState method
 
   updateDisplay : function(){
-
-    // // console.log('enter updateDisplay');
 
     // update colorCanvasData array
     // x = 0 is at left, xmax is at right of color canvas display
@@ -205,9 +189,6 @@ processUnits[0] = {
         this.colorCanvasData[0][x][y] = this.trees[x][y].temperature;
       }
     }
-
-    // console.log('20,20 mass = ' + this.trees[20][20].mass);
-    // console.log('20,20 Temperature = ' + this.trees[20][20].temperature);
 
   }, // END of updateDisplay()
 
@@ -239,50 +220,44 @@ class Tree {
     this.y = newY;
   } // END Tree constructor
 
-  // NOTE: this does NOT work here >>  this.updateState = function() {
-  updateState() {
-
-    // console.log('enter updateState, tree at = ' + this.x + ',' + this.y);
+  updateRates() {
 
     // constants
     // could make some variable through constructor arguments for faster testing
-    const dt = 0.008; // s, time step
-    const mbr = -4;  // kg/s, mass burn rate
+    const mbr = -2;  // kg/s, mass burn rate
     const u0 = 2000; // kJ/kg, combustible energy mass density
     const tempi = 310; // K, ignition temperature
     const cp = 1; // kJ/kg/K, mass heat capacity
-    const alpha = 1e-8; // radiation coeffic
-    const beta = 1e-2; // convection coeffic
-    const gamma = 1e-1; // energy loss to atmosphere
+    const alpha = 1e-9; // radiation coeffic
+    const beta = 1e-1; // convection coeffic
+    // need energy loss to atmosphere or get adiabatic system that never cools
+    const gamma = 1e-2; // energy loss to atmosphere
 
-    // save current values as old values
-    // mass and temperature were initialized by process unit's initialize
-    let massOld = this.mass;
-    let tempOld = this.temperature;
+    // BASE SET OF PARAMS
+    //     const mbr = -2;  // kg/s, mass burn rate
+    //     const u0 = 2000; // kJ/kg, combustible energy mass density
+    //     const tempi = 310; // K, ignition temperature
+    //     const cp = 1; // kJ/kg/K, mass heat capacity
+    //     const alpha = 1e-9; // radiation coeffic
+    //     const beta = 1e-1; // convection coeffic
+    //     // need energy loss to atmosphere or get adiabatic system that never cools
+    //     const gamma = 1e-2; // energy loss to atmosphere
 
     // update burn rate and mass
-    if (tempOld >= tempi && massOld > 0) {
+    if (this.temperature >= tempi && this.mass > 0) {
       this.dm_dt = mbr; // kg/s, mass burning rate
     } else {
       this.dm_dt = 0; // not ignited or no mass left
     }
-    this.mass = massOld + this.dm_dt * dt;
-
-    if (this.mass < 0) {this.mass = 0};
-
-    // console.log('after update burn rate and mass');
-    // console.log('mass = ' + this.mass);
 
     // scan neighbors and compute rate of temperature change, dtemp_dt
     let xymax = processUnits[0].numNodes;
-    let xxx;
+    let xxx; // so don't modify loop var xx in loop!
     let yyy;
     let rr = 0; // radiant inputs accumulated below
     let cc = 0; // convective inputs accumulated below
     // just check 8 nearest neigbors for now and count corners equally
-// console.log('this.x = ' + this.x + ', this.y = ' + this.y);
     for (let xx = this.x - 1; xx <= this.x + 1; xx++) {
-// console.log('*** START NEW xx = ' + xx);
       for (let yy = this.y - 1; yy <= this.y + 1; yy++) {
         // check if at boundaries
         // use zero-flux BC for now
@@ -299,36 +274,50 @@ class Tree {
           yyy = xymax - 1;
         }
 
-// console.log('xxx = ' + xxx + ', yyy = ' + yyy);
-// console.log("processUnits[0]['trees'][xxx][yyy].temperature = " + processUnits[0]['trees'][xxx][yyy].temperature);
-
         // add contribution of neighbor to convective input
-        cc = cc + beta * (processUnits[0]['trees'][xxx][yyy].temperature - tempOld);
+        cc = cc + beta * (processUnits[0]['trees'][xxx][yyy].temperature - this.temperature);
 
-// console.log('cc just updated = ' + cc);
+        // EXPERIMENT WITH WIND
+        // alter convection in one direction
+        let wind = 40.00; // if gets too big will extinguish field (40.0 does near end)
+        if ( xxx == (this.x - 1) && yyy == (this.y - 1) ) {
+          cc = cc + wind * beta * (processUnits[0]['trees'][xxx][yyy].temperature - this.temperature);
+        }
 
         // add contribution of neighbor to radiant input
-        rr = rr + alpha * (processUnits[0]['trees'][xxx][yyy].temperature**4 -  tempOld**4);
-
-        // console.log('rr just updated = ' + rr);
+        rr = rr + alpha * (processUnits[0]['trees'][xxx][yyy].temperature**4 -  this.temperature**4);
 
       } // END OF inner for repeat
     } // END OF outer for repeat
 
-    // console.log('before update temperature');
-    // console.log('rr = ' + rr + ', cc = ' + cc);
+    this.dtemp_dt = (1/this.mass/cp) * ( rr + cc - u0 * this.dm_dt - gamma * (this.temperature - 300) );
 
-    let dtemp_dt = (1/massOld/cp) * ( rr + cc - u0 * this.dm_dt - gamma * (tempOld - 300) );
+  } // END OF class Ant updateRates method
 
-    // console.log('dm_dt = ' + this.dm_dt);
+  updateState() {
 
-    // update temperature
-    this.temperature = tempOld + dtemp_dt * dt;
+    // constants
+    // could make some variable through constructor arguments for faster testing
+    const dt = 3.0e-3; // s, time step
+    // also see process_plot_info.js for graphic's min and max values
+    const minT = 300;
+    const maxT = 1000;
 
-    if (this.temperature > 1000) {this.temperature = 1000}
-    else if (this.temperature < 300) {this.temperature = 300};
+    // BASE SET OF PARAMS
+    //    const dt = 3.0e-3; // s, time step
 
-    // console.log('temperature = ' + this.temperature);
+    this.mass = this.mass + this.dm_dt * dt;
 
-  } // END OF class Ant updateState method
+    this.temperature = this.temperature + this.dtemp_dt * dt;
+
+    if (this.temperature > maxT) {this.temperature = maxT;}
+
+    // need this constraint or can get stable red-blue patterns
+    // in center reminiscent of "game of life"
+    if (this.mass <= 0) {
+      this.mass = 0;
+      this.temperature = minT;
+    }
+
+  } // END OF updateState method of class Ant
 } // END OF class Ant definition

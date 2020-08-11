@@ -21,7 +21,7 @@ let simParams = {
   //    variable simTimeStep in method controller.changeSimTimeStep
   //
 
-  title : 'arena', // title of simulation
+  title : 'Forest fire', // title of simulation
   labType : 'Dynamic',
 
   runButtonID : "button_runButton", // for functions to run, reset, copy data
@@ -33,7 +33,7 @@ let simParams = {
   // see method simParams.changeSimTimeStep() below to change simTimeStep value
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
-  simStepRepeats : 1, // integer number of unit updates between display updates
+  simStepRepeats : 50, // integer number of unit updates between display updates
   simTimeStep : 1, // time step value, simulation time, of main repeat
 
   // individual units may do more steps in one unit updateState()

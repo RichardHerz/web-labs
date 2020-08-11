@@ -49,6 +49,23 @@ canvas {
   display: none;
 }
 
+#div_page_header {
+ display: block;
+ position: relative;
+ border-color: DodgerBlue;
+ left: 5px;
+ width: 640px;
+ height: 140px;
+ visibility: visible;
+ border-width: 0px;
+ background-color: rgb(255,255,255);
+ border-style: dotted;
+ opacity: 1;
+ LCvScrollbar: false;
+ LCthreeD: true;
+ LCshowBorder: false;
+}
+
 #div_simFrame {
   display: block;
   position: relative;

@@ -97,13 +97,6 @@ processUnits[0] = {
       }
     }
 
-    for (x = 0; x <= xymax; x++) {
-      for (y = 0; y <= xymax; y++) {
-        this.trees[x][y].mass = 10;
-        this.trees[x][y].temperature = 300;
-      }
-    }
-
     // SET AN IGNITION POINT
     this.trees[20][20].temperature = 600;
 
@@ -218,6 +211,8 @@ class Tree {
     // y = 0 is at top, ymax is at bottom
     this.x  = newX;
     this.y = newY;
+    this.temperature = 300;
+    this.mass = 10;
   } // END Tree constructor
 
   updateRates() {

@@ -74,6 +74,7 @@ processUnits[0] = {
   numNodes : 100,
 
   ssCheckSum : 0, // used to check for steady state
+  mtotOld : 0, // used to check for steady state
   residenceTime : 0, // for timing checks for steady state check
   // residenceTime is set in this unit's updateUIparams()
 
@@ -197,8 +198,24 @@ processUnits[0] = {
     // but wait at least one residence time after the previous check
     // to allow changes to propagate down unit
     //
-    // NOTE: this is the only unit, so return false
+
     let ssFlag = false;
+
+    // check mass left
+    let xymax = this.numNodes;
+    let mtot = 0;
+    for (x = 0; x <= xymax; x++) {
+      for (y = 0; y <= xymax; y++) {
+        mtot += this.trees[x][y].mass;
+      }
+    }
+    // console.log('mtot = ' + mtot);
+    if (mtot == this.mtotOld){
+      ssFlag = true;
+    } else {
+      this.mtotOld = mtot;
+    }
+
     return ssFlag;
   } // END OF checkForSteadyState()
 

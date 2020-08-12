@@ -201,6 +201,24 @@ processUnits[0] = {
 
     let ssFlag = false;
 
+    // // WARNING: this doesn't work, mass at corners doesn't go to zero
+    // //    XXX   and T goes to NaN
+    // //
+    // // at least one of corners will be last to burn
+    // let xymax = this.numNodes - 1;
+    // let mCheck = this.trees[1][1].temperature +
+    //              this.trees[1][xymax].temperature +
+    //              this.trees[xymax][1].temperature +
+    //              this.trees[xymax][xymax].temperature;
+    // if (mCheck < 300){
+    //   ssFlag = true;
+    // }
+    //
+    // console.log('mCheck = ' + mCheck);
+    // if (ssFlag == true) {console.log('at SS');}
+
+    // WARNING: need to initialize  mtotOld at top this unit
+    //
     // check mass left
     let xymax = this.numNodes;
     let mtot = 0;
@@ -215,6 +233,8 @@ processUnits[0] = {
     } else {
       this.mtotOld = mtot;
     }
+
+    if (ssFlag == true) {interfacer.resetThisLab();}
 
     return ssFlag;
   } // END OF checkForSteadyState()

@@ -1,0 +1,61 @@
+OBJECT VALUES GET & SET BY OTHER OBJECTS 
+
+*NOT* METHOD CALLS  
+
+First, maybe just work on simParams, controller and interfacer between themselves 
+
+--- IN CONTROLLER --- 
+
+no values from interfacer or plotter 
+
+gets and sets simParams.labType in controller.openThisLab >> can this be done in simParams itself? 
+
+gets simParams.labType in controller.updateDisplay 
+
+gets simParams.simStepRepeats 
+
+gets simParams.simTimeStep 
+
+gets simParams.updateDisplayTimingMs  for // out testing 
+
+gets plotInfo[p]['type'] in controller.updateDisplay 
+
+gets plotInfo[p] number of elements, max and min in controller.getStripPlotSpan 
+
+gets processUnits[u]['residenceTime'] in controller.checkForSteadyState 
+
+--- IN INTERFACER --- 
+
+NOTE: 
+two places:  let el = document.getElementById('button_runButton');  
+and at least some simParams have the property runButtonID but not used in interfacer... 
+
+no values from plotter 
+
+too many to count from processUnits and plotInfo! 
+
+gets controller.simTime 
+
+sets controller.ssFlag 
+
+gets simParams.labType << ALSO BY CONTROLLER 
+
+gets simParams.updateDisplayTimingMs 
+
+IN COPYDATA 
+
+gets simParams.oldDataFlag 
+
+gets simParams.title 
+
+gets simParams.simTimeUnits 
+
+--- IN SIMPARAMS --- 
+
+no values from interfacer 
+
+>>> PROCESS UNITS get simParams.simTimeStep and simParams.simTimeRepeats 
+
+gets controller.simTime in updateRunCount (which really is a logger) 
+
+

@@ -49,12 +49,13 @@ let controller = {
 
   openThisLab : function() {
 
-    if (simParams.labType) {
+    let simp = simParams.getLabType;
+    if (simp) {
       // simParams.labType exists
       // 'Dynamic' or any other value
     } else {
       // does not exist, set to default Dynamic
-      simParams.labType = 'Dynamic';
+      simParams.setLabType = 'Dynamic';
     }
 
     // initialize variables in each process unit
@@ -97,7 +98,8 @@ let controller = {
     // latest real time at which updateDisplay must occur in order
     // to maintain correspondence between sim time and real time
 
-    for (let i = 0; i < simParams.simStepRepeats; i++) {
+    let ssr = simParams.getSimStepRepeats;
+    for (let i = 0; i < ssr; i++) {
       controller.updateProcessUnits();
     }
 
@@ -169,15 +171,18 @@ let controller = {
     // REDRAW OF THE PLOT (plotPlotData) IS SLOW STEP IN MANY SIMULATIONS
 
     // GET AND PLOT ALL PLOTS defined in object plotInfo
+    let ptype;
+    let ltype;
+    let numSatReps = 5;
     for (let p in plotInfo) {
-      let ptype = plotInfo[p]['type'];
+      ptype = plotInfo[p]['type'];
       if (ptype == 'canvas') {
         // space-time, color-canvas plot
         plotter.plotColorCanvasPlot(p);
-        if (simParams.labType != 'Dynamic') {
+        ltype = simParams.getLabType;
+        if (ltype != 'Dynamic') {
           // plot color canvas again for better color saturation
           // in non-dynamic labs - do not slow down dynamic labs
-          let numSatReps = 5; // 5 is max to have effect
           for (let k = 0; k < numSatReps; k++) {
             plotter.plotColorCanvasPlot(p);
           }
@@ -213,13 +218,17 @@ let controller = {
   updateSimTime : function() {
     // only updated before simStepRepeats are all executed
     // and only updated once each displayUpdate
-    controller.simTime = controller.simTime + simParams.simTimeStep * simParams.simStepRepeats;
+    let sts = simParams.getSimTimeStep;
+    let ssr = simParams.getSimStepRepeats;
+    controller.simTime = controller.simTime + sts * ssr;
   },
 
   changeSimTimeStep : function(factor) {
     // WARNING: do not change simTimeStep except immediately before or after a
     // display update in order to maintain sync between sim time and real time
-    simParams.simTimeStep = factor * simParams.simTimeStep;
+    let sts = simParams.getSimTimeStep;
+    sts = factor * sts;
+    simParams.setSimTimeStep = sts;
   },
 
   resetSSflagsFalse : function() {

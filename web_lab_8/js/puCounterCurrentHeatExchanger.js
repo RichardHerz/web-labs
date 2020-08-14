@@ -92,7 +92,7 @@ let puCounterCurrentHeatExchanger = {
   // allow this unit to take more than one step within one main loop step in updateState method
   // WARNING: see special handling for time step in this unit's updateInputs method
   unitStepRepeats : 100,
-  unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
+  unitTimeStep : 0, // set in updateState
 
   // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
   // REDUCE size of time steps FOR NUMERICAL STABILITY BY SQUARE OF THE FACTOR
@@ -215,7 +215,9 @@ let puCounterCurrentHeatExchanger = {
       this.profileData[1][k][1] = this.dataMin[1];
     }
 
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    let sts = simParams.getSimTimeStep;
+    let ssr = simParams.getSimStepRepeats;
+    let timeStep = sts * ssr;
     for (k=0; k<=numStripPts; k+=1) {
       for (v = 0; v < numStripVars; v += 1) {
         // x-axis values will not change
@@ -279,7 +281,8 @@ let puCounterCurrentHeatExchanger = {
     //          get info from other units ONLY in updateInputs() method
     //
     // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    let sts = simParams.getSimTimeStep;
+    this.unitTimeStep = sts / this.unitStepRepeats;
 
     // *** NEW FOR ADIABATIC RXR + HX ***
     // fix Cp's here
@@ -485,7 +488,9 @@ let puCounterCurrentHeatExchanger = {
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    let sts = simParams.getSimTimeStep;
+    let ssr = simParams.getSimStepRepeats;
+    let timeStep = sts * ssr;
     for (v = 0; v < numStripVars; v += 1) {
       for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
         // note want p <= numStripPoints so get # 0 to  # numStripPoints of points

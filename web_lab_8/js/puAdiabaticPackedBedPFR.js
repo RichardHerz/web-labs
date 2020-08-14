@@ -96,7 +96,7 @@ let puAdiabaticPackedBedPFR = {
 
   // allow this unit to take more than one step within one main loop step in updateState method
   unitStepRepeats : 100,
-  unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
+  unitTimeStep : 0, // set below in updateState
 
   // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
   // REDUCE size of time steps FOR NUMERICAL STABILITY BY SQUARE OF THE FACTOR
@@ -248,7 +248,9 @@ let puAdiabaticPackedBedPFR = {
       this.profileData[1][k][1] = this.dataDefault[4]; // [4] is Cain
     }
 
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    let sts = simParams.getSimTimeStep;
+    let ssr = simParams.getSimStepRepeats;
+    let timeStep = sts * ssr;
     for (k = 0; k <= numStripPts; k += 1) {
       // x-axis values
       // x-axis values will not change during sim
@@ -339,7 +341,8 @@ let puAdiabaticPackedBedPFR = {
     //          get info from other units ONLY in updateInputs() method
     //
     // check for change in overall main time step simTimeStep
-    this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
+    let sts = simParams.getSimTimeStep;
+    this.unitTimeStep = sts / this.unitStepRepeats;
 
     let i = 0; // index for step repeats
     let n = 0; // index for nodes
@@ -509,7 +512,9 @@ let puAdiabaticPackedBedPFR = {
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    let sts = simParams.getSimTimeStep;
+    let ssr = simParams.getSimStepRepeats;
+    let timeStep = sts * ssr;
     for (v = 0; v < numStripVars; v += 1) {
       for (p = 0; p <= numStripPts; p += 1) { // note = in p <= numStripPts
         // note want p <= numStripPts so get # 0 to  # numStripPts of points

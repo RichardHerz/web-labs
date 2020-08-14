@@ -40,7 +40,7 @@ let simParams = {
 
   // set updateDisplayTimingMs to 50 ms because runs too fast on fast desktop
   // and 50 ms gives about same speed as 0 ms on my laptop
-  displayTimingMs : 50, // real time milliseconds between display updates
+  updateDisplayTimingMs : 50, // real time milliseconds between display updates
 
   // WARNING: NEED LITERAL, e.g., "field_run_counter" in methods below
   //      e.g., this.runCounterFieldID does NOT work
@@ -63,18 +63,5 @@ let simParams = {
     // $.post(this.runCurrrentRunCountURL) .done(function(data) {
       // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
   },
-
-  // GETTERS & SETTERS SO NO DIRECT ACCESS TO THESE VARIABLES:
-  //
-  get getLabType() {return this.labType;},
-  get getTitle() {return this.title;},
-  get getSimStepRepeats() {return this.simStepRepeats;},
-  get getSimTimeStep() {return this.simTimeStep;},
-  get getSimTimeUnits() {return this.simTimeUnits;},
-  get getDisplayTimingMs() {return this.displayTimingMs;},
-  get getOldDataFlag() {return this.oldDataFlag;},
-  //
-  set setLabType(labtype) {this.labType = labtype;}, // var names case sensitive
-  set setSimTimeStep(timestep) {this.simTimeStep = timestep}, 
 
 }; // END simParams object

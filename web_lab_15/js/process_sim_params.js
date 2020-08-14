@@ -47,7 +47,7 @@ let simParams = {
 
   // set updateDisplayTimingMs to 50 ms because runs too fast on fast desktop
   // and 50 ms gives about same speed as 0 ms on my laptop
-  displayTimingMs : 100, // real time milliseconds between display updates
+  updateDisplayTimingMs : 100, // real time milliseconds between display updates
 
   // set oldDataFlag to 1 initially so copy data buttons don't run script before
   // any data is present - set simParams.oldDataFlag = 0 in unit updateState
@@ -78,19 +78,6 @@ let simParams = {
     // $.post(this.runCurrrentRunCountURL) .done(function(data) {
       // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
   },
-
-  // GETTERS & SETTERS SO NO DIRECT ACCESS TO THESE VARIABLES:
-  //
-  get getLabType() {return this.labType;},
-  get getTitle() {return this.title;},
-  get getSimStepRepeats() {return this.simStepRepeats;},
-  get getSimTimeStep() {return this.simTimeStep;},
-  get getSimTimeUnits() {return this.simTimeUnits;},
-  get getDisplayTimingMs() {return this.displayTimingMs;},
-  get getOldDataFlag() {return this.oldDataFlag;},
-  //
-  set setLabType(labtype) {this.labType = labtype;}, // var names case sensitive
-  set setSimTimeStep(timestep) {this.simTimeStep = timestep}, 
 
   // SPECIAL - LAB TYPE NOT DYNAMIC
   // assume only one unit and one plot type 'single' in this lab

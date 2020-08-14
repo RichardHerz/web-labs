@@ -22,13 +22,11 @@ let interfacer = {
       // button label is 'Run' & was clicked, so start running
       controller.ssFlag = false; // unit sets true when sim reaches steady state
 
-      let labtype = simParams.getLabType;
-      if (labtype == 'Dynamic') {
+      if (simParams.labType == 'Dynamic') {
         // change button label to 'Pause'
         el.value = 'Pause'; // REQUIRES run button id="button_runButton"
         // repeat calling updateProcess to run Dynamic labtype - no () after .updateProcess
-        let dtms = simParams.getDisplayTimingMs;
-        this.timerID = setInterval(controller.updateProcess, dtms);
+        this.timerID = setInterval(controller.updateProcess,simParams.updateDisplayTimingMs);
       } else {
         // lapType is Static or other non-Dynamic
         // update process once
@@ -231,8 +229,7 @@ let interfacer = {
 
     // if oldDataFlag is true, return so script will not continue
     // if simParams.oldDataFlag not set by lab, script will continue
-    let odf = simParams.getOldDataFlag;
-    if (odf == 1) {
+    if (simParams.oldDataFlag == 1) {
       return;
     }
 
@@ -258,22 +255,19 @@ let interfacer = {
     let tItemDelimiter = ', &nbsp;';
     let tVarLen = plotInfo[plotIndex]['var'].length; // length for loops below
 
-    let labtitle = simParams.getTitle;
-    tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + labtitle + '</p>';
+    tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
     // list current input values
 
     let timeTOround = controller.simTime;
     let timeUnits = '&nbsp;' ;
-    let stu = simParams.getSimTimeUnits;
-    if (stu) {
-      timeUnits += stu;
+    if (simParams.simTimeUnits) {
+      timeUnits += simParams.simTimeUnits;
     } else {
       // add default seconds
       timeUnits += 's';
     }
-    let labtype = simParams.getLabType;
-    if (labtype == 'Dynamic') {
+    if (simParams.labType == 'Dynamic') {
       tText += '<p>Simulation time of data capture = ' + timeTOround.toFixed(3)
                + timeUnits + '<br>';
     } else {

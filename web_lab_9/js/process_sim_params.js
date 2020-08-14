@@ -41,7 +41,7 @@ let simParams = {
 
   // set updateDisplayTimingMs to 50 ms because runs too fast on fast desktop
   // and 50 ms gives about same speed as 0 ms on my laptop
-  displayTimingMs : 30, // real time milliseconds between display updates
+  updateDisplayTimingMs : 30, // real time milliseconds between display updates
 
   // WARNING: NEED LITERAL, e.g., "field_run_counter" in methods below
   //      e.g., this.runCounterFieldID does NOT work
@@ -86,7 +86,7 @@ let simParams = {
   selectReactor : function() {
         let plotIndex = 1;
         let rxr = document.getElementById("selectReactor").value;
-        let vnum = rxr - 1; // plot variable index
+        let vnum = rxr - 1; // plot variable index 
         // NEW
         // hide all vars first
         for (v = 0; v < 4; v += 1) {
@@ -98,17 +98,4 @@ let simParams = {
         plotter.plotPlotData(data,plotIndex);
   }
 
-  // GETTERS & SETTERS SO NO DIRECT ACCESS TO THESE VARIABLES:
-  //
-  get getLabType() {return this.labType;},
-  get getTitle() {return this.title;},
-  get getSimStepRepeats() {return this.simStepRepeats;},
-  get getSimTimeStep() {return this.simTimeStep;},
-  get getSimTimeUnits() {return this.simTimeUnits;},
-  get getDisplayTimingMs() {return this.displayTimingMs;},
-  get getOldDataFlag() {return this.oldDataFlag;},
-  //
-  set setLabType(labtype) {this.labType = labtype;}, // var names case sensitive
-  set setSimTimeStep(timestep) {this.simTimeStep = timestep},
-  
 }; // END simParams object

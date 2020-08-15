@@ -96,13 +96,6 @@
   left: 85px;
   top: 5px;
   width: 70px;
-  height: 24px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 #button_runButton {
@@ -110,13 +103,6 @@
   left: 5px;
   top: 5px;
   width: 70px;
-  height: 24px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 #div_operatingParams {
@@ -330,13 +316,6 @@ border-style: solid;
   left: 146px;
   top: 278px;
   width: 104px;
-  height: 24px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 #field_cA_final_profile {
@@ -490,13 +469,6 @@ border-style: solid;
   left: 146px;
   top: 278px;
   width: 104px;
-  height: 24px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 #field_cA_final {
@@ -654,8 +626,17 @@ border-style: solid;
   font-size: 16px;
 }
 
-/* example @media for responsive design */
-/* requires meta viewport element in HTML head */
+/* @media for responsive design                    */
+/* requires meta viewport element in HTML head     */
+/* styling above this holds except, e.g.,          */
+/*    when width is >= 640px : (min-width: 640px)  */
+/*    when width is <= 640px : (max-width: 640px)  */
+/*    then styling below holds                     */
+/* min- below holds for bigger than #              */
+/* max- below holds for smaller than #             */
+/* (orientation: portrait) - below holds for narrow field */
+/* (orientation: landscape) - below holds for wide field  */
+
 @media(max-width: 640px) {
   /* change the following when the screen width is <= 640px */
   /* #div_controller {

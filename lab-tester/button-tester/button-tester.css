@@ -1,0 +1,43 @@
+html input[type="button"] {
+  background-color: #ccccff;
+  border-width: 1px;
+  border-style: outset;
+}
+
+html input[type="button"]:hover {
+  background-color: #9999ff;
+  border-width: 1px;
+  border-style: outset;
+}
+
+/*
+  * change color when click to activate buttons
+  * WARNING: active must appear below hover in css file
+*/
+
+html input[type="button"]:active {
+  background-color: #6666ff;
+  border-width: 1px;
+  border-style: inset;
+}
+
+#button_01 {
+ left: 92px;
+ top: 20px;
+ width: 82px;
+ height: 23px;
+}
+
+#button_02 {
+ left: 92px;
+ top: 50px;
+ width: 82px;
+ height: 23px;
+}
+
+#button_03 {
+ left: 92px;
+ top: 80px;
+ width: 82px;
+ height: 23px;
+}

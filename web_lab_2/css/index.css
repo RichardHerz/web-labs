@@ -112,11 +112,6 @@
   left: 98px;
   top: 134px;
   width: 74px;
-  height: 23px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
 }
 
 #button_runButton {
@@ -124,11 +119,6 @@
   left: 20px;
   top: 135px;
   width: 74px;
-  height: 23px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
 }
 
 #div_PLOTDIV_inlet_gas {
@@ -730,6 +720,17 @@
   border-style: dotted;
   opacity: 1;
 }
+
+/* @media for responsive design                    */
+/* requires meta viewport element in HTML head     */
+/* styling above this holds except, e.g.,          */
+/*    when width is >= 640px : (min-width: 640px)  */
+/*    when width is <= 640px : (max-width: 640px)  */
+/*    then styling below holds                     */
+/* min- below holds for bigger than #              */
+/* max- below holds for smaller than #             */
+/* (orientation: portrait) - below holds for narrow field */
+/* (orientation: landscape) - below holds for wide field  */
 
 /* @media(max-width: 980px) {
   .class_body_text {

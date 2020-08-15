@@ -71,13 +71,6 @@
   left: 80px;
   top: 0px;
   width: 72px;
-  height: 23px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 #button_resetButton {
@@ -86,13 +79,6 @@
   left: 156px;
   top: 0px;
   width: 72px;
-  height: 23px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 #field_reactor_right_arrow {
@@ -300,13 +286,6 @@
   left: 190px;
   top: 283px;
   width: 130px;
-  height: 23px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 #canvas_CANVAS_hot {
@@ -789,13 +768,6 @@ border-style: solid;
   left: 147px;
   top: 237px;
   width: 130px;
-  height: 23px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 #button_copyData_exchanger {
@@ -803,13 +775,6 @@ border-style: solid;
   left: 10px;
   top: 237px;
   width: 130px;
-  height: 23px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 /* example @media for responsive design */
@@ -822,8 +787,17 @@ border-style: solid;
    } */
 }
 
-/* example @media for responsive design */
-/* requires meta viewport element in HTML head */
+/* @media for responsive design                    */
+/* requires meta viewport element in HTML head     */
+/* styling above this holds except, e.g.,          */
+/*    when width is >= 640px : (min-width: 640px)  */
+/*    when width is <= 640px : (max-width: 640px)  */
+/*    then styling below holds                     */
+/* min- below holds for bigger than #              */
+/* max- below holds for smaller than #             */
+/* (orientation: portrait) - below holds for narrow field */
+/* (orientation: landscape) - below holds for wide field  */
+
 @media(min-width: 640px) {
   /* change the following when the screen width is > 640px */
   /* settings for wide screen here with min-width */

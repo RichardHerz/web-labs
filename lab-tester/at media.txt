@@ -1,0 +1,25 @@
+/* @media for responsive design                    */
+/* requires meta viewport element in HTML head     */
+/* styling above thisRate holds except, e.g.,      */
+/*    when width is >= 640px : (min-width: 640px)  */
+/*    when width is <= 640px : (max-width: 640px)  */
+/*    then styling below holds                     */
+/* min- below holds for bigger than #              */
+/* max- below holds for smaller than #             */
+
+FOR EXAMPLE:
+
+STYLING ABOVE THIS HOLDS WHEN WIDTH IS < 640px, OTHERWISE BELOW HOLDS
+"MIN- BELOW HOLDS FOR BIGGER THAN"
+"MAX - BELOW HOLDS FOR SMALLER THAN"
+
+@media(min-width: 640px) {
+  #div_input_fields_group {
+    position: absolute;
+    top: 141px;
+    left: 400px;
+  }
+  #div_rlnoticetext {
+    font-size: 70%;
+  }
+}

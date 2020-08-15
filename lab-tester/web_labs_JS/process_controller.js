@@ -1,5 +1,5 @@
 /*
-  Design, text, images and code by Richard K. Herz, 2017-2018
+  Design, text, images and code by Richard K. Herz, 2017-2020
   Copyrights held by Richard K. Herz
   Licensed for use under the GNU General Public License v3.0
   https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -48,12 +48,21 @@ let controller = {
   stripPlotSpan : 5000,
 
   openThisLab : function() {
+
+    if (simParams.labType) {
+      // simParams.labType exists
+      // 'Dynamic' or any other value
+    } else {
+      // does not exist, set to default Dynamic
+      simParams.labType = 'Dynamic';
+    }
+
     // initialize variables in each process unit
     // the order of the numeric index of process units does not affect the simulation
-    let numUnits = Object.keys(processUnits).length; // number of units
-    for (let n = 0; n < numUnits; n += 1) {
-      processUnits[n].initialize();
+    for (let u in processUnits) {
+      processUnits[u].initialize();
     }
+
     // initialize plotInfo to define plots after initialize units
     //    in order to allow plotInfo to use values from units,
     //    e.g., dataUnits of output vars
@@ -62,10 +71,12 @@ let controller = {
     plotter.plotArrays.initialize();
     interfacer.resetThisLab(); // defined in process_interfacer.js
     simParams.updateCurrentRunCountDisplay(); // defined in process_sim_params.js
+
   }, // END OF function openThisLab
 
   updateProcess : function() {
-    // called periodically by setInterval in interfacer.runThisLab
+    // called once by interfacer.runThisLab for non-dynamic labs
+    // called periodically by interfacer.runThisLab for dynamic labs
 
     // update simTime = simulation time elapsed
     // done before simStepRepeats of all units, so
@@ -86,7 +97,7 @@ let controller = {
     // latest real time at which updateDisplay must occur in order
     // to maintain correspondence between sim time and real time
 
-    for (let i = 0; i < simParams.simStepRepeats; i += 1) {
+    for (let i = 0; i < simParams.simStepRepeats; i++) {
       controller.updateProcessUnits();
     }
 
@@ -116,18 +127,18 @@ let controller = {
       return;
     }
 
-    let numUnits = Object.keys(processUnits).length; // number of units
+    let u; // unit index
 
     // FIRST, have all units update their unit input connections
-    for (let n = 0; n < numUnits; n += 1) {
-      processUnits[n].updateInputs();
+    for (u in processUnits) {
+      processUnits[u].updateInputs();
     }
 
     // NOTE: UI params are updated whenever UI changes by HTML input actions
 
     // SECOND, have all units update their state
-    for (let n = 0; n < numUnits; n += 1) {
-        processUnits[n].updateState();
+    for (u in processUnits) {
+        processUnits[u].updateState();
     }
 
   }, // END OF function updateProcessUnits
@@ -146,9 +157,8 @@ let controller = {
     }
 
     // DISPLAY ALL UNITS BUT DO NOT STEP
-    let numUnits = Object.keys(processUnits).length; // number of units
-    for (let n = 0; n < numUnits; n += 1) {
-      processUnits[n].updateDisplay();
+    for (let u in processUnits) {
+      processUnits[u].updateDisplay();
     }
 
     // UPDATE PLOTS HERE AND NOT IN PROCESS UNITS IN ORDER TO ALLOW
@@ -159,14 +169,20 @@ let controller = {
     // REDRAW OF THE PLOT (plotPlotData) IS SLOW STEP IN MANY SIMULATIONS
 
     // GET AND PLOT ALL PLOTS defined in object plotInfo
-    let numPlots = Object.keys(plotInfo).length;
-    numPlots = numPlots - 1; // subtract method initialize(), which is counted in length
-    for (let p = 0; p < numPlots; p += 1) {
+    for (let p in plotInfo) {
       let ptype = plotInfo[p]['type'];
       if (ptype == 'canvas') {
         // space-time, color-canvas plot
         plotter.plotColorCanvasPlot(p);
-      } else if ((ptype == 'profile') || (ptype == 'strip')) {
+        if (simParams.labType != 'Dynamic') {
+          // plot color canvas again for better color saturation
+          // in non-dynamic labs - do not slow down dynamic labs
+          let numSatReps = 5; // 5 is max to have effect
+          for (let k = 0; k < numSatReps; k++) {
+            plotter.plotColorCanvasPlot(p);
+          }
+        }
+      } else if ((ptype == 'profile') || (ptype == 'strip') || (ptype == 'single')) {
         // profile (static x,y) or strip chart (scolling x,y)
         let data = plotter.getPlotData(p);
         plotter.plotPlotData(data,p);
@@ -174,7 +190,7 @@ let controller = {
         // plotting must be handled by a unit's updateDisplay
         // no plotting here
       }
-    }
+    } // END OF for (let p in plotInfo)
 
     // check and set ssFlag to true if at steady state
     // do this here in updateDisplay rather than each process update
@@ -214,13 +230,11 @@ let controller = {
   },
 
   getStripPlotSpan : function() {
-    let numPlots = Object.keys(plotInfo).length; // number of plots
-    numPlots = numPlots - 1; // correct for initialize member of plotInfo
     let span = 0;
-    for (let p = 0; p < numPlots; p += 1) {
+    for (let p in plotInfo) {
       if (plotInfo[p]['type'] == 'strip') {
-        let xMax = plotInfo[p]['xAxisMax'];
-        if (xMax > span) {span = xMax}
+        let xMax = plotInfo[p]['xAxisMax'] - plotInfo[p]['xAxisMin'];
+        if (xMax > span) {span = xMax;}
       }
     }
     return span;
@@ -242,11 +256,12 @@ let controller = {
     // get longest residence time in all units
     // if all stay constant this check could be moved out of here
     // so only done once, but here allows unit residence times to change
-    let numUnits = Object.keys(processUnits).length; // number of units
+
+    let u; // unit index
     let resTime = 0;
-    for (let n = 0; n < numUnits; n += 1) {
-      if (processUnits[n]['residenceTime'] > resTime) {
-        resTime = processUnits[n]['residenceTime'];
+    for (u in processUnits) {
+      if (processUnits[u]['residenceTime'] > resTime) {
+        resTime = processUnits[u]['residenceTime'];
       }
     }
 
@@ -256,8 +271,9 @@ let controller = {
       // get ssFlag from each unit
       let thisFlag = true; // changes to false if any unit not at steady state
       let thisCheck = true;
-      for (let n = 0; n < numUnits; n += 1) {
-        thisCheck = processUnits[n].checkForSteadyState();
+
+      for (u in processUnits) {
+        thisCheck = processUnits[u].checkForSteadyState();
         if (thisCheck == false){
           // result returned by unit is not true
           thisFlag = false;
@@ -302,4 +318,4 @@ let controller = {
 
   } // END method checkForSteadyState()
 
-} // END OF OBJECT controller
+}; // END OF OBJECT controller

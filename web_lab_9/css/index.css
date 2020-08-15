@@ -66,10 +66,6 @@
   left: 85px;
   top: 5px;
   width: 70px;
-  height: 24px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
 }
 
 #button_runButton {
@@ -77,10 +73,6 @@
   left: 10px;
   top: 5px;
   width: 70px;
-  height: 24px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
 }
 
 #div_PLOTDIV_plotConcentration {
@@ -123,10 +115,6 @@
   left: 510px;
   top: 100px;
   width: 120px;
-  height: 24px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
 }
 
 #div_PLOTDIV_plotSSconversion {
@@ -164,10 +152,6 @@
   left: 510px;
   top: 100px;
   width: 120px;
-  height: 24px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
 }
 
 #div_PLOTDIV_plotSSrate {
@@ -201,8 +185,17 @@
   LCvScrollbar: false;
 } */
 
-/* example @media for responsive design */
-/* requires meta viewport element in HTML head */
+/* @media for responsive design                    */
+/* requires meta viewport element in HTML head     */
+/* styling above this holds except, e.g.,          */
+/*    when width is >= 640px : (min-width: 640px)  */
+/*    when width is <= 640px : (max-width: 640px)  */
+/*    then styling below holds                     */
+/* min- below holds for bigger than #              */
+/* max- below holds for smaller than #             */
+/* (orientation: portrait) - below holds for narrow field */
+/* (orientation: landscape) - below holds for wide field  */
+
 @media(max-width: 640px) {
   /* change the following when the screen width is <= 640px */
   /* #div_controller {

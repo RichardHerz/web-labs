@@ -1,69 +1,6 @@
-sup {
-  font-size: smaller;
-}
-
-sub {
-  font-size: smaller;
-}
-
-input {
-  display: block;
-  position: absolute;
-  text-align: center;
-}
-
-input, button {
-  text-align: center;
-}
-
-/* do NOT write general style for div since interferes
-    with plotting by jquery.flot.js */
-
-p {
-  display: block;
-  text-align: left;
-}
-
-label {
-  display: block;
-  position: absolute;
-}
-
-img {
-  display: block;
-  position: absolute;
-}
-
-select {
-  display: block;
-  position: absolute;
-}
-
-canvas {
-  display: block;
-  position: absolute;
-  text-align: left;
-}
-
-::-ms-tooltip {
-  display: none;
-}
-
 #div_page_header {
- display: block;
- position: relative;
- border-color: DodgerBlue;
- left: 5px;
- width: 640px;
- height: 140px;
- visibility: visible;
- border-width: 0px;
- background-color: rgb(255,255,255);
- border-style: dotted;
- opacity: 1;
- LCvScrollbar: false;
- LCthreeD: true;
- LCshowBorder: false;
+  /* the rest set in ../web_labs_CSS/common.css */
+  width: 628px;
 }
 
 #div_simFrame {
@@ -126,39 +63,69 @@ canvas {
   LCshowBorder: true;
 }
 
-#input_field_N {
-  position: absolute;
-  left: 287px;
-  top: 5px;
-  width: 100px;
-  height: 21px;
-border-width: 1px;
-  visibility: visible;
-border-style: solid;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: true;
+#div_radio_group_1 {
+ display: block;
+ position: absolute;
+ left: 200px;
+ top: 4px;
+ width: 306px;
+ height: 27px;
+ visibility: visible;
+ border-width: 0px;
+ border-style: dotted;
+ border-color: DodgerBlue;
+ opacity: 1;
+ LCvScrollbar: false;
 }
 
-#field_input_N_LABEL {
-  position: absolute;
-  left: 183px;
-  top: -11px;
-  width: 100px;
-  height: 21px;
-  border-width: 2px;
-  visibility: visible;
-  border-style: dotted;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: true;
-  font-size: 16px;
-  border-color: DodgerBlue;
+#radio_Radio_button_1 {
+ transform: scale(1);
 }
+
+#radio_Radio_button_2 {
+ transform: scale(1);
+}
+
+#radio_Radio_button_3 {
+ transform: scale(1);
+}
+
+#radio_Radio_button_1_LABEL {
+ width: 160px;
+ height: 23px;
+ left: 0px;
+ top: 0px;
+}
+
+#radio_Radio_button_2_LABEL {
+ width: 160px;
+ height: 23px;
+ left: 100px;
+ top: 0px;
+}
+
+#radio_Radio_button_3_LABEL {
+ width: 160px;
+ height: 23px;
+ left: 200px;
+ top: 0px;
+}
+
+#radio_Radio_button_1_SPAN {
+ margin-left: 24px;
+ line-height: 22px;
+}
+
+#radio_Radio_button_2_SPAN {
+ margin-left: 24px;
+ line-height: 22px;
+}
+
+#radio_Radio_button_3_SPAN {
+ margin-left: 24px;
+ line-height: 22px;
+}
+
 
 /* example @media for responsive design */
 /* requires meta viewport element in HTML head */

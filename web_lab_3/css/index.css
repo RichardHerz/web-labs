@@ -1,69 +1,13 @@
-sup {
-  font-size: smaller;
-}
-
-sub {
-  font-size: smaller;
-}
-
-input {
-  display: block;
-  position: absolute;
-  text-align: center;
-}
-
-input, button {
-  text-align: center;
-}
-
-/* do NOT write general style for div since interferes
-    with plotting by jquery.flot.js */
-
-p {
-  display: block;
-  text-align: left;
-}
-
-label {
-  display: block;
-  position: absolute;
-}
-
-img {
-  display: block;
-  position: absolute;
-}
-
-select {
-  display: block;
-  position: absolute;
-}
-
-canvas {
-  display: block;
-  position: absolute;
-  text-align: left;
-}
-
-::-ms-tooltip {
-  display: none;
-}
-
-/* start with same margin as div_simFrame left */
-/* start with same width as div_simFrame width + 2*margin */
-/* then edit as desired */
-.class_body_text {
-  margin: 20px;
-  width: 790px;
-  font-size: 1em;
+#div_page_header {
+  width: 780px;
 }
 
 #div_simFrame {
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 10px;
-  top: 26px;
+  left: 5px;
+  top: 0px;
   width: 797px;
   height: 649px;
   visibility: visible;

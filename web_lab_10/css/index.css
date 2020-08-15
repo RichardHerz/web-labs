@@ -1,53 +1,9 @@
-sup {
-  font-size: smaller;
+#div_page_header {
+  /* the rest is set in ../web_labs_CSS/common.css */
+  /* need to load that file in index.html before this file */
+  width: 984px;
 }
 
-sub {
-  font-size: smaller;
-}
-
-input {
-  display: block;
-  position: absolute;
-  text-align: center;
-}
-
-input, button {
-  text-align: center;
-}
-
-/* do NOT write general style for div since interferes
-    with plotting by jquery.flot.js */
-
-p {
-  display: block;
-  text-align: left;
-}
-
-label {
-  display: block;
-  position: absolute;
-}
-
-img {
-  display: block;
-  position: absolute;
-}
-
-select {
-  display: block;
-  position: absolute;
-}
-
-canvas {
-  display: block;
-  position: absolute;
-  text-align: left;
-}
-
-::-ms-tooltip {
-  display: none;
-}
 
 #div_simFrame {
   display: block;

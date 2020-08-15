@@ -1,69 +1,10 @@
-sup {
-  font-size: smaller;
-}
-
-sub {
-  font-size: smaller;
-}
-
-input {
-  display: block;
-  position: absolute;
-  text-align: center;
-}
-
-input, button {
-  text-align: center;
-}
-
-/* do NOT write general style for div since interferes
-    with plotting by jquery.flot.js */
-
-p {
-  display: block;
-  text-align: left;
-}
-
-label {
-  display: block;
-  position: absolute;
-}
-
-img {
-  display: block;
-  position: absolute;
-}
-
-select {
-  display: block;
-  position: absolute;
-}
-
-canvas {
-  display: block;
-  position: absolute;
-  text-align: left;
-}
-
-::-ms-tooltip {
-  display: none;
-}
-
 #div_page_header {
-  display: block;
-  position: relative;
-  border-color: DodgerBlue;
-  left: 5px;
-  width: 368px;
-  height: 122px;
-  visibility: visible;
-  border-width: 1px;
-  background-color: rgb(255,255,255);
-  border-style: none;
-  opacity: 1;
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: false;
+  /* the rest is set in ../web_labs_CSS/common.css */
+ width: 368px;
+}
+
+#div_rlnoticetext {
+  font-size: 50%;
 }
 
 #div_simFrame {
@@ -623,5 +564,8 @@ border-style: solid;
     position: absolute;
     top: 154px;
     left: 400px;
+  }
+  #div_rlnoticetext {
+    font-size: 70%;
   }
 }

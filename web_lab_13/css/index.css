@@ -1,69 +1,7 @@
-0px;sup {
-  font-size: smaller;
-}
-
-sub {
-  font-size: smaller;
-}
-
-input {
-  display: block;
-  position: absolute;
-  text-align: center;
-}
-
-input, button {
-  text-align: center;
-}
-
-/* do NOT write general style for div since interferes
-    with plotting by jquery.flot.js */
-
-p {
-  display: block;
-  text-align: left;
-}
-
-label {
-  display: block;
-  position: absolute;
-}
-
-img {
-  display: block;
-  position: absolute;
-}
-
-select {
-  display: block;
-  position: absolute;
-}
-
-canvas {
-  display: block;
-  position: absolute;
-  text-align: left;
-}
-
-::-ms-tooltip {
-  display: none;
-}
-
 #div_page_header {
- display: block;
- position: relative;
- border-color: DodgerBlue;
- left: 5px;
- width: 640px;
- height: 122px;
- visibility: visible;
- border-width: 0px;
- background-color: rgb(255,255,255);
- border-style: dotted;
- opacity: 1;
- LCvScrollbar: false;
- LCthreeD: true;
- LCshowBorder: false;
+  /* the rest is set in ../web_labs_CSS/common.css */
+  /* need to load that file in index.html before this file */
+  width: 797px;
 }
 
 #div_simFrame {

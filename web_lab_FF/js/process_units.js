@@ -78,6 +78,8 @@ processUnits[0] = {
   residenceTime : 0, // for timing checks for steady state check
   // residenceTime is set in this unit's updateUIparams()
 
+  windSpeed : 2, // 0,1,2 = off,med,high, see method changeWindSpeed(ws) below
+
   trees : [], // will get filled below in initialize
 
   // BOTH LINES BELOW WORK (Flanagan, 6.10.5, 7th ed., p. 149)
@@ -139,6 +141,11 @@ processUnits[0] = {
     // nothing here
   }, // END updateUIparams
 
+  changeWindSpeed : function(ws) {
+    this.windSpeed = ws;
+console.log('changeWindSpeed, ws = ' + ws);
+  },
+
   updateState : function() {
     //
     // BEFORE REPLACING PREVIOUS STATE VARIABLE VALUE WITH NEW VALUE, MAKE
@@ -155,7 +162,7 @@ processUnits[0] = {
     let xymax = this.numNodes;
     for (let x = 0; x <= xymax; x++) {
       for (let y = 0; y <= xymax; y++) {
-        this.trees[x][y].updateRates();
+        this.trees[x][y].updateRates(this.windSpeed);
       }
     }
 
@@ -252,7 +259,7 @@ class Tree {
     this.mass = 10;
   } // END Tree constructor
 
-  updateRates() {
+  updateRates(windSpeed) {
 
     // constants
     // could make some variable through constructor arguments for faster testing
@@ -309,9 +316,8 @@ class Tree {
         // add contribution of neighbor to convective input
         cc = cc + beta * (processUnits[0]['trees'][xxx][yyy].temperature - this.temperature);
 
-        // EXPERIMENT WITH WIND
-        // alter convection in one direction
-        let wind = 40.00; // if gets too big will extinguish field (40.0 does near end)
+        // fake wind alters convection in one direction
+        let wind = (windSpeed / 2) * 40.00; // if gets too big will extinguish field (40.0 does near end)
         if ( xxx == (this.x - 1) && yyy == (this.y - 1) ) {
           cc = cc + wind * beta * (processUnits[0]['trees'][xxx][yyy].temperature - this.temperature);
         }

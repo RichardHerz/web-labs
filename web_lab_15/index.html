@@ -24,13 +24,13 @@
   <!-- suggest use content width = div_simFrame width + 2 * div_simFrame left, and no scale -->
   <meta id='meta-viewport' name='viewport' content='width=370'>
 
+  <!-- load COMMON CSS style sheets FIRST -->
+  <link rel="stylesheet" href="../web_labs_CSS/common.css">
+
   <!-- load CSS style sheets for this lab  -->
   <link rel="stylesheet" href="css/index.css">
 
-  <!-- load COMMON CSS style sheets for this lab  -->
-  <link rel="stylesheet" href="../web_labs_CSS/common.css">
-
-  <!-- load SPECIFIC JAVASCRIPT for this lab -->
+  <!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
   <script language="javascript" src="js/process_sim_params.js" type="text/javascript"></script>
   <script language="javascript" src="js/puPFRnthOrder.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_units.js" type="text/javascript"></script>
@@ -95,7 +95,6 @@
     <p id="field_old_data_notice_profile"></p>
      <div id="div_PLOTDIV_profile">
      </div> <!-- end of div div_PLOTDIV_profile -->
-     <!-- copyData method argument below is plot index in plotInfo -->
      <!-- copyData method argument below is plot index in plotInfo -->
      <input type="button" id="button_copyData_profile" value="Copy data" value="Copy data" onclick="interfacer.copyData(0)">
      <p id="field_spaceTime_profile">SPACE TIME</p>

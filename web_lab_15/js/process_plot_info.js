@@ -139,7 +139,7 @@ let plotInfo = {
     plotInfo[pnum]['varYaxis'][vnum] = 'left';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
-    // plot 3 info
+    // plot 2 info
     pnum = 2;
     plotInfo[pnum] = new Object();
     plotInfo[pnum]['type'] = 'canvas';

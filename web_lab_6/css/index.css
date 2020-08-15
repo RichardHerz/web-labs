@@ -1,12 +1,3 @@
-#div_page_header {
-  /* the rest is set in ../web_labs_CSS/common.css */
- width: 368px;
-}
-
-#div_rlnoticetext {
-  font-size: 50%;
-}
-
 #div_simFrame {
   display: block;
   position: relative;
@@ -641,10 +632,15 @@ border-style: solid;
   font-size: 16px;
 }
 
-  #div_rlnoticetext {
-    font-size: 70%;
-    width: 100%;
-  }
+#div_page_header {
+  /* the rest is set in ../web_labs_CSS/common.css */
+ width: 100%px;
+}
+
+#div_rlnoticetext {
+  font-size: 60%;
+  width: 100%;
+}
 
 /* @media for responsive design                    */
 /* requires meta viewport element in HTML head     */

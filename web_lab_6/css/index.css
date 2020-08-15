@@ -634,7 +634,7 @@ border-style: solid;
 
 #div_page_header {
   /* the rest is set in ../web_labs_CSS/common.css */
- width: 640px;
+ width: 100%;
 }
 
 #div_rlnoticetext {
@@ -661,6 +661,6 @@ border-style: solid;
   }
   #div_rlnoticetext {
     font-size: 50%;
-    width: 100%;
+    width: 640px;
   }
 }

@@ -654,16 +654,13 @@ border-style: solid;
 /* (orientation: landscape) - below holds for wide field  */
 
 @media(min-width: 640px) {
-  
   #div_input_fields_group {
     position: absolute;
     top: 141px;
     left: 400px;
   }
-  
   #div_rlnoticetext {
     font-size: 50%;
     width: 640px;
   }
-  
 }

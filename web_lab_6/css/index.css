@@ -641,6 +641,16 @@ border-style: solid;
   font-size: 16px;
 }
 
+#div_page_header {
+  /* the rest is set in ../web_labs_CSS/common.css */
+ width: 100%;
+}
+
+#div_rlnoticetext {
+  font-size: 60%;
+  width: 100%;
+}
+
 /* @media for responsive design                    */
 /* requires meta viewport element in HTML head     */
 /* styling above this holds except, e.g.,          */
@@ -659,7 +669,7 @@ border-style: solid;
     left: 400px;
   }
   #div_rlnoticetext {
-    font-size: 70%;
-    width: 600px;
+    font-size: 50%;
+    width: 640px;
   }
 }

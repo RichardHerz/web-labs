@@ -7,7 +7,7 @@
   width: 560px;
   height: 540px;
   visibility: visible;
-  border-width: 1px;
+  border-width: 0px;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
@@ -27,7 +27,7 @@
 #button_runButton {
   position: absolute;
   left: 30px;
-  top: 5px;
+  top: 4px;
   width: 72px;
   height: 23px;
   visibility: visible;

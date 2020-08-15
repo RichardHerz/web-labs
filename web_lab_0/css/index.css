@@ -4,10 +4,10 @@
   border-color: DodgerBlue;
   left: 11px;
   top: 0px;
-  width: 628px;
+  width: 560px;
   height: 540px;
   visibility: visible;
-  border-width: 0px;
+  border-width: 1px;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
@@ -16,18 +16,12 @@
   LCshowBorder: false;
 }
 
+/* canvas element width & height must be set in HTML and not in CSS */
+
 #canvas_CANVAS_arena {
-  position: absolute;
-  left: 4px;
-  top: 31px;
- /* canvas element width & height must be set in HTML and not in CSS */
-  visibility: visible;
-  border-width: 2px;
-  background-color: rgb(115,251,121);
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
+  display: block;
+  position: relative;
+  top: 28px;
 }
 
 #button_runButton {

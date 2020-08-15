@@ -538,9 +538,14 @@ border-style: solid;
   LCshowBorder: true;
 }
 
+#div_page_header {
+  /* the rest is set in ../web_labs_CSS/common.css */
+ width: 100%;
+}
+
 #div_rlnoticetext {
   font-size: 60%;
-  width: 580px;
+  width: 100%;
 }
 
 /* @media for responsive design                    */
@@ -557,10 +562,11 @@ border-style: solid;
 @media(min-width: 640px) {
   #div_input_fields_group {
     position: absolute;
-    top: 154px;
+    top: 141px;
     left: 400px;
   }
   #div_rlnoticetext {
-    font-size: 70%;
+    font-size: 50%;
+    width: 640px;
   }
 }

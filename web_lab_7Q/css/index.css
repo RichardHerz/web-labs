@@ -641,29 +641,35 @@ border-style: solid;
   LCshowBorder: true;
 }
 
+#div_page_header {
+  /* the rest is set in ../web_labs_CSS/common.css */
+ width: 100%;
+}
+
 #div_rlnoticetext {
   font-size: 60%;
-  width: 580px;
+  width: 100%;
 }
 
 /* @media for responsive design                    */
 /* requires meta viewport element in HTML head     */
-/* styling above thisRate holds except, e.g.,      */
+/* styling above this holds except, e.g.,          */
 /*    when width is >= 640px : (min-width: 640px)  */
 /*    when width is <= 640px : (max-width: 640px)  */
 /*    then styling below holds                     */
 /* min- below holds for bigger than #              */
 /* max- below holds for smaller than #             */
-/* (orientation: portrait) - below holds for narrow field   */
-/* & (orientation: landscape) - below holds for wide field  */
+/* (orientation: portrait) - below holds for narrow field */
+/* (orientation: landscape) - below holds for wide field  */
 
 @media(min-width: 640px) {
   #div_input_fields_group {
     position: absolute;
-    top: 154px;
+    top: 141px;
     left: 400px;
   }
   #div_rlnoticetext {
-    font-size: 70%;
+    font-size: 50%;
+    width: 640px;
   }
-}
+}''

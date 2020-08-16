@@ -81,29 +81,17 @@
 #radio_Radio_button_2_LABEL {
  width: 160px;
  height: 23px;
- left: 100px;
- top: 0px;
-}
-
-#radio_Radio_button_3_LABEL {
- width: 160px;
- height: 23px;
- left: 200px;
+ left: 110px;
  top: 0px;
 }
 
 #radio_Radio_button_1_SPAN {
- margin-left: 24px;
+ margin-left: 22px;
  line-height: 22px;
 }
 
 #radio_Radio_button_2_SPAN {
- margin-left: 24px;
- line-height: 22px;
-}
-
-#radio_Radio_button_3_SPAN {
- margin-left: 24px;
+ margin-left: 22px;
  line-height: 22px;
 }
 

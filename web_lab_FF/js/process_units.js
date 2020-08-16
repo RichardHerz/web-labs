@@ -143,7 +143,6 @@ processUnits[0] = {
 
   changeWindSpeed : function(ws) {
     this.windSpeed = ws;
-console.log('changeWindSpeed, ws = ' + ws);
   },
 
   updateState : function() {
@@ -317,7 +316,7 @@ class Tree {
         cc = cc + beta * (processUnits[0]['trees'][xxx][yyy].temperature - this.temperature);
 
         // fake wind alters convection in one direction
-        let wind = (windSpeed / 2) * 40.00; // if gets too big will extinguish field (40.0 does near end)
+        let wind = windSpeed * 40.00; // if gets too big will extinguish field (40.0 does near end)
         if ( xxx == (this.x - 1) && yyy == (this.y - 1) ) {
           cc = cc + wind * beta * (processUnits[0]['trees'][xxx][yyy].temperature - this.temperature);
         }

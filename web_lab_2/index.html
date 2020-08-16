@@ -20,9 +20,7 @@
   structured to allow fast construction of new simulations of chemical reactors and other systems."/>
 
   <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
-  <!-- ID used to modify with Javascript after initial loading - OR EDIT HERE -->
-  <!-- suggest use content width = div_simFrame width + 2 * div_simFrame left, and no scale -->
-  <meta id='meta-viewport' name='viewport' content='width=847'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- load COMMON CSS style sheets FIRST -->
   <link rel="stylesheet" href="../web_labs_CSS/common.css">
@@ -59,7 +57,7 @@
   <!-- <div id="dev01"></div> -->
   <!-- <script>document.getElementById("dev01").innerHTML = "at top HTML index"</script> -->
 
-  <div class="class_body_text">
+  <div id="div_page_header">
      <input type="button" value="Back" onclick="history.back()"><p style="margin-left: 55px;">to Web Labs at ReactorLab.net</p>
     <p>
        <i><b>Dynamic diffusion and reaction in a porous solid catalyst layer
@@ -70,7 +68,7 @@
            Select Model 1 or 2. <font color="blue">Click the Run button below.
            Hit the enter key or click out of field after changing inputs.</font>
      </p>
-  </div> <!-- end of div class body text -->
+  </div> <!-- end of div div_page_header -->
 
   <div id="div_simFrame">
      <p id="field_run_counter">

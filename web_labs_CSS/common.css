@@ -97,21 +97,18 @@ canvas {
  display: block;
  position: relative;
  left: 5px;
- width: 640px;
+ width: 100%;
  visibility: visible;
  border-width: 0px;
  border-color: DodgerBlue;
  border-style: dotted;
  background-color: rgb(255,255,255);
  opacity: 1;
- LCvScrollbar: false;
- LCthreeD: true;
- LCshowBorder: false;
 }
 
 #div_rlnoticetext {
   position: relative;
-  width: 608px;
+  width: 100%;
   padding-top: 50px;
-  font-size: 70%;
+  font-size: 60%;
 }

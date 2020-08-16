@@ -777,15 +777,6 @@ border-style: solid;
   width: 130px;
 }
 
-/* example @media for responsive design */
-/* requires meta viewport element in HTML head */
-@media(max-width: 640px) {
-  /* change the following when the screen width is <= 640px */
-  /* #div_controller {
-    top: 600px;
-    left: 20px;
-   } */
-}
 
 /* @media for responsive design                    */
 /* requires meta viewport element in HTML head     */
@@ -816,6 +807,8 @@ border-style: solid;
   }
 
   #div_rlnoticetext {
-    font-size: 70%;
+    font-size: 50%;
+    width: 640px;
   }
+  
 }

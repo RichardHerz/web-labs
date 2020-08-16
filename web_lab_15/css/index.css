@@ -1,9 +1,3 @@
-#div_page_header {
-  /* the rest is set in ../web_labs_CSS/common.css */
-  /* need to load that file in index.html before this file */
-  width: 797px;
-}
-
 #div_simFrame {
   display: block;
   position: relative;
@@ -11,7 +5,7 @@
   left: 10px;
   top: 0px;
   width: 797px;
-  height: 764px;
+  height: 740px;
   visibility: visible;
   border-width: 1px;
   border-style: dotted;
@@ -694,10 +688,12 @@ border-style: solid;
 /* (orientation: portrait) - below holds for narrow field */
 /* (orientation: landscape) - below holds for wide field  */
 
-@media(max-width: 640px) {
-  /* change the following when the screen width is <= 640px */
-  /* #div_controller {
-    top: 600px;
-    left: 20px;
-   } */
+@media(min-width: 640px) {
+  #div_page_header {
+    width: 797px;
+  }
+  #div_rlnoticetext {
+    font-size: 50%;
+    width: 640px;
+  }
 }

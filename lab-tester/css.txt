@@ -1,0 +1,53 @@
+  <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  
+  
+
+/* @media for responsive design                    */
+/* requires meta viewport element in HTML head     */
+/* styling above this holds except, e.g.,          */
+/*    when width is >= 640px : (min-width: 640px)  */
+/*    when width is <= 640px : (max-width: 640px)  */
+/*    then styling below holds                     */
+/* min- below holds for bigger than #              */
+/* max- below holds for smaller than #             */
+/* (orientation: portrait) - below holds for narrow field */
+/* (orientation: landscape) - below holds for wide field  */
+
+@media(min-width: 640px) {
+  #div_page_header {
+    width: 640px;
+  }
+  #div_rlnoticetext {
+    font-size: 50%;
+    width: 640px;
+  }
+}
+
+====== DUPLICATE ============ 
+
+  <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  
+  
+
+/* @media for responsive design                    */
+/* requires meta viewport element in HTML head     */
+/* styling above this holds except, e.g.,          */
+/*    when width is >= 640px : (min-width: 640px)  */
+/*    when width is <= 640px : (max-width: 640px)  */
+/*    then styling below holds                     */
+/* min- below holds for bigger than #              */
+/* max- below holds for smaller than #             */
+/* (orientation: portrait) - below holds for narrow field */
+/* (orientation: landscape) - below holds for wide field  */
+
+@media(min-width: 640px) {
+  #div_page_header {
+    width: 640px;
+  }
+  #div_rlnoticetext {
+    font-size: 50%;
+    width: 640px;
+  }
+}

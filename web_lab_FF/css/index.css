@@ -1,8 +1,3 @@
-#div_page_header {
-  /* the rest set in ../web_labs_CSS/common.css */
-  width: 628px;
-}
-
 #div_simFrame {
   display: block;
   position: relative;
@@ -123,10 +118,12 @@
 /* (orientation: portrait) - below holds for narrow field */
 /* (orientation: landscape) - below holds for wide field  */
 
-@media(max-width: 640px) {
-  /* change the following when the screen width is <= 640px */
-  /* #div_controller {
-    top: 600px;
-    left: 20px;
-   } */
+@media(min-width: 640px) {
+  #div_page_header {
+    width: 640px;
+  }
+  #div_rlnoticetext {
+    font-size: 50%;
+    width: 640px;
+  }
 }

@@ -2,8 +2,8 @@
  display: block;
  position: relative;
  left: 5px;
- width: 798px;
- height: 500px;
+ width: 620px;
+ height: 900px;
  visibility: visible;
  border-width: 1px;
  border-style: outset;
@@ -76,8 +76,8 @@
 #div_controller {
  display: block;
  position: absolute;
- left: 360px;
- top: 46px;
+ left: 10px;
+ top: 415px;
  width: 414px;
  height: 307px;
  visibility: visible;
@@ -175,16 +175,25 @@
 /* (orientation: portrait) - below holds for narrow field */
 /* (orientation: landscape) - below holds for wide field  */
 
-@media (orientation: portrait) {
+@media (orientation: landscape) {
 
   #div_simFrame {
-    width: 620px;
-    height: 940px;
+    width: 798px;
+    height: 510px;
   }
 
   #div_controller {
-    left: 10px;
-    top: 415px;
+    left: 360px;
+    top: 46px;
+  }
+
+  #div_page_header {
+    width: 640px;
+  }
+
+  #div_rlnoticetext {
+    font-size: 50%;
+    width: 640px;
   }
 
 } // END of @media

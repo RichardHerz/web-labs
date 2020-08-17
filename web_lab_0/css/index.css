@@ -27,15 +27,15 @@
 #button_runButton {
   position: absolute;
   left: 30px;
-  top: 4px;
+  top: 0px;
   width: 72px;
   height: 23px;
 }
 
 #button_resetButton {
   position: absolute;
-  left: 106px;
-  top: 4px;
+  left: 112px;
+  top: 0px;
   width: 72px;
   height: 23px;
 }

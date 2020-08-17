@@ -74,11 +74,13 @@ processUnits[0] = {
   numNodes : 100,
 
   ssCheckSum : 0, // used to check for steady state
-  mtotOld : 0, // used to check for steady state
+  mtotOld : 0, // used in checkForSteadyState method
   residenceTime : 0, // for timing checks for steady state check
   // residenceTime is set in this unit's updateUIparams()
 
-  windSpeed : 2, // 0,1,2 = off,med,high, see method changeWindSpeed(ws) below
+  // windSpeed = 0,1 = off,on, see method changeWindSpeed(ws) below
+  // value set next line must agree with value in checked radio button in html
+  windSpeed : 1,
 
   trees : [], // will get filled below in initialize
 
@@ -103,6 +105,26 @@ processUnits[0] = {
     // SET AN IGNITION POINT
     this.trees[20][20].temperature = 600;
 
+    // ==============
+
+    // initialize local array to hold color-canvas data, e.g., space-time data -
+    // plotter.initColorCanvasArray(numVars,numXpts,numYpts)
+    this.colorCanvasData = plotter.initColorCanvasArray(1,this.numNodes,this.numNodes+1);
+
+    // INITIALIZE array colorCanvasData
+    // x = 0 is at left, xmax is at right of color canvas display
+    // y = 0 is at top, ymax is at bottom
+    for (let x = 0; x <= xymax; x++) {
+      for (let y = 0; y <= xymax; y++) {
+        this.colorCanvasData[0][x][y] = 0;
+      }
+    }
+
+    // PLOT THIS
+    // plotter.plotColorCanvasPlot(0);
+
+    // ==============
+
   }, // END of initialize()
 
   reset : function(){
@@ -114,7 +136,16 @@ processUnits[0] = {
 
     this.updateUIparams(); // this first, then set other values as needed
 
-    this.initialize();
+    let xymax = this.numNodes; // for square field - used 2 places here
+
+    for (x = 0; x <= xymax; x++) {
+      for (y = 0; y <= xymax; y++) {
+        this.trees[x][y].replant();
+      }
+    }
+
+    // SET AN IGNITION POINT
+    this.trees[20][20].temperature = 600;
 
     // set state variables not set by updateUIparams() to initial settings
 
@@ -125,7 +156,6 @@ processUnits[0] = {
     // INITIALIZE array colorCanvasData
     // x = 0 is at left, xmax is at right of color canvas display
     // y = 0 is at top, ymax is at bottom
-    let xymax = this.numNodes;
     for (let x = 0; x <= xymax; x++) {
       for (let y = 0; y <= xymax; y++) {
         this.colorCanvasData[0][x][y] = 0;
@@ -223,7 +253,7 @@ processUnits[0] = {
     // console.log('mCheck = ' + mCheck);
     // if (ssFlag == true) {console.log('at SS');}
 
-    // WARNING: need to initialize  mtotOld at top this unit
+    // WARNING: need to initialize mtotOld at top this unit
     //
     // check mass left
     let xymax = this.numNodes;
@@ -233,14 +263,18 @@ processUnits[0] = {
         mtot += this.trees[x][y].mass;
       }
     }
-    // console.log('mtot = ' + mtot);
+
     if (mtot == this.mtotOld){
       ssFlag = true;
     } else {
       this.mtotOld = mtot;
     }
 
-    if (ssFlag == true) {interfacer.resetThisLab();}
+    if (ssFlag == true & controller.simTime > 0) {
+      // must only call resetThisLab after first run or get into endless loop
+      // of resets if user clicks html reset button before first run
+      interfacer.resetThisLab();
+    }
 
     return ssFlag;
   } // END OF checkForSteadyState()
@@ -257,6 +291,13 @@ class Tree {
     this.temperature = 300;
     this.mass = 10;
   } // END Tree constructor
+
+  replant() {
+    // called by main reset method to reset initial values
+    // at later time after all trees have been created
+    this.temperature = 300;
+    this.mass = 10;
+  }
 
   updateRates(windSpeed) {
 

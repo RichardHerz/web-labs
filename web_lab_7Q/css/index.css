@@ -2,12 +2,6 @@
   font-size: 50%;
 }
 
-#div_page_header {
-  /* the rest is set in ../web_labs_CSS/common.css */
- height: 170px;
- width: 500px;
-}
-
 #div_simFrame {
   display: block;
   position: relative;
@@ -76,7 +70,7 @@
 #button_runButton {
   position: absolute;
   left: 87px;
-  top: 5px;
+  top: 4px;
   width: 72px;
 }
 
@@ -207,13 +201,9 @@
   background-color: rgb(255,255,255);
   border-style: none;
   opacity: 1;
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: false;
   font-size: 14px;
 }
 
-/* see this div below @media(min-width: 640px) */
 /* @media sets position for wide screen */
 /* this sets position for narrow screen */
 #div_input_fields_group {
@@ -228,9 +218,6 @@
   border-color: Tomato;
   background-color: rgb(255,255,255);
   opacity: 1;
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: false;
 }
 
 /* SPECIAL - THIS LAB IS A QUIZ */
@@ -651,6 +638,12 @@ border-style: solid;
   width: 100%;
 }
 
+/*#div_input_fields_group {*/
+/*  border-color: blue;*/
+/*  border-style: dotted;*/
+/*  border-width: 2px;*/
+/*}*/
+
 /* @media for responsive design                    */
 /* requires meta viewport element in HTML head     */
 /* styling above this holds except, e.g.,          */
@@ -665,7 +658,7 @@ border-style: solid;
 @media(min-width: 640px) {
   #div_input_fields_group {
     position: absolute;
-    top: 141px;
+    top: 164px;
     left: 400px;
   }
   #div_rlnoticetext {

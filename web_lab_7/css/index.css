@@ -75,7 +75,7 @@
 #button_runButton {
   position: absolute;
   left: 87px;
-  top: 5px;
+  top: 4px;
   width: 72px;
 }
 
@@ -392,14 +392,11 @@ border-style: solid;
   top: 112px;
   width: 91px;
   height: 21px;
-border-width: 1px;
+  border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
-border-style: solid;
+  border-style: solid;
   opacity: 1;
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 #field_flowrate_label {
@@ -413,9 +410,6 @@ border-style: solid;
   background-color: rgb(255,255,255);
   border-style: dotted;
   opacity: 1;
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: true;
   font-size: 16px;
   border-color: DodgerBlue;
 }
@@ -431,9 +425,6 @@ border-width: 1px;
   background-color: rgb(255,255,255);
 border-style: solid;
   opacity: 1;
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: true;
 }
 
 #field_Tin_label {
@@ -562,7 +553,7 @@ border-style: solid;
 @media(min-width: 640px) {
   #div_input_fields_group {
     position: absolute;
-    top: 141px;
+    top: 130px;
     left: 400px;
   }
   #div_rlnoticetext {

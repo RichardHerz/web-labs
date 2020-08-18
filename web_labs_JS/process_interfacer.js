@@ -63,7 +63,7 @@ let interfacer = {
 
     let txt = 'The Reactor Lab provides interactive chemical reactor '
       + 'simulations for active learning. The web site is '
-      + '<a href="http://reactorlab.net/">ReactorLab.net</a>. '
+      + '<a href="https://reactorlab.net/">ReactorLab.net</a>. '
       + 'Web Labs and desktop versions of ReactorLab and SimzLab, '
       + 'which includes PureWaterLab, are available. '
       + 'The lab is provided free of charge and code is open source and available '

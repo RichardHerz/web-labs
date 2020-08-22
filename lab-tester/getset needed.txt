@@ -1,64 +1,64 @@
-OBJECT VALUES GET & SET BY OTHER OBJECTS 
+OBJECT VALUES GET & SET BY OTHER OBJECTS
 
-*NOT* METHOD CALLS  
+*NOT* METHOD CALLS
 
-First, maybe just work on simParams, controller and interfacer between themselves 
+First, maybe just work on simParams, controller and interfacer between themselves
 
---- IN CONTROLLER --- 
+--- IN CONTROLLER ---
 
-no values from interfacer or plotter 
+no values from interfacer or plotter
 
-gets and sets simParams.labType in controller.openThisLab >> can this be done in simParams itself? 
+gets simParams.labType in controller.openThisLab >> can this be done in simParams itself? 
 
-gets simParams.labType in controller.updateDisplay 
+gets simParams.labType in controller.updateDisplay
 
-gets simParams.simStepRepeats 
+gets simParams.simStepRepeats
 
-gets simParams.simTimeStep 
+gets simParams.simTimeStep
 
-gets simParams.updateDisplayTimingMs  for // out testing 
+gets simParams.updateDisplayTimingMs  for // out testing
 
-gets plotInfo[p]['type'] in controller.updateDisplay 
+gets plotInfo[p]['type'] in controller.updateDisplay
 
-gets plotInfo[p] number of elements, max and min in controller.getStripPlotSpan 
+gets plotInfo[p] number of elements, max and min in controller.getStripPlotSpan
 
-gets processUnits[u]['residenceTime'] in controller.checkForSteadyState 
+gets processUnits[u]['residenceTime'] in controller.checkForSteadyState
 
---- IN INTERFACER --- 
+--- IN INTERFACER ---
 
-NOTE: 
-two places:  let el = document.getElementById('button_runButton');  
-and at least some simParams have the property runButtonID but not used in interfacer... 
+NOTE:
+two places:  let el = document.getElementById('button_runButton');
+and at least some simParams have the property runButtonID but not used in interfacer...
 
-no values from plotter 
+no values from plotter
 
-too many to count from processUnits and plotInfo! 
+too many to count from processUnits and plotInfo!
 
-gets controller.simTime 
+gets controller.simTime
 
-sets controller.ssFlag 
+sets controller.ssFlag
 
-gets simParams.labType << ALSO BY CONTROLLER 
+gets simParams.labType << ALSO BY CONTROLLER
 
-gets simParams.updateDisplayTimingMs 
+gets simParams.updateDisplayTimingMs
 
-IN COPYDATA 
+IN COPYDATA
 
-gets simParams.oldDataFlag 
+gets simParams.oldDataFlag
 
-gets simParams.title 
+gets simParams.title
 
-gets simParams.simTimeUnits 
+gets simParams.simTimeUnits
 
---- IN SIMPARAMS --- 
+--- IN SIMPARAMS ---
 
-no values from interfacer 
+no values from interfacer
 
->>> PROCESS UNITS get simParams.simTimeStep and simParams.simTimeRepeats 
+>>> PROCESS UNITS get simParams.simTimeStep and simParams.simTimeRepeats
 
-gets controller.simTime in updateRunCount (which really is a logger) 
+gets controller.simTime in updateRunCount (which really is a logger)
 
-CAN DO ONE-LINERS UNTIL WANT TO ADD MORE FUNCTIONALITY 
+CAN DO ONE-LINERS UNTIL WANT TO ADD MORE FUNCTIONALITY
 
 // GETTERS & SETTERS SO NO DIRECT ACCESS TO THESE VARIABLES:
 //
@@ -70,9 +70,4 @@ get getSimTimeUnits() {return this.simTimeUnits;},
 get getDisplayTimingMs() {return this.displayTimingMs;},
 get getOldDataFlag() {return this.oldDataFlag;},
 //
-set setLabType(labtype) {this.labType = labtype;}, // var names case sensitive
 set setSimTimeStep(timestep) {this.simTimeStep = timestep},
-
-
-
-

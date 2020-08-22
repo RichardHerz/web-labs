@@ -190,9 +190,9 @@ function puSpiritStill(pUnitIndex) {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
+    controller.resetSSflagsFalse();
 
     // set to zero ssCheckSum used to check for steady state by this unit
     ssCheckSum = 0;

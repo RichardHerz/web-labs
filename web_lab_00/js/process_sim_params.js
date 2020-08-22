@@ -19,6 +19,12 @@ let simParams = {
 
   title : 'Pendulum', // title of simulation
 
+  // valid values for labType are 'Dynamic' (default), or any other value
+  // if not specified or set to '', 0, or false, then gets set to 'Dynamic' in controller
+  // if then set to 'Dynamic', then controller.updateProcess is called repeatedly on Run
+  // if is set to any other value, controller.updateProcess is called once on Run
+  labType : 'Dynamic',
+
   runButtonID : "button_runButton", // required for interfacer object methods
   // URLs for methods updateRunCount and updateCurrentRunCountDisplay below
   runLoggerURL : "../webAppRunLog.lc",

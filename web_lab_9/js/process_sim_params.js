@@ -19,6 +19,12 @@ let simParams = {
 
   title : 'catalytic CSTRs in series', // title of simulation
 
+  // valid values for labType are 'Dynamic' (default), or any other value
+  // if not specified or set to '', 0, or false, then gets set to 'Dynamic' in controller
+  // if then set to 'Dynamic', then controller.updateProcess is called repeatedly on Run
+  // if is set to any other value, controller.updateProcess is called once on Run
+  labType : 'Dynamic',
+
   runButtonID : "button_runButton", // for functions to run, reset, copy data
   // URLs for methods updateRunCount and updateCurrentRunCountDisplay below
   runLoggerURL : "../webAppRunLog.lc",

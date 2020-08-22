@@ -127,9 +127,9 @@ processUnits[0] = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
+    controller.resetSSflagsFalse();
     // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
   },
@@ -349,9 +349,9 @@ processUnits[1] = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
+    controller.resetSSflagsFalse();
 
     // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
@@ -897,9 +897,9 @@ processUnits[3] = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
+    controller.resetSSflagsFalse();
 
     // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;
@@ -1163,9 +1163,9 @@ processUnits[4] = {
 
     // set state variables not set by updateUIparams() to initial settings
 
-    // need to directly set controller.ssFlag to false to get sim to run
+    // need to set controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
-    controller.ssFlag = false;
+    controller.resetSSflagsFalse();
 
     // set to zero ssCheckSum used to check for steady state by this unit
     this.ssCheckSum = 0;

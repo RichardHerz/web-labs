@@ -1,36 +1,34 @@
-GETTER & SETTERS TO ADD 
+GETTER & SETTERS TO ADD
 
-WARNING: check lab files other than simParams for get/set from controller and interfacer 
-         also check plotter and plotInfo 
-
-BUT, AS LONG AS NAMES DON'T CHANGE, units should be able to get & set values as before
-until I get around to changing all... 
-
--- IN CONTROLLER --- 
-
-set setSSflag(ssflag) {this.ssFlag = ssflag;} // var names case sensitive 
-
-get getSimTime() {return this.simTime;} 
-
---- IN INTERFACER --- 
-
-none to add - although have to use getters & setters in controller and simParams 
-
---- IN SIMPARAMS --- 
-
-NOTE ALL PROCESS UNITS GET simStepRepeats & simTimeStep 
+WARNING: check lab files other than simParams for get/set from controller and interfacer
+         also check plotter and plotInfo
 
 BUT, AS LONG AS NAMES DON'T CHANGE, units should be able to get & set values as before
-until I get around to changing all... 
+until I get around to changing all...
+
+-- IN CONTROLLER ---
+
+get getSimTime() {return this.simTime;}
+
+--- IN INTERFACER ---
+
+none to add - although have to use getters & setters in controller and simParams
+
+--- IN SIMPARAMS ---
+
+NOTE ALL PROCESS UNITS GET simStepRepeats & simTimeStep
+
+BUT, AS LONG AS NAMES DON'T CHANGE, units should be able to get & set values as before
+until I get around to changing all...
 
 BUT, if I add calls in common JS files, then will get error if not present in individual
-labs, though easy to add to all simParam files, at least... 
+labs, though easy to add to all simParam files, at least...
 
-NOTE process_sim_params.js IS LAB SPECFIC AND HAS TO BE CHANGED IN ALL LABS! 
+NOTE process_sim_params.js IS LAB SPECFIC AND HAS TO BE CHANGED IN ALL LABS!
 
-Seems like need getter for all values in simParams - they are to be used in the sim! 
+Seems like need getter for all values in simParams - they are to be used in the sim!
 
-CAN DO ONE-LINERS UNTIL WANT TO ADD MORE FUNCTIONALITY 
+CAN DO ONE-LINERS UNTIL WANT TO ADD MORE FUNCTIONALITY
 
 // GETTERS & SETTERS SO NO DIRECT ACCESS TO THESE VARIABLES:
 //
@@ -42,9 +40,4 @@ get getSimTimeUnits() {return this.simTimeUnits;},
 get getDisplayTimingMs() {return this.displayTimingMs;},
 get getOldDataFlag() {return this.oldDataFlag;},
 //
-set setLabType(labtype) {this.labType = labtype;}, // var names case sensitive
 set setSimTimeStep(timestep) {this.simTimeStep = timestep},
-
-
- 
- 

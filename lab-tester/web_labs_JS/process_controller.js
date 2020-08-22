@@ -49,14 +49,6 @@ let controller = {
 
   openThisLab : function() {
 
-    if (simParams.labType) {
-      // simParams.labType exists
-      // 'Dynamic' or any other value
-    } else {
-      // does not exist, set to default Dynamic
-      simParams.labType = 'Dynamic';
-    }
-
     // initialize variables in each process unit
     // the order of the numeric index of process units does not affect the simulation
     for (let u in processUnits) {

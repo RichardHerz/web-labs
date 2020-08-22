@@ -20,7 +20,7 @@ let interfacer = {
     if (el.value == 'Run') {
 
       // button label is 'Run' & was clicked, so start running
-      controller.ssFlag = false; // unit sets true when sim reaches steady state
+      controller.resetSSflagsFalse(); // gets set true when sim reaches steady state
 
       if (simParams.labType == 'Dynamic') {
         // change button label to 'Pause'

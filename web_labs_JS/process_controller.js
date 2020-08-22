@@ -49,14 +49,6 @@ let controller = {
 
   openThisLab : function() {
 
-    if (simParams.labType) {
-      // simParams.labType exists
-      // 'Dynamic' or any other value
-    } else {
-      // does not exist, set to default Dynamic
-      simParams.labType = 'Dynamic';
-    }
-
     // initialize variables in each process unit
     // the order of the numeric index of process units does not affect the simulation
     for (let u in processUnits) {
@@ -219,7 +211,7 @@ let controller = {
   resetSSflagsFalse : function() {
     controller.ssStartTime = 0;
     controller.oldSimTime = 0;
-    controller.ssFlag = false; // unit sets true when sim reaches steady state
+    controller.ssFlag = false; // gets set true when sim reaches steady state
     controller.stripPlotSpan = controller.getStripPlotSpan();
   },
 
@@ -275,9 +267,7 @@ let controller = {
       }
 
       if (thisFlag == false) {
-        controller.ssFlag = false;
-        controller.oldSimTime = controller.simTime;
-        controller.ssStartTime = 0;
+        controller.resetSSflagsFalse();
       } else {
         // all units are at steady state
         if (controller.stripPlotSpan == 0) {

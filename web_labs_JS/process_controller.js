@@ -16,7 +16,7 @@ let controller = {
   // USES in object interfacer the function interfacer.resetThisLab()
   //
   // USES in object simParams the following:
-  //    variables simStepRepeats, simTimeStep, updateDisplayTimingMs
+  //    variables labType, simStepRepeats, simTimeStep, updateDisplayTimingMs
   //    function updateCurrentRunCountDisplay()
   //
   // WARNING: do not change simTimeStep between display updates in order to

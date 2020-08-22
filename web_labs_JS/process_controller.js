@@ -19,6 +19,9 @@ let controller = {
   //    variables simStepRepeats, simTimeStep, updateDisplayTimingMs
   //    function updateCurrentRunCountDisplay()
   //
+  // WARNING: do not change simTimeStep between display updates in order to
+  //    maintain correspondence between simTime and real time
+  //
   // USES in each process unit object the following:
   //    variable residenceTime
   //    functions initialize(), reset(), updateInputs(), updateState()
@@ -37,12 +40,12 @@ let controller = {
 
   // ssFlag set to true below in checkForSteadyState() when
   //           sim reaches steady state
-  // ssFlag set to false in runThisLab() and resetThisLab() in interfacer object
-  // ssFlag set to false by updateUIparams() in each process unit
+  // ssFlag set to false by controller.resetSSflagsFalse()
   ssFlag : false,
   // ssStartTime is time when first reach steady state
   // used to keep computing & plotting until any strip plots go flat
   // for which stripPlotSpan is also used
+  // reset in controller.resetSSflagsFalse()
   ssStartTime : 0,
   stripPlotSpan : 5000,
 
@@ -73,6 +76,9 @@ let controller = {
     // done before simStepRepeats of all units, so
     // simTime update each time is simTimeStep * simStepRepeats
     controller.updateSimTime();
+
+    // WARNING: do not change simTimeStep between display updates in order to
+    //    maintain correspondence between simTime and real time
 
     // do NOT return here when ssFlag goes true at steady statement
     // because then simTime will not update since this function will not call itself again
@@ -115,6 +121,9 @@ let controller = {
 
     if (controller.ssFlag) {
       // exit if ssFlag true
+      // this stops update computations to reduce CPU load when not needed
+      // but main loop continues to update simTime and to keep checking units
+      // for user input changes
       return;
     }
 
@@ -135,6 +144,9 @@ let controller = {
   }, // END OF function updateProcessUnits
 
   updateDisplay : function() {
+
+    // WARNING: do not change simTimeStep between display updates in order to
+    //    maintain correspondence between simTime and real time
 
     if (controller.ssFlag) {
       // exit if ssFlag true

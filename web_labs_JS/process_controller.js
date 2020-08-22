@@ -18,7 +18,7 @@ let controller = {
   // USES in object simParams the following:
   //    variables simStepRepeats, simTimeStep, updateDisplayTimingMs
   //    function updateCurrentRunCountDisplay()
-  //    controller's changeSimTimeStep() can change simParams.simTimeStep
+  //    function changeSimTimeStep() can change simParams.simTimeStep
   //
   // USES in each process unit object the following:
   //    variable residenceTime
@@ -214,12 +214,6 @@ let controller = {
     // only updated before simStepRepeats are all executed
     // and only updated once each displayUpdate
     controller.simTime = controller.simTime + simParams.simTimeStep * simParams.simStepRepeats;
-  },
-
-  changeSimTimeStep : function(factor) {
-    // WARNING: do not change simTimeStep except immediately before or after a
-    // display update in order to maintain sync between sim time and real time
-    simParams.simTimeStep = factor * simParams.simTimeStep;
   },
 
   resetSSflagsFalse : function() {

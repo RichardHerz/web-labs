@@ -32,13 +32,19 @@ Seems like need getter for all values in simParams - they are to be used in the 
 
 CAN DO ONE-LINERS UNTIL WANT TO ADD MORE FUNCTIONALITY 
 
-set setLabType(labtype) {this.labType = labtype;}, // var names case sensitive 
-get getLabType() {return this.labType;}, 
-get getTitle() {return this.title;}, 
-get getSimStepRepeats() {return this.simStepRepeats;}, 
-get getSimTimeStep() {return this.simTimeStep;}, 
-get getSimTimeUnits() {return this.simTimeUnits;}, 
-get getUpdateDisplayTimingMs() {return this.updateDisplayTimingMs;}, 
-get getOldDataFlag() {return this.oldDataFlag;}, 
+// GETTERS & SETTERS SO NO DIRECT ACCESS TO THESE VARIABLES:
+//
+get getLabType() {return this.labType;},
+get getTitle() {return this.title;},
+get getSimStepRepeats() {return this.simStepRepeats;},
+get getSimTimeStep() {return this.simTimeStep;},
+get getSimTimeUnits() {return this.simTimeUnits;},
+get getDisplayTimingMs() {return this.displayTimingMs;},
+get getOldDataFlag() {return this.oldDataFlag;},
+//
+set setLabType(labtype) {this.labType = labtype;}, // var names case sensitive
+set setSimTimeStep(timestep) {this.simTimeStep = timestep},
+
+
  
  

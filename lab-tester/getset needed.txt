@@ -58,4 +58,21 @@ no values from interfacer
 
 gets controller.simTime in updateRunCount (which really is a logger) 
 
+CAN DO ONE-LINERS UNTIL WANT TO ADD MORE FUNCTIONALITY 
+
+// GETTERS & SETTERS SO NO DIRECT ACCESS TO THESE VARIABLES:
+//
+get getLabType() {return this.labType;},
+get getTitle() {return this.title;},
+get getSimStepRepeats() {return this.simStepRepeats;},
+get getSimTimeStep() {return this.simTimeStep;},
+get getSimTimeUnits() {return this.simTimeUnits;},
+get getDisplayTimingMs() {return this.displayTimingMs;},
+get getOldDataFlag() {return this.oldDataFlag;},
+//
+set setLabType(labtype) {this.labType = labtype;}, // var names case sensitive
+set setSimTimeStep(timestep) {this.simTimeStep = timestep},
+
+
+
 

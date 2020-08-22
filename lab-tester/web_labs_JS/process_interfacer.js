@@ -49,7 +49,6 @@ let interfacer = {
     // CALLED BY UI RESET BUTTON DEFINED IN HTML
     // USES OBJECTS simParams, controller
     //
-
     clearInterval(this.timerID);
     controller.resetSimTime();
     // reset all units
@@ -64,7 +63,7 @@ let interfacer = {
 
     let txt = 'The Reactor Lab provides interactive chemical reactor '
       + 'simulations for active learning. The web site is '
-      + '<a href="http://reactorlab.net/">ReactorLab.net</a>. '
+      + '<a href="https://reactorlab.net/">ReactorLab.net</a>. '
       + 'Web Labs and desktop versions of ReactorLab and SimzLab, '
       + 'which includes PureWaterLab, are available. '
       + 'The lab is provided free of charge and code is open source and available '
@@ -74,7 +73,7 @@ let interfacer = {
       + 'at the University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>, '
       + 'in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>. '
       + 'Please let us know if you use the Lab or the code. Thanks! '
-      + '<a href="mailto://rherz@ucsd.edu/"">rherz@ucsd.edu</a>';
+      + '<a href="mailto://rherz@ucsd.edu/">rherz@ucsd.edu</a>';
     document.getElementById('div_rlnoticetext').innerHTML = txt;
     // see web_labs_CSS/common.css file for formatting on page
 

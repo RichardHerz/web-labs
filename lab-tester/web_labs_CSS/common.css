@@ -19,20 +19,17 @@ html input[disabled] {
     cursor: default;
 }
 
-/*
-  * Remove the default button background color that browsers set
-*/
+/* set basic style of buttons */
 
-/* html input[type="button"] {
-    background: transparent;
-} */
-
-/*
-  * change color when hover over buttons
-*/
+html input[type="button"] {
+  background-color: #ccccff;
+  border-width: 1px;
+  border-style: outset;
+  height: 23px;
+}
 
 html input[type="button"]:hover {
-  background-color: rgb(232, 228, 250);
+  background-color: #9999ff;
 }
 
 /*
@@ -41,7 +38,12 @@ html input[type="button"]:hover {
 */
 
 html input[type="button"]:active {
-  background-color: rgb(177, 150, 254);
+  background-color: #6666ff;
+  border-style: inset;
+}
+
+input, button {
+  text-align: center;
 }
 
 sup {
@@ -55,10 +57,6 @@ sub {
 input {
   display: block;
   position: absolute;
-  text-align: center;
-}
-
-input, button {
   text-align: center;
 }
 
@@ -99,21 +97,18 @@ canvas {
  display: block;
  position: relative;
  left: 5px;
- width: 640px;
+ width: 100%;
  visibility: visible;
  border-width: 0px;
  border-color: DodgerBlue;
  border-style: dotted;
  background-color: rgb(255,255,255);
  opacity: 1;
- LCvScrollbar: false;
- LCthreeD: true;
- LCshowBorder: false;
 }
 
 #div_rlnoticetext {
   position: relative;
-  width: 608px;
+  width: 100%;
   padding-top: 50px;
-  font-size: 70%;
+  font-size: 60%;
 }

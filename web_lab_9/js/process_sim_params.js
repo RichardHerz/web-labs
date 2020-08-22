@@ -16,10 +16,6 @@ let simParams = {
   //    function updateCurrentRunCountDisplay()
   //    function checkForSteadyState()
   //    variables simTimeStep, simStepRepeats, updateDisplayTimingMs
-  //
-  // OBJECT controller CAN CHANGE in object simParams the following:
-  //    variable simTimeStep in method controller.changeSimTimeStep
-  //
 
   title : 'catalytic CSTRs in series', // title of simulation
 
@@ -29,7 +25,7 @@ let simParams = {
   runCurrrentRunCountURL : "../webAppCurrentCount.lc",
 
   // all units use simParams.simTimeStep, getting it at each step in unit updateInputs()
-  // see method simParams.changeSimTimeStep() below to change simTimeStep value
+  // see method changeSimTimeStep() below to change simTimeStep value
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
   simStepRepeats : 10, // integer number of unit updates between display updates
@@ -42,6 +38,12 @@ let simParams = {
   // set updateDisplayTimingMs to 50 ms because runs too fast on fast desktop
   // and 50 ms gives about same speed as 0 ms on my laptop
   updateDisplayTimingMs : 30, // real time milliseconds between display updates
+
+  changeSimTimeStep : function(factor) {
+    // WARNING: do not change simTimeStep except immediately before or after a
+    // display update in order to maintain sync between sim time and real time
+    this.simTimeStep = factor * this.simTimeStep;
+  },
 
   // WARNING: NEED LITERAL, e.g., "field_run_counter" in methods below
   //      e.g., this.runCounterFieldID does NOT work
@@ -68,25 +70,12 @@ let simParams = {
       // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
   },
 
-  // // ORIG
-  // // SPECIAL FOR THIS LAB - SELECT REACTOR FOR SS CONVERSION PLOT
-  // // called onchange of html select element id='selectReactor'
-  // selectReactor : function() {
-  //       let p = 1; // plot number
-  //       let rxr = document.getElementById("selectReactor").value;
-  //       plotInfo[p]['varUnitIndex'][0] = rxr;
-  //       // document.getElementById("demo").innerHTML = "You selected: " + rxr;
-  //       let data = plotter.getPlotData(p);
-  //       plotter.plotPlotData(data,p);
-  // }
-
-  // NEW
   // SPECIAL FOR THIS LAB - SELECT REACTOR FOR SS CONVERSION PLOT
   // called onchange of html select element id='selectReactor'
   selectReactor : function() {
         let plotIndex = 1;
         let rxr = document.getElementById("selectReactor").value;
-        let vnum = rxr - 1; // plot variable index 
+        let vnum = rxr - 1; // plot variable index
         // NEW
         // hide all vars first
         for (v = 0; v < 4; v += 1) {

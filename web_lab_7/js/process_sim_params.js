@@ -31,7 +31,7 @@ let simParams = {
   runCurrrentRunCountURL : "../webAppCurrentCount.lc",
 
   // all units use simParams.simTimeStep, getting it at each step in unit updateInputs()
-  // see method changeSimTimeStep() below to change simTimeStep value
+
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
   simStepRepeats : 1, // integer number of unit updates between display updates
@@ -43,12 +43,6 @@ let simParams = {
   // set updateDisplayTimingMs to 50 ms because runs too fast on fast desktop
   // and 50 ms gives about same speed as 0 ms on my laptop
   updateDisplayTimingMs : 100, // real time milliseconds between display updates
-
-  changeSimTimeStep : function(factor) {
-    // WARNING: do not change simTimeStep except immediately before or after a
-    // display update in order to maintain sync between sim time and real time
-    this.simTimeStep = factor * this.simTimeStep;
-  },
 
   // WARNING: NEED LITERAL, e.g., "field_run_counter" in methods below
   //      e.g., this.runCounterFieldID does NOT work

@@ -18,7 +18,6 @@ let controller = {
   // USES in object simParams the following:
   //    variables simStepRepeats, simTimeStep, updateDisplayTimingMs
   //    function updateCurrentRunCountDisplay()
-  //    function changeSimTimeStep() can change simParams.simTimeStep
   //
   // USES in each process unit object the following:
   //    variable residenceTime

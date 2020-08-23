@@ -142,19 +142,30 @@ let interfacer = {
   initializeQuizVars : function(u,qv) {
     // inputs are unit index, array of quiz variable indexes in that unit
     let v;
+    let vmin;
+    let vmax;
     let qval;
     this.quizInputArray = initializeQuizArray(); // subfunction of this function
     for (let n in qv) {
       v = qv[n];
       processUnits[u]['dataQuizInputs'][v] = true; // checked in interfacer.copyData
-      qval = processUnits[u]['dataMin'][v] // line continues below...
-        + Math.random() // line continues below...
-        * (processUnits[u]['dataMax'][v] - processUnits[u]['dataMin'][v]);
-      //
-      // XXX not good for DelH heat of reaction - get ave = 0 and half endothermic
-      //     maybe detect DelH when dataMin < 0 and skew toward positive values?
-      //     or check dataHeaders, though name could change in future...?
-      //
+      vmin = processUnits[u]['dataMin'][v];
+      vmax = processUnits[u]['dataMax'][v];
+      // ----------
+      if (vmin < 0) {
+        // assume variable with potentially negative values is heat of reaction
+        // use a log-normal distribution in order to shift distribution
+        // towards negative (exothermic) values
+        //
+        // WARNING: this causes problem when quiz var is negative reaction
+        //          order or negative temperature (in F or C)
+        //          alternative is to check var name but that can change...
+        //
+        qval = randomLogNormal(vmin,vmax); // see subfunction below
+      } else {
+        // other variables get a uniform distribution between vmin and vmax
+        qval = vmin + Math.random() * (vmax - vmin);
+      }
       // format number so don't get zillions of places after decimal place
       // digits in small numbers won't affect answer check & will format on display
       if (Math.abs(qval) >= 10){
@@ -177,6 +188,24 @@ let interfacer = {
       }
       return arrayStub;
     } // END OF sub function initializeQuizArray
+
+    function randomLogNormal(vmin,vmax) {
+      // return values  will have close to a log-normal distribution
+      // skewed toward vmin - see Box-Muller transform
+      let u = Math.random();
+      let v = Math.random();
+      // u's and v's have uniform distributions
+      let z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+      // z's have a normal distribution
+      let sigma = 0.5; // std deviation
+      let mu = 0.5; // mean
+      let x = z*sigma + mu;
+      let y = Math.exp(x);
+      // y's have a log-normal distribution skewed toward 0 & few values above 5
+      let ymax = 5;
+      if (y > ymax) {y = ymax;} // quick & dirty to not use while loop
+      return (y/ymax)*(vmax - vmin) + vmin;
+    } // END OF sub function randomLogNormal
 
   }, // END OF function initializeQuizVars
 

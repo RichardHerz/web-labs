@@ -139,8 +139,8 @@ let puPlugFlowReactorQUIZ = {
     this.dataHeaders[v] = 'DelH';
     this.dataInputs[v] = 'input_field_DelH';
     this.dataUnits[v] = 'kJ/mol';
-    this.dataMin[v] = -100;
-    this.dataMax[v] = 150;
+    this.dataMin[v] = -200;
+    this.dataMax[v] = 200;
     this.dataDefault[v] = -125;
     //
     v = 3;
@@ -190,7 +190,7 @@ let puPlugFlowReactorQUIZ = {
     this.dataUnits[v] = 'K';
     this.dataMin[v] = 250;
     this.dataMax[v] = 400;
-    this.dataDefault[v] = 370;
+    this.dataDefault[v] = 350;
     //
     // END OF INPUT VARS
     // record number of input variables, varCount

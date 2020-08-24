@@ -151,7 +151,6 @@ let interfacer = {
       processUnits[u]['dataQuizInputs'][v] = true; // checked in interfacer.copyData
       vmin = processUnits[u]['dataMin'][v];
       vmax = processUnits[u]['dataMax'][v];
-      // ----------
       if (vmin < 0) {
         // assume variable with potentially negative values is heat of reaction
         // use a log-normal distribution in order to shift distribution
@@ -190,21 +189,26 @@ let interfacer = {
     } // END OF sub function initializeQuizArray
 
     function randomLogNormal(vmin,vmax) {
-      // return values  will have close to a log-normal distribution
-      // skewed toward vmin - see Box-Muller transform
-      let u = Math.random();
-      let v = Math.random();
-      // u's and v's have uniform distributions
-      let z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
-      // z's have a normal distribution
+      // return values will have close to a log-normal distribution
+      // skewed toward vmin >> see Box-Muller transform
       let sigma = 0.5; // std deviation
       let mu = 0.5; // mean
-      let x = z*sigma + mu;
-      let y = Math.exp(x);
-      // y's have a log-normal distribution skewed toward 0 & few values above 5
-      let ymax = 5;
-      if (y > ymax) {y = ymax;} // quick & dirty to not use while loop
-      return (y/ymax)*(vmax - vmin) + vmin;
+      let u; let v; let x; let y;
+      let zmax = 5;
+      let z = 1 + zmax;
+      // z's will have a log-normal distribution but clipped at zmax value
+      // so z's will be 0 to zmax skewed towards zero
+      while (z > zmax) {
+        u = Math.random();
+        v = Math.random();
+        // u's and v's have uniform distributions
+        x = Math.sqrt( -2.0 * Math.log(u) ) * Math.cos(2.0 * Math.PI * v);
+        // x's have a normal distribution
+        y = x*sigma + mu;
+        z = Math.exp(y);
+      }
+      // return random value between vmin and vmax with log-normal distribution
+      return (z/zmax)*(vmax - vmin) + vmin;
     } // END OF sub function randomLogNormal
 
   }, // END OF function initializeQuizVars
@@ -227,7 +231,7 @@ let interfacer = {
       let absVarAnswer = Math.abs(varAnswer);
       let absVarValue = Math.abs(varValue);
       if ((absVarAnswer >= 0.8 * absVarValue) && (absVarAnswer <= 1.2 * absVarValue)){
-        alert("Good! " + txt);
+        alert("Good work! " + txt);
         // put the value in the input field
         let el = document.getElementById(processUnits[u]['dataInputs'][v]);
         el.value = varValue;
@@ -460,12 +464,12 @@ let interfacer = {
     //
     // NOTE: window.open VERSION BELOW OPENS NEW POPUP WINDOW - MAY GET HIDDEN
     //       BEHIND FULL SCREEN BROWSER IF USER CLICKS ON PAGE BEFORE POPUP OPENS
-    dataWindow = window.open('', 'Copy data',
+    let dataWindow = window.open('', 'Copy data',
           'height=600, left=20, resizable=1, scrollbars=1, top=40, width=600');
     //
     // NOTE: window.open VERSION BELOW OPENS NEW TAB IN SAME BROWSER WINDOW
     //       NEED TO ADD TOOLTIP TO BTN AND/OR TEXT OR LINK ON COPY DATA TAB...
-    // dataWindow = window.open('',
+    // let dataWindow = window.open('',
     //       'height=600, left=20, resizable=1, scrollbars=1, top=40, width=600');
     //
 

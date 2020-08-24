@@ -1,0 +1,71 @@
+<html>
+<body>
+
+  Hello there! Test of ReactorLab Web Labs function interfacer.randomLogNormal()
+  <br>Data should have log-normal distribution.
+  <br>Button opens popup window with data. Copy to Matlab for plotting.
+
+  <!-- WARNING: can NOT run getData as file opens because no "window" present
+           so must wait until window opens and get window object  -->
+  <button onclick="getData()">getData</button>
+
+<script>
+
+let vmin = -200;
+let vmax = 200;
+
+let r = [];
+
+for (j = 0; j < 1000; j++) {
+  r[j] = randomLogNormal(vmin,vmax);
+}
+
+function getData() {
+
+  // WARNING: can NOT run getData as file opens because no "window" present
+  //          so must wait until window opens and get window object
+
+  // for window.open, see http://www.w3schools.com/jsref/met_win_open.asp
+  //
+  // NOTE: window.open VERSION BELOW OPENS NEW POPUP WINDOW - MAY GET HIDDEN
+  //       BEHIND FULL SCREEN BROWSER IF USER CLICKS ON PAGE BEFORE POPUP OPENS
+  let dataWindow = window.open('', 'Copy data',
+        'height=600, left=20, resizable=1, scrollbars=1, top=40, width=600');
+  //
+  // NOTE: window.open VERSION BELOW OPENS NEW TAB IN SAME BROWSER WINDOW
+  //       NEED TO ADD TOOLTIP TO BTN AND/OR TEXT OR LINK ON COPY DATA TAB...
+  // let dataWindow = window.open('',
+  //       'height=600, left=20, resizable=1, scrollbars=1, top=40, width=600');
+
+  dataWindow.document.writeln('<html><head><title>Copy data</title></head>' +
+         '<body>' +
+         r +
+         '</body></html>');
+  dataWindow.document.close();
+}
+
+function randomLogNormal(vmin,vmax) {
+  // return values  will have close to a log-normal distribution
+  // skewed toward vmin - see Box-Muller transform
+  let sigma = 0.5; // std deviation
+  let mu = 0.5; // mean
+  let u; let v; let x; let y;
+  let zmax = 5;
+  let z = 1 + zmax;
+  // z's will have a log-normal distribution but clipped at zmax value
+  // so z's will be 0 to zmax skewed towards zero
+  while (z > zmax) {
+    u = Math.random();
+    v = Math.random();
+    // u's and v's have uniform distributions
+    x = Math.sqrt( -2.0 * Math.log(u) ) * Math.cos(2.0 * Math.PI * v);
+    // x's have a normal distribution
+    y = x*sigma + mu;
+    z = Math.exp(y);
+  }
+  return (z/zmax)*(vmax - vmin) + vmin;
+} // END OF sub function randomLogNormal
+
+</script>
+</body>
+</html>

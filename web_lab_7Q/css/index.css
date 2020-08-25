@@ -658,7 +658,7 @@ border-style: solid;
 @media(min-width: 640px) {
   #div_input_fields_group {
     position: absolute;
-    top: 164px;
+    top: 200px;
     left: 400px;
   }
   #div_rlnoticetext {

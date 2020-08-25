@@ -655,18 +655,38 @@ border-style: solid;
 /* (orientation: portrait) - below holds for narrow field */
 /* (orientation: landscape) - below holds for wide field  */
 
+.flex-container {
+  display: flex;
+  flex-direction: column;
+}
+
 @media(min-width: 640px) {
-  #div_input_fields_group {
+  /* #div_input_fields_group {
     position: absolute;
     top: 170px;
+    left: 400px;
+  } */
+  #div_input_fields_group {
+    margin-top: 15px;
+  }
+  #div_rlnoticetext {
+    font-size: 50%;
+    width: 640px;
+  }
+  .flex-container {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+/* @media(orientation: landscape) {
+  #div_input_fields_group {
+    position: absolute;
+    top: 200px;
     left: 400px;
   }
   #div_rlnoticetext {
     font-size: 50%;
     width: 640px;
   }
-  #div_page_header {
-    /* the rest is set in ../web_labs_CSS/common.css */
-   font-size: 90%;
-  }
-}
+} */

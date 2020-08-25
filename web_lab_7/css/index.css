@@ -560,6 +560,9 @@ border-style: solid;
     display: flex;
     flex-direction: row;
   }
+  #div_simFrame {
+    left: 5px;
+  }
   #div_input_fields_group {
     margin-top: 15px;
   }

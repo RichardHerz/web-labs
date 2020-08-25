@@ -550,11 +550,18 @@ border-style: solid;
 /* (orientation: portrait) - below holds for narrow field */
 /* (orientation: landscape) - below holds for wide field  */
 
+.flex-container {
+  display: flex;
+  flex-direction: column;
+}
+
 @media(min-width: 640px) {
+  .flex-container {
+    display: flex;
+    flex-direction: row;
+  }
   #div_input_fields_group {
-    position: absolute;
-    top: 130px;
-    left: 400px;
+    margin-top: 15px;
   }
   #div_rlnoticetext {
     font-size: 50%;

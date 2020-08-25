@@ -661,11 +661,10 @@ border-style: solid;
 }
 
 @media(min-width: 640px) {
-  /* #div_input_fields_group {
-    position: absolute;
-    top: 170px;
-    left: 400px;
-  } */
+  .flex-container {
+    display: flex;
+    flex-direction: row;
+  }
   #div_input_fields_group {
     margin-top: 15px;
   }
@@ -673,20 +672,4 @@ border-style: solid;
     font-size: 50%;
     width: 640px;
   }
-  .flex-container {
-    display: flex;
-    flex-direction: row;
-  }
 }
-
-/* @media(orientation: landscape) {
-  #div_input_fields_group {
-    position: absolute;
-    top: 200px;
-    left: 400px;
-  }
-  #div_rlnoticetext {
-    font-size: 50%;
-    width: 640px;
-  }
-} */

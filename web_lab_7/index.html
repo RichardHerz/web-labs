@@ -62,79 +62,81 @@
       <a href="images/pfr-info.html" target="new">More info</a>
     </p>
   </div> <!-- end of div div_page_header -->
-<div id="div_simFrame">
+  <div class="flex-container">
+    <div id="div_simFrame">
       <div id="div_PLOTDIV_PFR_plot">
       </div> <!-- end of div div_PLOTDIV_T_plot -->
-   <canvas id="canvas_CANVAS_jacket" width="201" height="64"></canvas> <!-- canvas for colormap graphic -->
-   <!-- canvas element width & height must be specified here in HTML and not in CSS -->
-   <canvas id="canvas_CANVAS_reactor" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
-   <!-- canvas element width & height must be specified here in HTML and not in CSS -->
-   <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
-   <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
-   <p id="field_reactor_right_arrow">
-      &rarr;
-   </p>
-   <p id="field_reactor_left_arrow">
-      &rarr;
-   </p>
-   <p id="field_reactor_left_conc">
-      334 K
-   </p>
-   <p id="field_reactor_right_conc">
-      335 K
-   </p>
-   <p id="field_reactor_left_T">
-      336 K
-   </p>
-   <p id="field_reactor_right_T">
-      337 K
-   </p>
-   <p id='field_color_canvas_label'>
-     Temperature color plot
-   </p>
-   <input type="button" id="button_copyData" value="Copy Data" onclick="interfacer.copyData(0)">
-</div> <!-- end of div div_simFrame -->
-<div id="div_input_fields_group">
-   <!-- onchange can send interfacer.updateUIparams() to update all units *OR* send updateUIparams() to specific units -->
-   <p id="field_Kf300_label">
-      k at 300 K (m<sup>3</sup>/kg/s)
-   </p>
-   <input id="input_field_Kf300" value="1.0e-7" onchange="interfacer.updateUIparams()">
-   <p id="field_Ea_label">
-      Ea (kJ/mol)
-   </p>
-   <input id="input_field_Ea" value="100" onchange="interfacer.updateUIparams()">
-   <p id="field_DelH_label">
-      &#8710;H (kJ/mol)
-   </p>
-   <input id="input_field_DelH" value="-125" onchange="interfacer.updateUIparams()">
-   <p id="field_Wcat_label">
-      Wcat (kg)
-   </p>
-   <input id="input_field_Wcat" value="100" onchange="interfacer.updateUIparams()">
-   <p id="field_Cain_label">
-      Ca-in (mol/m<sup>3</sup>)
-   </p>
-   <input id="input_field_Cain" value="500" onchange="interfacer.updateUIparams()">
-   <p id="field_flowrate_label">
-      Flow rate (m<sup>3</sup>/s)
-   </p>
-   <input id="input_field_Flowrate" value="0.004" onchange="interfacer.updateUIparams()">
-   <p id="field_Tin_label">
-      Tin (K)
-   </p>
-   <input id="input_field_Tin" value="350" onchange="interfacer.updateUIparams()">
-   <p id="field_UA_label">
-      UA (kW/kg/K)
-   </p>
-   <input id="input_field_UA" value="0.1" onchange="interfacer.updateUIparams()">
-   <p id="field_Tjacket_label">
-      Tjacket (K)
-   </p>
-   <input id="input_field_Tjacket" value="355" onchange="interfacer.updateUIparams()">
-</div> <!-- end of div div_input_fields_group -->
-<!-- div_rlnoticetext filled by interfacer.resetThisLab()
-and formatted by web_labs_CSS/common.css -->
-<div id="div_rlnoticetext"></div>
+       <canvas id="canvas_CANVAS_jacket" width="201" height="64"></canvas> <!-- canvas for colormap graphic -->
+       <!-- canvas element width & height must be specified here in HTML and not in CSS -->
+       <canvas id="canvas_CANVAS_reactor" width="201" height="34"></canvas> <!-- canvas for colormap graphic -->
+       <!-- canvas element width & height must be specified here in HTML and not in CSS -->
+       <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
+       <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
+       <p id="field_reactor_right_arrow">
+          &rarr;
+       </p>
+       <p id="field_reactor_left_arrow">
+          &rarr;
+       </p>
+       <p id="field_reactor_left_conc">
+          334 K
+       </p>
+       <p id="field_reactor_right_conc">
+          335 K
+       </p>
+       <p id="field_reactor_left_T">
+          336 K
+       </p>
+       <p id="field_reactor_right_T">
+          337 K
+       </p>
+       <p id='field_color_canvas_label'>
+         Temperature color plot
+       </p>
+       <input type="button" id="button_copyData" value="Copy Data" onclick="interfacer.copyData(0)">
+    </div> <!-- end of div div_simFrame -->
+    <div id="div_input_fields_group">
+       <!-- onchange can send interfacer.updateUIparams() to update all units *OR* send updateUIparams() to specific units -->
+       <p id="field_Kf300_label">
+          k at 300 K (m<sup>3</sup>/kg/s)
+       </p>
+       <input id="input_field_Kf300" value="1.0e-7" onchange="interfacer.updateUIparams()">
+       <p id="field_Ea_label">
+          Ea (kJ/mol)
+       </p>
+       <input id="input_field_Ea" value="100" onchange="interfacer.updateUIparams()">
+       <p id="field_DelH_label">
+          &#8710;H (kJ/mol)
+       </p>
+       <input id="input_field_DelH" value="-125" onchange="interfacer.updateUIparams()">
+       <p id="field_Wcat_label">
+          Wcat (kg)
+       </p>
+       <input id="input_field_Wcat" value="100" onchange="interfacer.updateUIparams()">
+       <p id="field_Cain_label">
+          Ca-in (mol/m<sup>3</sup>)
+       </p>
+       <input id="input_field_Cain" value="500" onchange="interfacer.updateUIparams()">
+       <p id="field_flowrate_label">
+          Flow rate (m<sup>3</sup>/s)
+       </p>
+       <input id="input_field_Flowrate" value="0.004" onchange="interfacer.updateUIparams()">
+       <p id="field_Tin_label">
+          Tin (K)
+       </p>
+       <input id="input_field_Tin" value="350" onchange="interfacer.updateUIparams()">
+       <p id="field_UA_label">
+          UA (kW/kg/K)
+       </p>
+       <input id="input_field_UA" value="0.1" onchange="interfacer.updateUIparams()">
+       <p id="field_Tjacket_label">
+          Tjacket (K)
+       </p>
+       <input id="input_field_Tjacket" value="355" onchange="interfacer.updateUIparams()">
+    </div> <!-- end of div div_input_fields_group -->
+  </div> <!-- end of div flex container-->
+  <!-- div_rlnoticetext filled by interfacer.resetThisLab()
+  and formatted by web_labs_CSS/common.css -->
+  <div id="div_rlnoticetext"></div>
 </body>
 </html>

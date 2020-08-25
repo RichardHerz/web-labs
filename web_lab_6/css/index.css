@@ -2,7 +2,7 @@
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 5px;
+  left: 0px;
   width: 368px;
   height: 370px;
   visibility: visible;
@@ -226,7 +226,7 @@
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 12px;
+  left: 7px;
   /* top: 358px; */
   width: 288px;
   height: 340px;

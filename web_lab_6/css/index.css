@@ -219,9 +219,6 @@
   background-color: rgb(255,255,255);
   border-style: none;
   opacity: 1;
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: false;
   font-size: 16px;
 }
 
@@ -239,9 +236,6 @@
   background-color: rgb(255,255,255);
   border-style: dotted;
   opacity: 1;
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: false;
 }
 
 #div_radio_button_group {
@@ -642,6 +636,11 @@ border-style: solid;
   width: 100%;
 }
 
+.flex-container {
+  display: flex;
+  flex-direction: column;
+}
+
 /* @media for responsive design                    */
 /* requires meta viewport element in HTML head     */
 /* styling above this holds except, e.g.,          */
@@ -654,10 +653,12 @@ border-style: solid;
 /* (orientation: landscape) - below holds for wide field  */
 
 @media(min-width: 640px) {
+  .flex-container {
+    display: flex;
+    flex-direction: row;
+  }
   #div_input_fields_group {
-    position: absolute;
-    top: 141px;
-    left: 400px;
+    margin-top: 15px;
   }
   #div_rlnoticetext {
     font-size: 50%;

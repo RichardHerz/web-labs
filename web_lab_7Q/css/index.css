@@ -638,11 +638,10 @@ border-style: solid;
   width: 100%;
 }
 
-/*#div_input_fields_group {*/
-/*  border-color: blue;*/
-/*  border-style: dotted;*/
-/*  border-width: 2px;*/
-/*}*/
+.flex-container {
+  display: flex;
+  flex-direction: column;
+}
 
 /* @media for responsive design                    */
 /* requires meta viewport element in HTML head     */
@@ -654,11 +653,6 @@ border-style: solid;
 /* max- below holds for smaller than #             */
 /* (orientation: portrait) - below holds for narrow field */
 /* (orientation: landscape) - below holds for wide field  */
-
-.flex-container {
-  display: flex;
-  flex-direction: column;
-}
 
 @media(min-width: 640px) {
   .flex-container {

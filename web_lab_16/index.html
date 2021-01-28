@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>ReactorLab.net, RSA Encryption</title>
+
+  <!--
+    Design, text, images and code by Richard K. Herz, 2017-2021
+    Copyrights held by Richard K. Herz
+    Licensed for use under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.en.html
+  -->
+
+  <meta name='description' author='Richard Herz'>
+  <meta name="description" content="The Reactor Lab provides interactive chemical reactor
+  simulations for active learning. Web Labs and desktop versions of ReactorLab
+  and SimzLab, including PureWaterLab, are available. Software is provided free of charge
+  and is open source and available at our GitHub site, github.com/RichardHerz. The code is
+  structured to allow fast construction of new simulations of chemical reactors and other systems."/>
+
+  <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- load COMMON CSS style sheets FIRST -->
+  <link rel="stylesheet" href="../web_labs_CSS/common.css">
+
+  <!-- load CSS style sheets for this lab  -->
+  <link rel="stylesheet" href="css/index.css">
+
+  <!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
+  <script language="javascript" src="js/myRSA.js" type="text/javascript"></script>
+
+</head>
+<body>
+
+  <p>Check Javascript console for output.</p>
+
+  <input type="button" value="Main" onclick="myRSA()"><br>
+  <input type="button" value="Func" onclick="myRSA_F(412,[55,27])">
+
+  <div id="div_simulation_frame">
+   <p id="field_primes">
+      3,5,9
+   </p>
+   <p id="field_primes_LABEL">
+      List of primes from which to pick p and q
+   </p>
+   <p id="field_private_key">
+      11
+   </p>
+   <input id="input_field_enter_numeric_message" value="65" onchange="unit_1.updateUIparams()" value="0.005">
+   <input id="input_field_enter_q" value="11" onchange="unit_1.updateUIparams()" value="300">
+   <input type="button" id="button_decode" value="Decode">
+   <p id="field_public_key_LABEL">
+      Private Key
+   </p>
+   <p id="field_private_key_LABEL">
+      Private Key
+   </p>
+   <p id="field_public_key">
+      5
+   </p>
+   <p id="field_enter_numeric_message_LABEL">
+      Enter numeric message, 1 integer &lt;
+   </p>
+   <input id="input_field_enter_p" value="0.02" onchange="unit_1.updateUIparams()" value="0.005">
+   <input type="button" id="button_generate_keys" value="Generate Keys">
+   <input type="button" id="button_encode" value="Encode">
+   <p id="field_decoded_message_LABEL">
+      Decoded message
+   </p>
+   <p id="field_decoded_message" onchange="unit_1.updateUIparams()" value="0.005">
+      65
+   </p>
+   <p id="field_field_n_value">
+      55
+   </p>
+   <p id="field_encoded_message" onchange="unit_1.updateUIparams()" value="0.005">
+      888
+   </p>
+   <p id="field_encoded_message_LABEL">
+      Encoded message
+   </p>
+   <p id="field_enter_q_LABEL">
+      Enter q
+   </p>
+   <p id="field_enter_p_LABEL">
+      Enter p
+   </p>
+</div> <!-- end of div div_simulation_frame -->
+</body>
+</html>

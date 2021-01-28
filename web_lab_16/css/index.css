@@ -71,11 +71,11 @@ canvas {
   position: absolute;
   left: 208px;
   top: -12px;
-  width: 383px;
+  width: 640px;
   height: 64px;
   border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-style: dashed;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -101,9 +101,26 @@ canvas {
   font-size: 16px;
 }
 
-#field_private_key {
+#field_private_key_0 {
   position: absolute;
   left: 135px;
+  top: 233px;
+  width: 98px;
+  height: 28px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#field_private_key_1 {
+  position: absolute;
+  left: 235px;
   top: 233px;
   width: 98px;
   height: 28px;
@@ -198,9 +215,26 @@ border-style: solid;
   font-size: 16px;
 }
 
-#field_public_key {
+#field_public_key_0 {
   position: absolute;
   left: 136px;
+  top: 192px;
+  width: 98px;
+  height: 28px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: false;
+  font-size: 16px;
+}
+
+#field_public_key_1 {
+  position: absolute;
+  left: 236px;
   top: 192px;
   width: 98px;
   height: 28px;
@@ -219,7 +253,7 @@ border-style: solid;
   position: absolute;
   left: 9px;
   top: 276px;
-  width: 241px;
+  width: 260px;
   height: 32px;
   border-width: 1px;
   visibility: visible;
@@ -310,9 +344,9 @@ border-style: solid;
   font-size: 16px;
 }
 
-#field_field_n_value {
+#field_n_value {
   position: absolute;
-  left: 239px;
+  left: 290px;
   top: 277px;
   width: 62px;
   height: 32px;

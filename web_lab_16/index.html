@@ -40,54 +40,58 @@
   <input type="button" value="Func" onclick="myRSA_F(412,[55,27])">
 
   <div id="div_simulation_frame">
-   <p id="field_primes">
-      3,5,9
-   </p>
-   <p id="field_primes_LABEL">
-      List of primes from which to pick p and q
-   </p>
-   <p id="field_private_key">
-      11
-   </p>
-   <input id="input_field_enter_numeric_message" value="65" onchange="unit_1.updateUIparams()" value="0.005">
-   <input id="input_field_enter_q" value="11" onchange="unit_1.updateUIparams()" value="300">
-   <input type="button" id="button_decode" value="Decode">
-   <p id="field_public_key_LABEL">
-      Private Key
-   </p>
-   <p id="field_private_key_LABEL">
-      Private Key
-   </p>
-   <p id="field_public_key">
-      5
-   </p>
-   <p id="field_enter_numeric_message_LABEL">
-      Enter numeric message, 1 integer &lt;
-   </p>
-   <input id="input_field_enter_p" value="0.02" onchange="unit_1.updateUIparams()" value="0.005">
-   <input type="button" id="button_generate_keys" value="Generate Keys">
-   <input type="button" id="button_encode" value="Encode">
-   <p id="field_decoded_message_LABEL">
-      Decoded message
-   </p>
-   <p id="field_decoded_message" onchange="unit_1.updateUIparams()" value="0.005">
-      65
-   </p>
-   <p id="field_field_n_value">
-      55
-   </p>
-   <p id="field_encoded_message" onchange="unit_1.updateUIparams()" value="0.005">
-      888
-   </p>
-   <p id="field_encoded_message_LABEL">
-      Encoded message
-   </p>
-   <p id="field_enter_q_LABEL">
-      Enter q
-   </p>
-   <p id="field_enter_p_LABEL">
+    <p id="field_primes_LABEL">
+       List of primes from which to pick p and q
+    </p>
+    <p id="field_primes">
+      3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
+      73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151,
+      157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233,
+      239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317,
+      331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419,
+      421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499
+    </p>
+    <p id="field_enter_p_LABEL">
       Enter p
-   </p>
-</div> <!-- end of div div_simulation_frame -->
+    </p>
+    <input id="input_field_enter_p" value="491">
+    <p id="field_enter_q_LABEL">
+      Enter q
+    </p>
+    <input id="input_field_enter_q" value="499">
+    <input type="button" id="button_generate_keys" value="Generate Keys"
+      onclick="fGetKeys()">
+    <p id="field_public_key_LABEL">
+      Public Key
+    </p>
+    <p id="field_public_key_0"></p>
+    <p id="field_public_key_1"></p>
+    <p id="field_private_key_LABEL">
+      Private Key
+    </p>
+    <p id="field_private_key_0"></p>
+    <p id="field_private_key_1"></p>
+    <input id="input_field_enter_numeric_message" value="65">
+    <p id="field_enter_numeric_message_LABEL">
+      Enter numeric message, one integer &lt;
+    </p>
+    <p id="field_n_value">000</p>
+    <input type="button" id="button_encode" value="Encode"
+      onclick='fEncode()'>
+    <p id="field_encoded_message">
+      888
+    </p>
+    <p id="field_encoded_message_LABEL">
+      Encoded message
+    </p>
+    <input type="button" id="button_decode" value="Decode"
+      onclick='fDecode()'>
+    <p id="field_decoded_message_LABEL">
+      Decoded message
+    </p>
+    <p id="field_decoded_message">
+      65
+    </p>
+  </div> <!-- end of div div_simulation_frame -->
 </body>
 </html>

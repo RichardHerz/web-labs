@@ -261,6 +261,11 @@ border-style: solid;
   border-color: DodgerBlue;
 }
 
+/* USE PROGRESS CURSOR WHEN **GEN KEYS** BUTTON CLICKED */
+html input[id="button_generate_keys"]:active {
+  cursor: progress;
+}
+
 #button_generate_keys {
   position: absolute;
   left: 88px;
@@ -560,7 +565,7 @@ border-style: solid;
   position: absolute;
   border-color: DodgerBlue;
   left: 366px;
-  top: 112px;
+  top: 160px;
   width: 265px;
   height: 239px;
   visibility: visible;
@@ -710,7 +715,7 @@ border-style: solid;
     left: 5px;
   }
   #div_show_popups_group {
-    top: 760px;
+    top: 860px;
     left: 5px;
   }
   #div_rlnoticetext {

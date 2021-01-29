@@ -100,8 +100,8 @@ function fListGetKeys() {
   tText += "&nbsp; &nbsp; d++; <br>";
   tText += "} <br><br>";
 
-  tText += "let pk = [n,e]; <br>";
-  tText += "let sk = [n,d]; <br><br>";
+  tText += "let pk = [n,e]; // public key <br>";
+  tText += "let sk = [n,d]; // private (secret) key <br><br>";
 
   tText += "// update display <br>";
   tText += "document.getElementById('field_public_key_0').innerHTML = pk[0]; <br>";

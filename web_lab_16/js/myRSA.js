@@ -2,6 +2,14 @@ function fGetKeys() {
   // uses functions fPrimes() and fGCD_two_numbers()
   console.log('enter main function fGetKeys');
 
+  // DEVELOPMENT
+  // declare variables
+  // for use in development timing checks below
+  let timerDate;
+  let timerStart;
+  let timerEnd;
+  let timerElapsed;
+
   let pf = document.getElementById('input_field_enter_p');
   let qf = document.getElementById('input_field_enter_q');
 
@@ -10,16 +18,54 @@ function fGetKeys() {
 
   let n = p*q;
   let phi = (p-1)*(q-1);
-  console.log('phi = ' + phi);
-  let ep = fPrimes(phi);
-  console.log('ep = ' + ep);
+
+  timerDate = new Date();
+  timerStart = timerDate.getTime();
+  // console.log('timerStart = ' + timerStart);
+
+  // get array of primes ep from which to select e
+  let ep; // declare ep
+  let eplen; // declare eplen
+  if (phi < 25000000) {
+    // get from pre-generated list in file primesList.js
+    // only to this limit so this is very fast
+    // MATLAB primes(25000000) returns 1,565,927 primes from 2 to 24999983 (6.3%)
+    ep = fPrimesList(); // this function in file primesList.js
+    // need to estimate eplen because won't need all those in this array
+    eplen = ep.length; // TEMPORARY FOR NOW
+    // coefficients of 3rd order polynomial fit of fraction of primes >2 in list
+    // vs. natural log of max number in list - coefficients from fit in MATLAB
+    let coef = [-0.000099758947246, 0.004513664869385, -0.073043961967510, 0.490056200524824];
+    let plog = Math.log(phi);
+    let pfrac = coef[0]*plog**3 + coef[1]*plog**2 + coef[2]*plog + coef[3];
+    pfrac = 0.988*pfrac; // lower a little so don't overshoot length estimate 
+    eplen = Math.round(pfrac*phi);
+    console.log('eplen calc = ' + eplen)
+  } else {
+    // this takes > 10 seconds for phi this size
+    ep = fPrimes(phi); // this function listed below in this file
+    eplen = ep.length;
+  }
+
+  timerDate = new Date();
+  timerEnd = timerDate.getTime();
+  // console.log('timerEnd = ' + timerEnd);
+  timerElapsed = timerEnd - timerStart;
+  console.log('TIME (ms) to get PRIMES = ' + timerElapsed);
+
+  // console.log('ep = ' + ep); // WARNING: THIS LOGGING IS VERY SLOW WITH LONG LIST
 
   // find a random value in primes that is coprime with phi
   // this produces different keys every run
   // if desire same key, let i = 1 or other start
   // then increment i inside while loop
   // (or write own random function where can fix seed)
-  let eplen = ep.length;
+
+  timerDate = new Date();
+  timerStart = timerDate.getTime();
+  // console.log('timerStart = ' + timerStart);
+  // PUT PROCESS TO TIME HERE
+
   let j = 0; // counter so random pick loop won't run forever
   let jfac = 5; // factor * eplen to limit random pick loop to run
   let i = Math.floor(Math.random() * eplen);
@@ -40,7 +86,19 @@ function fGetKeys() {
     // }
   }
   let e = ep[i];
+
+  timerDate = new Date();
+  timerEnd = timerDate.getTime();
+  // console.log('timerEnd = ' + timerEnd);
+  timerElapsed = timerEnd - timerStart;
+  console.log('TIME (ms) to get GCD = ' + timerElapsed);
+
   console.log('GCD e = ' + e);
+
+  timerDate = new Date();
+  timerStart = timerDate.getTime();
+  // console.log('timerStart = ' + timerStart);
+  // PUT PROCESS TO TIME HERE
 
   // find modular inverse d of e such that mod(e*d,phi) = 1
   // use brute force here but check out extended Euclidean algorithm
@@ -49,11 +107,19 @@ function fGetKeys() {
   while (Math.round(e*d % phi) != 1) {
       d++;
   }
+
+  timerDate = new Date();
+  timerEnd = timerDate.getTime();
+  // console.log('timerEnd = ' + timerEnd);
+  timerElapsed = timerEnd - timerStart;
+  console.log('TIME (ms) to get MOD INVERSE d = ' + timerElapsed);
+
   tm = e*d % phi; // check
   console.log('d = ' + d + ', check e*d % phi = 1 ?=? ' + tm);
 
-  let pk = [n,e];
-  let sk = [n,d];
+  let pk = [n,e]; // public key
+  let sk = [n,d]; // private (secret) key
+
   console.log('pk = ' + pk);
   console.log('sk = ' + sk);
 
@@ -120,7 +186,7 @@ function fGCD_two_numbers(x, y) {
 function fPrimes(max) {
   // thanks to vitaly-t on stackoverflow
   // uses function fNextPrime()
-  console.log('enter function primes');
+  // console.log('enter function primes');
   let value = 1;
   let result = [];
   while (value < max) {
@@ -136,7 +202,7 @@ function fPrimes(max) {
 
 function fNextPrime(value) {
   // thanks to vitaly-t on stackoverflow
-  console.log('enter function fNextPrime');
+  // console.log('enter function fNextPrime');
   if (value > 2) {
       let i;
       let q;

@@ -49,14 +49,14 @@ canvas {
   display: none;
 }
 
-#div_simulation_frame {
+#div_simFrame {
   display: block;
-  position: absolute;
+  position: relative;
   border-color: DodgerBlue;
-  left: 42px;
-  top: 80px;
-  width: 595px;
-  height: 599px;
+  left: 31px;
+  top: 111px;
+  width: 328px;
+  height: 624px;
   visibility: visible;
   border-width: 2px;
   border-style: none;
@@ -67,78 +67,362 @@ canvas {
   LCshowBorder: false;
 }
 
-#field_primes {
+#field_enter_q_LABEL {
   position: absolute;
-  left: 208px;
-  top: -12px;
-  width: 640px;
-  height: 64px;
+  left: 31px;
+  top: 19px;
+  width: 84px;
+  height: 23px;
   border-width: 1px;
   visibility: visible;
-  border-style: dashed;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: false;
-  font-size: 12px;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
 }
 
-#field_primes_LABEL {
+#field_enter_p_LABEL {
   position: absolute;
-  left: 4px;
-  top: -11px;
-  width: 195px;
-  height: 41px;
+  left: 32px;
+  top: -12px;
+  width: 84px;
+  height: 23px;
   border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: false;
+  LCthreeD: false;
+  LCshowBorder: true;
   font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_phi_LABEL {
+  position: absolute;
+  left: 56px;
+  top: 128px;
+  width: 60px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_n_LABEL {
+  position: absolute;
+  left: 56px;
+  top: 97px;
+  width: 60px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_phi_value {
+  position: absolute;
+  left: 121px;
+  top: 128px;
+  width: 134px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_n_value {
+  position: absolute;
+  left: 121px;
+  top: 97px;
+  width: 134px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#input_field_enter_q {
+  position: absolute;
+  left: 121px;
+  top: 36px;
+  width: 134px;
+  height: 22px;
+border-width: 1px;
+  visibility: visible;
+border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#input_field_enter_p {
+  position: absolute;
+  left: 121px;
+  top: 5px;
+  width: 134px;
+  height: 22px;
+border-width: 1px;
+  visibility: visible;
+border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#field_n_LABEL_0 {
+  position: absolute;
+  left: 120px;
+  top: 165px;
+  width: 50px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_public_key_LABEL {
+  position: absolute;
+  left: 18px;
+  top: 188px;
+  width: 98px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_public_key_0 {
+  position: absolute;
+  left: 121px;
+  top: 188px;
+  width: 98px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#button_generate_keys {
+  position: absolute;
+  left: 88px;
+  top: 76px;
+  width: 126px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#field_n_LABEL_1 {
+  position: absolute;
+  left: 121px;
+  top: 223px;
+  width: 53px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
 }
 
 #field_private_key_0 {
   position: absolute;
-  left: 135px;
-  top: 233px;
+  left: 121px;
+  top: 246px;
   width: 98px;
-  height: 28px;
+  height: 23px;
   border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
-  LCshowBorder: false;
+  LCshowBorder: true;
   font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_private_key_LABEL {
+  position: absolute;
+  left: 18px;
+  top: 246px;
+  width: 98px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_enter_numeric_message_LABEL {
+  position: absolute;
+  left: 0px;
+  top: 305px;
+  width: 270px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_public_key_1 {
+  position: absolute;
+  left: 226px;
+  top: 188px;
+  width: 98px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
 }
 
 #field_private_key_1 {
   position: absolute;
-  left: 235px;
-  top: 233px;
+  left: 226px;
+  top: 246px;
   width: 98px;
-  height: 28px;
+  height: 23px;
   border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
-  LCshowBorder: false;
+  LCshowBorder: true;
   font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_e_LABEL {
+  position: absolute;
+  left: 226px;
+  top: 165px;
+  width: 52px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_d_LABEL {
+  position: absolute;
+  left: 226px;
+  top: 223px;
+  width: 52px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
 }
 
 #input_field_enter_numeric_message {
   position: absolute;
-  left: 76px;
-  top: 334px;
+  left: 82px;
+  top: 359px;
   width: 142px;
   height: 22px;
 border-width: 1px;
@@ -151,155 +435,79 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#input_field_enter_q {
+#button_encode {
   position: absolute;
-  left: 227px;
-  top: 118px;
-  width: 72px;
-  height: 22px;
-border-width: 1px;
+  left: 87px;
+  top: 396px;
+  width: 126px;
+  height: 23px;
   visibility: visible;
-border-style: solid;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#field_n_message_max {
+  position: absolute;
+  left: 250px;
+  top: 305px;
+  width: 134px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_encoded_message_LABEL {
+  position: absolute;
+  left: 27px;
+  top: 421px;
+  width: 241px;
+  height: 32px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_encoded_message {
+  position: absolute;
+  left: 75px;
+  top: 467px;
+  width: 142px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+  text-align: center;
 }
 
 #button_decode {
   position: absolute;
-  left: 74px;
-  top: 496px;
-  width: 126px;
-  height: 23px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
-}
-
-#field_public_key_LABEL {
-  position: absolute;
-  left: 24px;
-  top: 192px;
-  width: 98px;
-  height: 28px;
-  border-width: 1px;
-  visibility: visible;
-  border-style: none;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
-}
-
-#field_private_key_LABEL {
-  position: absolute;
-  left: 22px;
-  top: 232px;
-  width: 98px;
-  height: 28px;
-  border-width: 1px;
-  visibility: visible;
-  border-style: none;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
-}
-
-#field_public_key_0 {
-  position: absolute;
-  left: 136px;
-  top: 192px;
-  width: 98px;
-  height: 28px;
-  border-width: 1px;
-  visibility: visible;
-  border-style: none;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
-}
-
-#field_public_key_1 {
-  position: absolute;
-  left: 236px;
-  top: 192px;
-  width: 98px;
-  height: 28px;
-  border-width: 1px;
-  visibility: visible;
-  border-style: none;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
-}
-
-#field_enter_numeric_message_LABEL {
-  position: absolute;
-  left: 9px;
-  top: 276px;
-  width: 260px;
-  height: 32px;
-  border-width: 1px;
-  visibility: visible;
-  border-style: none;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
-}
-
-#input_field_enter_p {
-  position: absolute;
-  left: 227px;
-  top: 86px;
-  width: 72px;
-  height: 22px;
-border-width: 1px;
-  visibility: visible;
-border-style: solid;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: true;
-}
-
-#button_generate_keys {
-  position: absolute;
-  left: 78px;
-  top: 154px;
-  width: 126px;
-  height: 23px;
-  visibility: visible;
-  border-width: 2px;
-  border-style: outset;
-  opacity: 1;
-  LCthreeD: true;
-  LCshowBorder: true;
-}
-
-#button_encode {
-  position: absolute;
-  left: 79px;
-  top: 380px;
+  left: 80px;
+  top: 521px;
   width: 126px;
   height: 23px;
   visibility: visible;
@@ -312,121 +520,163 @@ border-style: solid;
 
 #field_decoded_message_LABEL {
   position: absolute;
-  left: 17px;
-  top: 523px;
+  left: 23px;
+  top: 541px;
   width: 241px;
   height: 32px;
   border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
-  LCshowBorder: false;
+  LCshowBorder: true;
   font-size: 16px;
+  border-color: DodgerBlue;
 }
 
 #field_decoded_message {
   position: absolute;
-  left: 68px;
-  top: 557px;
+  left: 73px;
+  top: 582px;
   width: 142px;
   height: 22px;
   border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
-  LCshowBorder: false;
+  LCshowBorder: true;
   font-size: 16px;
+  border-color: DodgerBlue;
+  text-align: center;
 }
 
-#field_n_value {
+#div_show_popups_group {
+  display: block;
   position: absolute;
-  left: 290px;
-  top: 277px;
-  width: 62px;
-  height: 32px;
-  border-width: 1px;
+  border-color: DodgerBlue;
+  left: 366px;
+  top: 112px;
+  width: 265px;
+  height: 239px;
   visibility: visible;
+  border-width: 2px;
   border-style: none;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0);
   LCvScrollbar: false;
-  LCthreeD: false;
+  LCthreeD: true;
   LCshowBorder: false;
-  font-size: 16px;
 }
 
-#field_encoded_message {
+#field_click_to_show_LABEL {
   position: absolute;
-  left: 68px;
-  top: 445px;
-  width: 142px;
-  height: 22px;
+  left: 4px;
+  top: 57px;
+  width: 199px;
+  height: 23px;
   border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
-  LCshowBorder: false;
+  LCshowBorder: true;
   font-size: 16px;
+  border-color: DodgerBlue;
 }
 
-#field_encoded_message_LABEL {
+#button_list_primes {
   position: absolute;
-  left: 21px;
-  top: 406px;
-  width: 241px;
-  height: 32px;
-  border-width: 1px;
+  left: 29px;
+  top: 39px;
+  width: 174px;
+  height: 23px;
   visibility: visible;
-  border-style: none;
+  border-width: 2px;
+  border-style: outset;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
+  LCthreeD: true;
+  LCshowBorder: true;
 }
 
-#field_enter_q_LABEL {
+#button_fEncode {
   position: absolute;
-  left: 24px;
-  top: 102px;
-  width: 181px;
-  height: 28px;
-  border-width: 1px;
+  left: 29px;
+  top: 143px;
+  width: 174px;
+  height: 23px;
   visibility: visible;
-  border-style: none;
+  border-width: 2px;
+  border-style: outset;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: false;
-  LCshowBorder: false;
-  font-size: 16px;
+  LCthreeD: true;
+  LCshowBorder: true;
 }
 
-#field_enter_p_LABEL {
+#button_fGetKeys {
   position: absolute;
-  left: 24px;
-  top: 70px;
-  width: 195px;
-  height: 32px;
+  left: 29px;
+  top: 108px;
+  width: 174px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#button_fModExp {
+  position: absolute;
+  left: 29px;
+  top: 212px;
+  width: 174px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#button_fDecode {
+  position: absolute;
+  left: 29px;
+  top: 177px;
+  width: 174px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#field_list_popup_notice {
+  position: absolute;
+  left: 4px;
+  top: -12px;
+  width: 257px;
+  height: 23px;
   border-width: 1px;
   visibility: visible;
-  border-style: none;
+  border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0);
   LCvScrollbar: false;
   LCthreeD: false;
-  LCshowBorder: false;
+  LCshowBorder: true;
   font-size: 16px;
+  border-color: DodgerBlue;
 }
 
 /* example @media for responsive design */

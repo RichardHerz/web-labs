@@ -57,13 +57,18 @@ function fGetKeys() {
   console.log('pk = ' + pk);
   console.log('sk = ' + sk);
 
-  // need to return keys or put them in fields
+  // update display
   document.getElementById('field_public_key_0').innerHTML = pk[0];
   document.getElementById('field_public_key_1').innerHTML = pk[1];
   document.getElementById('field_private_key_0').innerHTML = sk[0];
   document.getElementById('field_private_key_1').innerHTML = sk[1];
 
-  document.getElementById('field_n_value').innerHTML = pk[0];
+  document.getElementById('field_n_value').innerHTML = n;
+  document.getElementById('field_phi_value').innerHTML = phi;
+  document.getElementById('field_n_message_max').innerHTML = n;
+
+  document.getElementById('field_encoded_message').innerHTML = '';
+  document.getElementById('field_decoded_message').innerHTML = '';
 
 } // END of function fGetKeys
 
@@ -79,6 +84,7 @@ function fEncode() {
   let c = fModExp(m,pk);
   console.log('in fEncode, c = ' + c);
   document.getElementById('field_encoded_message').innerHTML = c;
+    document.getElementById('field_decoded_message').innerHTML = '';
 } // END of function fEncode
 
 function fDecode() {
@@ -186,72 +192,3 @@ function fModExp(m,key) {
   console.log('end function fModExp, r = ' + r);
   return r;
 } // END of function fModExp
-
-// function myRSA() {
-//
-//   console.log('enter main function myRSA');
-//
-//   let p = 13;
-//   let q = 37;
-//   let n = p*q;
-//   let phi = (p-1)*(q-1);
-//   console.log('phi = ' + phi);
-//   let ep = fPrimes(phi);
-//   console.log('ep = ' + ep);
-//
-//   // find a random value in primes that is coprime with phi
-//   // this produces different keys every run
-//   // if desire same key, let i = 1 or other start
-//   // then increment i inside while loop
-//   // (or write own random function where can fix seed)
-//   let eplen = ep.length;
-//   let j = 0; // counter so random pick loop won't run forever
-//   let jfac = 5; // factor * eplen to limit random pick loop to run
-//   let i = Math.floor(Math.random() * eplen);
-//   // let i = 1;
-//   while (fGCD_two_numbers(ep[i],phi) != 1) {
-//     i = Math.floor(Math.random() * eplen);
-//     // break out if don't find GCD within loop limit for random pick
-//     j++;
-//     if (j > jfac * eplen) {
-//       console.log('in function myRSA, no GCD found');
-//       break;
-//     }
-//     // i = i++;
-//     // // break out if start at fixed i and don't find GCD
-//     // if (i > ep.length) {
-//     //   console.log('in function myRSA, no GCD found');
-//     //   break;
-//     // }
-//   }
-//   let e = ep[i];
-//   console.log('GCD e = ' + e);
-//
-//   // find modular inverse d of e such that mod(e*d,phi) = 1
-//   // use brute force here but check out extended Euclidean algorithm
-//   // e.g., at 11:20 of https://youtu.be/Z8M2BTscoD4
-//   let d = 1; // initialize
-//   while (Math.round(e*d % phi) != 1) {
-//       d++;
-//   }
-//   tm = e*d % phi; // check
-//   console.log('d = ' + d + ', check e*d % phi = 1 ?=? ' + tm);
-//
-//   let pk = [n,e];
-//   let sk = [n,d];
-//   console.log('pk = ' + pk);
-//   console.log('sk = ' + sk);
-//
-//   // test a message
-//   let m = 65;
-//   console.log('m = ' + m);
-//
-//   // encrypt
-//   let c = fModExp(m,pk);
-//   console.log('c = ' + c);
-//
-//   // decrypt
-//   let md = fModExp(c,sk);
-//   console.log('md = ' + md);
-//
-// } // END of function myRSA

@@ -54,9 +54,9 @@ canvas {
   position: relative;
   border-color: DodgerBlue;
   left: 31px;
-  top: 111px;
+  top: 0px;
   width: 328px;
-  height: 624px;
+  height: 750px;
   visibility: visible;
   border-width: 2px;
   border-style: none;
@@ -680,6 +680,7 @@ border-style: solid;
 }
 
 #div_rlnoticetext {
+  position: relative;
   font-size: 60%;
   width: 100%;
 }
@@ -714,6 +715,7 @@ border-style: solid;
   }
   #div_rlnoticetext {
     font-size: 50%;
-    width: 680px;
+    top: 200px;
+    /* width: 620px; */
   }
 }

@@ -1,5 +1,5 @@
 function fGetKeys() {
-
+  // uses functions fPrimes() and fGCD_two_numbers()
   console.log('enter main function fGetKeys');
 
   let pf = document.getElementById('input_field_enter_p');
@@ -73,6 +73,7 @@ function fGetKeys() {
 } // END of function fGetKeys
 
 function fEncode() {
+  // uses function fModExp()
   let pk0 = document.getElementById('field_public_key_0').innerHTML;
   let pk1 = document.getElementById('field_public_key_1').innerHTML;
   let pk = [];
@@ -88,6 +89,7 @@ function fEncode() {
 } // END of function fEncode
 
 function fDecode() {
+  // uses function fModExp()
   let sk0 = document.getElementById('field_private_key_0').innerHTML;
   let sk1 = document.getElementById('field_private_key_1').innerHTML;
   let sk = [];
@@ -117,6 +119,7 @@ function fGCD_two_numbers(x, y) {
 
 function fPrimes(max) {
   // thanks to vitaly-t on stackoverflow
+  // uses function fNextPrime()
   console.log('enter function primes');
   let value = 1;
   let result = [];
@@ -160,14 +163,14 @@ function fModExp(m,key) {
   console.log('key[0] = ' + key[0]);
   console.log('key[1] = ' + key[1]);
 
-  // convert key(2) to binary char array
+  // convert key[2] to binary char array
   // so we know which terms we will need in modular exponentiation below
   let b = key[1].toString(2); // toString(2) means return binary representation
 
-  // get results in array p of successive squares of m mod key(1)
+  // get results in array p of successive squares of m mod key[0]
   let p = [m];
   for (i = 1; i < b.length; i++) {
-    p[i] = p[i-1]**2 % key[0]; // % is modulus operator
+    p[i] = p[i-1]**2 % key[0];
   }
 
   console.log('length b = ' + b.length);
@@ -175,12 +178,12 @@ function fModExp(m,key) {
   console.log('length p = ' + p.length);
   console.log('p = ' + p);
 
-  // compute result using the p(i) required by key(2)
+  // compute result using the p[i] required by key[1]
   // use only the powers-of-two of bit values in b == '1'
   // increasing index in p is higher power-of-two
   // increasing index in b is lower power-of-two
-  // access b from high-index 2^0 bit to low-index, highest-power bit
-  // to match p(i) powers
+  // access b from high-index 2**0 bit to low-index, highest-power bit
+  // to match p[i] powers
   let blen = b.length;
   let r = 1; // initialize product
   for (i = 0; i < blen; i++) {

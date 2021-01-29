@@ -679,12 +679,41 @@ border-style: solid;
   border-color: DodgerBlue;
 }
 
-/* example @media for responsive design */
-/* requires meta viewport element in HTML head */
+#div_rlnoticetext {
+  font-size: 60%;
+  width: 100%;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+/* @media for responsive design                    */
+/* requires meta viewport element in HTML head     */
+/* styling above this holds except, e.g.,          */
+/*    when width is >= 640px : (min-width: 640px)  */
+/*    when width is <= 640px : (max-width: 640px)  */
+/*    then styling below holds                     */
+/* min- below holds for bigger than #              */
+/* max- below holds for smaller than #             */
+/* (orientation: portrait) - below holds for narrow field */
+/* (orientation: landscape) - below holds for wide field  */
+
 @media(max-width: 640px) {
-  /* change the following when the screen width is <= 640px */
-  /* #div_controller {
-    top: 600px;
-    left: 20px;
-   } */
+  .flex-container {
+    display: flex;
+    flex-direction: column;
+  }
+  #div_simFrame {
+    left: 5px;
+  }
+  #div_show_popups_group {
+    top: 760px;
+    left: 5px;
+  }
+  #div_rlnoticetext {
+    font-size: 50%;
+    width: 680px;
+  }
 }

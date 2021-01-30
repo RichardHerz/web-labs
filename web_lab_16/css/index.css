@@ -71,7 +71,7 @@ canvas {
   position: absolute;
   left: 31px;
   top: 19px;
-  width: 84px;
+  width: 110px;
   height: 23px;
   border-width: 1px;
   visibility: visible;
@@ -87,9 +87,9 @@ canvas {
 
 #field_enter_p_LABEL {
   position: absolute;
-  left: 32px;
+  left: 31px;
   top: -12px;
-  width: 84px;
+  width: 110px;
   height: 23px;
   border-width: 1px;
   visibility: visible;
@@ -177,7 +177,7 @@ canvas {
 
 #input_field_enter_q {
   position: absolute;
-  left: 121px;
+  left: 144px;
   top: 36px;
   width: 134px;
   height: 22px;
@@ -193,7 +193,7 @@ border-style: solid;
 
 #input_field_enter_p {
   position: absolute;
-  left: 121px;
+  left: 144px;
   top: 5px;
   width: 134px;
   height: 22px;

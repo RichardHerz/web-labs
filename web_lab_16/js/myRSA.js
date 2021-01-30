@@ -38,7 +38,7 @@ function fGetKeys() {
     let coef = [-0.000099758947246, 0.004513664869385, -0.073043961967510, 0.490056200524824];
     let plog = Math.log(phi);
     let pfrac = coef[0]*plog**3 + coef[1]*plog**2 + coef[2]*plog + coef[3];
-    pfrac = 0.988*pfrac; // lower a little so don't overshoot length estimate 
+    pfrac = 0.99*pfrac; // lower a little so don't overshoot length estimate
     eplen = Math.round(pfrac*phi);
     console.log('eplen calc = ' + eplen)
   } else {
@@ -70,7 +70,8 @@ function fGetKeys() {
   let jfac = 5; // factor * eplen to limit random pick loop to run
   let i = Math.floor(Math.random() * eplen);
   // let i = 1;
-  while (fGCD_two_numbers(ep[i],phi) != 1) {
+  // add condition (ep[i] < phi) because estimating length of primes above 
+  while ( (fGCD_two_numbers(ep[i],phi) != 1) && (ep[i] < phi) ) {
     i = Math.floor(Math.random() * eplen);
     // break out if don't find GCD within loop limit for random pick
     j++;

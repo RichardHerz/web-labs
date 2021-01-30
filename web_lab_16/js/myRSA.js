@@ -26,7 +26,19 @@ function fGetKeys() {
   // get array of primes ep from which to select e
   let ep; // declare ep
   let eplen; // declare eplen
-  if (phi < 25000000) {
+  if (phi > 25000000) {
+        // this takes > 10 seconds for phi this size
+        ep = fPrimes(phi); // this function listed below in this file
+        eplen = ep.length;
+
+        // xxx But can change fPrimes to take a min as well as a max, since
+        //     it calls fNextPrime and use the last element in the
+        //     pre-generated list as min first prime to start at
+        //     then append new primes to pre-generated list
+        // xxx also may want to limit range to larger primes and not even
+        //     consider small primes, even in pre-generated list
+
+  } else {
     // get from pre-generated list in file primesList.js
     // only to this limit so this is very fast
     // MATLAB primes(25000000) returns 1,565,927 primes from 2 to 24999983 (6.3%)
@@ -41,10 +53,6 @@ function fGetKeys() {
     pfrac = 0.99*pfrac; // lower a little so don't overshoot length estimate
     eplen = Math.round(pfrac*phi);
     console.log('eplen calc = ' + eplen)
-  } else {
-    // this takes > 10 seconds for phi this size
-    ep = fPrimes(phi); // this function listed below in this file
-    eplen = ep.length;
   }
 
   timerDate = new Date();
@@ -70,7 +78,7 @@ function fGetKeys() {
   let jfac = 5; // factor * eplen to limit random pick loop to run
   let i = Math.floor(Math.random() * eplen);
   // let i = 1;
-  // add condition (ep[i] < phi) because estimating length of primes above 
+  // add condition (ep[i] < phi) because estimating length of primes above
   while ( (fGCD_two_numbers(ep[i],phi) != 1) && (ep[i] < phi) ) {
     i = Math.floor(Math.random() * eplen);
     // break out if don't find GCD within loop limit for random pick

@@ -1,3 +1,21 @@
+function fGetRandomPQ() {
+  // WARNING: prMin in fPrimes must be a prime!!!
+  let prMin = 1009; // WARNING: must be a prime number!!!
+  let prMax = 10000;
+  let pr = fPrimes(prMin, prMax);
+  let prLen = pr.length;
+  let i = Math.floor(Math.random() * prLen);
+  let p = pr[i];
+  let j = Math.floor(Math.random() * prLen);
+  while (j == i) {
+    j = Math.floor(Math.random() * prLen);
+  }
+  let q = pr[j];
+  console.log('p = ' + p + ', q = ' + q);
+  document.getElementById('input_field_enter_p').value = p;
+  document.getElementById('input_field_enter_q').value = q;
+} // END of function fGetRandomPQ
+
 function fGetKeys() {
   // uses functions fPrimes() and fGCD_two_numbers()
   console.log('enter main function fGetKeys');
@@ -24,20 +42,14 @@ function fGetKeys() {
   // console.log('timerStart = ' + timerStart);
 
   // get array of primes ep from which to select e
-  let ep; // declare ep
+  let ep =[]; // declare ep
   let eplen; // declare eplen
-  if (phi > 25000000) {
-        // this takes > 10 seconds for phi this size
-        ep = fPrimes(phi); // this function listed below in this file
-        eplen = ep.length;
-
-        // xxx But can change fPrimes to take a min as well as a max, since
-        //     it calls fNextPrime and use the last element in the
-        //     pre-generated list as min first prime to start at
-        //     then append new primes to pre-generated list
-        // xxx also may want to limit range to larger primes and not even
-        //     consider small primes, even in pre-generated list
-
+  let pLim = 25000000;
+  if (phi > pLim) {
+    let ep1 = fPrimesList();
+    let ep2 = fPrimes(pLim, phi); // this function listed below in this file
+    ep = ep.concat(ep1, ep2);
+    eplen = ep.length;
   } else {
     // get from pre-generated list in file primesList.js
     // only to this limit so this is very fast
@@ -192,11 +204,12 @@ function fGCD_two_numbers(x, y) {
   return x;
 } // END of function fGCD_two_numbers
 
-function fPrimes(max) {
+function fPrimes(min, max) {
+  // WARNING: input min must be a prime number!!!
   // thanks to vitaly-t on stackoverflow
   // uses function fNextPrime()
   // console.log('enter function primes');
-  let value = 1;
+  let value = min;
   let result = [];
   while (value < max) {
       value = fNextPrime(value);
@@ -210,6 +223,7 @@ function fPrimes(max) {
 } // END of function primes
 
 function fNextPrime(value) {
+  // WARNING: input value must be a prime number!!!
   // thanks to vitaly-t on stackoverflow
   // console.log('enter function fNextPrime');
   if (value > 2) {

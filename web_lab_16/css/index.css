@@ -61,7 +61,7 @@ canvas {
   border-width: 2px;
   border-style: none;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 0);
+  /* background-color: rgba(255, 255, 255, 0); */
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: false;
@@ -264,6 +264,31 @@ border-style: solid;
 /* USE PROGRESS CURSOR WHEN **GEN KEYS** BUTTON CLICKED */
 html input[id="button_generate_keys"]:active {
   cursor: progress;
+}
+
+#button_random_pq {
+  position: absolute;
+  left: 320px;
+  top: 20px;
+  width: 126px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#field_OR_LABEL {
+  position: absolute;
+  top: 5px;
+  left: 290px;
+  width: 30px;
+  height: 23px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
 }
 
 #button_generate_keys {
@@ -564,7 +589,7 @@ border-style: solid;
   display: block;
   position: absolute;
   border-color: DodgerBlue;
-  left: 366px;
+  left: 510px;
   top: 160px;
   width: 265px;
   height: 239px;
@@ -572,7 +597,7 @@ border-style: solid;
   border-width: 2px;
   border-style: none;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 0);
+  /* background-color: rgba(255, 255, 255, 0); */
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: false;

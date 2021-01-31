@@ -11,14 +11,14 @@ function fGetRandomPQ() {
     j = Math.floor(Math.random() * prLen);
   }
   let q = pr[j];
-  console.log('p = ' + p + ', q = ' + q);
+  // console.log('p = ' + p + ', q = ' + q);
   document.getElementById('input_field_enter_p').value = p;
   document.getElementById('input_field_enter_q').value = q;
 } // END of function fGetRandomPQ
 
 function fGetKeys() {
   // uses functions fPrimes() and fGCD_two_numbers()
-  console.log('enter main function fGetKeys');
+  // console.log('enter main function fGetKeys');
 
   // DEVELOPMENT
   // declare variables
@@ -39,7 +39,7 @@ function fGetKeys() {
 
   timerDate = new Date();
   timerStart = timerDate.getTime();
-  // console.log('timerStart = ' + timerStart);
+  // // console.log('timerStart = ' + timerStart);
 
   // get array of primes ep from which to select e
   let ep =[]; // declare ep
@@ -64,16 +64,16 @@ function fGetKeys() {
     let pfrac = coef[0]*plog**3 + coef[1]*plog**2 + coef[2]*plog + coef[3];
     pfrac = 0.99*pfrac; // lower a little so don't overshoot length estimate
     eplen = Math.round(pfrac*phi);
-    console.log('eplen calc = ' + eplen)
+    // console.log('eplen calc = ' + eplen)
   }
 
   timerDate = new Date();
   timerEnd = timerDate.getTime();
-  // console.log('timerEnd = ' + timerEnd);
+  // // console.log('timerEnd = ' + timerEnd);
   timerElapsed = timerEnd - timerStart;
-  console.log('TIME (ms) to get PRIMES = ' + timerElapsed);
+  // console.log('TIME (ms) to get PRIMES = ' + timerElapsed);
 
-  // console.log('ep = ' + ep); // WARNING: THIS LOGGING IS VERY SLOW WITH LONG LIST
+  // // console.log('ep = ' + ep); // WARNING: THIS LOGGING IS VERY SLOW WITH LONG LIST
 
   // find a random value in primes that is coprime with phi
   // this produces different keys every run
@@ -83,7 +83,7 @@ function fGetKeys() {
 
   timerDate = new Date();
   timerStart = timerDate.getTime();
-  // console.log('timerStart = ' + timerStart);
+  // // console.log('timerStart = ' + timerStart);
   // PUT PROCESS TO TIME HERE
 
   let j = 0; // counter so random pick loop won't run forever
@@ -96,13 +96,13 @@ function fGetKeys() {
     // break out if don't find GCD within loop limit for random pick
     j++;
     if (j > jfac * eplen) {
-      console.log('in function fGetKeys, no GCD found');
+      // console.log('in function fGetKeys, no GCD found');
       break;
     }
     // i = i++;
     // // break out if start at fixed i and don't find GCD
     // if (i > ep.length) {
-    //   console.log('in function fGetKeys, no GCD found');
+    //   // console.log('in function fGetKeys, no GCD found');
     //   break;
     // }
   }
@@ -110,15 +110,15 @@ function fGetKeys() {
 
   timerDate = new Date();
   timerEnd = timerDate.getTime();
-  // console.log('timerEnd = ' + timerEnd);
+  // // console.log('timerEnd = ' + timerEnd);
   timerElapsed = timerEnd - timerStart;
-  console.log('TIME (ms) to get GCD = ' + timerElapsed);
+  // console.log('TIME (ms) to get GCD = ' + timerElapsed);
 
-  console.log('GCD e = ' + e);
+  // console.log('GCD e = ' + e);
 
   timerDate = new Date();
   timerStart = timerDate.getTime();
-  // console.log('timerStart = ' + timerStart);
+  // // console.log('timerStart = ' + timerStart);
   // PUT PROCESS TO TIME HERE
 
   // find modular inverse d of e such that mod(e*d,phi) = 1
@@ -131,18 +131,18 @@ function fGetKeys() {
 
   timerDate = new Date();
   timerEnd = timerDate.getTime();
-  // console.log('timerEnd = ' + timerEnd);
+  // // console.log('timerEnd = ' + timerEnd);
   timerElapsed = timerEnd - timerStart;
-  console.log('TIME (ms) to get MOD INVERSE d = ' + timerElapsed);
+  // console.log('TIME (ms) to get MOD INVERSE d = ' + timerElapsed);
 
   tm = e*d % phi; // check
-  console.log('d = ' + d + ', check e*d % phi = 1 ?=? ' + tm);
+  // console.log('d = ' + d + ', check e*d % phi = 1 ?=? ' + tm);
 
   let pk = [n,e]; // public key
   let sk = [n,d]; // private (secret) key
 
-  console.log('pk = ' + pk);
-  console.log('sk = ' + sk);
+  // console.log('pk = ' + pk);
+  // console.log('sk = ' + sk);
 
   // update display
   document.getElementById('field_public_key_0').innerHTML = pk[0];
@@ -155,6 +155,7 @@ function fGetKeys() {
   document.getElementById('field_n_message_max').innerHTML = n;
 
   document.getElementById('field_encoded_message').innerHTML = '';
+  document.getElementById('field_encoded_message_hex').innerHTML = '';
   document.getElementById('field_decoded_message').innerHTML = '';
 
 } // END of function fGetKeys
@@ -166,13 +167,15 @@ function fEncode() {
   let pk = [];
   pk[0] = Number(pk0); // convert string to number
   pk[1] = Number(pk1);
-  console.log('in fEncode, pk = ' + pk);
+  // console.log('in fEncode, pk = ' + pk);
   let mf = document.getElementById('input_field_enter_numeric_message');
   let m = mf.value;
   let c = fModExp(m,pk);
-  console.log('in fEncode, c = ' + c);
+  // console.log('in fEncode, c = ' + c);
+  chex = c.toString(16); // toString(16) base 16, means return hex
   document.getElementById('field_encoded_message').innerHTML = c;
-    document.getElementById('field_decoded_message').innerHTML = '';
+  document.getElementById('field_encoded_message_hex').innerHTML = chex;
+  document.getElementById('field_decoded_message').innerHTML = '';
 } // END of function fEncode
 
 function fDecode() {
@@ -182,11 +185,11 @@ function fDecode() {
   let sk = [];
   sk[0] = Number(sk0); // convert string to number
   sk[1] = Number(sk1);
-  console.log('in fDecode, sk = ' + sk);
+  // console.log('in fDecode, sk = ' + sk);
   let cf = document.getElementById('field_encoded_message').innerHTML;
   let c = Number(cf);
   let m = fModExp(c,sk);
-  console.log('in fDecode, m = ' + m);
+  // console.log('in fDecode, m = ' + m);
   document.getElementById('field_decoded_message').innerHTML = m;
 } // END of function fDecode
 
@@ -208,7 +211,7 @@ function fPrimes(min, max) {
   // WARNING: input min must be a prime number!!!
   // thanks to vitaly-t on stackoverflow
   // uses function fNextPrime()
-  // console.log('enter function primes');
+  // // console.log('enter function primes');
   let value = min;
   let result = [];
   while (value < max) {
@@ -225,7 +228,7 @@ function fPrimes(min, max) {
 function fNextPrime(value) {
   // WARNING: input value must be a prime number!!!
   // thanks to vitaly-t on stackoverflow
-  // console.log('enter function fNextPrime');
+  // // console.log('enter function fNextPrime');
   if (value > 2) {
       let i;
       let q;
@@ -247,14 +250,14 @@ function fModExp(m,key) {
   // return r = m**key[1] % key[0], where ** is exponentiate and % is mod
   // using modular exponentiation
 
-  console.log('enter function fModExp');
-  console.log('m = ' + m);
-  console.log('key[0] = ' + key[0]);
-  console.log('key[1] = ' + key[1]);
+  // console.log('enter function fModExp');
+  // console.log('m = ' + m);
+  // console.log('key[0] = ' + key[0]);
+  // console.log('key[1] = ' + key[1]);
 
   // convert key[2] to binary char array
   // so we know which terms we will need in modular exponentiation below
-  let b = key[1].toString(2); // toString(2) means return binary representation
+  let b = key[1].toString(2); // toString(2) base 2, means return binary
 
   // get results in array p of successive squares of m mod key[0]
   let p = [m];
@@ -262,10 +265,10 @@ function fModExp(m,key) {
     p[i] = p[i-1]**2 % key[0];
   }
 
-  console.log('length b = ' + b.length);
-  console.log('b = ' + b);
-  console.log('length p = ' + p.length);
-  console.log('p = ' + p);
+  // console.log('length b = ' + b.length);
+  // console.log('b = ' + b);
+  // console.log('length p = ' + p.length);
+  // console.log('p = ' + p);
 
   // compute result using the p[i] required by key[1]
   // use only the powers-of-two of bit values in b == '1'
@@ -281,6 +284,6 @@ function fModExp(m,key) {
       r = r % key[0];
     }
   }
-  console.log('end function fModExp, r = ' + r);
+  // console.log('end function fModExp, r = ' + r);
   return r;
 } // END of function fModExp

@@ -49,6 +49,10 @@ canvas {
   display: none;
 }
 
+#div_page_header {
+  background-color: lightYellow;
+}
+
 #div_simFrame {
   display: block;
   position: relative;
@@ -61,7 +65,6 @@ canvas {
   border-width: 2px;
   border-style: none;
   opacity: 1;
-  /* background-color: rgba(255, 255, 255, 0); */
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: false;
@@ -70,14 +73,13 @@ canvas {
 #field_enter_q_LABEL {
   position: absolute;
   left: 31px;
-  top: 19px;
+  top: 23px;
   width: 110px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -88,14 +90,13 @@ canvas {
 #field_enter_p_LABEL {
   position: absolute;
   left: 31px;
-  top: -12px;
+  top: -6px;
   width: 110px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -109,11 +110,10 @@ canvas {
   top: 128px;
   width: 60px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -127,11 +127,10 @@ canvas {
   top: 97px;
   width: 60px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -148,6 +147,7 @@ canvas {
   border-width: 1px;
   visibility: visible;
   border-style: dotted;
+  border-color: black;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -166,8 +166,9 @@ canvas {
   border-width: 1px;
   visibility: visible;
   border-style: dotted;
+  border-color: black;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 1);1`
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -181,11 +182,11 @@ canvas {
   top: 36px;
   width: 134px;
   height: 22px;
-border-width: 1px;
+  border-width: 2px;
   visibility: visible;
-border-style: solid;
+  border-style: solid;
+  border-color: DodgerBlue;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -197,11 +198,10 @@ border-style: solid;
   top: 5px;
   width: 134px;
   height: 22px;
-border-width: 1px;
+  border-width: 2px;
   visibility: visible;
-border-style: solid;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
+  border-style: solid;
+  border-color: DodgerBlue;
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -213,11 +213,10 @@ border-style: solid;
   top: 165px;
   width: 50px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -231,11 +230,10 @@ border-style: solid;
   top: 188px;
   width: 98px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -252,6 +250,7 @@ border-style: solid;
   border-width: 1px;
   visibility: visible;
   border-style: dotted;
+  border-color: black;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -268,7 +267,7 @@ html input[id="button_generate_keys"]:active {
 
 #button_random_pq {
   position: absolute;
-  left: 320px;
+  left: 310px;
   top: 20px;
   width: 126px;
   height: 23px;
@@ -282,11 +281,11 @@ html input[id="button_generate_keys"]:active {
 
 #field_OR_LABEL {
   position: absolute;
-  top: 5px;
+  top: 7px;
   left: 290px;
   width: 30px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
 }
@@ -311,7 +310,7 @@ html input[id="button_generate_keys"]:active {
   top: 223px;
   width: 53px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -332,6 +331,7 @@ html input[id="button_generate_keys"]:active {
   border-width: 1px;
   visibility: visible;
   border-style: dotted;
+  border-color: black;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -347,11 +347,10 @@ html input[id="button_generate_keys"]:active {
   top: 246px;
   width: 98px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -365,11 +364,10 @@ html input[id="button_generate_keys"]:active {
   top: 305px;
   width: 270px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -386,6 +384,7 @@ html input[id="button_generate_keys"]:active {
   border-width: 1px;
   visibility: visible;
   border-style: dotted;
+  border-color: black;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -404,6 +403,7 @@ html input[id="button_generate_keys"]:active {
   border-width: 1px;
   visibility: visible;
   border-style: dotted;
+  border-color: black;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -419,11 +419,10 @@ html input[id="button_generate_keys"]:active {
   top: 165px;
   width: 52px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -437,11 +436,10 @@ html input[id="button_generate_keys"]:active {
   top: 223px;
   width: 52px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -455,10 +453,11 @@ html input[id="button_generate_keys"]:active {
   top: 359px;
   width: 142px;
   height: 22px;
-border-width: 1px;
+  border-width: 2px;
   visibility: visible;
-  background-color: rgb(255,255,255);
-border-style: solid;
+  background-color: rgba(255, 255, 255, 1);
+  border-style: solid;
+  border-color: DodgerBlue;
   opacity: 1;
   LCvScrollbar: false;
   LCthreeD: false;
@@ -485,11 +484,10 @@ border-style: solid;
   top: 305px;
   width: 134px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -503,11 +501,10 @@ border-style: solid;
   top: 421px;
   width: 241px;
   height: 32px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -524,6 +521,45 @@ border-style: solid;
   border-width: 1px;
   visibility: visible;
   border-style: dotted;
+  border-color: black;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+  text-align: center;
+}
+
+#field_encoded_message_hex_LABEL {
+  position: absolute;
+  left: 280px;
+  top: 446px;
+  width: 241px;
+  height: 32px;
+  border-width: 0px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  text-align: center:
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_encoded_message_hex {
+  position: absolute;
+  left: 250px;
+  top: 467px;
+  width: 142px;
+  height: 22px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  border-color: black;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -554,11 +590,10 @@ border-style: solid;
   top: 541px;
   width: 241px;
   height: 32px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -575,6 +610,7 @@ border-style: solid;
   border-width: 1px;
   visibility: visible;
   border-style: dotted;
+  border-color: black;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
@@ -590,7 +626,7 @@ border-style: solid;
   position: absolute;
   border-color: DodgerBlue;
   left: 510px;
-  top: 160px;
+  top: 293px;
   width: 265px;
   height: 239px;
   visibility: visible;
@@ -609,11 +645,10 @@ border-style: solid;
   top: 57px;
   width: 199px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
@@ -697,7 +732,7 @@ border-style: solid;
   top: -12px;
   width: 257px;
   height: 23px;
-  border-width: 1px;
+  border-width: 0px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;

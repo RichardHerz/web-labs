@@ -38,28 +38,30 @@
 </head>
 <body>
 <div id="div_page_header">
-  <p>
-    Things to do:
-    clear fields on load;
-    remove field borders;
-    colorize;
-    comment console.log;
-    add 1 or 2 button to get new primes
-    since not easy to come up with primes > 5000 list in popup;
+    <input type="button" value="Back" onclick="history.back()">
+    <p style="margin-left: 55px;">to Web Labs at ReactorLab.net</p>
+    <!-- <br> -->
+    <!-- <p><b><i>RSA Encryption</i></b> -->
+    <h3>RSA Encryption</h3>
   </p>
   <p>
-    This is an interactive simulation of RSA public-key encryption. Real RSA
-    uses very large starting prime numbers - p and q - but this simulation
-    works fast only with p's and q's < 5000. <i>Generating new keys may
-    take a few seconds with p's and q's &gt; 5000</i>.
+    This is an interactive simulation of RSA public-key encryption.
+    The public key can encrypt a message but cannot decrypt it. Decryption
+    requires use of the private key. This allows anyone to send an encrypted
+    message securely to the holder of the private key. RSA was published in
+    1977 by Rivest, Shamir and Adleman, and is in wide use today.
+  <p>
+    Real RSA uses very large starting prime numbers - p and q - but this
+    simulation generates keys fast with p's and q's < 5000.
+    <i>Generating new keys may take a few seconds with p's and q's &gt; 5000</i>.
   </p>
   <p>
-    <a href="images/modular.pdf">Link to notes</a> on the basic math involved in
+    <a href="images/modular.pdf"><b>Link to notes</b></a> on the basic math involved in
     RSA encryption. Use your browser's Back button to return here.
   </p>
 </div> <!-- end of div div_page_header --></div>
 <div id="div_simFrame">
-   <input type="button" id="button_random_pq" value="get random p & q"
+   <input type="button" id="button_random_pq" value="Get random p & q"
      onclick="fGetRandomPQ()">
    <p id="field_OR_LABEL">
     <i>or</i>
@@ -70,20 +72,20 @@
    <p id="field_enter_p_LABEL">
       Enter prime # p
    </p>
+   <input id="input_field_enter_q" value="1087">
+   <input id="input_field_enter_p" value="2423">
    <p id="field_phi_LABEL">
       &straightphi;(n)
    </p>
    <p id="field_n_LABEL">
       n
    </p>
-   <p id="field_phi_value">
-      00
-   </p>
    <p id="field_n_value">
-      00
+      2633801
    </p>
-   <input id="input_field_enter_q" value="983">
-   <input id="input_field_enter_p" value="997">
+   <p id="field_phi_value">
+      2630292
+   </p>
    <p id="field_n_LABEL_0">
       n
    </p>
@@ -91,15 +93,15 @@
       Public Key
    </p>
    <p id="field_public_key_0">
-      00
+      2633801
    </p>
-   <input type="button" id="button_generate_keys" value="Generate New Keys"
+   <input type="button" id="button_generate_keys" value="Generate new keys"
       onclick="fGetKeys()">
    <p id="field_n_LABEL_1">
       n
    </p>
    <p id="field_private_key_0">
-      00
+      2633801
    </p>
    <p id="field_private_key_LABEL">
       Private Key
@@ -108,10 +110,10 @@
       Enter numeric message, an integer &lt;
    </p>
    <p id="field_public_key_1">
-      00
+      807941
    </p>
    <p id="field_private_key_1">
-      00
+      1792001
    </p>
    <p id="field_e_LABEL">
       e
@@ -123,22 +125,22 @@
    <input type="button" id="button_encode" value="Encode"
       onclick="fEncode()">
    <p id="field_n_message_max">
-      00
+      2633801
    </p>
    <p id="field_encoded_message_LABEL">
       Encoded message
    </p>
-   <p id="field_encoded_message">
-      00
+   <p id="field_encoded_message"></p>
+   <p id="field_encoded_message_hex_LABEL">
+      hexidecimal
    </p>
+   <p id="field_encoded_message_hex"></p>
    <input type="button" id="button_decode" value="Decode"
       onclick="fDecode()">
    <p id="field_decoded_message_LABEL">
       Decoded message
    </p>
-   <p id="field_decoded_message">
-      00
-   </p>
+   <p id="field_decoded_message"></p>
 </div> <!-- end of div div_simFrame -->
 <div id="div_show_popups_group">
    <p id="field_list_popup_notice">

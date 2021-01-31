@@ -54,8 +54,8 @@
     Real RSA uses very large starting prime numbers - p and q - but this
     simulation generates keys fast with p's and q's < 5000.
     <i>Generating new keys may take a few seconds with p's and q's &gt; 5000</i>.
-    Plain text messages are converted to numeric messages before encryption
-    using ASCII or UTF conversion tables.
+    In practice, plain text messages are converted to numeric messages before
+    encryption using ASCII or UTF conversion tables.
   </p>
   <p>
     <a href="images/modular.pdf"><b>Link to notes</b></a> on the basic math involved in
@@ -74,8 +74,8 @@
    <p id="field_enter_p_LABEL">
       Enter prime # p
    </p>
-   <input id="input_field_enter_q" value="1087">
-   <input id="input_field_enter_p" value="2423">
+   <input id="input_field_enter_q" value="5861">
+   <input id="input_field_enter_p" value="1759">
    <p id="field_phi_LABEL">
       &straightphi;(n)
    </p>
@@ -83,10 +83,10 @@
       n
    </p>
    <p id="field_n_value">
-      2633801
+      10309499
    </p>
    <p id="field_phi_value">
-      2630292
+      1030180
    </p>
    <p id="field_n_LABEL_0">
       n
@@ -95,7 +95,7 @@
       Public Key
    </p>
    <p id="field_public_key_0">
-      2633801
+      10309499
    </p>
    <input type="button" id="button_generate_keys" value="Generate new keys"
       onclick="fGetKeys()">
@@ -103,7 +103,7 @@
       n
    </p>
    <p id="field_private_key_0">
-      2633801
+      10309499
    </p>
    <p id="field_private_key_LABEL">
       Private Key
@@ -112,10 +112,10 @@
       Enter numeric message, an integer &lt;
    </p>
    <p id="field_public_key_1">
-      807941
+      2128769
    </p>
    <p id="field_private_key_1">
-      1792001
+      3988049
    </p>
    <p id="field_e_LABEL">
       e

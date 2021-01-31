@@ -267,7 +267,7 @@ html input[id="button_generate_keys"]:active {
 
 #button_random_pq {
   position: absolute;
-  left: 310px;
+  left: 320px;
   top: 20px;
   width: 126px;
   height: 23px;
@@ -282,7 +282,7 @@ html input[id="button_generate_keys"]:active {
 #field_OR_LABEL {
   position: absolute;
   top: 7px;
-  left: 290px;
+  left: 300px;
   width: 30px;
   height: 23px;
   border-width: 0px;
@@ -775,7 +775,7 @@ html input[id="button_generate_keys"]:active {
     left: 5px;
   }
   #div_show_popups_group {
-    top: 920px;
+    top: 1100px;
     left: 50px;
   }
   #div_rlnoticetext {

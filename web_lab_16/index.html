@@ -74,8 +74,8 @@
    <p id="field_enter_p_LABEL">
       Enter prime # p
    </p>
-   <input id="input_field_enter_q" value="5861">
-   <input id="input_field_enter_p" value="1759">
+   <input id="input_field_enter_q" value="5861" onchange="fClearFields()">
+   <input id="input_field_enter_p" value="1759" onchange="fClearFields()">
    <p id="field_phi_LABEL">
       &straightphi;(n)
    </p>
@@ -130,7 +130,7 @@
       2633801
    </p>
    <p id="field_encoded_message_LABEL">
-      Encoded message
+      Encoded message, c = m<sup>e</sup> (mod n)
    </p>
    <p id="field_encoded_message"></p>
    <p id="field_encoded_message_hex_LABEL">
@@ -140,7 +140,7 @@
    <input type="button" id="button_decode" value="Decode"
       onclick="fDecode()">
    <p id="field_decoded_message_LABEL">
-      Decoded message
+      Decoded message, m = c<sup>d</sup> (mod n)
    </p>
    <p id="field_decoded_message"></p>
 </div> <!-- end of div div_simFrame -->

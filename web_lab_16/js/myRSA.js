@@ -1,4 +1,18 @@
+function fClearFields() {
+  document.getElementById('field_public_key_0').innerHTML = '';
+  document.getElementById('field_public_key_1').innerHTML = '';
+  document.getElementById('field_private_key_0').innerHTML = '';
+  document.getElementById('field_private_key_1').innerHTML = '';
+  document.getElementById('field_n_value').innerHTML = '';
+  document.getElementById('field_phi_value').innerHTML = '';
+  document.getElementById('field_n_message_max').innerHTML = '';
+  document.getElementById('field_encoded_message').innerHTML = '';
+  document.getElementById('field_encoded_message_hex').innerHTML = '';
+  document.getElementById('field_decoded_message').innerHTML = '';
+}
+
 function fGetRandomPQ() {
+  fClearFields();
   // WARNING: prMin in fPrimes must be a prime!!!
   let prMin = 1009; // WARNING: must be a prime number!!!
   let prMax = 10000;
@@ -19,7 +33,6 @@ function fGetRandomPQ() {
 function fGetKeys() {
   // uses functions fPrimes() and fGCD_two_numbers()
   // console.log('enter main function fGetKeys');
-
   // DEVELOPMENT
   // declare variables
   // for use in development timing checks below
@@ -27,6 +40,8 @@ function fGetKeys() {
   let timerStart;
   let timerEnd;
   let timerElapsed;
+
+  fClearFields();
 
   let pf = document.getElementById('input_field_enter_p');
   let qf = document.getElementById('input_field_enter_q');
@@ -44,10 +59,12 @@ function fGetKeys() {
   // get array of primes ep from which to select e
   let ep =[]; // declare ep
   let eplen; // declare eplen
-  let pLim = 25000000;
+  let pLim = 24999983;
   if (phi > pLim) {
     let ep1 = fPrimesList();
-    let ep2 = fPrimes(pLim, phi); // this function listed below in this file
+    // WARNING: pMin in fPrimes must be a prime!!!
+    let pMin = 25000033; // start at  next prime after pLim
+    let ep2 = fPrimes(pMin, phi); // this function listed below in this file
     ep = ep.concat(ep1, ep2);
     eplen = ep.length;
   } else {

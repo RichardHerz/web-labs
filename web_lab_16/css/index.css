@@ -467,7 +467,7 @@ html input[id="button_generate_keys"]:active {
 #button_encode {
   position: absolute;
   left: 87px;
-  top: 396px;
+  top: 403px;
   width: 126px;
   height: 23px;
   visibility: visible;
@@ -499,7 +499,7 @@ html input[id="button_generate_keys"]:active {
   position: absolute;
   left: 27px;
   top: 421px;
-  width: 241px;
+  width: 246px;
   height: 32px;
   border-width: 0px;
   visibility: visible;
@@ -573,7 +573,7 @@ html input[id="button_generate_keys"]:active {
 #button_decode {
   position: absolute;
   left: 80px;
-  top: 521px;
+  top: 526px;
   width: 126px;
   height: 23px;
   visibility: visible;
@@ -586,9 +586,9 @@ html input[id="button_generate_keys"]:active {
 
 #field_decoded_message_LABEL {
   position: absolute;
-  left: 23px;
+  left: 27px;
   top: 541px;
-  width: 241px;
+  width: 246px;
   height: 32px;
   border-width: 0px;
   visibility: visible;

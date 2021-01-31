@@ -1,4 +1,4 @@
-Lab 17 – Hash Algorithm
+Lab 17 – Cryptographic Hashing
 
 _*UNDER DEVELOPMENT*_
 

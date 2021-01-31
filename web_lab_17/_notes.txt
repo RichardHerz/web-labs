@@ -5,5 +5,5 @@ Check on what cryptocoin addresses are - hash of public key?
 
 Any way to combine RSA functions with this lab to make a simulation of a blockchain... 
 
-especially where used could get to/from addresses and enter transactions and have code "mine" and return hash for new block? 
+especially where user could get to/from addresses and enter transactions and have code "mine" and return hash for new block? 
 

@@ -1,5 +1,0 @@
-QUESTION: 
-
-does a bit change in long message cause fewer bit changes in hash that does a bit change in short message? 
-
-should not because even a single change continues to propagate 

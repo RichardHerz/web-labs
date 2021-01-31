@@ -1,0 +1,9 @@
+QUESTION: does a bit change in long message cause fewer bit changes in hash that does a bit change in short message? 
+ANSWER: should not because even a single change continues to propagate 
+
+Check on what cryptocoin addresses are - hash of public key? 
+
+Any way to combine RSA functions with this lab to make a simulation of a blockchain... 
+
+especially where used could get to/from addresses and enter transactions and have code "mine" and return hash for new block? 
+

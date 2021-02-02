@@ -113,12 +113,12 @@ canvas {
   border-width: 0px;
   visibility: visible;
   border-style: dotted;
+  border-color: DodgerBlue;
   opacity: 1;
+  font-size: 16px;
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
-  font-size: 16px;
-  border-color: DodgerBlue;
 }
 
 #field_n_LABEL {
@@ -147,14 +147,14 @@ canvas {
   border-width: 1px;
   visibility: visible;
   border-style: dotted;
-  border-color: black;
+  border-color: DodgerBlue;
   opacity: 1;
+  font-size: 16px;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: false;
   LCshowBorder: true;
-  font-size: 16px;
-  border-color: DodgerBlue;
+
 }
 
 #field_n_value {

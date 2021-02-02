@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>ReactorLab.net, Cryptographic Hash</title>
+
+  <!--
+    Design, text, images and code by Richard K. Herz, 2017-2021
+    Copyrights held by Richard K. Herz
+    Licensed for use under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.en.html
+  -->
+
+  <meta name='description' author='Richard Herz'>
+  <meta name="description" content="The Reactor Lab provides interactive chemical reactor
+  simulations for active learning. Web Labs and desktop versions of ReactorLab
+  and SimzLab, including PureWaterLab, are available. Software is provided free of charge
+  and is open source and available at our GitHub site, github.com/RichardHerz. The code is
+  structured to allow fast construction of new simulations of chemical reactors and other systems."/>
+
+  <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- load COMMON CSS style sheets FIRST -->
+  <link rel="stylesheet" href="../web_labs_CSS/common.css">
+
+  <!-- load CSS style sheets for this lab  -->
+  <link rel="stylesheet" href="css/index.css">
+
+  <style>body {background-color: lightYellow;}</style>
+
+  <!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
+  <script language="javascript" src="js/myHasher.js" type="text/javascript"></script>
+
+</head>
+<body>
+<div id="div_page_header">
+  <input type="button" value="Back" onclick="history.back()">
+  <p style="margin-left: 55px;">to Web Labs at ReactorLab.net</p>
+  <h3>Cryptographic hash</h3>
+  </p>
+  <p>
+    This is an interactive simulation of the MD2 hash algorithm. This
+    hash was introduced by Ronald Rivest in 1989. It is no longer secure
+    and has been replaced by others such as SHA-256. But MD2 is simple
+    to understand as a basis for learning about hash algorithms.
+  <p>
+    Hashing consists of processing messages of arbitrary length to a unique hash
+    value of fixed length such that any change in the message results in a
+    change in the hash value. This result is valuable. You can verify that a
+    message hasn’t been tampered with by running the message through the hash
+    algorithm and ensuring that the hash value hasn’t changed from that supplied
+    with the message. Even a tiny change in the message will result in a large
+    and obvious change in the hash. In that case, you know that the message has
+    been tampered with.
+  <p>
+    After you enter or edit a message, click the Hash button and see the
+    result. Then copy the message and hash. Then make a trivial change in
+    the message, hash, and see how the hash result has changed.
+  <p>
+    <a href="images/mod_and_hash.pdf"><b>Link to notes</b></a> on the basic math
+    involved and a listing of the hash function used here.
+    Use your browser's Back button to return here.
+  </p>
+  <br>
+</div> <!-- end of div div_page_header -->
+<div id="div_simFrame">
+  <p id="field_enter_message_LABEL">Enter or edit message, then Hash</p>
+  <textarea id="textarea_enter_message" onchange="fClearHash()">
+   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent augue ex, pharetra eu leo quis, pharetra interdum dui. Vivamus leo ante, imperdiet id efficitur tempor, hendrerit ut sem. Integer egestas purus sed posuere euismod. Maecenas vel sagittis sem. Quisque euismod vestibulum justo nec pulvinar. Vestibulum bibendum eleifend tortor a vestibulum. Donec hendrerit interdum erat et sodales.
+  </textarea>
+  <input type="button" id="button_hash" value="Hash" onclick="fHashit()">
+  <input type="button" id="button_copy" value="Copy >>" onclick="fCopyit()">
+  <p id="field_hash_result"></p>
+  <p id="field_COPY_LABEL">Copies of previous message and hash for comparison</p>
+  <p id="field_message_COPY"></p>
+  <p id="field_hash_result_COPY"></p>
+</div> <!-- end of div div_simFrame -->
+</body>
+</html>

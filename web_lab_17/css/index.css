@@ -1,0 +1,224 @@
+sup {
+  font-size: smaller;
+}
+
+sub {
+  font-size: smaller;
+}
+
+input {
+  display: block;
+  position: absolute;
+  text-align: center;
+}
+
+input, button {
+  text-align: center;
+}
+
+/* do NOT write general style for div since interferes
+    with plotting by jquery.flot.js */
+
+p {
+  display: block;
+  text-align: left;
+}
+
+label {
+  display: block;
+  position: absolute;
+}
+
+img {
+  display: block;
+  position: absolute;
+}
+
+select {
+  display: block;
+  position: absolute;
+}
+
+canvas {
+  display: block;
+  position: absolute;
+  text-align: left;
+}
+
+::-ms-tooltip {
+  display: none;
+}
+
+#div_page_header {
+  background-color: lightYellow;
+}
+
+#div_simFrame {
+  display: block;
+  position: relative;
+  border-color: DodgerBlue;
+  left: 11px;
+  top: 0px;
+  width: 621px;
+  height: 336px;
+  visibility: visible;
+  border-width: 0px;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: false;
+}
+
+#field_enter_message_LABEL {
+  position: absolute;
+  left: 4px;
+  top: -12px;
+  width: 291px;
+  height: 36px;
+  border-width: 0px;
+  visibility: visible;
+  border-style: dotted;
+  border-color: DodgerBlue;
+  opacity: 1;
+  font-family: "Arial";
+  font-size: 14px;
+  text-align: left;
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#textarea_enter_message {
+  position: absolute;
+  left: 4px;
+  top: 42px;
+  width: 290px;
+  height: 201px;
+  border-width: 1px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  border-style: solid;
+  opacity: 1;
+  font-family: "Times";
+  font-size: 14px;
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#button_hash {
+  position: absolute;
+  left: 108px;
+  top: 263px;
+  width: 69px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#button_copy {
+  position: absolute;
+  left: 208px;
+  top: 263px;
+  width: 69px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#field_hash_result {
+  position: absolute;
+  left: 4px;
+  top: 284px;
+  width: 291px;
+  height: 32px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  font-family: "Courier";
+  font-size: 14px;
+  border-color: DodgerBlue;
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#field_COPY_LABEL {
+  position: absolute;
+  left: 326px;
+  top: -12px;
+  width: 291px;
+  height: 36px;
+  border-width: 0px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  border-color: DodgerBlue;
+  font-family: "Arial";
+  font-size: 14px;
+  text-align: left;
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#field_message_COPY {
+  position: absolute;
+  left: 326px;
+  top: 28px;
+  width: 290px;
+  height: 204px;
+  border-width: 1px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  border-style: dotted;
+  opacity: 1;
+  border-color: DodgerBlue;
+  font-family: "Times";
+  font-size: 14px;
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+#field_hash_result_COPY {
+  position: absolute;
+  left: 326px;
+  top: 284px;
+  width: 291px;
+  height: 32px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  font-family: "Courier";
+  font-size: 14px;
+  border-color: DodgerBlue;
+  LCvScrollbar: false;
+  LCthreeD: false;
+  LCshowBorder: true;
+}
+
+/* example @media for responsive design */
+/* requires meta viewport element in HTML head */
+@media(max-width: 640px) {
+  /* change the following when the screen width is <= 640px */
+  /* #div_controller {
+    top: 600px;
+    left: 20px;
+   } */
+}

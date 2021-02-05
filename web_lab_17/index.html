@@ -35,72 +35,73 @@
 
 </head>
 <body>
-<div id="div_page_header">
-  <input type="button" value="Back" onclick="history.back()">
-  <p style="margin-left: 55px;">to Web Labs at ReactorLab.net</p>
-  <h3>Cryptographic hash</h3>
-  </p>
-  <p>
-    This is an interactive simulation of the MD2 hash algorithm. This
-    hash was introduced by Ronald Rivest in 1989. It is no longer secure
-    and has been replaced by others such as SHA-256. But MD2 is simple
-    to understand as a basis for learning about hash algorithms.
-  </p>
-  <p>
-    Hashing consists of processing messages of arbitrary length to a unique hash
-    value of fixed length such that any change in the message results in a
-    change in the hash value. This result is valuable. You can verify that a
-    message hasn’t been tampered with by running the message through the hash
-    algorithm and ensuring that the hash value hasn’t changed from that supplied
-    with the message. Even a tiny change in the message will result in a large
-    and obvious change in the hash. In that case, you know that the message has
-    been tampered with.
-  </p>
-  <p>
-    After you enter or edit a message, click the Hash button and see the
-    result. The hash value, an integer, is displayed in the hexidecimal format.
-  </p>
-  <p>
-    Then copy the message and hash. Then make a trivial change in
-    the message, then hash again and see how the hash result has changed.
-  </p>
-  <p>
-    <a href="images/mod_and_hash.pdf"><b>Link to notes</b></a> on the basic math
-    involved and a listing of the hash function used here.
-    Use your browser's Back button to return here.
-  </p>
-  <br>
-</div> <!-- end of div div_page_header -->
-<div id="div_simFrame">
-  <p id="field_enter_message_LABEL">Enter or edit message, then Hash</p>
-  <textarea id="textarea_enter_message" onchange="fClearHash()">
-   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent augue ex, pharetra eu leo quis, pharetra interdum dui. Vivamus leo ante, imperdiet id efficitur tempor, hendrerit ut sem. Integer egestas purus sed posuere euismod. Maecenas vel sagittis sem. Quisque euismod vestibulum justo nec pulvinar. Vestibulum bibendum eleifend tortor a vestibulum. Donec hendrerit interdum erat et sodales.
-  </textarea>
-  <input type="button" id="button_hash" value="Hash" onclick="fHashit()">
-  <input type="button" id="button_copy" value="Copy >>" onclick="fCopyit()">
-  <p id="field_hash_result"></p>
-  <p id="field_COPY_LABEL">Copies of previous message and hash for comparison</p>
-  <p id="field_message_COPY"></p>
-  <p id="field_hash_result_COPY"></p>
-</div> <!-- end of div div_simFrame -->
-<!-- div_rlnoticetext filled by interfacer.resetThisLab()
-IN OTHER WEB LABS and formatted by web_labs_CSS/common.css -->
-<div id="div_rlnoticetext">
-  <p>
-    The Reactor Lab provides interactive chemical reactor
-    simulations for active learning. The web site is
-    <a href="https://reactorlab.net/">ReactorLab.net</a>.
-    Web Labs and desktop versions of ReactorLab and SimzLab,
-    which includes PureWaterLab, are available.
-    The lab is provided free of charge and code is open source and available
-    at <a href="https://github.com/RichardHerz">our GitHub site</a>.
-    The code is structured to allow fast construction of new simulations of reactors and other systems.
-    The author of Reactor Lab is Richard K. Herz, emeritus professor of chemical engineering
-    at the University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>,
-    in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>.
-    Please let us know if you use the Lab or the code. Thanks!
-    <a href="mailto://rherz@ucsd.edu/">rherz@ucsd.edu</a><br><br>
-  </p>
-</div>
+  <div id="div_page_header">
+    <input type="button" value="Back" onclick="history.back()">
+    <p style="margin-left: 55px;">to Web Labs at ReactorLab.net</p>
+    <h3>Cryptographic hash</h3>
+    </p>
+    <p>
+      This is an interactive simulation of a cryptographic hash. The MD2
+      hash was introduced by Ronald Rivest in 1989. It has been replaced in use
+      by others, such as SHA-256, but MD2 is simple and useful for learning
+      about hashes.
+    </p>
+    <p>
+      Hashing consists of processing messages of arbitrary length to a unique hash
+      value of fixed length such that any change in the message results in a
+      change in the hash value. This result is valuable. You can verify that a
+      message hasn’t been tampered with by running the message through the hash
+      algorithm and ensuring that the hash value hasn’t changed from that supplied
+      with the message. Even a tiny change in the message will result in a large
+      and obvious change in the hash. In that case, you know that the message has
+      been altered.
+    </p>
+    <p>
+      After you enter or edit a message, click the Hash button and see the
+      result. The hash value, an integer, is displayed in the hexidecimal format.
+    </p>
+    <p>
+      Then click the Copy button. Then make a trivial change in
+      the message, then hash again and compare with the copy to see how the hash
+      result has changed.
+    </p>
+    <p>
+      <a href="images/mod_and_hash.pdf"><b>Link to notes</b></a> on the basic math
+      involved and a listing of the hash function used here.
+      Use your browser's Back button to return here.
+    </p>
+    <br>
+  </div> <!-- end of div div_page_header -->
+  <div id="div_simFrame">
+    <p id="field_enter_message_LABEL">Enter or edit message, then Hash</p>
+    <textarea id="textarea_enter_message" onchange="fClearHash()">
+     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent augue ex, pharetra eu leo quis, pharetra interdum dui. Vivamus leo ante, imperdiet id efficitur tempor, hendrerit ut sem. Integer egestas purus sed posuere euismod. Maecenas vel sagittis sem. Quisque euismod vestibulum justo nec pulvinar. Vestibulum bibendum eleifend tortor a vestibulum. Donec hendrerit interdum erat et sodales.
+    </textarea>
+    <input type="button" id="button_hash" value="Hash" onclick="fHashit()">
+    <input type="button" id="button_copy" value="Copy >>" onclick="fCopyit()">
+    <p id="field_hash_result"></p>
+    <p id="field_COPY_LABEL">Copies of previous message and hash for comparison</p>
+    <p id="field_message_COPY"></p>
+    <p id="field_hash_result_COPY"></p>
+  </div> <!-- end of div div_simFrame -->
+  <!-- div_rlnoticetext filled by interfacer.resetThisLab()
+  IN OTHER WEB LABS and formatted by web_labs_CSS/common.css -->
+  <div id="div_rlnoticetext">
+    <p>
+      The Reactor Lab provides interactive chemical reactor
+      simulations for active learning. The web site is
+      <a href="https://reactorlab.net/">ReactorLab.net</a>.
+      Web Labs and desktop versions of ReactorLab and SimzLab,
+      which includes PureWaterLab, are available.
+      The lab is provided free of charge and code is open source and available
+      at <a href="https://github.com/RichardHerz">our GitHub site</a>.
+      The code is structured to allow fast construction of new simulations of reactors and other systems.
+      The author of Reactor Lab is Richard K. Herz, emeritus professor of chemical engineering
+      at the University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>,
+      in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>.
+      Please let us know if you use the Lab or the code. Thanks!
+      <a href="mailto://rherz@ucsd.edu/">rherz@ucsd.edu</a><br><br>
+    </p>
+  </div>
 </body>
 </html>

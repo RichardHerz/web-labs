@@ -1,0 +1,156 @@
+sup {
+  font-size: smaller;
+}
+
+sub {
+  font-size: smaller;
+}
+
+input {
+  display: block;
+  position: absolute;
+  text-align: center;
+}
+
+input, button {
+  text-align: center;
+}
+
+/* do NOT write general style for div since interferes
+    with plotting by jquery.flot.js */
+
+p {
+  display: block;
+  text-align: left;
+}
+
+label {
+  display: block;
+  position: absolute;
+}
+
+img {
+  display: block;
+  position: absolute;
+}
+
+select {
+  display: block;
+  position: absolute;
+}
+
+canvas {
+  display: block;
+  position: absolute;
+  text-align: left;
+}
+
+::-ms-tooltip {
+  display: none;
+}
+
+#div_simFrame_03 {
+  display: block;
+  position: relative;
+  border-color: DodgerBlue;
+  left: 6px;
+  top: 14px;
+  width: 352px;
+  height: 784px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: none;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#button_add_block {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  width: 157px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#input_field_blockchain_header_LABEL {
+  position: absolute;
+  left: 6px;
+  top: 35px;
+  width: 136px;
+  height: 24px;
+border-width: 1px;
+  visibility: visible;
+border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#input_field_Field {
+  position: absolute;
+  left: 6px;
+  top: 64px;
+  width: 326px;
+  height: 181px;
+border-width: 1px;
+  visibility: visible;
+border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#input_field_blockchain_body_LABEL {
+  position: absolute;
+  left: 6px;
+  top: 254px;
+  width: 141px;
+  height: 24px;
+border-width: 1px;
+  visibility: visible;
+border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#input_field_Field {
+  position: absolute;
+  left: 6px;
+  top: 285px;
+  width: 340px;
+  height: 493px;
+border-width: 1px;
+  visibility: visible;
+border-style: solid;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: true;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+/* example @media for responsive design */
+/* requires meta viewport element in HTML head */
+@media(max-width: 640px) {
+  /* change the following when the screen width is <= 640px */
+  /* #div_controller {
+    top: 600px;
+    left: 20px;
+   } */
+}

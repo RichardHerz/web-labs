@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+
+<title>** EDIT TITLE **</title>
+
+<meta name='description' content='designed with lcCardLayoutToWeb project at GitHub'>
+
+<!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
+<!-- ID used to modify with Javascript after initial loading - OR EDIT HERE -->
+<!-- suggest use content width = div_simFrame width + 2 * div_simFrame left, and no scale -->
+<meta id='meta-viewport' name='viewport' content='width=0'>
+
+<!-- load CSS style sheets for this lab  -->
+<link rel="stylesheet" href="css/index.css">
+
+<!-- load JAVASCRIPT files for this lab  -->
+<!-- e.g., <script language='javascript' src='js/process_main.js' type='text/javascript'></script> -->
+
+</head>
+<body>
+<div id="div_simFrame_01">
+   <input id="input_field_TITLE" value="Teddy Token cryptocoin blockchain">
+   <input id="input_field_people_LABEL" value="Wallets">
+   <input id="input_field_people" value="Priya - MINER
+Address: 8fca7b9ab6fac411b2443c1303d3bc56 
+Balance: 50 
+---- 
+Tinashe
+address: f157bab61715d2bca9d81ada45bad57c 
+Balance: 50 
+---- 
+Chen
+address: 263f99c540f4168132cc5fee5726b5ce 
+Balance: 50 
+---- 
+Zahra
+address: bf61f561918f37cf441fb8a6a1094b7a  
+Balance: 50 
+---- 
+Bob 
+address: 9412daed1e0bd204f652677a80192ea9  
+Balance: 50 ">
+   <input id="input_field_transaction_LABEL" value="1) Create transaction">
+   <p id="field_enter_From_person_LABEL">
+      Select TO:
+   </p>
+   <p id="field_enter_To_Person_LABEL">
+      Select FROM:
+   </p>
+   <select id="select_From_menu" value="Select..." onchange="fMenuTOP()">
+      <option value="Select...">Select...</option>
+      <option value="Priya">Priya</option>
+      <option value="Tinashe">Tinashe</option>
+      <option value="Chen">Chen</option>
+      <option value="Zahra">Zahra</option>
+      <option value="Bob">Bob</option>
+   </select>
+   <select id="select_To_menu" value="Select..." onchange="fMenuTOP()">
+      <option value="Select...">Select...</option>
+      <option value="Priya">Priya</option>
+      <option value="Tinashe">Tinashe</option>
+      <option value="Chen">Chen</option>
+      <option value="Zahra">Zahra</option>
+      <option value="Bob">Bob</option>
+   </select>
+   <p id="field_enter_amount_LABEL">
+      Enter amount:
+   </p>
+   <input id="input_field_enter_amount" value="10">
+   <input id="input_field_transaction" value="From: 263f99c540f4168132cc5fee5726b5ce
+To: bf61f561918f37cf441fb8a6a1094b7a
+Amount: 10">
+   <input type="button" id="button_verify_transaction" value="2) Verify">
+   <p id="field_check_sufficient_funds_">
+      Funds ARE available, adding to pending
+   </p>
+   <input id="input_field_transactions_pending_LABEL" value="Pending Transactions">
+   <input id="input_field_transactions_ready_LABEL" value="ready to build block">
+   <input id="input_field_transactions_pending" value="From: 263f99c540f4168132cc5fee5726b5ce
+To: bf61f561918f37cf441fb8a6a1094b7a
+Amount: 10
+Time: 00830238
+Hash: 9412daed1e0bd204f652677a80192ea9
+---- 
+From: 
+To:
+Amount: 
+Time: 
+Hash: ">
+</div> <!-- end of div div_simFrame_01 -->
+</body>
+</html>

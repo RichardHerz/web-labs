@@ -53,10 +53,10 @@ canvas {
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: -2px;
-  top: 14px;
+  left: 521px;
+  top: 3px;
   width: 342px;
-  height: 784px;
+  height: 789px;
   visibility: visible;
   border-width: 2px;
   border-style: none;
@@ -67,74 +67,64 @@ canvas {
   LCshowBorder: true;
 }
 
-#input_field_TITLE {
+#field_TITLE {
   position: absolute;
   left: 6px;
-  top: 6px;
+  top: -10px;
   width: 323px;
   height: 27px;
-border-width: 1px;
+  border-width: 2px;
   visibility: visible;
-border-style: solid;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: true;
+  font-size: 17px;
+  border-color: DodgerBlue;
 }
 
-#input_field_people_LABEL {
+#field_people_LABEL {
   position: absolute;
   left: 6px;
-  top: 35px;
+  top: 24px;
   width: 136px;
   height: 24px;
-border-width: 1px;
+  border-width: 2px;
   visibility: visible;
-border-style: solid;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
 }
 
-#input_field_people {
+#field_transaction_LABEL {
   position: absolute;
   left: 6px;
-  top: 64px;
-  width: 316px;
-  height: 244px;
-border-width: 1px;
-  visibility: visible;
-border-style: solid;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: true;
-}
-
-#input_field_transaction_LABEL {
-  position: absolute;
-  left: 6px;
-  top: 318px;
+  top: 307px;
   width: 190px;
   height: 24px;
-border-width: 1px;
+  border-width: 2px;
   visibility: visible;
-border-style: solid;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
 }
 
 #field_enter_From_person_LABEL {
   position: absolute;
   left: 6px;
-  top: 365px;
+  top: 370px;
   width: 115px;
   height: 24px;
   border-width: 2px;
@@ -152,7 +142,7 @@ border-style: solid;
 #field_enter_To_Person_LABEL {
   position: absolute;
   left: 6px;
-  top: 333px;
+  top: 338px;
   width: 115px;
   height: 24px;
   border-width: 2px;
@@ -170,7 +160,7 @@ border-style: solid;
 #select_From_menu {
   position: absolute;
   left: 140px;
-  top: 349px;
+  top: 354px;
   width: 102px;
   height: 22px;
   visibility: visible;
@@ -185,7 +175,7 @@ border-style: solid;
 #select_To_menu {
   position: absolute;
   left: 143px;
-  top: 381px;
+  top: 386px;
   width: 102px;
   height: 22px;
   visibility: visible;
@@ -200,7 +190,7 @@ border-style: solid;
 #field_enter_amount_LABEL {
   position: absolute;
   left: 6px;
-  top: 401px;
+  top: 405px;
   width: 115px;
   height: 24px;
   border-width: 2px;
@@ -218,25 +208,9 @@ border-style: solid;
 #input_field_enter_amount {
   position: absolute;
   left: 137px;
-  top: 417px;
+  top: 422px;
   width: 115px;
   height: 24px;
-border-width: 1px;
-  visibility: visible;
-border-style: solid;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: false;
-  LCthreeD: true;
-  LCshowBorder: true;
-}
-
-#input_field_transaction {
-  position: absolute;
-  left: 6px;
-  top: 453px;
-  width: 319px;
-  height: 53px;
 border-width: 1px;
   visibility: visible;
 border-style: solid;
@@ -250,7 +224,7 @@ border-style: solid;
 #button_verify_transaction {
   position: absolute;
   left: 6px;
-  top: 521px;
+  top: 526px;
   width: 82px;
   height: 23px;
   visibility: visible;
@@ -264,7 +238,7 @@ border-style: solid;
 #field_check_sufficient_funds_ {
   position: absolute;
   left: 6px;
-  top: 538px;
+  top: 542px;
   width: 307px;
   height: 24px;
   border-width: 2px;
@@ -279,52 +253,97 @@ border-style: solid;
   border-color: DodgerBlue;
 }
 
-#input_field_transactions_pending_LABEL {
+#field_transactions_pending_LABEL {
   position: absolute;
   left: 6px;
-  top: 585px;
+  top: 574px;
   width: 141px;
   height: 24px;
-border-width: 1px;
+  border-width: 2px;
   visibility: visible;
-border-style: solid;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
 }
 
-#input_field_transactions_ready_LABEL {
+#field_transactions_ready_LABEL {
   position: absolute;
   left: 153px;
-  top: 585px;
+  top: 574px;
   width: 168px;
   height: 24px;
-border-width: 1px;
+  border-width: 2px;
   visibility: visible;
-border-style: solid;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
 }
 
-#input_field_transactions_pending {
+#div_PLOTDIV_transaction {
+  display: block;
   position: absolute;
   left: 6px;
-  top: 615px;
-  width: 330px;
-  height: 163px;
-border-width: 1px;
+  top: 458px;
+  width: 319px;
+  height: 53px;
   visibility: visible;
-border-style: solid;
+  border-width: 2px;
+  border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: true;
+  border-style: dotted;
+  border-color: DodgerBlue;
   LCthreeD: true;
   LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#div_PLOTDIV_transactions_pending {
+  display: block;
+  position: absolute;
+  left: 6px;
+  top: 620px;
+  width: 330px;
+  height: 163px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: true;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#div_PLOTDIV_people {
+  display: block;
+  position: absolute;
+  left: 6px;
+  top: 69px;
+  width: 316px;
+  height: 244px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: true;
+  LCshowBorder: true;
+  LCvScrollbar: false;
 }
 
 /* example @media for responsive design */

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.dropbtn {
+  background-color: #3498DB;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #2980B9;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}
+</style>
+</head>
+<body>
+
+<h2>Clickable Dropdown</h2>
+<p>Click on the button to open the dropdown menu.</p>
+
+<div class="dropdown">
+  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+  <div id="myDropdown" class="dropdown-content">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</div>
+
+<select id="myid" onchange="SelectedValue(this)">
+    <option value=0>Select...</option>
+    <option value=Joe>Joe</option>
+    <option value="Jane">Jane</option>
+    <option value=3>Alice</option>
+    <!-- 4 below returned as string -->
+    <option value=4>Bob</option>
+    <option value="5">Zoe</option>
+</select>
+
+<script>
+function SelectedValue(sel) {
+    var tvalue = sel.options[sel.selectedIndex].value;
+
+    // // TEST
+    // tvalue = 4;
+
+    console.log('selection = ' + tvalue);
+    switch (tvalue) {
+      case "Joe":
+        console.log('Joe selected');
+        break;
+      case "Jane":
+        console.log('Jane selected');
+        break;
+      case "3":
+        console.log('Alice selected');
+        break;
+      case 4: // DOESN'T WORK... except for TEST above
+        console.log('Bob selected');
+        break;
+      case "5":
+        console.log('Zoe selected');
+        break;
+      default:
+        console.log('nada, ' + tvalue);
+    } // END of switch (tvalue)
+
+    // CHANGE VALUE DISPLAYED ON BUTTON (or not)
+    // if NO document.getElementById('myid').value line, then
+    //   the selected name (Joe, Jane, Alice) is displayed
+    // line below with .value = "3" displays Alice no matter what selected
+    // document.getElementById('myid').value = "3";
+    // line below .value = "" displays Select... no matter what selected
+    document.getElementById('myid').value = 0; // or = "0"
+
+} // END of function SelectedValue
+
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
+
+</body>
+</html>

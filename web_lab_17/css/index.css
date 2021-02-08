@@ -212,6 +212,7 @@ canvas {
   LCthreeD: false;
   LCshowBorder: true;
 }
+
 #div_rlnoticetext {
   position: relative;
   font-size: 60%;
@@ -242,7 +243,7 @@ canvas {
   #div_simFrame {
     left: 5px;
   }
-  
+
   #div_rlnoticetext {
     font-size: 50%;
     top: 200px;

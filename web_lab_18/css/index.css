@@ -51,6 +51,10 @@ canvas {
   display: none;
 }
 
+#div_page_header {
+  background-color: lightYellow;
+}
+
 #div_simFrame_01 {
   display: block;
   position: relative;
@@ -348,12 +352,266 @@ border-style: solid;
   LCvScrollbar: false;
 }
 
-/* example @media for responsive design */
-/* requires meta viewport element in HTML head */
+#div_simFrame_02 {
+  display: block;
+  position: relative;
+  border-color: DodgerBlue;
+  left: 527px;
+  top: 5px;
+  width: 336px;
+  height: 784px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#button_build_block {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  width: 118px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#field_provisional_block_LABEL {
+  position: absolute;
+  left: 6px;
+  top: 19px;
+  width: 136px;
+  height: 24px;
+  border-width: 2px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#button_mine_block {
+  position: absolute;
+  left: 6px;
+  top: 371px;
+  width: 110px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#field_mined_block_LABEL {
+  position: absolute;
+  left: 6px;
+  top: 385px;
+  width: 136px;
+  height: 24px;
+  border-width: 2px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#div_TEXTDIV_mined_block {
+  display: block;
+  position: absolute;
+  left: 6px;
+  top: 427px;
+  width: 324px;
+  height: 351px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: true;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#div_TEXTDIV_provisional_block {
+  display: block;
+  position: absolute;
+  left: 6px;
+  top: 64px;
+  width: 324px;
+  height: 296px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: true;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#div_simFrame_03 {
+  display: block;
+  position: relative;
+  border-color: DodgerBlue;
+  left: 538px;
+  top: 3px;
+  width: 352px;
+  height: 784px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#button_add_block {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  width: 157px;
+  height: 23px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  LCthreeD: true;
+  LCshowBorder: true;
+}
+
+#field_blockchain_header_LABEL {
+  position: absolute;
+  left: 6px;
+  top: 21px;
+  width: 136px;
+  height: 24px;
+  border-width: 2px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#field_blockchain_body_LABEL {
+  position: absolute;
+  left: 6px;
+  top: 238px;
+  width: 141px;
+  height: 24px;
+  border-width: 2px;
+  visibility: visible;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
+#div_TEXTDIV_blockchain_body {
+  display: block;
+  position: absolute;
+  left: 6px;
+  top: 285px;
+  width: 340px;
+  height: 493px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: true;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#div_TEXTDIV_blockchain_header {
+  display: block;
+  position: absolute;
+  left: 6px;
+  top: 64px;
+  width: 326px;
+  height: 181px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: true;
+  LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#div_rlnoticetext {
+  position: relative;
+  font-size: 60%;
+  width: 100%;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+/* @media for responsive design                    */
+/* requires meta viewport element in HTML head     */
+/* styling above this holds except, e.g.,          */
+/*    when width is >= 640px : (min-width: 640px)  */
+/*    when width is <= 640px : (max-width: 640px)  */
+/*    then styling below holds                     */
+/* min- below holds for bigger than #              */
+/* max- below holds for smaller than #             */
+/* (orientation: portrait) - below holds for narrow field */
+/* (orientation: landscape) - below holds for wide field  */
+
 @media(max-width: 640px) {
-  /* change the following when the screen width is <= 640px */
-  /* #div_controller {
-    top: 600px;
-    left: 20px;
-   } */
+  .flex-container {
+    display: flex;
+    flex-direction: column;
+  }
+  #div_simFrame {
+    left: 5px;
+  }
+
+  #div_rlnoticetext {
+    font-size: 50%;
+    top: 200px;
+    /* width: 620px; */
+  }
 }

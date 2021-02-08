@@ -51,6 +51,12 @@ canvas {
   display: none;
 }
 
+.flex-container {
+  display: flex;
+  /* https://sketchingwithcss.com/samplechapter/cheatsheet.html#wraprow */
+  flex-flow: row wrap;
+}
+
 #div_page_header {
   background-color: lightYellow;
 }
@@ -59,8 +65,8 @@ canvas {
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 521px;
-  top: 3px;
+  /* left: 521px;
+  top: 3px; */
   width: 342px;
   height: 789px;
   visibility: visible;
@@ -356,8 +362,8 @@ border-style: solid;
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 527px;
-  top: 5px;
+  /* left: 527px;
+  top: 5px; */
   width: 336px;
   height: 784px;
   visibility: visible;
@@ -476,8 +482,8 @@ border-style: solid;
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 538px;
-  top: 3px;
+  /* left: 538px;
+  top: 3px; */
   width: 352px;
   height: 784px;
   visibility: visible;
@@ -584,11 +590,6 @@ border-style: solid;
   width: 100%;
 }
 
-.flex-container {
-  display: flex;
-  flex-direction: row;
-}
-
 /* @media for responsive design                    */
 /* requires meta viewport element in HTML head     */
 /* styling above this holds except, e.g.,          */
@@ -601,14 +602,6 @@ border-style: solid;
 /* (orientation: landscape) - below holds for wide field  */
 
 @media(max-width: 640px) {
-  .flex-container {
-    display: flex;
-    flex-direction: column;
-  }
-  #div_simFrame {
-    left: 5px;
-  }
-
   #div_rlnoticetext {
     font-size: 50%;
     top: 200px;

@@ -35,93 +35,105 @@
 
 </head>
 <body>
-  <div id="div_simFrame_01">
-    <p id="field_TITLE">
-      Teddy Token cryptocoin blockchain
+  <div id="div_page_header">
+    <input type="button" value="Back" onclick="history.back()">
+    <p style="margin-left: 55px;">to Web Labs at ReactorLab.net</p>
+    <h3>Cryptocoin Blockchain - Teddy Token</h3>
     </p>
-    <p id="field_people_LABEL">
-      Wallets
+    <p>
+      This is an interactive simulation of the Teddy Token cryptocoin
+      blockchain.
     </p>
-    <p id="field_transaction_LABEL">
-      1) Create transaction
-    </p>
-    <p id="field_enter_From_person_LABEL">
-      Select TO:
-    </p>
-    <p id="field_enter_To_Person_LABEL">
-      Select FROM:
-    </p>
-    <select id="select_From_menu" value="Select..." onchange="fMenuTOP()">
-      <option value="Select...">Select...</option>
-      <option value="Priya">Priya</option>
-      <option value="Tinashe">Tinashe</option>
-      <option value="Chen">Chen</option>
-      <option value="Zahra">Zahra</option>
-      <option value="Bob">Bob</option>
-    </select>
-    <select id="select_To_menu" value="Select..." onchange="fMenuTOP()">
-      <option value="Select...">Select...</option>
-      <option value="Priya">Priya</option>
-      <option value="Tinashe">Tinashe</option>
-      <option value="Chen">Chen</option>
-      <option value="Zahra">Zahra</option>
-      <option value="Bob">Bob</option>
-    </select>
-    <p id="field_enter_amount_LABEL">
-      Enter amount:
-    </p>
-    <input id="input_field_enter_amount" value="10">
-    <input type="button" id="button_verify_transaction" value="2) Verify">
-    <p id="field_check_sufficient_funds_">
-      Funds ARE available, adding to pending
-    </p>
-    <p id="field_transactions_pending_LABEL">
-      Pending Transactions
-    </p>
-    <p id="field_transactions_ready_LABEL">
-      ready to build block
-    </p>
-    <div id="div_TEXTDIV_transaction">
-      TEXTDIV
-    </div> <!-- end of div div_TEXTDIV_transaction -->
-    <div id="div_TEXTDIV_transactions_pending">
-      TEXTDIV
-    </div> <!-- end of div div_TEXTDIV_transactions_pending -->
-    <div id="div_TEXTDIV_people">
-      TEXTDIV
-    </div> <!-- end of div div_TEXTDIV_people -->
-  </div> <!-- end of div div_simFrame_01 -->
-  <div id="div_simFrame_02">
-    <input type="button" id="button_build_block" value="3) Build block">
-    <p id="field_provisional_block_LABEL">
-      Provisional Block
-    </p>
-    <input type="button" id="button_mine_block" value="4) Mine block">
-    <p id="field_mined_block_LABEL">
-      Mined Block
-    </p>
-    <div id="div_TEXTDIV_mined_block">
-      TEXTDIV
-    </div> <!-- end of div div_TEXTDIV_mined_block -->
-    <div id="div_TEXTDIV_provisional_block">
-      TEXTDIV
-    </div> <!-- end of div div_TEXTDIV_provisional_block -->
-  </div> <!-- end of div div_simFrame_02 -->
-  <div id="div_simFrame_03">
-    <input type="button" id="button_add_block" value="5) Add block to chain">
-    <p id="field_blockchain_header_LABEL">
-      Blockchain Header
-    </p>
-    <p id="field_blockchain_body_LABEL">
-      Blockchain Body
-    </p>
-    <div id="div_TEXTDIV_blockchain_body">
-      TEXTDIV
-    </div> <!-- end of div div_TEXTDIV_blockchain_body -->
-    <div id="div_TEXTDIV_blockchain_header">
-      TEXTDIV
-    </div> <!-- end of div div_TEXTDIV_blockchain_header -->
-  </div> <!-- end of div div_simFrame_03 -->
+  </div> <!-- end of div div_page_header -->
+  <div class="flex-container">
+    <div id="div_simFrame_01">
+      <p id="field_TITLE">
+        Teddy Token cryptocoin blockchain
+      </p>
+      <p id="field_people_LABEL">
+        Wallets
+      </p>
+      <p id="field_transaction_LABEL">
+        1) Create transaction
+      </p>
+      <p id="field_enter_From_person_LABEL">
+        Select TO:
+      </p>
+      <p id="field_enter_To_Person_LABEL">
+        Select FROM:
+      </p>
+      <select id="select_From_menu" value="Select..." onchange="fMenuTOP()">
+        <option value="Select...">Select...</option>
+        <option value="Priya">Priya</option>
+        <option value="Tinashe">Tinashe</option>
+        <option value="Chen">Chen</option>
+        <option value="Zahra">Zahra</option>
+        <option value="Bob">Bob</option>
+      </select>
+      <select id="select_To_menu" value="Select..." onchange="fMenuTOP()">
+        <option value="Select...">Select...</option>
+        <option value="Priya">Priya</option>
+        <option value="Tinashe">Tinashe</option>
+        <option value="Chen">Chen</option>
+        <option value="Zahra">Zahra</option>
+        <option value="Bob">Bob</option>
+      </select>
+      <p id="field_enter_amount_LABEL">
+        Enter amount:
+      </p>
+      <input id="input_field_enter_amount" value="10">
+      <input type="button" id="button_verify_transaction" value="2) Verify">
+      <p id="field_check_sufficient_funds_">
+        Funds ARE available, adding to pending
+      </p>
+      <p id="field_transactions_pending_LABEL">
+        Pending Transactions
+      </p>
+      <p id="field_transactions_ready_LABEL">
+        ready to build block
+      </p>
+      <div id="div_TEXTDIV_transaction">
+        TEXTDIV
+      </div> <!-- end of div div_TEXTDIV_transaction -->
+      <div id="div_TEXTDIV_transactions_pending">
+        TEXTDIV
+      </div> <!-- end of div div_TEXTDIV_transactions_pending -->
+      <div id="div_TEXTDIV_people">
+        TEXTDIV
+      </div> <!-- end of div div_TEXTDIV_people -->
+    </div> <!-- end of div div_simFrame_01 -->
+    <div id="div_simFrame_02">
+      <input type="button" id="button_build_block" value="3) Build block">
+      <p id="field_provisional_block_LABEL">
+        Provisional Block
+      </p>
+      <input type="button" id="button_mine_block" value="4) Mine block">
+      <p id="field_mined_block_LABEL">
+        Mined Block
+      </p>
+      <div id="div_TEXTDIV_mined_block">
+        TEXTDIV
+      </div> <!-- end of div div_TEXTDIV_mined_block -->
+      <div id="div_TEXTDIV_provisional_block">
+        TEXTDIV
+      </div> <!-- end of div div_TEXTDIV_provisional_block -->
+    </div> <!-- end of div div_simFrame_02 -->
+    <div id="div_simFrame_03">
+      <input type="button" id="button_add_block" value="5) Add block to chain">
+      <p id="field_blockchain_header_LABEL">
+        Blockchain Header
+      </p>
+      <p id="field_blockchain_body_LABEL">
+        Blockchain Body
+      </p>
+      <div id="div_TEXTDIV_blockchain_body">
+        TEXTDIV
+      </div> <!-- end of div div_TEXTDIV_blockchain_body -->
+      <div id="div_TEXTDIV_blockchain_header">
+        TEXTDIV
+      </div> <!-- end of div div_TEXTDIV_blockchain_header -->
+    </div> <!-- end of div div_simFrame_03 -->
+  </div>  <!-- end of div flex-container -->
   <!-- div_rlnoticetext filled by interfacer.resetThisLab()
   IN OTHER WEB LABS and formatted by web_labs_CSS/common.css -->
   <div id="div_rlnoticetext">

@@ -53,8 +53,8 @@ canvas {
   display: block;
   position: relative;
   border-color: DodgerBlue;
-  left: 9px;
-  top: 13px;
+  left: 527px;
+  top: 5px;
   width: 336px;
   height: 784px;
   visibility: visible;
@@ -81,36 +81,22 @@ canvas {
   LCshowBorder: true;
 }
 
-#input_field_provisional_block_LABEL {
+#field_provisional_block_LABEL {
   position: absolute;
   left: 6px;
-  top: 35px;
+  top: 19px;
   width: 136px;
   height: 24px;
-border-width: 1px;
+  border-width: 2px;
   visibility: visible;
-border-style: solid;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: true;
-}
-
-#input_field_transactions_pending {
-  position: absolute;
-  left: 6px;
-  top: 64px;
-  width: 324px;
-  height: 296px;
-border-width: 1px;
-  visibility: visible;
-border-style: solid;
-  opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: true;
-  LCthreeD: true;
-  LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
 }
 
 #button_mine_block {
@@ -127,36 +113,60 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#input_field_mined_block_LABEL {
+#field_mined_block_LABEL {
   position: absolute;
   left: 6px;
-  top: 401px;
+  top: 385px;
   width: 136px;
   height: 24px;
-border-width: 1px;
+  border-width: 2px;
   visibility: visible;
-border-style: solid;
+  border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: true;
+  font-size: 16px;
+  border-color: DodgerBlue;
 }
 
-#input_field_verified_block {
+#div_TEXTDIV_mined_block {
+  display: block;
   position: absolute;
   left: 6px;
   top: 427px;
   width: 324px;
   height: 351px;
-border-width: 1px;
   visibility: visible;
-border-style: solid;
+  border-width: 2px;
+  border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
-  LCvScrollbar: true;
+  border-style: dotted;
+  border-color: DodgerBlue;
   LCthreeD: true;
   LCshowBorder: true;
+  LCvScrollbar: false;
+}
+
+#div_TEXTDIV_provisional_block {
+  display: block;
+  position: absolute;
+  left: 6px;
+  top: 64px;
+  width: 324px;
+  height: 296px;
+  visibility: visible;
+  border-width: 2px;
+  border-style: outset;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 1);
+  border-style: dotted;
+  border-color: DodgerBlue;
+  LCthreeD: true;
+  LCshowBorder: true;
+  LCvScrollbar: false;
 }
 
 /* example @media for responsive design */

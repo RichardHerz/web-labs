@@ -1,6 +1,6 @@
 ﻿script "lcCardLayoutToWeb-EXPORT"
 /*
-Design, text, images and code by Richard K. Herz, 2017-2018
+Design, text, images and code by Richard K. Herz, 2017-2021
 Copyrights held by Richard K. Herz
 https://github.com/RichardHerz
 Licensed for use under the GNU General Public License v3.0
@@ -22,7 +22,8 @@ constant kScriptTagPrefix = "scriptTag" -- used on IMPORT and EXPORT of script t
 constant kCommentTagPrefix = "commentTag" -- used on IMPORT and EXPORT of script tags in html body
 -- make sure value of constant kCommentTagPrefix is the same in both script files
 
-constant kDottedBorderColor = "DodgerBlue"
+constant kDottedBorderColor01 = "DodgerBlue"
+constant kDottedBorderColor02 = "Tomato"
 
 -- Writes to files in output folder kWebOutputFolder & "card" & LC stack card number
 constant kWebOutputFolder = "web output"
@@ -37,7 +38,7 @@ constant kHtmlFileName = "index.html"
 -- set number of spaces to indent
 --      used to increase and decrease indents
 --      not only makes html look nice but text editors use indents to fold/unfold sections
-constant kIndentSpaces = 3
+constant kIndentSpaces = 2
 
 -- use kReporter "true" to activate all reports below to msg box
 -- or use a special value to activate only selected reports below
@@ -319,7 +320,7 @@ on exportWebPage
    if there is a button tBtnName then
       if the hilite of button tBtnName is true then
          put space & space & "border-style: dotted;" & LF after tCSS
-         put space & space & "border-color:" &&  kDottedBorderColor & ";" & LF after tCSS
+         put space & space & "border-color:" &&  kDottedBorderColor01 & ";" & LF after tCSS
       end if
    end if
    put "}" & LF & LF after tCSS -- finish css for p, locked field
@@ -480,6 +481,9 @@ on exportWebPage
                   if the first word of the short name of control tControlNumber is "PLOTDIV" then
                      -- button used to represent an empty html div tag in html body for x-y plotting
                      get fExportPLOTDIV(tControl_ID, tGrpList, tGrpLocList, tOneIndent, tIndent, aCSSprops)
+                  else if the first word of the short name of control tControlNumber is "TEXTDIV" then
+                     -- button used to represent an empty html div tag in html body for multi-line text
+                     get fExportTEXTDIV(tControl_ID, tGrpList, tGrpLocList, tOneIndent, tIndent, aCSSprops)
                   else if the first word of the short name of control tControlNumber is "CANVAS" then
                      -- button used to represent an html canvas tag in html body
                      get fExportCANVAS(tControl_ID, tGrp, tGrpLoc, tIndent, aCSSprops)
@@ -624,12 +628,12 @@ end fReturnHtmlEvents
 -----------------------------------------------
 
 function fReturnCSSprops tControl_ID, tGrpLoc, tGrpLocList, aCSSprops
-   
+
    -- functions which do NOT use this function:
    -- fExportScrollBar
    -- fExportRadioButton
    -- fExportCheckBox
-   
+
    -- groups and some controls use this, other controls are special
    put empty into tCSS -- tCSS is local to this function, build it up, then return it
    put the rect of control id tControl_ID into tRect
@@ -771,17 +775,17 @@ function fReturnCSSprops tControl_ID, tGrpLoc, tGrpLocList, aCSSprops
                default
                   put empty into tValue
             end switch
-            
+
             -- write property and value to CSS
             if tValue is not empty then
                put space & space & aCSSprops[tKey] & ":" && tValue & ";" & LF after tCSS
                -- e.g., CSS prop name: value;
             end if -- end if tValue is not empty
-            
+
          end if -- end if aControlProps[tKey] is not empty
       end if -- end if tKey is among the lines of tHitList
    end repeat -- repeat for each line tKey in tKeyList
-   
+
    -- SPECIAL - need to check LC opaque
    -- if LC backColor not empty, then this is handled above
    -- but if LC backColor is empty, then need to check here
@@ -795,19 +799,27 @@ function fReturnCSSprops tControl_ID, tGrpLoc, tGrpLocList, aCSSprops
          put space & space & "background-color: rgba(255, 255, 255, 0);" & LF after tCSS
       end if
    end if
-   
-   -- SPECIAL for PLOTDIV button to be exported as div
-   -- need to override some border settings above after they are set
-   -- and do this before special LC properties below so special LC props will be set on import
+
+   --   -- SPECIAL for PLOTDIV button to be exported as div
+   --   -- need to override some border settings above after they are set
+   --   -- and do this before special LC properties below so special LC props will be set on import
    if the first word of the short name of control id tControl_ID is "PLOTDIV" then
       put space & space & "border-style: dotted;" & LF after tCSS
-      put space & space & "border-color:" &&  kDottedBorderColor & ";" & LF after tCSS
+      put space & space & "border-color:" &&  kDottedBorderColor02 & ";" & LF after tCSS
    end if
-   
+
+   -- SPECIAL for TEXTDIV button to be exported as div
+   -- need to override some border settings above after they are set
+   -- and do this before special LC properties below so special LC props will be set on import
+   if the first word of the short name of control id tControl_ID is "TEXTDIV" then
+      put space & space & "border-style: dotted;" & LF after tCSS
+      put space & space & "border-color:" &&  kDottedBorderColor01 & ";" & LF after tCSS
+   end if
+
    -- SPECIAL LC PROPERTIES
    -- to get reversibility on export-import need to save special LC properties
    -- these are ignored by CSS processor but used on import back into this project
-   
+
    -- start handle LCvScrollbar
    -- xxx for now, "try" for quick fix - should apply to groups and fields only?
    try
@@ -818,7 +830,7 @@ function fReturnCSSprops tControl_ID, tGrpLoc, tGrpLocList, aCSSprops
       end if
    end try
    -- endhandle LCvScrollbar
-   
+
    -- start handle LCthreeD
    if the threeD of control id tControl_ID is true then
       put space & space & "LCthreeD: true;" & LF after tCSS
@@ -826,7 +838,7 @@ function fReturnCSSprops tControl_ID, tGrpLoc, tGrpLocList, aCSSprops
       put space & space & "LCthreeD: false;" & LF after tCSS
    end if
    -- end handle LCthreeD
-   
+
    -- start handle LCshowBorder
    if the showBorder of control id tControl_ID is true then
       put space & space & "LCshowBorder: true;" into tTempCSS
@@ -844,7 +856,7 @@ function fReturnCSSprops tControl_ID, tGrpLoc, tGrpLocList, aCSSprops
    end if
    put tTempCSS & LF after tCSS
    -- end handle LCshowBorder
-   
+
    return tCSS
 end fReturnCSSprops
 
@@ -1167,7 +1179,7 @@ function fExportGroup tControl_ID, tGrpList, tGrpLocList, tOneIndent, tIndent, a
    else
       put space & space & "position: absolute;" & LF after tCSS
    end if
-   put space & space & "border-color:" &&  kDottedBorderColor & ";" & LF after tCSS
+   put space & space & "border-color:" &&  kDottedBorderColor01 & ";" & LF after tCSS
    put empty into tGrpLoc -- used in fReturnCSSprops for non group controls, this copy local to this function
    put fReturnCSSprops(tControl_ID, tGrpLoc, tGrpLocList, aCSSprops) after tCSS
    -- conclude css
@@ -1382,21 +1394,22 @@ end fExportStandardButton
 -----------------------------------------------
 
 function fExportPLOTDIV tControl_ID, tGrpList, tGrpLocList, tOneIndent, tIndent, aCSSprops
+   -- this is for x-y plots of data
    -- uses function fReturnCSSprops
    -- uses function fIDname
    -- these inputs are not modified: tControl_ID, tOneIndent
    -- PLOTDIV BUTTON in LC becomes an empty DIV in HTML
    -- add div tag
-   -- indent manually here without altering tIndent, since will be terminated immediately
-   put tIndent & tOneIndent & "<div" after tHTML
+   put tIndent & "<div" after tHTML
    put fIDname(tControl_ID) into tIDname
    delete char 1 to 7 of tIDname -- delete: button_
    put "div_" before tIDname
    put space & "id=" & quote & tIDname & quote after tHTML
    put ">" & LF after tHTML
+   put tIndent & tOneIndent & "PLOTDIV" & LF after tHTML
    -- new for PLOTDIV - terminate the empty div immediately
    -- "<!-- end of div" literal used on import to not duplicate comment - do not change here
-   put tIndent & tOneIndent & "</div>" && "<!-- end of div" && tIDname && "-->" & LF after tHTML
+   put tIndent & "</div>" && "<!-- end of div" && tIDname && "-->" & LF after tHTML
    -- end of html
    -- write css
    put fIDname(tControl_ID) into tIDname
@@ -1418,6 +1431,47 @@ function fExportPLOTDIV tControl_ID, tGrpList, tGrpLocList, tOneIndent, tIndent,
    put tCSS into tResult["css"]
    return tResult
 end fExportPLOTDIV
+
+-----------------------------------------------
+
+function fExportTEXTDIV tControl_ID, tGrpList, tGrpLocList, tOneIndent, tIndent, aCSSprops
+   -- this is for multi-line text - manually in CSS add overflow: auto or scroll for scrollbars
+   -- uses function fReturnCSSprops
+   -- uses function fIDname
+   -- these inputs are not modified: tControl_ID, tOneIndent
+   -- TEXTDIV BUTTON in LC becomes an empty DIV in HTML
+   -- add div tag
+   put tIndent & "<div" after tHTML
+   put fIDname(tControl_ID) into tIDname
+   delete char 1 to 7 of tIDname -- delete: button_
+   put "div_" before tIDname
+   put space & "id=" & quote & tIDname & quote after tHTML
+   put ">" & LF after tHTML
+   put tIndent & tOneIndent & "TEXTDIV" & LF after tHTML
+   -- new for TEXTDIV - terminate the empty div immediately
+   -- "<!-- end of div" literal used on import to not duplicate comment - do not change here
+   put tIndent & "</div>" && "<!-- end of div" && tIDname && "-->" & LF after tHTML
+   -- end of html
+   -- write css
+   put fIDname(tControl_ID) into tIDname
+   delete char 1 to 7 of tIDname -- delete: button_
+   put "div_" before tIDname
+   put "#" & tIDname && "{" & LF after tCSS
+   -- WARNING: need to write display and position here for each separate div
+   -- because doing so for all div interferes with plotting with jquery.flot.js
+   put space & space & "display: block;" & LF after tCSS
+   put the last line of tGrpLocList into tGrpLoc
+   -- TEXTDIV gets some special handling in fReturnCSSprops
+   put fReturnCSSprops(tControl_ID, tGrpLoc, tGrpLocList, aCSSprops) after tCSS
+   put space & space & "LCvScrollbar: false;" & LF after tCSS -- add, since will be a div
+   -- conclude css
+   put "}" & LF & LF after tCSS
+   -- end of css
+   -- finally return the result
+   put tHTML into tResult["html"]
+   put tCSS into tResult["css"]
+   return tResult
+end fExportTEXTDIV
 
 -----------------------------------------------
 
@@ -1707,21 +1761,21 @@ function fExportField tControl_ID, tGrp, tGrpLoc, tIndent, aCSSprops
             if tThreeD is true then
                -- was outset but looks solid on Win IE & Edge, use dotted instead
                put space & space & "border-style: dotted;" into line tline of tCSS
-               put space & space & "border-color:" &&  kDottedBorderColor & ";" & LF after tCSS
+               put space & space & "border-color:" &&  kDottedBorderColor01 & ";" & LF after tCSS
             else
                -- was solid
                put space & space & "border-style: dotted;" into line tline of tCSS
-               put space & space & "border-color:" &&  kDottedBorderColor & ";" & LF after tCSS
+               put space & space & "border-color:" &&  kDottedBorderColor01 & ";" & LF after tCSS
             end if
          else
             if tThreeD is true then
                -- was outset but looks solid on Win IE & Edge, use dotted instead
                put space & space & "border-style: dotted;" & LF after tCSS
-               put space & space & "border-color:" &&  kDottedBorderColor & ";" & LF after tCSS
+               put space & space & "border-color:" &&  kDottedBorderColor01 & ";" & LF after tCSS
             else
                -- was solid
                put space & space & "border-style: dotted;" & LF after tCSS
-               put space & space & "border-color:" &&  kDottedBorderColor & ";" & LF after tCSS
+               put space & space & "border-color:" &&  kDottedBorderColor01 & ";" & LF after tCSS
             end if
          end if
 

@@ -289,8 +289,7 @@ border-style: solid;
   border-color: DodgerBlue;
 }
 
-#div_PLOTDIV_transaction {
-  display: block;
+#button_TEXTDIV_transaction {
   position: absolute;
   left: 6px;
   top: 458px;
@@ -301,15 +300,11 @@ border-style: solid;
   border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
-  border-style: dotted;
-  border-color: DodgerBlue;
   LCthreeD: true;
   LCshowBorder: true;
-  LCvScrollbar: false;
 }
 
-#div_PLOTDIV_transactions_pending {
-  display: block;
+#button_TEXTDIV_transactions_pending {
   position: absolute;
   left: 6px;
   top: 620px;
@@ -320,15 +315,11 @@ border-style: solid;
   border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
-  border-style: dotted;
-  border-color: DodgerBlue;
   LCthreeD: true;
   LCshowBorder: true;
-  LCvScrollbar: false;
 }
 
-#div_PLOTDIV_people {
-  display: block;
+#button_TEXTDIV_people {
   position: absolute;
   left: 6px;
   top: 69px;
@@ -339,11 +330,8 @@ border-style: solid;
   border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
-  border-style: dotted;
-  border-color: DodgerBlue;
   LCthreeD: true;
   LCshowBorder: true;
-  LCvScrollbar: false;
 }
 
 /* example @media for responsive design */

@@ -65,9 +65,34 @@
    <p id="field_transactions_ready_LABEL">
       ready to build block
    </p>
-   <input type="button" id="button_TEXTDIV_transaction" value="TEXTDIV transaction">
-   <input type="button" id="button_TEXTDIV_transactions_pending" value="TEXTDIV transactions pending">
-   <input type="button" id="button_TEXTDIV_people" value="TEXTDIV people">
+      <div id="div_TEXTDIV_transaction">
+        From: jkasdf;kljasdf<br>
+        To: fjas;dlfj<br>
+        Amt: 20<br>
+      </div> <!-- end of div div_TEXTDIV_transaction -->
+      <div id="div_TEXTDIV_transactions_pending">
+      </div> <!-- end of div div_TEXTDIV_transactions_pending -->
+      <div id="div_TEXTDIV_people">
+        Priya - MINER<br>
+        Address: 8fca7b9ab6fac411b2443c1303d3bc56 <br>
+        Balance: 50 <br>
+        ---- <br>
+        Tinashe<br>
+        address: f157bab61715d2bca9d81ada45bad57c <br>
+        Balance: 50 <br>
+        ---- <br>
+        Chen<br>
+        address: 263f99c540f4168132cc5fee5726b5ce <br>
+        Balance: 50 <br>
+        ---- <br>
+        Zahra<br>
+        address: bf61f561918f37cf441fb8a6a1094b7a  <br>
+        Balance: 50 <br>
+        ---- <br>
+        Bob <br>
+        address: 9412daed1e0bd204f652677a80192ea9  <br>
+        Balance: 50
+      </div> <!-- end of div div_TEXTDIV_people -->
 </div> <!-- end of div div_simFrame_01 -->
 </body>
 </html>

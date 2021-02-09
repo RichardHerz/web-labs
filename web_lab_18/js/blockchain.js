@@ -37,7 +37,7 @@ function transFrom(sel) {
   let endPos;
   let newStr;
   if (tSel >= 0) {
-    let newPerson = data['people'][tSel];
+    let newPerson = data['address'][tSel];
     startPos = str.indexOf('From:');
     endPos = str.indexOf('<br>',startPos);
     let oldPerson = str.substring(startPos, endPos);
@@ -62,7 +62,7 @@ function transTo(sel) {
   let endPos;
   let newStr;
   if (tSel >= 0) {
-    let newPerson = data['people'][tSel];
+    let newPerson = data['address'][tSel];
     startPos = str.indexOf('To:');
     endPos = str.indexOf('<br>',startPos);
     let oldPerson = str.substring(startPos, endPos);

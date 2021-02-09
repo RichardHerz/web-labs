@@ -22,16 +22,19 @@
   <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- load COMMON CSS style sheets FIRST -->
-<link rel="stylesheet" href="../web_labs_CSS/common.css">
+  <!-- load COMMON CSS style sheets FIRST -->
+  <link rel="stylesheet" href="../web_labs_CSS/common.css">
 
-<!-- load CSS style sheets for this lab  -->
-<link rel="stylesheet" href="css/index.css">
+  <!-- load CSS style sheets for this lab  -->
+  <link rel="stylesheet" href="css/index.css">
 
-<style>body {background-color: lightYellow;}</style>
+  <script language="javascript" src="js/blockchain.js" type="text/javascript"></script>
 
-<!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
-<!-- e.g., <script language='javascript' src='js/process_main.js' type='text/javascript'></script> -->
+  <!-- initialize simulation after loading of this window -->
+  <script language="javascript">
+    // this works as script in html file but not in external js files
+    window.onload = openThisLab(); // can NOT use () after controller.openThisLab
+  </script>
 
 </head>
 <body>
@@ -62,26 +65,26 @@
       <p id="field_enter_To_Person_LABEL">
         Select FROM:
       </p>
-      <select id="select_From_menu" value="Select..." onchange="fMenuTOP()">
-        <option value="Select...">Select...</option>
-        <option value="Priya">Priya</option>
-        <option value="Tinashe">Tinashe</option>
-        <option value="Chen">Chen</option>
-        <option value="Zahra">Zahra</option>
-        <option value="Bob">Bob</option>
+      <select id="select_From_menu" value="Select..." onchange="transFrom(this.value)">
+        <option value="-1">Select...</option>
+        <option value="0">Priya</option>
+        <option value="1">Tinashe</option>
+        <option value="2">Chen</option>
+        <option value="3">Zahra</option>
+        <option value="4">Bob</option>
       </select>
-      <select id="select_To_menu" value="Select..." onchange="fMenuTOP()">
-        <option value="Select...">Select...</option>
-        <option value="Priya">Priya</option>
-        <option value="Tinashe">Tinashe</option>
-        <option value="Chen">Chen</option>
-        <option value="Zahra">Zahra</option>
-        <option value="Bob">Bob</option>
+      <select id="select_To_menu" value="Select..." onchange="transTo(this.value)">
+        <option value="-1">Select...</option>
+        <option value="0">Priya</option>
+        <option value="1">Tinashe</option>
+        <option value="2">Chen</option>
+        <option value="3">Zahra</option>
+        <option value="4">Bob</option>
       </select>
       <p id="field_enter_amount_LABEL">
         Enter amount:
       </p>
-      <input id="input_field_enter_amount" value="10">
+      <input id="input_field_enter_amount" value="" onchange="transAmount(this.value)">
       <input type="button" id="button_verify_transaction" value="2) Verify">
       <p id="field_check_sufficient_funds_">
         Funds ARE available, adding to pending
@@ -93,13 +96,33 @@
         ready to build block
       </p>
       <div id="div_TEXTDIV_transaction">
-        TEXTDIV
+        From: <br>
+        To: <br>
+        Amount:
       </div> <!-- end of div div_TEXTDIV_transaction -->
       <div id="div_TEXTDIV_transactions_pending">
         TEXTDIV
       </div> <!-- end of div div_TEXTDIV_transactions_pending -->
       <div id="div_TEXTDIV_people">
-        TEXTDIV
+        Priya - Miner <br>
+        Address: 8fca7b9ab6fac411b2443c1303d3bc56 <br>
+        Balance: 50 <br>
+        --------------- <br>
+        Tinashe <br>
+        Address: f157bab61715d2bca9d81ada45bad57c <br>
+        Balance: 50 <br>
+        --------------- <br>
+        Chen <br>
+        Address: 263f99c540f4168132cc5fee5726b5ce <br>
+        Balance: 50 <br>
+        --------------- <br>
+        Zahra <br>
+        Address: bf61f561918f37cf441fb8a6a1094b7a <br>
+        Balance: 50 <br>
+        --------------- <br>
+        Bob <br>
+        Address: 9412daed1e0bd204f652677a80192ea9 <br>
+        Balance: 50
       </div> <!-- end of div div_TEXTDIV_people -->
     </div> <!-- end of div div_simFrame_01 -->
     <div id="div_simFrame_02">

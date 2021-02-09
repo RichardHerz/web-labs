@@ -186,7 +186,7 @@ canvas {
 
 #select_To_menu {
   position: absolute;
-  left: 143px;
+  left: 140px;
   top: 386px;
   width: 102px;
   height: 22px;
@@ -345,7 +345,7 @@ border-style: solid;
   left: 6px;
   top: 69px;
   width: 316px;
-  height: 244px;
+  height: 248px;
   visibility: visible;
   border-width: 2px;
   border-style: outset;
@@ -353,6 +353,8 @@ border-style: solid;
   background-color: rgba(255, 255, 255, 1);
   border-style: dotted;
   border-color: DodgerBlue;
+  font-family: courier;
+  font-size: 11px;
   LCthreeD: true;
   LCshowBorder: true;
   LCvScrollbar: false;

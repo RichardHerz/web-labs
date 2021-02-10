@@ -26,6 +26,10 @@ let data = {
     data['balance'][2] = '50';
     data['balance'][3] = '50';
     data['balance'][4] = '50';
+    data['transaction'] = new Object();
+    data['transaction']['From'] = '';
+    data['transaction']['To'] = '';
+    data['transaction']['Amount'] = '';
   } // END of function data.initialize()
 } // END of object data
 
@@ -107,21 +111,60 @@ function transVerify() {
   let tAmount = el.value;
   //
   // do some validation
+  let tFlag1 = 0;
+  let tFlag2 = 0;
   console.log('tFromAddress = ' + tFromAddress);
   console.log('tToAddress = ' + tToAddress);
   console.log('tAmount = ' + tAmount);
   if ( (tAmount > 0) & (tFromAddress != tToAddress) ) {
     console.log('OK transaction');
+    tFlag1 = 1;
   } else {
     console.log('Fishy transaction');
   }
   // check if balance is sufficient
   let tAmountAvailable = data['balance'][tFromIndex];
   if (tAmount <= tAmountAvailable) {
-    // this is good
     console.log('has sufficient funds');
+    tFlag2 = 1;
   } else {
-    console.log('INsufficient funds');
+    console.log('NOT sufficient funds');
+  }
+
+  if (tFlag1 & tFlag2) {
+    // add to data store
+    data['transaction']['From'] = tFromAddress;
+    data['transaction']['To'] = tToAddress;
+    data['transaction']['Amount'] = tAmount;
+    // add to pending
+    addTransToPending();
   }
 
 } // END of function transVerify
+
+function addTransToPending() {
+
+  let tFrom = data['transaction']['From'];
+  let tTo = data['transaction']['To'];
+  let tAmt = data['transaction']['Amount'];
+
+  let el = document.getElementById('div_TEXTDIV_transactions_pending');
+  let oldText = el.innerHTML;
+  let newText = 'From: ' + tFrom + '<br>';
+  newText += 'To: ' + tTo + '<br>';
+  newText += 'Amount: ' + tAmt + '<br>';
+  let d = new Date(); // or let d = Date.now() for ms since Jan 1, 1970
+  newText += 'Date: ' + d + '<br>';
+  let tHash = fMD2(newText);
+  newText += 'Hash: ' + tHash + '<br>';
+  newText += '----------------------' + '<br>';
+  el.innerHTML = newText + oldText;
+
+  // CLEAR TRANSACTION FIELD
+  el = document.getElementById('div_TEXTDIV_transaction');
+  newText = 'From: <br>';
+  newText += 'To: <br>';
+  newText += 'Amount: ';
+  el.innerHTML = newText;
+
+}

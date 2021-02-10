@@ -28,13 +28,15 @@
   <!-- load CSS style sheets for this lab  -->
   <link rel="stylesheet" href="css/index.css">
 
+  <!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
   <script language="javascript" src="js/blockchain.js" type="text/javascript"></script>
+  <script language="javascript" src="js/myHasher.js" type="text/javascript"></script>
 
   <!-- initialize simulation after loading of this window -->
   <script language="javascript">
     // this works as script in html file but not in external js files
     window.onload = openThisLab(); // can NOT use () after controller.openThisLab
-    // put onload into <body> to load fields, which have not yet been created here 
+    // put onload into <body> to load fields, which have not yet been created here
   </script>
 
 </head>
@@ -103,7 +105,6 @@
         Amount:
       </div> <!-- end of div div_TEXTDIV_transaction -->
       <div id="div_TEXTDIV_transactions_pending">
-        TEXTDIV
       </div> <!-- end of div div_TEXTDIV_transactions_pending -->
       <div id="div_TEXTDIV_people">
         Priya - Miner <br>

@@ -88,3 +88,40 @@ function transAmount(amt) {
   let newStr = str.replace(oldAmt, 'Amount: ' + amt);
   el.innerHTML = newStr;
 } // END of function transAmount
+
+function transVerify() {
+  // get info from inputs rather than display field
+  //
+  let el = document.getElementById('select_From_menu');
+  let str = el.value;
+  let tIndex = Number(str);
+  let tFromAddress = data['address'][tIndex];
+  let tFromIndex = tIndex; // need this later to check if amt available
+  //
+  el = document.getElementById('select_To_menu');
+  str = el.value;
+  tIndex = Number(str);
+  let tToAddress = data['address'][tIndex];
+  //
+  el = document.getElementById('input_field_enter_amount');
+  let tAmount = el.value;
+  //
+  // do some validation
+  console.log('tFromAddress = ' + tFromAddress);
+  console.log('tToAddress = ' + tToAddress);
+  console.log('tAmount = ' + tAmount);
+  if ( (tAmount > 0) & (tFromAddress != tToAddress) ) {
+    console.log('OK transaction');
+  } else {
+    console.log('Fishy transaction');
+  }
+  // check if balance is sufficient
+  let tAmountAvailable = data['balance'][tFromIndex];
+  if (tAmount <= tAmountAvailable) {
+    // this is good
+    console.log('has sufficient funds');
+  } else {
+    console.log('INsufficient funds');
+  }
+
+} // END of function transVerify

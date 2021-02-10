@@ -34,6 +34,7 @@
   <script language="javascript">
     // this works as script in html file but not in external js files
     window.onload = openThisLab(); // can NOT use () after controller.openThisLab
+    // put onload into <body> to load fields, which have not yet been created here 
   </script>
 
 </head>
@@ -85,7 +86,8 @@
         Enter amount:
       </p>
       <input id="input_field_enter_amount" value="" onchange="transAmount(this.value)">
-      <input type="button" id="button_verify_transaction" value="2) Verify">
+      <input type="button" id="button_verify_transaction" value="2) Verify"
+        onclick='transVerify()'>
       <p id="field_check_sufficient_funds_">
         Funds ARE available, adding to pending
       </p>

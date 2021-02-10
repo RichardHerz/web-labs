@@ -36,11 +36,11 @@
   <script language="javascript">
     // this works as script in html file but not in external js files
     window.onload = openThisLab(); // can NOT use () after controller.openThisLab
-    // put onload into <body> to load fields, which have not yet been created here
+    // use onload in body tag to load fields, which have not yet been created here
   </script>
 
 </head>
-<body>
+<body onload="updateBody()">
   <div id="div_page_header">
     <input type="button" value="Back" onclick="history.back()">
     <p style="margin-left: 55px;">to Web Labs at ReactorLab.net</p>
@@ -59,6 +59,9 @@
       <p id="field_people_LABEL">
         Wallets
       </p>
+      <div id="div_TEXTDIV_people">
+        <!-- filled by updateBody called in body tag onload -->
+      </div> <!-- end of div div_TEXTDIV_people -->
       <p id="field_transaction_LABEL">
         1) Create transaction
       </p>
@@ -69,20 +72,10 @@
         Select FROM:
       </p>
       <select id="select_From_menu" value="Select..." onchange="transFrom(this.value)">
-        <option value="-1">Select...</option>
-        <option value="0">Priya</option>
-        <option value="1">Tinashe</option>
-        <option value="2">Chen</option>
-        <option value="3">Zahra</option>
-        <option value="4">Bob</option>
+        <!-- filled by updateBody called in body tag onload -->
       </select>
       <select id="select_To_menu" value="Select..." onchange="transTo(this.value)">
-        <option value="-1">Select...</option>
-        <option value="0">Priya</option>
-        <option value="1">Tinashe</option>
-        <option value="2">Chen</option>
-        <option value="3">Zahra</option>
-        <option value="4">Bob</option>
+        <!-- filled by updateBody called in body tag onload -->
       </select>
       <p id="field_enter_amount_LABEL">
         Enter amount:
@@ -106,27 +99,6 @@
       </div> <!-- end of div div_TEXTDIV_transaction -->
       <div id="div_TEXTDIV_transactions_pending">
       </div> <!-- end of div div_TEXTDIV_transactions_pending -->
-      <div id="div_TEXTDIV_people">
-        Priya - Miner <br>
-        Address: 8fca7b9ab6fac411b2443c1303d3bc56 <br>
-        Balance: 50 <br>
-        --------------- <br>
-        Tinashe <br>
-        Address: f157bab61715d2bca9d81ada45bad57c <br>
-        Balance: 50 <br>
-        --------------- <br>
-        Chen <br>
-        Address: 263f99c540f4168132cc5fee5726b5ce <br>
-        Balance: 50 <br>
-        --------------- <br>
-        Zahra <br>
-        Address: bf61f561918f37cf441fb8a6a1094b7a <br>
-        Balance: 50 <br>
-        --------------- <br>
-        Bob <br>
-        Address: 9412daed1e0bd204f652677a80192ea9 <br>
-        Balance: 50
-      </div> <!-- end of div div_TEXTDIV_people -->
     </div> <!-- end of div div_simFrame_01 -->
     <div id="div_simFrame_02">
       <input type="button" id="button_build_block" value="3) Build block">

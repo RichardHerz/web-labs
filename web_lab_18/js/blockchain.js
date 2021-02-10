@@ -2,8 +2,6 @@ function openThisLab() {
   data.initialize();
   // WARNING: can only alter HTML if this function called by
   //          onload property in BODY TAG (not onload in page header)
-  // let el = document.getElementById('div_TEXTDIV_transactions_pending');
-  // el.innerHTML = data['people'][0];
 }
 
 let data = {
@@ -14,6 +12,8 @@ let data = {
     data['people'][2] = 'Chen';
     data['people'][3] = 'Zahra';
     data['people'][4] = 'Bob';
+    data['miner'] = new Object();
+    data['miner'] = 1; // index of the one miner in group
     data['address'] = new Object();
     data['address'][0] = '8fca7b9ab6fac411b2443c1303d3bc56';
     data['address'][1] = 'f157bab61715d2bca9d81ada45bad57c';
@@ -27,11 +27,50 @@ let data = {
     data['balance'][3] = '50';
     data['balance'][4] = '50';
     data['transaction'] = new Object();
-    data['transaction']['From'] = '';
-    data['transaction']['To'] = '';
-    data['transaction']['Amount'] = '';
+    data['transaction']['pending'] = 0; // # pending transactions
+    data['transaction']['pendingMax'] = 4; // # needed for provisional block
   } // END of function data.initialize()
 } // END of object data
+
+function updateBody() {
+  // called in body tag onload so can alter HTML elements
+  updatePeople();
+  updateSelectMenus();
+}
+
+function updatePeople() {
+  // called by updateBody() and addTransToPending()
+  let minerIndex = data['miner'];
+  let tText = '';
+  let ol = Object.keys(data['people']);
+  let len = ol.length
+  for (let i=0; i<len; i++) {
+    tText += data['people'][i];
+    if (i == minerIndex) {tText += ' - Miner';}
+    tText += '<br>';
+    tText += 'Address: ' + data['address'][i] + '<br>';
+    tText += 'Balance: ' + data['balance'][i] + '<br>';
+    if (i < len-1) {tText += '------------------------ <br>';}
+  }
+  el = document.getElementById('div_TEXTDIV_people');
+  el.innerHTML = tText;
+} // END of function updatePeopleDiv
+
+function updateSelectMenus(){
+  // called by updateBody()
+  let ol = Object.keys(data['people']);
+  let len = ol.length
+  let person;
+  tText = '<option value="-1">Select...</option> <br>';
+  for (let i=0; i<len; i++) {
+    person = data['people'][i];
+    tText += '<option value="' + i + '">' + person + '</option> <br>';
+  }
+  el = document.getElementById('select_From_menu');
+  el.innerHTML = tText;
+  el = document.getElementById('select_To_menu');
+  el.innerHTML = tText;
+} // END of function updateSelectMenus
 
 function transFrom(sel) {
   let tSel = Number(sel);
@@ -98,14 +137,13 @@ function transVerify() {
   //
   let el = document.getElementById('select_From_menu');
   let str = el.value;
-  let tIndex = Number(str);
-  let tFromAddress = data['address'][tIndex];
-  let tFromIndex = tIndex; // need this later to check if amt available
+  let tFromIndex = Number(str);
+  let tFromAddress = data['address'][tFromIndex];
   //
   el = document.getElementById('select_To_menu');
   str = el.value;
-  tIndex = Number(str);
-  let tToAddress = data['address'][tIndex];
+  let tToIndex = Number(str);
+  let tToAddress = data['address'][tToIndex];
   //
   el = document.getElementById('input_field_enter_amount');
   let tAmount = el.value;
@@ -124,6 +162,7 @@ function transVerify() {
   }
   // check if balance is sufficient
   let tAmountAvailable = data['balance'][tFromIndex];
+  tAmountAvailable = Number(tAmountAvailable);
   if (tAmount <= tAmountAvailable) {
     console.log('has sufficient funds');
     tFlag2 = 1;
@@ -132,33 +171,48 @@ function transVerify() {
   }
 
   if (tFlag1 & tFlag2) {
-    // add to data store
-    data['transaction']['From'] = tFromAddress;
-    data['transaction']['To'] = tToAddress;
-    data['transaction']['Amount'] = tAmount;
-    // add to pending
-    addTransToPending();
+    addTransToPending(tFromIndex,tToIndex,tAmount);
   }
 
 } // END of function transVerify
 
-function addTransToPending() {
+function addTransToPending(pFromIndex,pToIndex,pAmt) {
 
-  let tFrom = data['transaction']['From'];
-  let tTo = data['transaction']['To'];
-  let tAmt = data['transaction']['Amount'];
-
+  // ADD TRANSACTION TO PENDING TRANSACTIONS
+  let tFrom = data['address'][pFromIndex];
+  let tTo = data['address'][pToIndex];
   let el = document.getElementById('div_TEXTDIV_transactions_pending');
   let oldText = el.innerHTML;
   let newText = 'From: ' + tFrom + '<br>';
   newText += 'To: ' + tTo + '<br>';
-  newText += 'Amount: ' + tAmt + '<br>';
+  newText += 'Amount: ' + pAmt + '<br>';
   let d = new Date(); // or let d = Date.now() for ms since Jan 1, 1970
   newText += 'Date: ' + d + '<br>';
   let tHash = fMD2(newText);
   newText += 'Hash: ' + tHash + '<br>';
   newText += '----------------------' + '<br>';
   el.innerHTML = newText + oldText;
+
+  // UPDATE USER BALANCES IN data
+  let fb = data['balance'][pFromIndex];
+  fb = Number(fb);
+  pAmt = Number(pAmt);
+  fb -= pAmt;
+  data['balance'][pFromIndex] = fb;
+  let tb = data['balance'][pToIndex];
+  tb = Number(tb);
+  tb += pAmt;
+  data['balance'][pToIndex] = tb;
+
+  // UPDATE USER BALANCES IN WALLETS to fb, tb
+  updatePeople();
+
+  // UPDATE NUMBER TRANSACTIONS PENDING
+  let p = data['transaction']['pending'];
+  p += 1;
+  if (p >= data['transaction']['pendingMax']) {
+    // TRANSFER TO PROVISIONAL BLOCK
+  }
 
   // CLEAR TRANSACTION FIELD
   el = document.getElementById('div_TEXTDIV_transaction');
@@ -167,4 +221,12 @@ function addTransToPending() {
   newText += 'Amount: ';
   el.innerHTML = newText;
 
-}
+  // RESET TRANSACTION INPUTS
+  el = document.getElementById('select_From_menu');
+  el.value = -1;
+  el = document.getElementById('select_To_menu');
+  el.value = -1;
+  el = document.getElementById('input_field_enter_amount');
+  el.value = '';
+
+} // END of function addTransToPending

@@ -5,6 +5,9 @@ function openThisLab() {
 }
 
 let data = {
+  // QUESTION: I apparently need the initialize method called by openThisLab
+  //           in regular web labs but do I need it here?
+  // ANSWER: Yes I do need initialize method: tried without it and doesn't work
   initialize : function() {
     data['people'] = new Object();
     data['people'][0] = 'Priya';
@@ -29,6 +32,7 @@ let data = {
     data['transaction'] = new Object();
     data['transaction']['pending'] = 0; // # pending transactions
     data['transaction']['pendingMax'] = 4; // # needed for provisional block
+    // data['transaction'][0] etc. hold pending trans hashes for Merkle tree
   } // END of function data.initialize()
 } // END of object data
 
@@ -210,8 +214,11 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
   // UPDATE NUMBER TRANSACTIONS PENDING
   let p = data['transaction']['pending'];
   p += 1;
+  // SAVE HASH FOR MERKLE TREE IN PENDING BLOCK
+  data['transaction'][p-1] = tHash;
+  console.log('new hash of verified trans = ' + data['transaction'][p-1]);
   if (p >= data['transaction']['pendingMax']) {
-    // TRANSFER TO PROVISIONAL BLOCK
+    // NOTIFY USER THEY CAN NOW BUILD PROVISIONAL BLOCK
   }
 
   // CLEAR TRANSACTION FIELD
@@ -230,3 +237,22 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
   el.value = '';
 
 } // END of function addTransToPending
+
+function buildBlock() {
+  // build provisional block
+  // make Merkle tree and get root
+  // create block header
+  // append pending transaction field
+
+  // MAKE MERKLE TREE and get root
+  // assume number of transactions is data['transaction']['pendingMax']
+  // and that is even number
+  // do brute force for now
+  let mt = [];
+  mt[0] = fMD2(data['transaction'][0] + data['transaction'][1]);
+  mt[1] = fMD2(data['transaction'][2] + data['transaction'][3]);
+  mt[2] = fMD2(mt[0] + mt[1]);
+  // mt[2] is Merkle root, at least for now
+  console.log('mt[2] = ' + mt[2]);
+
+}

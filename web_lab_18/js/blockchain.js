@@ -9,6 +9,10 @@ let data = {
   //           in regular web labs but do I need it here?
   // ANSWER: Yes I do need initialize method: tried without it and doesn't work
   initialize : function() {
+    data['version'] = new Object();
+    data['version'] = 'TedTok_01';
+    data['target'] = new Object();
+    data['target'] = '5';
     data['people'] = new Object();
     data['people'][0] = 'Priya';
     data['people'][1] = 'Tinashe';
@@ -30,9 +34,12 @@ let data = {
     data['balance'][3] = '50';
     data['balance'][4] = '50';
     data['transaction'] = new Object();
-    data['transaction']['pending'] = 0; // # pending transactions
-    data['transaction']['pendingMax'] = 4; // # needed for provisional block
+    data['transaction']['pending'] = 0; // number of pending transactions
     // data['transaction'][0] etc. hold pending trans hashes for Merkle tree
+    // do not use keys to get number trans because old ones not removed
+    data['block'] = new Object();
+    data['block']['number'] = 0;
+    data['block']['previous'] = 'genesis block';
   } // END of function data.initialize()
 } // END of object data
 
@@ -167,11 +174,11 @@ function transVerify() {
   // check if balance is sufficient
   let tAmountAvailable = data['balance'][tFromIndex];
   tAmountAvailable = Number(tAmountAvailable);
-  if (tAmount <= tAmountAvailable) {
+  if ((tAmount > 0) && (tAmount <= tAmountAvailable)) {
     console.log('has sufficient funds');
     tFlag2 = 1;
   } else {
-    console.log('NOT sufficient funds');
+    console.log('NOT sufficient funds or zero');
   }
 
   if (tFlag1 & tFlag2) {
@@ -214,12 +221,14 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
   // UPDATE NUMBER TRANSACTIONS PENDING
   let p = data['transaction']['pending'];
   p += 1;
+  data['transaction']['pending'] = p;
   // SAVE HASH FOR MERKLE TREE IN PENDING BLOCK
   data['transaction'][p-1] = tHash;
   console.log('new hash of verified trans = ' + data['transaction'][p-1]);
-  if (p >= data['transaction']['pendingMax']) {
-    // NOTIFY USER THEY CAN NOW BUILD PROVISIONAL BLOCK
-  }
+
+  // if (p >= data['transaction']['pendingMax']) {
+  //   // NOTIFY USER THEY CAN NOW BUILD PROVISIONAL BLOCK
+  // }
 
   // CLEAR TRANSACTION FIELD
   el = document.getElementById('div_TEXTDIV_transaction');
@@ -239,20 +248,125 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
 } // END of function addTransToPending
 
 function buildBlock() {
-  // build provisional block
-  // make Merkle tree and get root
-  // create block header
-  // append pending transaction field
 
-  // MAKE MERKLE TREE and get root
-  // assume number of transactions is data['transaction']['pendingMax']
-  // and that is even number
-  // do brute force for now
-  let mt = [];
-  mt[0] = fMD2(data['transaction'][0] + data['transaction'][1]);
-  mt[1] = fMD2(data['transaction'][2] + data['transaction'][3]);
-  mt[2] = fMD2(mt[0] + mt[1]);
-  // mt[2] is Merkle root, at least for now
-  console.log('mt[2] = ' + mt[2]);
+  // XXX HAVE TO PREVENT THIS RUNNING AGAIN BEFORE
+  // XXX IT HAS BEEN VERIFIED AND ADDED TO BLOCKCHAIN
 
+  // BLOCK HEADER CONTENTS
+  // version # = TedTok_01
+  // block #
+  // hash previous block
+  // # transactions >> WHERE PUT?
+  // hash Merkle root
+  //   since block hash has only header hash - this can verify trans in block
+  // target - # zeros here needed in block hash with nonce
+  // HOLDER PLACE FOR TIME - OR ADD IT NOW?
+  // HOLDER PLACE FOR NONCE
+  // HOLDER PLACE FOR BLOCK HASH WITH NONCE THAT MEETS TARGET
+
+  console.log('enter buildBlock');
+
+  let el = document.getElementById('div_TEXTDIV_provisional_block');
+  let elcont = el.innerHTML;
+  elcont = Number(elcont);
+
+    let elcontlen = elcont.length;
+    console.log('elcontlen = ' + elcontlen + ', elcont = ' + elcont);
+
+  if (elcont !== 0) {
+    console.log('block still pending, can not build new block, exit buildBlock');
+    return;
+  }
+
+  if (data['transaction']['pending'] == 0) {
+    console.log('no transactions, exit buildBlock');
+    return;
+  }
+
+  // GET MERKLE ROOT OF TRANSACTIONS
+  console.log("data['transaction'][0] = " + data['transaction'][0]);
+  let merkleRoot = getMerkleRoot();
+  console.log('merkleRoot = ' + merkleRoot);
+  console.log("root ?= data..[0] = " + data['transaction'][0]);
+
+
+  // UPDATE BLOCK NUMBER
+  let bc = data['block']['number'];
+  bc += 1;
+  data['block']['number'] = bc;
+
+  let tHeader = 'Version: ' + data['version'] + '<br>';
+  tHeader += 'Block number: ' + bc + '<br>';
+  tHeader += 'Previous hash: ' + data['block']['previous'] + '<br>';
+  tHeader += 'Number transactions: ' + data['transaction']['pending'] + '<br>';
+  tHeader += 'Merkle root: ' + merkleRoot + '<br>';
+  tHeader += 'Date: pending<br>';
+  tHeader += 'Target: ' + data['target'] + '<br>';
+  tHeader += 'Nonce: pending<br>';
+  tHeader += 'Block hash: pending<br>';
+
+  // WRAP UP
+  el = document.getElementById('div_TEXTDIV_provisional_block');
+  let el2 = document.getElementById('div_TEXTDIV_transactions_pending');
+  let ttrans = el2.innerHTML;
+  let sep = '---------------------------<br>';
+  el.innerHTML = tHeader + sep + ttrans;
+  data['transaction']['pending'] = 0;
+  el2.innerHTML = '';
+
+  console.log('exit buildBlock');
+}
+
+function getMerkleRoot() {
+  // Merkle root of transaction hashes included in block header
+  //   because only block header hash sent to next block in chain
+  //   so Merkle root in block header hash can verify tansactions not changed
+  // data['transaction'][0] etc. hold pending transaction hashes for Merkle tree
+  //
+  // WARNING: once this is called, data['transaction'][0] holds Merkle root
+  //          and other [i] hold intermediate values...
+  //
+  // COULD UPDATE by operating on a copy of data['transaction'][0] etc.
+  //
+  let pm = data['transaction']['pending'];
+  console.log('enter getMerkleRoot, pm = ' + pm);
+  if (pm > 0) {
+    // smells like something could do recursively...
+    while (pm >= 1) {
+      for (i = 0; i < pm; i += 2) {
+        console.log('enter for, pm = ' + pm);
+        if (i == pm-1) {
+          // i lands on pm-1 only when pm is odd
+          // hash i + i
+          data['transaction'][i] = fMD2(data['transaction'][i] + data['transaction'][i]);
+        } else {
+          // hash i + i
+          data['transaction'][i] = fMD2(data['transaction'][i] + data['transaction'][i]);
+        } // END of if (i == pm-1)
+        // update pm
+        if (pm == 1) {
+          // done, so this will end repeats and return
+          pm = 0;
+          console.log('set pm = 0');
+        } else if ((pm % 2) == 0) {
+          // pm is even
+          pm = pm/2;
+        } else {
+          // pm is odd and > 1
+          pm = (pm + 1)/2;
+        } // END of if (pm == 1)
+      } // END of for (i = 0; i < pm; i += 2)
+    } // END of while (pm >= 2)
+    // merkle root is in data['transaction'][0]
+    return data['transaction'][0];
+  } else {
+    return -99;
+  } // END of if (pm > 0)
+} // END of function getMerkleRoot
+
+function mineBlock() {
+  let el = document.getElementById('div_TEXTDIV_provisional_block');
+  el.innerHTML = '';
+  el = document.getElementById('div_TEXTDIV_mined_block');
+  el.innerHTML = 'mined block info under development';
 }

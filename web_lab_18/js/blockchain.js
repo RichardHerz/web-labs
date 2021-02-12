@@ -12,7 +12,9 @@ let data = {
     data['version'] = new Object();
     data['version'] = 'TedTok_01';
     data['target'] = new Object();
-    data['target'] = '5';
+    data['target'] = '3';
+    data['header'] = new Object();
+    data['header'] = '';
     data['people'] = new Object();
     data['people'][0] = 'Priya';
     data['people'][1] = 'Tinashe';
@@ -28,18 +30,20 @@ let data = {
     data['address'][3] = 'bf61f561918f37cf441fb8a6a1094b7a';
     data['address'][4] = '9412daed1e0bd204f652677a80192ea9';
     data['balance'] = new Object();
+    // starting balances after genesis block
     data['balance'][0] = '50';
     data['balance'][1] = '50';
     data['balance'][2] = '50';
     data['balance'][3] = '50';
     data['balance'][4] = '50';
     data['transaction'] = new Object();
-    data['transaction']['pending'] = 0; // number of pending transactions
+    data['transaction']['numPending'] = 0; // number of pending transactions
+    data['transaction']['pendingList'] = ''; // actual list of pending trans
     // data['transaction'][0] etc. hold pending trans hashes for Merkle tree
     // do not use keys to get number trans because old ones not removed
     data['block'] = new Object();
     data['block']['number'] = 0;
-    data['block']['previous'] = 'genesis block';
+    data['block']['previous'] = '00000000000000000000000000000000'; // 32 zeros
   } // END of function data.initialize()
 } // END of object data
 
@@ -47,6 +51,8 @@ function updateBody() {
   // called in body tag onload so can alter HTML elements
   updatePeople();
   updateSelectMenus();
+  updateChainHeader();
+  updateChainGenesis();
 }
 
 function updatePeople() {
@@ -82,6 +88,68 @@ function updateSelectMenus(){
   el = document.getElementById('select_To_menu');
   el.innerHTML = tText;
 } // END of function updateSelectMenus
+
+function updateChainHeader() {
+  // called by updateBody() and updateChain()
+  let el = document.getElementById('div_TEXTDIV_blockchain_header');
+  el.innerHTML = ''; // clear any old before filling
+  let tText = '';
+  let ol = Object.keys(data['people']);
+  let len = ol.length
+  for (let i=0; i<len; i++) {
+    tText += 'Address: ' + data['address'][i] + '<br>';
+    tText += 'Balance: ' + data['balance'][i] + '<br>';
+    if (i < len-1) {tText += '------------------------ <br>';}
+  }
+  el.innerHTML = tText;
+} // END of function updateChainHeader
+
+function updateChainGenesis() {
+
+  let el = document.getElementById('div_TEXTDIV_blockchain_body');
+  el.html = ''; // clear any old before filling
+
+  // DO GENESIS TRANSACTIONS 1st - NEED HASHES FOR MERKLE ROOT & BLOCK HASH
+  let tTrans ='';
+  let tHash = '';
+  let p = Object.keys(data['people']);
+  let np = p.length
+  for (let i=0; i<np; i++) {
+    tTrans += 'To: ' + data['address'][i] + '<br>';
+    tTrans += "Amount: " + data['balance'][i] + "<br>";
+    tHash = fMD2(tTrans);
+    data['transaction'][i] = tHash; // save, need for Merkle tree
+    tTrans += "Hash: " + tHash + '<br>';
+    if (i < np-1) {tTrans += '------------------------ <br>';}
+  }
+
+  let theader = 'Version: ' + data['version'] + '<br>';
+  theader += 'Block number: ' + data['block']['number'] + '<br>';
+  theader += 'Previous hash: ' + data['block']['previous'] + '<br>';
+  theader += 'Number transactions: ' + np + '<br>';
+  // get Merkle root
+  data['transaction']['numPending'] = np;
+  let mr = getMerkleRoot();
+  theader += 'Merkle root: ' + mr + '<br>';
+  let d = new Date();
+  theader += 'Date: ' + d + '<br>';
+  theader += 'Target: ' + data['target'] + '<br>';
+  data['header'] = theader;
+
+  // MINE GENESIS BLOCK TO GET HASH
+  let ttarget = data['target'];
+  let result = fMiner(theader,ttarget);
+  let newHeader = result[0];
+  let newHash = result[1];
+  newHeader += '<br>Hash: ' + newHash + '<br>';
+  newHeader += '---------------------------<br>';
+  data['block']['previous'] = newHash;
+
+  let tText = newHeader + tTrans;
+
+  el.innerHTML = tText;
+
+} // END of updateChainGenesis
 
 function transFrom(sel) {
   let tSel = Number(sel);
@@ -219,9 +287,9 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
   updatePeople();
 
   // UPDATE NUMBER TRANSACTIONS PENDING
-  let p = data['transaction']['pending'];
+  let p = data['transaction']['numPending'];
   p += 1;
-  data['transaction']['pending'] = p;
+  data['transaction']['numPending'] = p;
   // SAVE HASH FOR MERKLE TREE IN PENDING BLOCK
   data['transaction'][p-1] = tHash;
   console.log('new hash of verified trans = ' + data['transaction'][p-1]);
@@ -270,15 +338,15 @@ function buildBlock() {
   let elcont = el.innerHTML;
   elcont = Number(elcont);
 
-    let elcontlen = elcont.length;
-    console.log('elcontlen = ' + elcontlen + ', elcont = ' + elcont);
+  let elcontlen = elcont.length;
+  console.log('elcontlen = ' + elcontlen + ', elcont = ' + elcont);
 
   if (elcont !== 0) {
     console.log('block still pending, can not build new block, exit buildBlock');
     return;
   }
 
-  if (data['transaction']['pending'] == 0) {
+  if (data['transaction']['numPending'] == 0) {
     console.log('no transactions, exit buildBlock');
     return;
   }
@@ -298,12 +366,12 @@ function buildBlock() {
   let tHeader = 'Version: ' + data['version'] + '<br>';
   tHeader += 'Block number: ' + bc + '<br>';
   tHeader += 'Previous hash: ' + data['block']['previous'] + '<br>';
-  tHeader += 'Number transactions: ' + data['transaction']['pending'] + '<br>';
+  tHeader += 'Number transactions: ' + data['transaction']['numPending'] + '<br>';
   tHeader += 'Merkle root: ' + merkleRoot + '<br>';
-  tHeader += 'Date: pending<br>';
+  let d = new Date(); // or let d = Date.now() for ms since Jan 1, 1970
+  tHeader += 'Date: ' + d + '<br>';
   tHeader += 'Target: ' + data['target'] + '<br>';
-  tHeader += 'Nonce: pending<br>';
-  tHeader += 'Block hash: pending<br>';
+  data['header'] = tHeader;
 
   // WRAP UP
   el = document.getElementById('div_TEXTDIV_provisional_block');
@@ -311,7 +379,8 @@ function buildBlock() {
   let ttrans = el2.innerHTML;
   let sep = '---------------------------<br>';
   el.innerHTML = tHeader + sep + ttrans;
-  data['transaction']['pending'] = 0;
+  data['transaction']['pendingList'] = ttrans;
+  data['transaction']['numPending'] = 0;
   el2.innerHTML = '';
 
   console.log('exit buildBlock');
@@ -328,7 +397,7 @@ function getMerkleRoot() {
   //
   // COULD UPDATE by operating on a copy of data['transaction'][0] etc.
   //
-  let pm = data['transaction']['pending'];
+  let pm = data['transaction']['numPending'];
   console.log('enter getMerkleRoot, pm = ' + pm);
   if (pm > 0) {
     // smells like something could do recursively...
@@ -365,8 +434,49 @@ function getMerkleRoot() {
 } // END of function getMerkleRoot
 
 function mineBlock() {
-  let el = document.getElementById('div_TEXTDIV_provisional_block');
-  el.innerHTML = '';
+
+  let el = document.getElementById('div_TEXTDIV_mined_block');
+  let elcont = el.innerHTML;
+  elcont = Number(elcont);
+
+  let elcontlen = elcont.length;
+  console.log('elcontlen = ' + elcontlen + ', elcont = ' + elcont);
+
+  if (elcont !== 0) {
+    console.log('mined block still pending, can not build new block, exit mineBlock');
+    return;
+  }
+
+  let theader = data['header'];
+  let ttarget = data['target'];
+  let result = fMiner(theader,ttarget);
+  let newHeader = result[0];
+  let newHash = result[1];
+  newHeader += '<br>Hash: ' + newHash + '<br>';
+  newHeader += '---------------------------<br>';
+
+  // NOTE: block number already updated in buildBlock
+  // save hash for next block
+  data['block']['previous'] = newHash;
+  console.log("data['block']['previous']" + newHash);
+
+  let pending = data['transaction']['pendingList'];
+
   el = document.getElementById('div_TEXTDIV_mined_block');
-  el.innerHTML = 'mined block info under development';
-}
+  el.innerHTML = newHeader + pending;
+
+  el = document.getElementById('div_TEXTDIV_provisional_block');
+  el.innerHTML = '';
+
+} // END of function mineBlock
+
+function updateChain() {
+  updateChainHeader();
+  // we are going to pre-pend the new mined block
+  let el = document.getElementById('div_TEXTDIV_mined_block');
+  let tText = el.innerHTML;
+  el.innerHTML = ''; // clear mined block display
+  el = document.getElementById('div_TEXTDIV_blockchain_body');
+  tText += el.innerHTML;
+  el.innerHTML = tText;
+} // END of function updateCthain

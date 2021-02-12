@@ -1,3 +1,31 @@
+function fMiner(ph, pt) {
+  // input param ph is header
+  // input param pt is target = # zeros needed at start of hash
+  let mn;
+  let ha;
+  let s;
+  let zz;
+  let z = '';
+  // get string of zeros to match
+  for (let i = 0; i < pt; i++) {
+    z += '0';
+  }
+  for (i = 0; i < 300000; i++) {
+    // i is our mining nonce
+    mn = ph;
+    mn += 'Nonce: ' + i.toString();
+    ha = fMD2(mn);
+    s = ha.slice(0,pt);
+    if (s == z) {
+      console.log('break at i = ' + i);
+      break;
+    } // END of if
+  } // END of for
+  console.log('mn = ' + mn);
+  console.log('ha = ' + ha);
+  return [mn, ha];
+} // END of function fMiner
+
 function fHashit() {
   let ms = document.getElementById('textarea_enter_message').value;
   let h = fMD2(ms);
@@ -208,27 +236,3 @@ function fMD2(ms) {
 
   return MD2;
 } // END of fMD2
-
-function fMiner(m,b,ph) {
-  let mn;
-  let h;
-  let s;
-  let z = '0000000000';
-  let nz = 4; // # zeros needed at start of hash
-  let zz;
-  for (let i = 0; i < 300000; i++) {
-    // i is our mining nonce
-    mn ='block number: ' + b + '\n';
-    mn += 'nonce: ' + i.toString() + '\n'
-    mn +='previous hash: ' + ph + '\n';
-    mn += m;
-    h = fMD2(mn);
-    s = h.slice(0,nz);
-    zz = z.slice(0,nz);
-    if (s == zz) {
-      // console.log('break');
-      break;
-    } // END of if
-  } // END of for
-  return [mn, h];
-} // END of function fMiner()

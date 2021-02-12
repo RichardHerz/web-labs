@@ -19,6 +19,11 @@ input, button {
 /* do NOT write general style for div since interferes
     with plotting by jquery.flot.js */
 
+/* NOT REGULAR LAB SO WILL WRITE GENERAL STYLE FOR DIV */
+div {
+overflow: auto;
+}
+
 p {
   display: block;
   text-align: left;
@@ -541,7 +546,7 @@ border-style: solid;
 #field_blockchain_body_LABEL {
   position: absolute;
   left: 6px;
-  top: 238px;
+  top: 240px;
   width: 141px;
   height: 24px;
   border-width: 2px;
@@ -583,7 +588,7 @@ border-style: solid;
   left: 6px;
   top: 64px;
   width: 326px;
-  height: 181px;
+  height: 185px;
   visibility: visible;
   border-width: 2px;
   border-style: outset;

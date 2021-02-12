@@ -30,7 +30,7 @@
 
   <!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
   <script language="javascript" src="js/blockchain.js" type="text/javascript"></script>
-  <script language="javascript" src="js/myHasher.js" type="text/javascript"></script>
+  <script language="javascript" src="js/hasher_miner.js" type="text/javascript"></script>
 
   <!-- initialize simulation after loading of this window -->
   <script language="javascript">
@@ -111,15 +111,16 @@
       <p id="field_mined_block_LABEL">
         Mined Block
       </p>
+      <!-- KEEP MINED BLOCK DIV EMPTY - CHECKED BY mineBlock() - NO COMMENTS-->
       <div id="div_TEXTDIV_mined_block">
-        TEXTDIV
       </div> <!-- end of div div_TEXTDIV_mined_block -->
-      <!-- KEEP PROV BLOCK DIV EMPTY - CHECKED BY buildBlock() - NO COMMENTS-->
+      <!-- KEEP PROVISIONAL BLOCK DIV EMPTY - CHECKED BY buildBlock() - NO COMMENTS-->
       <div id="div_TEXTDIV_provisional_block">
       </div> <!-- end of div div_TEXTDIV_provisional_block -->
     </div> <!-- end of div div_simFrame_02 -->
     <div id="div_simFrame_03">
-      <input type="button" id="button_add_block" value="5) Add block to chain">
+      <input type="button" id="button_add_block" value="5) Add block to chain"
+        onclick= "updateChain()">
       <p id="field_blockchain_header_LABEL">
         Blockchain Header
       </p>
@@ -127,10 +128,8 @@
         Blockchain Body
       </p>
       <div id="div_TEXTDIV_blockchain_body">
-        TEXTDIV
       </div> <!-- end of div div_TEXTDIV_blockchain_body -->
       <div id="div_TEXTDIV_blockchain_header">
-        TEXTDIV
       </div> <!-- end of div div_TEXTDIV_blockchain_header -->
     </div> <!-- end of div div_simFrame_03 -->
   </div>  <!-- end of div flex-container -->

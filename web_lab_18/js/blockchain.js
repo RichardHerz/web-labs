@@ -18,11 +18,9 @@ let data = {
     data['people'] = new Object();
     data['people'][0] = 'Priya';
     data['people'][1] = 'Tinashe';
-    data['people'][2] = 'Chen';
+    data['people'][2] = 'Lily';
     data['people'][3] = 'Zahra';
     data['people'][4] = 'Bob';
-    data['miner'] = new Object();
-    data['miner'] = 1; // index of the one miner in group
     data['address'] = new Object();
     data['address'][0] = '8fca7b9ab6fac411b2443c1303d3bc56';
     data['address'][1] = 'f157bab61715d2bca9d81ada45bad57c';
@@ -42,6 +40,7 @@ let data = {
     // data['transaction'][0] etc. hold pending trans hashes for Merkle tree
     // do not use keys to get number trans because old ones not removed
     data['block'] = new Object();
+    data['block']['reward'] = 0.99;
     data['block']['number'] = 0;
     data['block']['previous'] = '00000000000000000000000000000000'; // 32 zeros
   } // END of function data.initialize()
@@ -57,14 +56,11 @@ function updateBody() {
 
 function updatePeople() {
   // called by updateBody() and addTransToPending()
-  let minerIndex = data['miner'];
   let tText = '';
   let ol = Object.keys(data['people']);
   let len = ol.length
   for (let i=0; i<len; i++) {
-    tText += data['people'][i];
-    if (i == minerIndex) {tText += ' - Miner';}
-    tText += '<br>';
+    tText += data['people'][i] + '<br>';
     tText += 'Address: ' + data['address'][i] + '<br>';
     tText += 'Balance: ' + data['balance'][i] + '<br>';
     if (i < len-1) {tText += '------------------------ <br>';}
@@ -112,6 +108,7 @@ function updateChainGenesis() {
   // DO GENESIS TRANSACTIONS 1st - NEED HASHES FOR MERKLE ROOT & BLOCK HASH
   let tTrans ='';
   let tHash = '';
+  let sep = '------------------------ <br>';
   let p = Object.keys(data['people']);
   let np = p.length
   for (let i=0; i<np; i++) {
@@ -120,34 +117,45 @@ function updateChainGenesis() {
     tHash = fMD2(tTrans);
     data['transaction'][i] = tHash; // save, need for Merkle tree
     tTrans += "Hash: " + tHash + '<br>';
-    if (i < np-1) {tTrans += '------------------------ <br>';}
+    if (i < np-1) {tTrans += sep;}
   }
 
   let theader = 'Version: ' + data['version'] + '<br>';
   theader += 'Block number: ' + data['block']['number'] + '<br>';
   theader += 'Previous hash: ' + data['block']['previous'] + '<br>';
-  theader += 'Number transactions: ' + np + '<br>';
   // get Merkle root
   data['transaction']['numPending'] = np;
   let mr = getMerkleRoot();
+  // xxx better to pass ['numPending'] to getMerkleRoot as param...
+  // xxx so don't have to remember to reset to zero below
   theader += 'Merkle root: ' + mr + '<br>';
-  let d = new Date();
-  theader += 'Date: ' + d + '<br>';
-  theader += 'Target: ' + data['target'] + '<br>';
-  data['header'] = theader;
+  // data['header'] = theader;
 
   // MINE GENESIS BLOCK TO GET HASH
   let ttarget = data['target'];
   let result = fMiner(theader,ttarget);
-  let newHeader = result[0];
-  let newHash = result[1];
-  newHeader += '<br>Hash: ' + newHash + '<br>';
-  newHeader += '---------------------------<br>';
+  let newDate = result[0];
+  let newNonce = result[1];
+  let newHash = result[2];
+  theader += 'Date: ' + newDate + '<br>';
+  theader += 'Target: ' + ttarget + '<br>';
+  theader += 'Nonce: ' + newNonce + '<br>';
+  theader += 'Hash: ' + newHash + '<br>';
+  theader += sep;
   data['block']['previous'] = newHash;
 
-  let tText = newHeader + tTrans;
+  let tText = '';
+  tText += theader;
+  tText += 'Number transactions: ' + np + '<br>';
+  tText += sep;
+  tText += tTrans;
+  tText += '======================== <br>';
+  tText += '======================== <br>';
 
   el.innerHTML = tText;
+
+  // xxx reset numPending to zero for use after genesis block
+  data['transaction']['numPending'] = 0;
 
 } // END of updateChainGenesis
 
@@ -287,16 +295,14 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
   updatePeople();
 
   // UPDATE NUMBER TRANSACTIONS PENDING
+  // xxx for now, numPending is without miner's block reward
   let p = data['transaction']['numPending'];
   p += 1;
   data['transaction']['numPending'] = p;
   // SAVE HASH FOR MERKLE TREE IN PENDING BLOCK
-  data['transaction'][p-1] = tHash;
+  // xxx was data['transaction'][p-1] but save [0] for miner's block reward
+  data['transaction'][p] = tHash;
   console.log('new hash of verified trans = ' + data['transaction'][p-1]);
-
-  // if (p >= data['transaction']['pendingMax']) {
-  //   // NOTIFY USER THEY CAN NOW BUILD PROVISIONAL BLOCK
-  // }
 
   // CLEAR TRANSACTION FIELD
   el = document.getElementById('div_TEXTDIV_transaction');
@@ -315,22 +321,120 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
 
 } // END of function addTransToPending
 
+// function buildBlock() {
+//
+//   // XXX HAVE TO PREVENT THIS RUNNING AGAIN BEFORE
+//   // XXX IT HAS BEEN VERIFIED AND ADDED TO BLOCKCHAIN
+//
+//   // BLOCK HEADER CONTENTS
+//   // ---
+//   // version
+//   // previous hash
+//   // merkle root: pending
+//   // time: pending (when miner starts the mining)
+//   // target: 3
+//   // nonce: pending
+//   // Hash : pending
+//   // ---
+//   // TRANSACTIONS
+//   // ---
+//   // Number transactions: including miner reward
+//   // ---
+//   // Miner reward to: pending
+//   // Amount: 0.99
+//   // Hash: pending
+//   // ---
+//   // List of other transactions
+//
+//   console.log('enter buildBlock');
+//
+//   let el = document.getElementById('div_TEXTDIV_provisional_block');
+//   let elcont = el.innerHTML;
+//   elcont = Number(elcont);
+//
+//   let elcontlen = elcont.length;
+//   console.log('elcontlen = ' + elcontlen + ', elcont = ' + elcont);
+//
+//   if (elcont !== 0) {
+//     console.log('block still pending, can not build new block, exit buildBlock');
+//     return;
+//   }
+//
+//   if (data['transaction']['numPending'] == 0) {
+//     console.log('no transactions, exit buildBlock');
+//     return;
+//   }
+//
+//   // select random user as miner
+//   let p = Object.keys(data['people']);
+//   let np = p.length;
+//   let minerIndex = Math.floor(Math.random() * np); // returns a random integer from 0 to np-1
+//   let coinbase = "";
+//   coinbase += "Miner reward to: " + data['address'][minerIndex] + "<br>";
+//   coinbase += "Amount: " + data['block']['reward'] + "<br>";
+//   let cbhash = fMD2(coinbase);
+//   data['transaction'][0] = cbhash;
+//   data['transaction']['numPending'] += 1;
+//   coinbase += 'ID: ' + cbhash + '<br>';
+//
+//   // GET MERKLE ROOT OF TRANSACTIONS
+//   console.log("data['transaction'][0] = " + data['transaction'][0]);
+//   let merkleRoot = getMerkleRoot();
+//   console.log('merkleRoot = ' + merkleRoot);
+//   console.log("root ?= data..[0] = " + data['transaction'][0]);
+//
+//   // UPDATE BLOCK NUMBER
+//   let bc = data['block']['number'];
+//   bc += 1;
+//   data['block']['number'] = bc;
+//
+//   let tHeader = 'Version: ' + data['version'] + '<br>';
+//   tHeader += 'Block number: ' + bc + '<br>';
+//   tHeader += 'Previous hash: ' + data['block']['previous'] + '<br>';
+//   tHeader += 'Number transactions: ' + data['transaction']['numPending'] + '<br>';
+//   tHeader += 'Merkle root: ' + merkleRoot + '<br>';
+//   let d = new Date(); // or let d = Date.now() for ms since Jan 1, 1970
+//   tHeader += 'Date: ' + d + '<br>';
+//   tHeader += 'Target: ' + data['target'] + '<br>';
+//   data['header'] = tHeader;
+//
+//   // WRAP UP
+//   el = document.getElementById('div_TEXTDIV_provisional_block');
+//   let el2 = document.getElementById('div_TEXTDIV_transactions_pending');
+//   let ttrans = el2.innerHTML;
+//   let sep = '---------------------------<br>';
+//   el.innerHTML = tHeader + sep + coinbase + sep + ttrans;
+//   data['transaction']['pendingList'] = ttrans;
+//   data['transaction']['numPending'] = 0;
+//   el2.innerHTML = '';
+//
+//   console.log('exit buildBlock');
+// } // END of function buildBlock
+
 function buildBlock() {
 
   // XXX HAVE TO PREVENT THIS RUNNING AGAIN BEFORE
   // XXX IT HAS BEEN VERIFIED AND ADDED TO BLOCKCHAIN
 
   // BLOCK HEADER CONTENTS
-  // version # = TedTok_01
-  // block #
-  // hash previous block
-  // # transactions >> WHERE PUT?
-  // hash Merkle root
-  //   since block hash has only header hash - this can verify trans in block
-  // target - # zeros here needed in block hash with nonce
-  // HOLDER PLACE FOR TIME - OR ADD IT NOW?
-  // HOLDER PLACE FOR NONCE
-  // HOLDER PLACE FOR BLOCK HASH WITH NONCE THAT MEETS TARGET
+  // ---
+  // version
+  // previous hash
+  // merkle root: pending
+  // time: pending (when miner starts the mining)
+  // target: 3
+  // nonce: pending
+  // Hash : pending
+  // ---
+  // TRANSACTIONS
+  // ---
+  // Number transactions: including miner reward
+  // ---
+  // Miner reward to: pending
+  // Amount: 0.99
+  // Hash: pending
+  // ---
+  // List of other transactions
 
   console.log('enter buildBlock');
 
@@ -351,40 +455,40 @@ function buildBlock() {
     return;
   }
 
-  // GET MERKLE ROOT OF TRANSACTIONS
-  console.log("data['transaction'][0] = " + data['transaction'][0]);
-  let merkleRoot = getMerkleRoot();
-  console.log('merkleRoot = ' + merkleRoot);
-  console.log("root ?= data..[0] = " + data['transaction'][0]);
-
-
   // UPDATE BLOCK NUMBER
   let bc = data['block']['number'];
   bc += 1;
   data['block']['number'] = bc;
 
+  let sep = '---------------------------<br>';
   let tHeader = 'Version: ' + data['version'] + '<br>';
   tHeader += 'Block number: ' + bc + '<br>';
   tHeader += 'Previous hash: ' + data['block']['previous'] + '<br>';
-  tHeader += 'Number transactions: ' + data['transaction']['numPending'] + '<br>';
-  tHeader += 'Merkle root: ' + merkleRoot + '<br>';
-  let d = new Date(); // or let d = Date.now() for ms since Jan 1, 1970
-  tHeader += 'Date: ' + d + '<br>';
+  tHeader += 'Merkle root: pending <br>';
+  tHeader += 'Date: pending <br>';
   tHeader += 'Target: ' + data['target'] + '<br>';
-  data['header'] = tHeader;
-
+  tHeader += 'Nonce: pending <br>';
+  tHeader += 'Hash: pending <br>';
+  tHeader += sep;
+  let np = 1 + data['transaction']['numPending']; // add 1 for miner's reward
+  tHeader += 'Number transactions: ' + data['transaction']['numPending'] + '<br>';
+  tHeader += sep;
+  tHeader += 'Miner reward to: pending <br>';
+  tHeader += 'Amount: pending <br>';
+  tHeader += 'Hash: pending <br>';
+  tHeader += sep;
   // WRAP UP
   el = document.getElementById('div_TEXTDIV_provisional_block');
   let el2 = document.getElementById('div_TEXTDIV_transactions_pending');
   let ttrans = el2.innerHTML;
-  let sep = '---------------------------<br>';
-  el.innerHTML = tHeader + sep + ttrans;
+
+  el.innerHTML = tHeader + ttrans;
   data['transaction']['pendingList'] = ttrans;
   data['transaction']['numPending'] = 0;
   el2.innerHTML = '';
 
   console.log('exit buildBlock');
-}
+} // END of function buildBlock
 
 function getMerkleRoot() {
   // Merkle root of transaction hashes included in block header

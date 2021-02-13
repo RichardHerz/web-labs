@@ -1,0 +1,19 @@
+PROVISIONAL BLOCK 
+
+HEADER 
+---
+version
+previous hash
+merkle root: pending
+time: pending (when miner starts the mining)
+target: 3
+nonce: pending
+Hash : pending 
+---
+TRANSACTIONS 
+--- 
+Miner reward to: pending
+Amount: 0.99
+Hash: pending
+---
+List of other transactions

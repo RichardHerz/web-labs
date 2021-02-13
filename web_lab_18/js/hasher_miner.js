@@ -1,4 +1,4 @@
-function fMiner(ph, pt) {
+function fBlockMiner(ph, pt) {
   // input param ph is header
   // input param pt is target = # zeros needed at start of hash
   // returns [date, nonce, hash]
@@ -25,14 +25,14 @@ function fMiner(ph, pt) {
       console.log('break at i = ' + i);
       break;
     } // END of if
-  } // END of forß
+  } // END of for
   let nonce = i.toString();
   console.log('nonce = ' + nonce);
   console.log('ha = ' + ha);
   return [d, nonce, ha];
-} // END of function fMiner
+} // END of function fBlockMiner
 
-// function fMiner(ph, pt) {
+// function fBlockMiner(ph, pt) {
 //   // input param ph is header
 //   // input param pt is target = # zeros needed at start of hash
 //   let mn;
@@ -58,7 +58,7 @@ function fMiner(ph, pt) {
 //   console.log('mn = ' + mn);
 //   console.log('ha = ' + ha);
 //   return [mn, ha];
-// } // END of function fMiner
+// } // END of function fBlockMiner
 
 function fHashit() {
   let ms = document.getElementById('textarea_enter_message').value;

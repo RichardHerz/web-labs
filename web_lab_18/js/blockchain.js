@@ -55,7 +55,7 @@ function updateBody() {
 }
 
 function updatePeople() {
-  // called by updateBody() and addTransToPending()
+  // called by updateBody(), addTransToPending(), updateChain()
   let tText = '';
   let ol = Object.keys(data['people']);
   let len = ol.length
@@ -63,11 +63,13 @@ function updatePeople() {
     tText += data['people'][i] + '<br>';
     tText += 'Address: ' + data['address'][i] + '<br>';
     tText += 'Balance: ' + data['balance'][i] + '<br>';
-    if (i < len-1) {tText += '------------------------ <br>';}
+    if (i < len-1) {
+      tText += '------------------------ <br>';
+    }
   }
   el = document.getElementById('div_TEXTDIV_people');
   el.innerHTML = tText;
-} // END of function updatePeopleDiv
+}
 
 function updateSelectMenus(){
   // called by updateBody()
@@ -133,7 +135,7 @@ function updateChainGenesis() {
 
   // MINE GENESIS BLOCK TO GET HASH
   let ttarget = data['target'];
-  let result = fMiner(theader,ttarget);
+  let result = fBlockMiner(theader,ttarget);
   let newDate = result[0];
   let newNonce = result[1];
   let newHash = result[2];
@@ -149,7 +151,6 @@ function updateChainGenesis() {
   tText += 'Number transactions: ' + np + '<br>';
   tText += sep;
   tText += tTrans;
-  tText += '======================== <br>';
   tText += '======================== <br>';
 
   el.innerHTML = tText;
@@ -270,14 +271,20 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
   let tTo = data['address'][pToIndex];
   let el = document.getElementById('div_TEXTDIV_transactions_pending');
   let oldText = el.innerHTML;
-  let newText = 'From: ' + tFrom + '<br>';
+
+  let newText = '';
+  newText += 'From: ' + tFrom + '<br>';
   newText += 'To: ' + tTo + '<br>';
   newText += 'Amount: ' + pAmt + '<br>';
   let d = new Date(); // or let d = Date.now() for ms since Jan 1, 1970
   newText += 'Date: ' + d + '<br>';
   let tHash = fMD2(newText);
   newText += 'Hash: ' + tHash + '<br>';
-  newText += '----------------------' + '<br>';
+
+  if (data['transaction']['numPending'] != 0) {
+    newText += '----------------------' + '<br>';
+  }
+
   el.innerHTML = newText + oldText;
 
   // UPDATE USER BALANCES IN data
@@ -296,13 +303,13 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
 
   // UPDATE NUMBER TRANSACTIONS PENDING
   // xxx for now, numPending is without miner's block reward
-  let p = data['transaction']['numPending'];
-  p += 1;
-  data['transaction']['numPending'] = p;
+  let np = data['transaction']['numPending'];
+  np += 1;
+  data['transaction']['numPending'] = np;
+  console.log('addTransToPending, np after increment = ' + np);
   // SAVE HASH FOR MERKLE TREE IN PENDING BLOCK
-  // xxx was data['transaction'][p-1] but save [0] for miner's block reward
-  data['transaction'][p] = tHash;
-  console.log('new hash of verified trans = ' + data['transaction'][p-1]);
+  data['transaction'][np] = tHash; //save [0] for miner's block reward
+  console.log('new hash of verified trans = ' + data['transaction'][np-1]);
 
   // CLEAR TRANSACTION FIELD
   el = document.getElementById('div_TEXTDIV_transaction');
@@ -321,96 +328,6 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
 
 } // END of function addTransToPending
 
-// function buildBlock() {
-//
-//   // XXX HAVE TO PREVENT THIS RUNNING AGAIN BEFORE
-//   // XXX IT HAS BEEN VERIFIED AND ADDED TO BLOCKCHAIN
-//
-//   // BLOCK HEADER CONTENTS
-//   // ---
-//   // version
-//   // previous hash
-//   // merkle root: pending
-//   // time: pending (when miner starts the mining)
-//   // target: 3
-//   // nonce: pending
-//   // Hash : pending
-//   // ---
-//   // TRANSACTIONS
-//   // ---
-//   // Number transactions: including miner reward
-//   // ---
-//   // Miner reward to: pending
-//   // Amount: 0.99
-//   // Hash: pending
-//   // ---
-//   // List of other transactions
-//
-//   console.log('enter buildBlock');
-//
-//   let el = document.getElementById('div_TEXTDIV_provisional_block');
-//   let elcont = el.innerHTML;
-//   elcont = Number(elcont);
-//
-//   let elcontlen = elcont.length;
-//   console.log('elcontlen = ' + elcontlen + ', elcont = ' + elcont);
-//
-//   if (elcont !== 0) {
-//     console.log('block still pending, can not build new block, exit buildBlock');
-//     return;
-//   }
-//
-//   if (data['transaction']['numPending'] == 0) {
-//     console.log('no transactions, exit buildBlock');
-//     return;
-//   }
-//
-//   // select random user as miner
-//   let p = Object.keys(data['people']);
-//   let np = p.length;
-//   let minerIndex = Math.floor(Math.random() * np); // returns a random integer from 0 to np-1
-//   let coinbase = "";
-//   coinbase += "Miner reward to: " + data['address'][minerIndex] + "<br>";
-//   coinbase += "Amount: " + data['block']['reward'] + "<br>";
-//   let cbhash = fMD2(coinbase);
-//   data['transaction'][0] = cbhash;
-//   data['transaction']['numPending'] += 1;
-//   coinbase += 'ID: ' + cbhash + '<br>';
-//
-//   // GET MERKLE ROOT OF TRANSACTIONS
-//   console.log("data['transaction'][0] = " + data['transaction'][0]);
-//   let merkleRoot = getMerkleRoot();
-//   console.log('merkleRoot = ' + merkleRoot);
-//   console.log("root ?= data..[0] = " + data['transaction'][0]);
-//
-//   // UPDATE BLOCK NUMBER
-//   let bc = data['block']['number'];
-//   bc += 1;
-//   data['block']['number'] = bc;
-//
-//   let tHeader = 'Version: ' + data['version'] + '<br>';
-//   tHeader += 'Block number: ' + bc + '<br>';
-//   tHeader += 'Previous hash: ' + data['block']['previous'] + '<br>';
-//   tHeader += 'Number transactions: ' + data['transaction']['numPending'] + '<br>';
-//   tHeader += 'Merkle root: ' + merkleRoot + '<br>';
-//   let d = new Date(); // or let d = Date.now() for ms since Jan 1, 1970
-//   tHeader += 'Date: ' + d + '<br>';
-//   tHeader += 'Target: ' + data['target'] + '<br>';
-//   data['header'] = tHeader;
-//
-//   // WRAP UP
-//   el = document.getElementById('div_TEXTDIV_provisional_block');
-//   let el2 = document.getElementById('div_TEXTDIV_transactions_pending');
-//   let ttrans = el2.innerHTML;
-//   let sep = '---------------------------<br>';
-//   el.innerHTML = tHeader + sep + coinbase + sep + ttrans;
-//   data['transaction']['pendingList'] = ttrans;
-//   data['transaction']['numPending'] = 0;
-//   el2.innerHTML = '';
-//
-//   console.log('exit buildBlock');
-// } // END of function buildBlock
-
 function buildBlock() {
 
   // XXX HAVE TO PREVENT THIS RUNNING AGAIN BEFORE
@@ -420,19 +337,19 @@ function buildBlock() {
   // ---
   // version
   // previous hash
-  // merkle root: pending
+  // merkle root: PENDING
   // time: pending (when miner starts the mining)
   // target: 3
-  // nonce: pending
-  // Hash : pending
+  // nonce: PENDING
+  // Hash : PENDING
   // ---
   // TRANSACTIONS
   // ---
   // Number transactions: including miner reward
   // ---
-  // Miner reward to: pending
+  // Miner reward to: PENDING
   // Amount: 0.99
-  // Hash: pending
+  // Hash: PENDING
   // ---
   // List of other transactions
 
@@ -471,7 +388,7 @@ function buildBlock() {
   tHeader += 'Hash: pending <br>';
   tHeader += sep;
   let np = 1 + data['transaction']['numPending']; // add 1 for miner's reward
-  tHeader += 'Number transactions: ' + data['transaction']['numPending'] + '<br>';
+  tHeader += 'Number transactions: ' + np + '<br>';
   tHeader += sep;
   tHeader += 'Miner reward to: pending <br>';
   tHeader += 'Amount: pending <br>';
@@ -484,13 +401,16 @@ function buildBlock() {
 
   el.innerHTML = tHeader + ttrans;
   data['transaction']['pendingList'] = ttrans;
-  data['transaction']['numPending'] = 0;
   el2.innerHTML = '';
 
   console.log('exit buildBlock');
 } // END of function buildBlock
 
 function getMerkleRoot() {
+  //
+  // USES data['transaction']['numPending']
+  // USES data['transaction'][i]
+  //
   // Merkle root of transaction hashes included in block header
   //   because only block header hash sent to next block in chain
   //   so Merkle root in block header hash can verify tansactions not changed
@@ -501,81 +421,149 @@ function getMerkleRoot() {
   //
   // COULD UPDATE by operating on a copy of data['transaction'][0] etc.
   //
-  let pm = data['transaction']['numPending'];
-  console.log('enter getMerkleRoot, pm = ' + pm);
-  if (pm > 0) {
+  let np = data['transaction']['numPending'];
+  console.log('enter getMerkleRoot, np = ' + np);
+  if (np > 0) {
     // smells like something could do recursively...
-    while (pm >= 1) {
-      for (i = 0; i < pm; i += 2) {
-        console.log('enter for, pm = ' + pm);
-        if (i == pm-1) {
-          // i lands on pm-1 only when pm is odd
+    while (np >= 1) {
+      for (i = 0; i < np; i += 2) {
+        console.log('enter for, np = ' + np);
+        if (i == np-1) {
+          // i lands on np-1 only when np is odd
           // hash i + i
           data['transaction'][i] = fMD2(data['transaction'][i] + data['transaction'][i]);
         } else {
           // hash i + i
           data['transaction'][i] = fMD2(data['transaction'][i] + data['transaction'][i]);
-        } // END of if (i == pm-1)
-        // update pm
-        if (pm == 1) {
+        } // END of if (i == np-1)
+        // update np
+        if (np == 1) {
           // done, so this will end repeats and return
-          pm = 0;
-          console.log('set pm = 0');
-        } else if ((pm % 2) == 0) {
-          // pm is even
-          pm = pm/2;
+          np = 0;
+          console.log('set np = 0');
+        } else if ((np % 2) == 0) {
+          // np is even
+          np = np/2;
         } else {
-          // pm is odd and > 1
-          pm = (pm + 1)/2;
-        } // END of if (pm == 1)
-      } // END of for (i = 0; i < pm; i += 2)
-    } // END of while (pm >= 2)
+          // np is odd and > 1
+          np = (np + 1)/2;
+        } // END of if (np == 1)
+      } // END of for (i = 0; i < np; i += 2)
+    } // END of while (np >= 2)
     // merkle root is in data['transaction'][0]
     return data['transaction'][0];
   } else {
     return -99;
-  } // END of if (pm > 0)
+  } // END of if (np > 0)
 } // END of function getMerkleRoot
 
 function mineBlock() {
+  // called by HTML input button id="button_mine_block"
+  // calls function fBlockMiner, which is in another JS file
 
+  // CHECK TO MAKE SURE OK TO RUN THIS FUNCTION
   let el = document.getElementById('div_TEXTDIV_mined_block');
   let elcont = el.innerHTML;
   elcont = Number(elcont);
-
   let elcontlen = elcont.length;
   console.log('elcontlen = ' + elcontlen + ', elcont = ' + elcont);
-
   if (elcont !== 0) {
     console.log('mined block still pending, can not build new block, exit mineBlock');
     return;
   }
 
-  let theader = data['header'];
+  let sep = '------------------------ <br>';
+
+  // REBUILD HEADER, NOW WITH MERKLE ROOT & DATE
+  let theader = 'Version: ' + data['version'] + '<br>';
+  theader += 'Block number: ' + data['block']['number'] + '<br>';
+  theader += 'Previous hash: ' + data['block']['previous'] + '<br>';
+
+  // ADD MINER REWARD TRANSACTION BEFORE MERKLE HASHING
+  // pick random user as miner
+  let p = Object.keys(data['people']);
+  let np = p.length
+  let minerIndex = Math.floor(Math.random() * np); // random 0 to np-1
+  let treward = 'Miner reward to: ' + data['address'][minerIndex] + '<br>';
+  treward += 'Amount: ' + data['block']['reward'] + '<br>';
+  let minerHash = fMD2(treward);
+  treward += 'Hash: ' + minerHash + '<br>';
+  treward += sep;
+  console.log('mineBlock, treward = ' + treward);
+  //save minerHash so getMerkleRoot can use it
+  data['transaction'][0] = minerHash;
+
+  // ADD MINER REWARD TO MINER'S BALANCE
+  let tb = data['balance'][minerIndex];
+  let br = data['block']['reward'];
+  tb = Number(tb);
+  br = Number(br);
+  tb = tb + br;
+  data['balance'][minerIndex] = tb;
+
+  // get Merkle root
+  // xxx for now, temporarily change numPending...
+  np = data['transaction']['numPending']; // np declared above
+  console.log('mineBlock, original np = ' + np);
+  np += 1;
+  console.log('mineBlock, incremented np = ' + np);
+  data['transaction']['numPending'] = np; // use below before clearing at end
+  let mr = getMerkleRoot();
+  // xxx better to pass ['numPending'] to getMerkleRoot as param...
+  theader += 'Merkle root: ' + mr + '<br>';
+  // data['header'] = theader;
+
+  // MINE BLOCK TO GET HASH
   let ttarget = data['target'];
-  let result = fMiner(theader,ttarget);
-  let newHeader = result[0];
-  let newHash = result[1];
-  newHeader += '<br>Hash: ' + newHash + '<br>';
-  newHeader += '---------------------------<br>';
+  let result = fBlockMiner(theader,ttarget);
+  let newDate = result[0];
+  let newNonce = result[1];
+  let newHash = result[2];
+  theader += 'Date: ' + newDate + '<br>';
+  theader += 'Target: ' + ttarget + '<br>';
+  theader += 'Nonce: ' + newNonce + '<br>';
+  theader += 'Hash: ' + newHash + '<br>';
+  theader += sep;
+  data['block']['previous'] = newHash;
+
+  let tText = '';
+  tText += theader;
+  console.log('mineBlock, tText incremented np = ' + np);
+  tText += 'Number transactions: ' + np + '<br>';
+  tText += sep;
+  // append block reward
+  console.log('before append block reward');
+  console.log('tText = ' + tText);
+  console.log('treward = ' + treward);
+  tText += treward;
+  console.log('after append block reward');
+  console.log('tText = ' + tText);
+  tText += data['transaction']['pendingList'];
+  console.log("after append data['transaction']['pendingList']");
+  console.log('tText = ' + tText);
+  tText += '================================ <br>';
+
+  console.log('minBlock, before el.innerHTML = tText;');
+  console.log('tText = ' + tText);
+  el.innerHTML = tText;
 
   // NOTE: block number already updated in buildBlock
   // save hash for next block
   data['block']['previous'] = newHash;
   console.log("data['block']['previous']" + newHash);
 
-  let pending = data['transaction']['pendingList'];
-
-  el = document.getElementById('div_TEXTDIV_mined_block');
-  el.innerHTML = newHeader + pending;
-
+  // CLEAR PROVISIONAL BLOCK DISPLAY
   el = document.getElementById('div_TEXTDIV_provisional_block');
   el.innerHTML = '';
+
+  // CLEAR NUMBER PENDING
+  data['transaction']['numPending'] = 0;
 
 } // END of function mineBlock
 
 function updateChain() {
   updateChainHeader();
+  updatePeople(); // to update balance for miner of this block
   // we are going to pre-pend the new mined block
   let el = document.getElementById('div_TEXTDIV_mined_block');
   let tText = el.innerHTML;
@@ -583,4 +571,4 @@ function updateChain() {
   el = document.getElementById('div_TEXTDIV_blockchain_body');
   tText += el.innerHTML;
   el.innerHTML = tText;
-} // END of function updateCthain
+} // END of function updateChain

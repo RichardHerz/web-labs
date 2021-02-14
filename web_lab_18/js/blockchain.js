@@ -43,6 +43,11 @@ let data = {
     data['block']['reward'] = 0.99;
     data['block']['number'] = 0;
     data['block']['previous'] = '00000000000000000000000000000000'; // 32 zeros
+    data['sep'] = new Object();
+    data['sep'][0] = '<span style="color:magenta;">----------------------</span><br>';
+    data['sep'][1] = '<span style="color:blue;">============================================</span><br>';
+    data['minedBlock'] = new Object;
+    data['minedBlock'] = '';
   } // END of function data.initialize()
 } // END of object data
 
@@ -64,7 +69,7 @@ function updatePeople() {
     tText += 'Address: ' + data['address'][i] + '<br>';
     tText += 'Balance: ' + data['balance'][i] + '<br>';
     if (i < len-1) {
-      tText += '------------------------ <br>';
+      tText += data['sep'][0];
     }
   }
   el = document.getElementById('div_TEXTDIV_people');
@@ -97,7 +102,7 @@ function updateChainHeader() {
   for (let i=0; i<len; i++) {
     tText += 'Address: ' + data['address'][i] + '<br>';
     tText += 'Balance: ' + data['balance'][i] + '<br>';
-    if (i < len-1) {tText += '------------------------ <br>';}
+    if (i < len-1) {tText += data['sep'][0];}
   }
   el.innerHTML = tText;
 } // END of function updateChainHeader
@@ -110,7 +115,6 @@ function updateChainGenesis() {
   // DO GENESIS TRANSACTIONS 1st - NEED HASHES FOR MERKLE ROOT & BLOCK HASH
   let tTrans ='';
   let tHash = '';
-  let sep = '------------------------ <br>';
   let p = Object.keys(data['people']);
   let np = p.length
   for (let i=0; i<np; i++) {
@@ -119,7 +123,7 @@ function updateChainGenesis() {
     tHash = fMD2(tTrans);
     data['transaction'][i] = tHash; // save, need for Merkle tree
     tTrans += "Hash: " + tHash + '<br>';
-    if (i < np-1) {tTrans += sep;}
+    if (i < np-1) {tTrans += data['sep'][0];}
   }
 
   let theader = 'Version: ' + data['version'] + '<br>';
@@ -143,15 +147,15 @@ function updateChainGenesis() {
   theader += 'Target: ' + ttarget + '<br>';
   theader += 'Nonce: ' + newNonce + '<br>';
   theader += 'Hash: ' + newHash + '<br>';
-  theader += sep;
+  theader += data['sep'][0];
   data['block']['previous'] = newHash;
 
   let tText = '';
   tText += theader;
   tText += 'Number transactions: ' + np + '<br>';
-  tText += sep;
+  tText += data['sep'][0];
   tText += tTrans;
-  tText += '======================== <br>';
+  tText += data['sep'][1];
 
   el.innerHTML = tText;
 
@@ -377,23 +381,23 @@ function buildBlock() {
   bc += 1;
   data['block']['number'] = bc;
 
-  let sep = '---------------------------<br>';
+  let pendcolor = '<span style="color:blue;">pending</span> <br>';
   let tHeader = 'Version: ' + data['version'] + '<br>';
   tHeader += 'Block number: ' + bc + '<br>';
   tHeader += 'Previous hash: ' + data['block']['previous'] + '<br>';
-  tHeader += 'Merkle root: pending <br>';
-  tHeader += 'Date: pending <br>';
+  tHeader += 'Merkle root: ' + pendcolor;
+  tHeader += 'Date: ' + pendcolor;
   tHeader += 'Target: ' + data['target'] + '<br>';
-  tHeader += 'Nonce: pending <br>';
-  tHeader += 'Hash: pending <br>';
-  tHeader += sep;
+  tHeader += 'Nonce: ' + pendcolor;
+  tHeader += 'Hash: ' + pendcolor;
+  tHeader += data['sep'][0];
   let np = 1 + data['transaction']['numPending']; // add 1 for miner's reward
   tHeader += 'Number transactions: ' + np + '<br>';
-  tHeader += sep;
-  tHeader += 'Miner reward to: pending <br>';
-  tHeader += 'Amount: pending <br>';
-  tHeader += 'Hash: pending <br>';
-  tHeader += sep;
+  tHeader += data['sep'][0];
+  tHeader += 'Miner reward to: ' + pendcolor;
+  tHeader += 'Amount: ' + pendcolor;
+  tHeader += 'Hash: ' + pendcolor;
+  tHeader += data['sep'][0];
   // WRAP UP
   el = document.getElementById('div_TEXTDIV_provisional_block');
   let el2 = document.getElementById('div_TEXTDIV_transactions_pending');
@@ -472,26 +476,33 @@ function mineBlock() {
     return;
   }
 
-  let sep = '------------------------ <br>';
-
   // REBUILD HEADER, NOW WITH MERKLE ROOT & DATE
   let theader = 'Version: ' + data['version'] + '<br>';
   theader += 'Block number: ' + data['block']['number'] + '<br>';
   theader += 'Previous hash: ' + data['block']['previous'] + '<br>';
+
+  // save b&w, no color version for adding to final blockchain
+  let bwHeader = theader;
 
   // ADD MINER REWARD TRANSACTION BEFORE MERKLE HASHING
   // pick random user as miner
   let p = Object.keys(data['people']);
   let np = p.length
   let minerIndex = Math.floor(Math.random() * np); // random 0 to np-1
-  let treward = 'Miner reward to: ' + data['address'][minerIndex] + '<br>';
-  treward += 'Amount: ' + data['block']['reward'] + '<br>';
+  let treward = 'Miner reward to: <span style="color:blue;">' + data['address'][minerIndex] + '</span><br>';
+  treward += 'Amount: <span style="color:blue;">' + data['block']['reward'] + '</span><br>';
   let minerHash = fMD2(treward);
-  treward += 'Hash: ' + minerHash + '<br>';
-  treward += sep;
+  treward += 'Hash: <span style="color:blue;">' + minerHash + '</span><br>';
+  treward += data['sep'][0];
   console.log('mineBlock, treward = ' + treward);
   //save minerHash so getMerkleRoot can use it
   data['transaction'][0] = minerHash;
+
+  // save b&w, no color version for adding to final blockchain
+  let bwReward = 'Miner reward to: ' + data['address'][minerIndex] + '<br>';
+  bwReward += 'Amount: ' + data['block']['reward'] + '<br>';
+  bwReward += 'Hash: ' + minerHash + '<br>';
+
 
   // ADD MINER REWARD TO MINER'S BALANCE
   let tb = data['balance'][minerIndex];
@@ -510,8 +521,7 @@ function mineBlock() {
   data['transaction']['numPending'] = np; // use below before clearing at end
   let mr = getMerkleRoot();
   // xxx better to pass ['numPending'] to getMerkleRoot as param...
-  theader += 'Merkle root: ' + mr + '<br>';
-  // data['header'] = theader;
+  theader += 'Merkle root: <span style="color:blue;">' + mr + '</span><br>';
 
   // MINE BLOCK TO GET HASH
   let ttarget = data['target'];
@@ -519,18 +529,25 @@ function mineBlock() {
   let newDate = result[0];
   let newNonce = result[1];
   let newHash = result[2];
-  theader += 'Date: ' + newDate + '<br>';
+  theader += 'Date: <span style="color:blue;">' + newDate + '</span><br>';
   theader += 'Target: ' + ttarget + '<br>';
-  theader += 'Nonce: ' + newNonce + '<br>';
-  theader += 'Hash: ' + newHash + '<br>';
-  theader += sep;
+  theader += 'Nonce: <span style="color:blue;">' + newNonce + '</span><br>';
+  theader += 'Hash: <span style="color:blue;">' + newHash + '</span><br>';
+  theader += data['sep'][0];
   data['block']['previous'] = newHash;
+
+  bwHeader += 'Merkle root: ' + mr + '<br>';
+  bwHeader += 'Date: ' + newDate + '<br>';
+  bwHeader += 'Target: ' + ttarget + '<br>';
+  bwHeader += 'Nonce: ' + newNonce + '<br>';
+  bwHeader += 'Hash: ' + newHash + '<br>';
+  bwHeader += data['sep'][0];
 
   let tText = '';
   tText += theader;
   console.log('mineBlock, tText incremented np = ' + np);
   tText += 'Number transactions: ' + np + '<br>';
-  tText += sep;
+  tText += data['sep'][0];
   // append block reward
   console.log('before append block reward');
   console.log('tText = ' + tText);
@@ -541,20 +558,33 @@ function mineBlock() {
   tText += data['transaction']['pendingList'];
   console.log("after append data['transaction']['pendingList']");
   console.log('tText = ' + tText);
-  tText += '================================ <br>';
+  tText += data['sep'][1]; // =====
 
   console.log('minBlock, before el.innerHTML = tText;');
   console.log('tText = ' + tText);
   el.innerHTML = tText;
+
+  //save b&w no color version for final blockchain
+  let bwText = '';
+  bwText += bwHeader;
+  bwText += 'Number transactions: ' + np + '<br>';
+  bwText += data['sep'][0];
+  bwText += bwReward;
+  bwText += data['sep'][0]; // =====
+  bwText += data['transaction']['pendingList'];
+  bwText += data['sep'][1]; // =====
+  data['minedBlock'] = bwText;
 
   // NOTE: block number already updated in buildBlock
   // save hash for next block
   data['block']['previous'] = newHash;
   console.log("data['block']['previous']" + newHash);
 
-  // CLEAR PROVISIONAL BLOCK DISPLAY
-  el = document.getElementById('div_TEXTDIV_provisional_block');
-  el.innerHTML = '';
+  // // ** LEAVE IT FOR NOW SO USER CAN SEE WHAT IS NEW **
+  // // ** CLEAR WHEN MINED BLOCK ADDED TO CHAIN **
+  // // CLEAR PROVISIONAL BLOCK DISPLAY
+  // el = document.getElementById('div_TEXTDIV_provisional_block');
+  // el.innerHTML = '';
 
   // CLEAR NUMBER PENDING
   data['transaction']['numPending'] = 0;
@@ -565,10 +595,20 @@ function updateChain() {
   updateChainHeader();
   updatePeople(); // to update balance for miner of this block
   // we are going to pre-pend the new mined block
-  let el = document.getElementById('div_TEXTDIV_mined_block');
-  let tText = el.innerHTML;
-  el.innerHTML = ''; // clear mined block display
-  el = document.getElementById('div_TEXTDIV_blockchain_body');
+
+  // add b&w no color version of mined block to blockchain
+  let tText = data['minedBlock'];
+  let el = document.getElementById('div_TEXTDIV_blockchain_body');
   tText += el.innerHTML;
   el.innerHTML = tText;
+
+  // clear provisional block display, which was saved with color
+  // highlights so user could compare provisional and mined blocks
+  el = document.getElementById('div_TEXTDIV_provisional_block');
+  el.innerHTML = '';
+
+  // clear mined block display
+  el = document.getElementById('div_TEXTDIV_mined_block');
+  el.innerHTML = '';
+
 } // END of function updateChain

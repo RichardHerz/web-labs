@@ -29,11 +29,12 @@ let data = {
     data['address'][4] = '9412daed1e0bd204f652677a80192ea9';
     data['balance'] = new Object();
     // starting balances after genesis block
-    data['balance'][0] = '50';
-    data['balance'][1] = '50';
-    data['balance'][2] = '50';
-    data['balance'][3] = '50';
-    data['balance'][4] = '50';
+    // WARNING: the total number of coins listed here may be stated in About text 
+    data['balance'][0] = '10';
+    data['balance'][1] = '10';
+    data['balance'][2] = '10';
+    data['balance'][3] = '10';
+    data['balance'][4] = '10';
     data['transaction'] = new Object();
     data['transaction']['numPending'] = 0; // number of pending transactions
     data['transaction']['pendingList'] = ''; // actual list of pending trans

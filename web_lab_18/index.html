@@ -26,132 +26,217 @@
   <link rel="stylesheet" href="../web_labs_CSS/common.css">
 
   <!-- load CSS style sheets for this lab  -->
-  <link rel="stylesheet" href="css/index.css">
+  <!-- <link rel="stylesheet" href="css/index.css"> -->
 
-  <!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
-  <script language="javascript" src="js/blockchain.js" type="text/javascript"></script>
-  <script language="javascript" src="js/hasher_miner.js" type="text/javascript"></script>
-
-  <!-- initialize simulation after loading of this window -->
-  <script language="javascript">
-    // this works as script in html file but not in external js files
-    window.onload = openThisLab(); // can NOT use () after controller.openThisLab
-    // use onload in body tag to load fields, which have not yet been created here
-  </script>
-
+  <style>body {background-color: cyan;}</style>
 </head>
-<body onload="updateBody()">
-  <div id="div_page_header">
-    <input type="button" value="Back" onclick="history.back()">
-    <p style="margin-left: 55px;">to Web Labs at ReactorLab.net</p>
-    <h3>Cryptocoin Blockchain - Teddy Token</h3>
-    </p>
-    <p>
-      This is an interactive simulation of the Teddy Token cryptocoin
-      blockchain. This chain was started by Catoshi Purramoto in honor of his
-      fellow feline Teddy.
-    </p>
-  </div> <!-- end of div div_page_header -->
-  <div class="flex-container">
-    <div id="div_simFrame_01">
-      <p id="field_TITLE">
-        Teddy Token cryptocoin blockchain
-      </p>
-      <p id="field_people_LABEL">
-        Wallets
-      </p>
-      <div id="div_TEXTDIV_people">
-        <!-- filled by updateBody called in body tag onload -->
-      </div> <!-- end of div div_TEXTDIV_people -->
-      <p id="field_transaction_LABEL">
-        1) Create transaction
-      </p>
-      <p id="field_enter_From_person_LABEL">
-        Select TO:
-      </p>
-      <p id="field_enter_To_Person_LABEL">
-        Select FROM:
-      </p>
-      <select id="select_From_menu" value="Select..." onchange="transFrom(this.value)">
-        <!-- filled by updateBody called in body tag onload -->
-      </select>
-      <select id="select_To_menu" value="Select..." onchange="transTo(this.value)">
-        <!-- filled by updateBody called in body tag onload -->
-      </select>
-      <p id="field_enter_amount_LABEL">
-        Enter amount:
-      </p>
-      <input id="input_field_enter_amount" value="" onchange="transAmount(this.value)">
-      <input type="button" id="button_verify_transaction" value="2) Verify"
-        onclick='transVerify()'>
-      <p id="field_check_sufficient_funds_">
-        Funds ARE available, adding to pending
-      </p>
-      <p id="field_transactions_pending_LABEL">
-        Pending Transactions
-      </p>
-      <p id="field_transactions_ready_LABEL">
-        ready to build block
-      </p>
-      <div id="div_TEXTDIV_transaction">
-        From: <br>
-        To: <br>
-        Amount:
-      </div> <!-- end of div div_TEXTDIV_transaction -->
-      <div id="div_TEXTDIV_transactions_pending">
-      </div> <!-- end of div div_TEXTDIV_transactions_pending -->
-    </div> <!-- end of div div_simFrame_01 -->
-    <div id="div_simFrame_02">
-      <input type="button" id="button_build_block" value="3) Build block"
-        onclick="buildBlock()">
-      <p id="field_provisional_block_LABEL">
-        Provisional Block
-      </p>
-      <input type="button" id="button_mine_block" value="4) Mine block"
-        onclick="mineBlock()">
-      <p id="field_mined_block_LABEL">
-        Mined Block
-      </p>
-      <!-- KEEP MINED BLOCK DIV EMPTY - CHECKED BY mineBlock() - NO COMMENTS-->
-      <div id="div_TEXTDIV_mined_block">
-      </div> <!-- end of div div_TEXTDIV_mined_block -->
-      <!-- KEEP PROVISIONAL BLOCK DIV EMPTY - CHECKED BY buildBlock() - NO COMMENTS-->
-      <div id="div_TEXTDIV_provisional_block">
-      </div> <!-- end of div div_TEXTDIV_provisional_block -->
-    </div> <!-- end of div div_simFrame_02 -->
-    <div id="div_simFrame_03">
-      <input type="button" id="button_add_block" value="5) Add block to chain"
-        onclick= "updateChain()">
-      <p id="field_blockchain_header_LABEL">
-        Blockchain Header
-      </p>
-      <p id="field_blockchain_body_LABEL">
-        Blockchain Body
-      </p>
-      <div id="div_TEXTDIV_blockchain_body">
-      </div> <!-- end of div div_TEXTDIV_blockchain_body -->
-      <div id="div_TEXTDIV_blockchain_header">
-      </div> <!-- end of div div_TEXTDIV_blockchain_header -->
-    </div> <!-- end of div div_simFrame_03 -->
-  </div>  <!-- end of div flex-container -->
+  <input type="button" value="Back" onclick="history.back()">
+  <p style="margin-left: 55px;">to Web Labs at ReactorLab.net</p>
+  <h3>Cryptocoin Blockchain - Teddy Token</h3>
+  <p>
+    This is an interactive simulation of the Teddy Token cryptocoin
+    blockchain. This chain was started by Catoshi Purramoto in honor of his
+    fellow feline Teddy.
+  </p>
+  <p><em><strong>GO TO THE SIMULATION</strong></em> &gt;&gt;
+    <a href="index-sim.html">Teddy Token</a>
+  </p>
+
+  <p>On opening the simulation, only the &quot;<em><strong>Genesis Block</strong></em>&quot; is
+    present in the blockchain field on the far right or far bottom of the page, depending on your screen
+    size and orientation.
+    The Genesis Block is block number 0, in which Catoshi Purramoto created tokens out of thin air and
+    distributed them equally to 5 users. In Bitcoin's genesis block, Satoshi Nakamoto created out of
+    thin air 50 bitcoins, which he sent to Hal Finey.
+  </p>
+  <h4>There are 5 steps for adding transactions to the blockchain:</h4>
+  <ol>
+  <li>
+  <p>
+    <em><strong>Create a transaction:</strong></em> Select To, From and enter an amount.
+    Transactions show the addresses, not the names of the people to whom the address belongs.
+    This makes transactions anonymous.
+  </p>
+  </li>
+  <li>
+  <p>
+    <em><strong>Verify the transaction:</strong></em> This step checks to make sure two different
+    addresses have been entered and a nonzero amount that is less than or equal to the current
+    balance of the From address has been entered. After verification, the transaction is added
+    to a pool of pending transactions on the peer network.
+  </p>
+  </li>
+  <li>
+  <p>
+    <em><strong>Build block:</strong></em> This step checks to make sure you have entered at least
+    two verified transactions, then creates a provisional block. Here you are required to enter
+    at least two transactions in order to proceed to making a block. Real blockchains have blocks
+    with thousands of transactions in order to reduce the cost per transaction. Miners on the peer
+    network collect pending transactions and form provisional blocks.
+  </p>
+  </li>
+  <li>
+  <p>
+    <em><strong>Mine block:</strong></em> This step performs computations in order to verify the block.
+    There are many methods for blocks to be verified. The method used by Bitcoin and Teddy Token
+    is &quot;proof of work.&quot; This requires the miner to find a number which they add to the block
+    header such that the hash of the block header starts with the target number of zeros.
+    This number is called the nonce: a number used once. The target here is a small value so that
+    the mining is fast. Real blockchains require a target value of many zeros such that mining
+    requires significant time and computer power.
+  </p>
+  </li>
+  <li>
+  <p>
+    <em><strong>Add block to chain:</strong></em> This step adds the new block to the top of the
+    blockchain and also updates the balances of all users in the blockchain header.
+  </p>
+  </li>
+  </ol>
+  <p><em><strong>ABOUT</strong></em></p>
+  <p>
+    Teddy Token's purpose is to show, in a simplified way, how blockchains and cryptocoins work.
+    There are many differences between Teddy tokens and real cryptocoins. But the essentials are shown.
+    See below for a partial list of differences.
+  </p>
+  <p>
+    Blockchains are a sequential record of transactions, which may be simple transfers of cryptocoins,
+    as in the case of Bitcoin and Teddy, or contracts in the form of computer algorithms, as in the
+    case of Ethereum.
+  </p>
+  <p>
+    Each block of transactions, as well as each individual transaction in a block, are identified by a
+    hash value that prevents the transactions and the blockchain from being tampered with.
+    The hashes also allow individual transactions and blocks to be located in the blockchain.
+  </p>
+  <p>
+    <em><strong>Hashes are key to blockchains</strong></em>.
+    They are values created by cryptographic hash algorithms operating on information such as public keys.
+    They ensure that any future change in information, such as how many coins you have sent me,
+    becomes obvious by a large change in the hash of the information, thus preventing tampering
+    with the blockchain. Each block contains the hash of the previous block such that tampering with any
+    block changes the hashes of all successive blocks, thus allowing identification and location of the problem.
+  </p>
+  <p>See Web Lab 17 for a demonstration of hashing. Lab 16 has a demonstration of public-key encryption.</p>
+  <p>Cryptocoins have several additional advantages in addition to that of security.
+    They can be exchanged anonymously through the hash addresses, which cannot be reverse engineered to
+    discover the owner. They can be exchanged by any user at small cost compared to bank transfers.
+    Their value is that perceived by all users and not directly dependent on government policies.</p>
+  <p>
+    <em><strong>Cryptocoins are created out of thin air</strong></em> initially.
+    Satoshi Nakamoto created the initial 50 bitcoins out of thin air. Catoshi Purramoto created the initial
+    50 Teddy tokens out of thin air. The number of bitcoins and Teddy tokens increases only as a result of
+    the computational work done in mining, which is described in step 4 above. Although the initial coins
+    were &quot;free,&quot; further coins require the expenditure of energy, which, in the case of Bitcoin,
+    has become a noticable percentage of the world's energy budget.
+  </p>
+  <p>
+    For what do people trade cryptocoins? Things of value, which they give in order to receive cryptocoins
+    in payment. The first purchase with bitcoins is said to be that of a pizza. People also will sell
+    their coins in exchange for government currency, e.g., U.S. dollars. Government currency is
+    termed &quot;Fiat&quot; currency in the cryptocoin world. Fiat currency is not backed by a real asset
+    such as gold, and depends on user confidence for value. Hmmm, that description also applies to cryptocurrency...
+  </p>
+  <p>
+    There is no fixed price for cryptocoins. The coins are auctioned such that <em><strong>their value in
+    government currency fluctuates with the perceived value of the coins</strong></em>. The real cost of
+    electricity to mine sets a base price.
+  </p>
+  <p>
+    In the Teddy Token simulation, the <em><strong>wallets field</strong></em> shows a partial snapshot of
+    the wallet of each of the users. Shown are the names of the users, their addresses, and their Teddy
+    token balance.
+  </p>
+  <p>
+    Real individual users can only view their own wallet, which also contains their private and public
+    encryption keys. Their address is the hash value of their public key.
+  </p>
+  <p>
+    In a real blockchain, the computers of users and miners are distributed throughout the world in a
+    peer-to-peer (P2P) network over the Internet.
+  </p>
+  <p>
+    In Bitcoin and Teddy Token, the total number of coins can increase with time only due to the
+    block reward coins given to the successful miner of a block. Mining has a real cost of
+    the energy expended in computation, which, in Bitcoin's case, is substantial.
+  </p>
+  <p>
+    Bitcoin started with only 50 coins and will max out at 21 million coins as the block
+    reward decreases with time to zero. For the first several months after the start of
+    Bitcoin, the first blocks mined contained only mining rewards. This built up the supply
+    of bitcoins such that a suffient number existed for people to start trading bitcoins.
+    The block reward stays constant in Teddy so there is no limit, other than your
+    patience, to the number of tokens.
+  </p>
+  <h4>Some differences between Teddy Token and real blockchains</h4>
+  <ol>
+  <li>
+  <p>
+    Teddy Token is self-contained in your web browser. Real users and miners are distributed
+    around the world and connected in P2P networks over the Internet.
+  </p>
+  </li>
+  <li>
+  <p>
+    You can see everyone's real names and balances in Teddy Token. Real users cannot see
+    information about other users other than anonymous hash addresses and balances.
+  </p>
+  </li>
+  <li>
+  <p>
+    Teddy Token blocks require a minimum of only two transactions, in addition to the miner reward.
+    Real blocks may involve thousands of transactions.
+  </p>
+  </li>
+  <li>
+  <p>
+    Teddy Token uses the &quot;proof-of-work&quot; concensus method for verifying and accepting blocks,
+    as does Bitcoin. There are many other concensus methods in the blockchain world.
+  </p>
+  </li>
+  <li>
+  <p>
+    Transactions are free to process in Teddy Token. Real blockchains can charge a transaction fee to
+    the sender.
+  </p>
+  </li>
+  <li>
+  <p>
+    The target value in Teddy Token is small to make mining fast for your convenience.
+    The larger the target value - the number of zeros required at the start of the final block header hash -
+    the more computation it takes to find the nonce. The Bitcoin target is increased periodically as computers
+    get faster in order to keep the mining time at approximately 10 minutes.
+  </p>
+  </li>
+  <li>
+  <p>
+    The total number of Teddy tokens is limited only by your persistence, since the block mining reward
+    is constant. The total number of bitcoins is limited to 21 million by the eventual reduction to zero
+    of the block reward.
+  </p>
+  </li>
+  </ol>
+  <p><em><strong>GO TO THE SIMULATION</strong></em> &gt;&gt;
+    <a href="index-sim.html">Teddy Token</a>
+  </p>
   <!-- div_rlnoticetext filled by interfacer.resetThisLab()
   IN OTHER WEB LABS and formatted by web_labs_CSS/common.css -->
   <div id="div_rlnoticetext">
-    <p>
-      The Reactor Lab provides interactive chemical reactor
-      simulations for active learning. The web site is
-      <a href="https://reactorlab.net/">ReactorLab.net</a>.
-      Web Labs and desktop versions of ReactorLab and SimzLab,
-      which includes PureWaterLab, are available.
-      The lab is provided free of charge and code is open source and available
-      at <a href="https://github.com/RichardHerz">our GitHub site</a>.
-      The code is structured to allow fast construction of new simulations of reactors and other systems.
-      The author of Reactor Lab is Richard K. Herz, emeritus professor of chemical engineering
-      at the University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>,
-      in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>.
-      Please let us know if you use the Lab or the code. Thanks!
-      <a href="mailto://rherz@ucsd.edu/">rherz@ucsd.edu</a><br><br>
-    </p>
-  </div>  <!-- end of div div_rlnoticetext -->
+  <p>
+    The Reactor Lab provides interactive
+    simulations for active learning. The web site is
+    <a href="https://reactorlab.net/">ReactorLab.net</a>.
+    Web Labs and desktop versions of ReactorLab and SimzLab,
+    which includes PureWaterLab, are available.
+    The lab is provided free of charge and code is open source and available
+    at <a href="https://github.com/RichardHerz">our GitHub site</a>.
+    The code is structured to allow fast construction of new simulations of reactors and other systems.
+    The author of Reactor Lab is Richard K. Herz, emeritus professor of chemical engineering
+    at the University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>,
+    in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>.
+    Please let us know if you use the Lab or the code. Thanks!
+    <a href="mailto://rherz@ucsd.edu/">rherz@ucsd.edu</a><br><br>
+  </p>
+</div>  <!-- end of div div_rlnoticetext -->
 </body>
 </html>

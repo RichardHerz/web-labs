@@ -29,7 +29,7 @@ let data = {
     data['address'][4] = '9412daed1e0bd204f652677a80192ea9';
     data['balance'] = new Object();
     // starting balances after genesis block
-    // WARNING: the total number of coins listed here may be stated in About text 
+    // WARNING: the total number of coins listed here may be stated in About text
     data['balance'][0] = '10';
     data['balance'][1] = '10';
     data['balance'][2] = '10';
@@ -372,8 +372,8 @@ function buildBlock() {
     return;
   }
 
-  if (data['transaction']['numPending'] == 0) {
-    console.log('no transactions, exit buildBlock');
+  if (data['transaction']['numPending'] < 2) {
+    console.log('not minimum 2 transactions, exit buildBlock');
     return;
   }
 

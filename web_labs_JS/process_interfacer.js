@@ -61,7 +61,7 @@ let interfacer = {
     el.value = 'Run';
     // do NOT update process nor display again here (will take one step)
 
-    let txt = 'The Reactor Lab provides interactive chemical reactor '
+    let txt = 'The Reactor Lab provides interactive '
       + 'simulations for active learning. The web site is '
       + '<a href="https://reactorlab.net/">ReactorLab.net</a>. '
       + 'Web Labs and desktop versions of ReactorLab and SimzLab, '

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>Teddy Token Blockchain</title>
+
+  <!--
+    Design, text, images and code by Richard K. Herz, 2017-2021
+    Copyrights held by Richard K. Herz
+    Licensed for use under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.en.html
+  -->
+
+  <meta name='description' author='Richard Herz'>
+  <meta name="description" content="The Reactor Lab provides interactive chemical reactor
+  simulations for active learning. Web Labs and desktop versions of ReactorLab
+  and SimzLab, including PureWaterLab, are available. Software is provided free of charge
+  and is open source and available at our GitHub site, github.com/RichardHerz. The code is
+  structured to allow fast construction of new simulations of chemical reactors and other systems."/>
+
+  <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- load COMMON CSS style sheets FIRST -->
+  <link rel="stylesheet" href="../web_labs_CSS/common.css">
+
+  <!-- load CSS style sheets for this lab  -->
+  <link rel="stylesheet" href="css/index-sim.css">
+
+  <!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
+  <script language="javascript" src="js/blockchain.js" type="text/javascript"></script>
+  <script language="javascript" src="js/hasher_miner.js" type="text/javascript"></script>
+
+  <!-- initialize simulation after loading of this window -->
+  <script language="javascript">
+    // this works as script in html file but not in external js files
+    window.onload = openThisLab(); // can NOT use () after controller.openThisLab
+    // use onload in body tag to load fields, which have not yet been created here
+  </script>
+
+</head>
+<body onload="updateBody()">
+  <div id="div_page_header">
+    <input type="button" value="Back" onclick="history.back()">
+    <p style="margin-left: 55px;">to About Teddy Token</p>
+    <h3>Cryptocoin Blockchain - Teddy Token</h3>
+    </p>
+    <p>
+      This is an interactive simulation of the Teddy Token cryptocoin
+      blockchain. This chain was started by Catoshi Purramoto in honor of his
+      fellow feline Teddy.
+    </p>
+  </div> <!-- end of div div_page_header -->
+  <div class="flex-container">
+    <div id="div_simFrame_01">
+      <p id="field_TITLE">
+        Teddy Token cryptocoin blockchain
+      </p>
+      <p id="field_people_LABEL">
+        Wallets
+      </p>
+      <div id="div_TEXTDIV_people">
+        <!-- filled by updateBody called in body tag onload -->
+      </div> <!-- end of div div_TEXTDIV_people -->
+      <p id="field_transaction_LABEL">
+        1) Create transaction
+      </p>
+      <p id="field_enter_From_person_LABEL">
+        Select TO:
+      </p>
+      <p id="field_enter_To_Person_LABEL">
+        Select FROM:
+      </p>
+      <select id="select_From_menu" value="Select..." onchange="transFrom(this.value)">
+        <!-- filled by updateBody called in body tag onload -->
+      </select>
+      <select id="select_To_menu" value="Select..." onchange="transTo(this.value)">
+        <!-- filled by updateBody called in body tag onload -->
+      </select>
+      <p id="field_enter_amount_LABEL">
+        Enter amount:
+      </p>
+      <input id="input_field_enter_amount" value="" onchange="transAmount(this.value)">
+      <input type="button" id="button_verify_transaction" value="2) Verify"
+        onclick='transVerify()'>
+      <p id="field_check_sufficient_funds_">
+        Funds ARE available, adding to pending
+      </p>
+      <p id="field_transactions_pending_LABEL">
+        Pending Transactions
+      </p>
+      <p id="field_transactions_ready_LABEL">
+        ready to build block
+      </p>
+      <div id="div_TEXTDIV_transaction">
+        From: <br>
+        To: <br>
+        Amount:
+      </div> <!-- end of div div_TEXTDIV_transaction -->
+      <div id="div_TEXTDIV_transactions_pending">
+      </div> <!-- end of div div_TEXTDIV_transactions_pending -->
+    </div> <!-- end of div div_simFrame_01 -->
+    <div id="div_simFrame_02">
+      <input type="button" id="button_build_block" value="3) Build block"
+        onclick="buildBlock()">
+      <p id="field_provisional_block_LABEL">
+        Provisional Block
+      </p>
+      <input type="button" id="button_mine_block" value="4) Mine block"
+        onclick="mineBlock()">
+      <p id="field_mined_block_LABEL">
+        Mined Block
+      </p>
+      <!-- KEEP MINED BLOCK DIV EMPTY - CHECKED BY mineBlock() - NO COMMENTS-->
+      <div id="div_TEXTDIV_mined_block">
+      </div> <!-- end of div div_TEXTDIV_mined_block -->
+      <!-- KEEP PROVISIONAL BLOCK DIV EMPTY - CHECKED BY buildBlock() - NO COMMENTS-->
+      <div id="div_TEXTDIV_provisional_block">
+      </div> <!-- end of div div_TEXTDIV_provisional_block -->
+    </div> <!-- end of div div_simFrame_02 -->
+    <div id="div_simFrame_03">
+      <input type="button" id="button_add_block" value="5) Add block to chain"
+        onclick= "updateChain()">
+      <p id="field_blockchain_header_LABEL">
+        Blockchain Header
+      </p>
+      <p id="field_blockchain_body_LABEL">
+        Blockchain Body
+      </p>
+      <div id="div_TEXTDIV_blockchain_body">
+      </div> <!-- end of div div_TEXTDIV_blockchain_body -->
+      <div id="div_TEXTDIV_blockchain_header">
+      </div> <!-- end of div div_TEXTDIV_blockchain_header -->
+    </div> <!-- end of div div_simFrame_03 -->
+  </div>  <!-- end of div flex-container -->
+  <!-- div_rlnoticetext filled by interfacer.resetThisLab()
+  IN OTHER WEB LABS and formatted by web_labs_CSS/common.css -->
+  <div id="div_rlnoticetext">
+    <p>
+      The Reactor Lab provides interactive
+      simulations for active learning. The web site is
+      <a href="https://reactorlab.net/">ReactorLab.net</a>.
+      Web Labs and desktop versions of ReactorLab and SimzLab,
+      which includes PureWaterLab, are available.
+      The lab is provided free of charge and code is open source and available
+      at <a href="https://github.com/RichardHerz">our GitHub site</a>.
+      The code is structured to allow fast construction of new simulations of reactors and other systems.
+      The author of Reactor Lab is Richard K. Herz, emeritus professor of chemical engineering
+      at the University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>,
+      in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>.
+      Please let us know if you use the Lab or the code. Thanks!
+      <a href="mailto://rherz@ucsd.edu/">rherz@ucsd.edu</a><br><br>
+    </p>
+  </div>  <!-- end of div div_rlnoticetext -->
+</body>
+</html>

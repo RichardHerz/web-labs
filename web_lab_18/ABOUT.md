@@ -1,10 +1,10 @@
 Back to Web Labs at ReactorLab.net 
 
-Cryptographic Blockchain - Teddy Token 
+***Cryptographic Blockchain - Teddy Token*** 
 
-### GO TO TEDDY TOKEN >> [reactorlab.net](https://reactorlab.net/)
+***GO TO THE SIMULATION*** >> [Teddy Token](https://reactorlab.net/web_labs/web_lab_18L/) (opens in a new tab)
 
-### ABOUT TEDDY TOKEN
+***ABOUT TEDDY TOKEN***
 
 Teddy Token's purpose is to show, in a simplified way, how blockchains and cryptocoins work. See below for the 5 steps to add transactions to the blockchain.
 
@@ -70,6 +70,5 @@ Bitcoin started with only 50 coins and will max out at 21 million coins. How doe
 
 7. The total number of Teddy tokens is limited only by your persistence, since the block mining reward is constant. The total number of bitcoins is limited to 21 million by the eventual reduction to zero of the block reward.
 
-### GO TO TEDDY TOKEN >> [reactorlab.net](https://reactorlab.net/)
-
+### GO TO TEDDY TOKEN >> [reactorlab.net](https://reactorlab.net/web_labs/web_lab_18L/)
 

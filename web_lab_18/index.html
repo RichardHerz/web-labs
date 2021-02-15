@@ -42,14 +42,13 @@
     <a href="index-sim.html">Teddy Token</a>
   </p>
 
-  <p>On opening the simulation, only the &quot;<em><strong>Genesis Block</strong></em>&quot; is
+  <p><em><strong>FIVE STEPS to building the blockchain:</strong></em></p>
+  <p> On opening the simulation, only the &quot;<em>Genesis Block</em>&quot; is
     present in the blockchain field on the far right or far bottom of the page, depending on your screen
     size and orientation.
-    The Genesis Block is block number 0, in which Catoshi Purramoto created tokens out of thin air and
-    distributed them equally to 5 users. In Bitcoin's genesis block, Satoshi Nakamoto created out of
-    thin air 50 bitcoins, which he sent to Hal Finey.
+    The Genesis Block is block number 0, in which Catoshi Purramoto created tokens and
+    distributed them to 5 friends.
   </p>
-  <h4>There are 5 steps for adding transactions to the blockchain:</h4>
   <ol>
   <li>
   <p>
@@ -69,7 +68,7 @@
   <li>
   <p>
     <em><strong>Build block:</strong></em> This step checks to make sure you have entered at least
-    two verified transactions, then creates a provisional block. Here you are required to enter
+    two verify transactions, then creates a provisional block. Teddy Token requires you to verify
     at least two transactions in order to proceed to making a block. Real blockchains have blocks
     with thousands of transactions in order to reduce the cost per transaction. Miners on the peer
     network collect pending transactions and form provisional blocks.
@@ -77,13 +76,10 @@
   </li>
   <li>
   <p>
-    <em><strong>Mine block:</strong></em> This step performs computations in order to verify the block.
-    There are many methods for blocks to be verified. The method used by Bitcoin and Teddy Token
-    is &quot;proof of work.&quot; This requires the miner to find a number which they add to the block
-    header such that the hash of the block header starts with the target number of zeros.
-    This number is called the nonce: a number used once. The target here is a small value so that
-    the mining is fast. Real blockchains require a target value of many zeros such that mining
-    requires significant time and computer power.
+    <em><strong>Mine block:</strong></em> This step performs computations in order to achieve concensus
+    on which provisional block created by miners should be added to the blockchain next.
+    Since a real peer network will have many miners, each of whom can build a provisional block,
+    they must reach concensus on which block to add next. See more on mining below.
   </p>
   </li>
   <li>
@@ -93,10 +89,26 @@
   </p>
   </li>
   </ol>
+
+  <p>
+    Of many methods available to achieve concensus on which block to add next,
+    the one used by Bitcoin and Teddy Token is &quot;proof of work.&quot;
+    This requires the miner to find a number which they add to the block
+    header such that the hash of the block header starts with the target number of zeros.
+    This number is called the nonce: a number used once. The first miner to reach
+    the target can add their block to the blockchain and earn the block reward.
+  </p>
+  <p>
+    The target here is a small value so that the mining is fast.
+    Real blockchains require a target value of many zeros such that mining
+    requires significant time and computer power.
+    Since only the block header is hashed, the header
+    includes a hash - the Merkle root - of the transactions to prevent tampering with them.
+  </p>
+
   <p><em><strong>ABOUT</strong></em></p>
   <p>
     Teddy Token's purpose is to show, in a simplified way, how blockchains and cryptocoins work.
-    There are many differences between Teddy tokens and real cryptocoins. But the essentials are shown.
     See below for a partial list of differences.
   </p>
   <p>
@@ -117,15 +129,19 @@
     with the blockchain. Each block contains the hash of the previous block such that tampering with any
     block changes the hashes of all successive blocks, thus allowing identification and location of the problem.
   </p>
-  <p>See Web Lab 17 for a demonstration of hashing. Lab 16 has a demonstration of public-key encryption.</p>
-  <p>Cryptocoins have several additional advantages in addition to that of security.
-    They can be exchanged anonymously through the hash addresses, which cannot be reverse engineered to
-    discover the owner. They can be exchanged by any user at small cost compared to bank transfers.
-    Their value is that perceived by all users and not directly dependent on government policies.</p>
   <p>
-    <em><strong>Cryptocoins are created out of thin air</strong></em> initially.
-    Satoshi Nakamoto created the initial 50 bitcoins out of thin air. Catoshi Purramoto created the initial
-    50 Teddy tokens out of thin air. The number of bitcoins and Teddy tokens increases only as a result of
+    See Web Lab 17 for a demonstration of hashing. Lab 16 has a demonstration of public-key encryption.
+  </p>
+  <p>
+    Cryptocoins have several additional advantages in addition to that of security.
+    They can be exchanged anonymously through the hash addresses, which cannot be reverse engineered to
+    discover the owner. They can be exchanged by users at small cost compared to bank transfers.
+    Their value is that perceived by all users and not directly dependent on government policies.
+  </p>
+  <p>
+    <em><strong>The first cryptocoins were created out of thin air</strong></em>.
+    Satoshi Nakamoto created the initial 50 bitcoins out of thin air. Catoshi Purramoto did so too.
+    The number of bitcoins and Teddy tokens increases only as a result of
     the computational work done in mining, which is described in step 4 above. Although the initial coins
     were &quot;free,&quot; further coins require the expenditure of energy, which, in the case of Bitcoin,
     has become a noticable percentage of the world's energy budget.
@@ -148,8 +164,8 @@
     token balance.
   </p>
   <p>
-    Real individual users can only view their own wallet, which also contains their private and public
-    encryption keys. Their address is the hash value of their public key.
+    Real individual users can only view their own wallet, which also contains their list of transactions
+    and private and public encryption keys. Their address is the hash value of their public key.
   </p>
   <p>
     In a real blockchain, the computers of users and miners are distributed throughout the world in a
@@ -168,7 +184,7 @@
     The block reward stays constant in Teddy so there is no limit, other than your
     patience, to the number of tokens.
   </p>
-  <h4>Some differences between Teddy Token and real blockchains</h4>
+  <h4>Summary of differences between Teddy Token and real blockchains</h4>
   <ol>
   <li>
   <p>
@@ -178,8 +194,14 @@
   </li>
   <li>
   <p>
+    There are only five users in Teddy Token. Real blockchains may have many thousands or millions of users.
+  </p>
+  </li>
+  <li>
+  <p>
     You can see everyone's real names and balances in Teddy Token. Real users cannot see
-    information about other users other than anonymous hash addresses and balances.
+    information about other users except their anonymous hash addresses and transaction amounts.
+    That is, everyone's identity is hidden.
   </p>
   </li>
   <li>
@@ -205,14 +227,20 @@
     The target value in Teddy Token is small to make mining fast for your convenience.
     The larger the target value - the number of zeros required at the start of the final block header hash -
     the more computation it takes to find the nonce. The Bitcoin target is increased periodically as computers
-    get faster in order to keep the mining time at approximately 10 minutes.
+    get faster in order to keep the mining time at approximately 10 minutes per block.
   </p>
   </li>
   <li>
   <p>
     The total number of Teddy tokens is limited only by your persistence, since the block mining reward
     is constant. The total number of bitcoins is limited to 21 million by the eventual reduction to zero
-    of the block reward.
+    of the block reward. At that time, miners will continue to receive transaction fees from users.
+  </p>
+  </li>
+  <li>
+  <p>
+    The format of entries here is simplified in order to help understanding.
+    Actual formats involve various number formats and field names, etc.
   </p>
   </li>
   </ol>

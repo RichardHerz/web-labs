@@ -11,6 +11,10 @@ input[type="submit"] {
     cursor: pointer;
 }
 
+html select{
+  cursor: pointer;
+}
+
 /*
   * Re-set default cursor for disabled elements.
 */

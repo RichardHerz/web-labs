@@ -46,7 +46,7 @@
     <input type="button" value="Back" onclick="history.back()">
     <p style="margin-left: 55px;">to About Teddy Token</p>
     <h3>Cryptocoin Blockchain - Teddy Token</h3>
-    <p>Steps: (1) Create transaction, (2) Verify transaction, (3) Repeat steps 1 & 2
+    <p>Steps: (1) Create a transaction, (2) Verify the transaction, (3) Repeat steps 1 & 2
       at least twice, then Build block, (4) Mine block, (5) Add block to chain.
       On mobile devices, tap a field then swipe to scroll long text.
   </div> <!-- end of div div_page_header -->
@@ -62,7 +62,7 @@
         <!-- filled by updateBody called in body tag onload -->
       </div> <!-- end of div div_TEXTDIV_people -->
       <p id="field_transaction_LABEL">
-        1) Create transaction
+        1) Create at least two transactions
       </p>
       <p id="field_enter_From_person_LABEL">
         Select TO:
@@ -80,7 +80,7 @@
         Enter amount:
       </p>
       <input id="input_field_enter_amount" value="" onchange="transAmount(this.value)">
-      <input type="button" id="button_verify_transaction" value="2) Verify"
+      <input type="button" id="button_verify_transaction" value="2) Verify each transaction"
         onclick='transVerify()'>
       <p id="field_check_sufficient_funds_">
         Funds ARE available, adding to pending

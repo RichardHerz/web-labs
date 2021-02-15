@@ -396,7 +396,7 @@ function buildBlock() {
   tHeader += 'Number transactions: ' + np + '<br>';
   tHeader += data['sep'][0];
   tHeader += 'Miner reward to: ' + pendcolor;
-  tHeader += 'Amount: ' + pendcolor;
+  tHeader += 'Amount: ' + data['block']['reward'] + '<br>';
   tHeader += 'Hash: ' + pendcolor;
   tHeader += data['sep'][0];
   // WRAP UP
@@ -491,7 +491,7 @@ function mineBlock() {
   let np = p.length
   let minerIndex = Math.floor(Math.random() * np); // random 0 to np-1
   let treward = 'Miner reward to: <span style="color:blue;">' + data['address'][minerIndex] + '</span><br>';
-  treward += 'Amount: <span style="color:blue;">' + data['block']['reward'] + '</span><br>';
+  treward += 'Amount: ' + data['block']['reward'] + '<br>';
   let minerHash = fMD2(treward);
   treward += 'Hash: <span style="color:blue;">' + minerHash + '</span><br>';
   treward += data['sep'][0];
@@ -506,6 +506,7 @@ function mineBlock() {
 
 
   // ADD MINER REWARD TO MINER'S BALANCE
+  let ttarget = data['target'];
   let tb = data['balance'][minerIndex];
   let br = data['block']['reward'];
   tb = Number(tb);
@@ -525,7 +526,6 @@ function mineBlock() {
   theader += 'Merkle root: <span style="color:blue;">' + mr + '</span><br>';
 
   // MINE BLOCK TO GET HASH
-  let ttarget = data['target'];
   let result = fBlockMiner(theader,ttarget);
   let newDate = result[0];
   let newNonce = result[1];

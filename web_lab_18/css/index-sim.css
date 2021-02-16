@@ -24,12 +24,12 @@ div {
 overflow: auto;
 }
 
-p {
+/* p {
   display: block;
   text-align: left;
-  border-style: dotted;
+  border-style: none;
   border-color: DodgerBlue;
-}
+} */
 
 label {
   display: block;
@@ -63,7 +63,8 @@ canvas {
 }
 
 #div_page_header {
-  background-color: lightYellow;
+  position: relative;
+  border-width: 1px;
 }
 
 #div_simFrame_01 {
@@ -75,7 +76,7 @@ canvas {
   width: 342px;
   height: 789px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
@@ -90,7 +91,7 @@ canvas {
   top: -10px;
   width: 323px;
   height: 27px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -108,7 +109,7 @@ canvas {
   top: 24px;
   width: 136px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -126,7 +127,7 @@ canvas {
   top: 307px;
   width: 319px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -144,7 +145,7 @@ canvas {
   top: 370px;
   width: 115px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -162,7 +163,7 @@ canvas {
   top: 338px;
   width: 115px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -210,7 +211,7 @@ canvas {
   top: 405px;
   width: 115px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -258,7 +259,7 @@ border-style: solid;
   top: 542px;
   width: 307px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -276,7 +277,7 @@ border-style: solid;
   top: 574px;
   width: 141px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -294,7 +295,7 @@ border-style: solid;
   top: 574px;
   width: 168px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -314,7 +315,7 @@ border-style: solid;
   width: 319px;
   height: 53px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
   border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
@@ -335,7 +336,7 @@ border-style: solid;
   width: 330px;
   height: 163px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
   border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
@@ -356,7 +357,7 @@ border-style: solid;
   width: 316px;
   height: 248px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
   border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
@@ -378,7 +379,7 @@ border-style: solid;
   width: 336px;
   height: 784px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
@@ -407,7 +408,7 @@ border-style: solid;
   top: 19px;
   width: 136px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -439,7 +440,7 @@ border-style: solid;
   top: 385px;
   width: 136px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -459,7 +460,7 @@ border-style: solid;
   width: 324px;
   height: 351px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
   border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
@@ -480,7 +481,7 @@ border-style: solid;
   width: 324px;
   height: 296px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
   border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
@@ -502,7 +503,7 @@ border-style: solid;
   width: 352px;
   height: 784px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
   border-style: dotted;
   opacity: 1;
   background-color: rgba(255, 255, 255, 0);
@@ -531,7 +532,7 @@ border-style: solid;
   top: 21px;
   width: 136px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -549,7 +550,7 @@ border-style: solid;
   top: 240px;
   width: 141px;
   height: 24px;
-  border-width: 2px;
+  border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
@@ -569,7 +570,7 @@ border-style: solid;
   width: 340px;
   height: 493px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
   border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);
@@ -590,7 +591,7 @@ border-style: solid;
   width: 326px;
   height: 185px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
   border-style: outset;
   opacity: 1;
   background-color: rgba(255, 255, 255, 1);

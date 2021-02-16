@@ -20,7 +20,7 @@ let data = {
     data['people'][1] = 'Tinashe';
     data['people'][2] = 'Lily';
     data['people'][3] = 'Zahra';
-    data['people'][4] = 'Bob';
+    data['people'][4] = 'Luca';
     data['address'] = new Object();
     data['address'][0] = '8fca7b9ab6fac411b2443c1303d3bc56';
     data['address'][1] = 'f157bab61715d2bca9d81ada45bad57c';
@@ -36,6 +36,7 @@ let data = {
     data['balance'][3] = '10';
     data['balance'][4] = '10';
     data['transaction'] = new Object();
+    // 'numPending' does not include block miner's reward
     data['transaction']['numPending'] = 0; // number of pending transactions
     data['transaction']['pendingList'] = ''; // actual list of pending trans
     // data['transaction'][0] etc. hold pending trans hashes for Merkle tree
@@ -131,10 +132,8 @@ function updateChainGenesis() {
   theader += 'Block number: ' + data['block']['number'] + '<br>';
   theader += 'Previous hash: ' + data['block']['previous'] + '<br>';
   // get Merkle root
-  data['transaction']['numPending'] = np;
-  let mr = getMerkleRoot();
-  // xxx better to pass ['numPending'] to getMerkleRoot as param...
-  // xxx so don't have to remember to reset to zero below
+  data['transaction']['numPending'] = np; // no block miner's reward in genesis
+  let mr = getMerkleRoot(np);
   theader += 'Merkle root: ' + mr + '<br>';
   // data['header'] = theader;
 
@@ -160,7 +159,7 @@ function updateChainGenesis() {
 
   el.innerHTML = tText;
 
-  // xxx reset numPending to zero for use after genesis block
+  // reset numPending to zero for use after genesis block
   data['transaction']['numPending'] = 0;
 
 } // END of updateChainGenesis
@@ -307,7 +306,7 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
   updatePeople();
 
   // UPDATE NUMBER TRANSACTIONS PENDING
-  // xxx for now, numPending is without miner's block reward
+  // numPending is without miner's block reward
   let np = data['transaction']['numPending'];
   np += 1;
   data['transaction']['numPending'] = np;
@@ -392,7 +391,8 @@ function buildBlock() {
   tHeader += 'Nonce: ' + pendcolor;
   tHeader += 'Hash: ' + pendcolor;
   tHeader += data['sep'][0];
-  let np = 1 + data['transaction']['numPending']; // add 1 for miner's reward
+  let np = data['transaction']['numPending'];
+  np++; // add 1 for miner's reward
   tHeader += 'Number transactions: ' + np + '<br>';
   tHeader += data['sep'][0];
   tHeader += 'Miner reward to: ' + pendcolor;
@@ -411,35 +411,46 @@ function buildBlock() {
   console.log('exit buildBlock');
 } // END of function buildBlock
 
-function getMerkleRoot() {
+function getMerkleRoot(pNumTrans) {
   //
-  // USES data['transaction']['numPending']
-  // USES data['transaction'][i]
+  // input pNumTrans is number of transactions to process here
+  // need input pNumTrans as an argument because actual number to process
+  // differs between genesis block (no block reward transaction)
+  // and subsequent blocks (include block reward transaction)
   //
-  // Merkle root of transaction hashes included in block header
-  //   because only block header hash sent to next block in chain
-  //   so Merkle root in block header hash can verify tansactions not changed
-  // data['transaction'][0] etc. hold pending transaction hashes for Merkle tree
+  // USES data['transaction'][i] but does not alter it
+  // operates on an independent copy-by-value of data['transaction'][i]
+  // data['transaction'][i] hold pending transaction hashes for Merkle tree
   //
-  // WARNING: once this is called, data['transaction'][0] holds Merkle root
-  //          and other [i] hold intermediate values...
-  //
-  // COULD UPDATE by operating on a copy of data['transaction'][0] etc.
-  //
-  let np = data['transaction']['numPending'];
+  // Merkle root of transaction hashes is included in block header
+  // because only block header hash sent to next block in chain
+  // so Merkle root in block header hash can verify tansactions not changed
+
+  // MAKE INDEPENDENT COPY OF DATA ON WHICH TO OPERATE
+  // need to copy each array element seperately in order to get
+  // independent copy, that is, copy-by-value, since
+  // tempData = data['transaction'] is copy-by-reference
+  // and changes to tempData would also change values in data['transaction']
+  let tempData = [];
+  for (i = 0; i < pNumTrans; i++) {
+    tempData[i] = data['transaction'][i];
+  }
+
+  // hmmm, below smells like something could do recursively...
+
+  let np = pNumTrans; // np value changes below in loop
   console.log('enter getMerkleRoot, np = ' + np);
   if (np > 0) {
-    // smells like something could do recursively...
     while (np >= 1) {
       for (i = 0; i < np; i += 2) {
         console.log('enter for, np = ' + np);
         if (i == np-1) {
           // i lands on np-1 only when np is odd
           // hash i + i
-          data['transaction'][i] = fMD2(data['transaction'][i] + data['transaction'][i]);
+          tempData[i] = fMD2(tempData[i] + tempData[i]);
         } else {
           // hash i + i
-          data['transaction'][i] = fMD2(data['transaction'][i] + data['transaction'][i]);
+          tempData[i] = fMD2(tempData[i] + tempData[i]);
         } // END of if (i == np-1)
         // update np
         if (np == 1) {
@@ -455,8 +466,8 @@ function getMerkleRoot() {
         } // END of if (np == 1)
       } // END of for (i = 0; i < np; i += 2)
     } // END of while (np >= 2)
-    // merkle root is in data['transaction'][0]
-    return data['transaction'][0];
+    // Merkle root is in tempData[0]
+    return tempData[0];
   } else {
     return -99;
   } // END of if (np > 0)
@@ -515,14 +526,9 @@ function mineBlock() {
   data['balance'][minerIndex] = tb;
 
   // get Merkle root
-  // xxx for now, temporarily change numPending...
-  np = data['transaction']['numPending']; // np declared above
-  console.log('mineBlock, original np = ' + np);
-  np += 1;
-  console.log('mineBlock, incremented np = ' + np);
-  data['transaction']['numPending'] = np; // use below before clearing at end
-  let mr = getMerkleRoot();
-  // xxx better to pass ['numPending'] to getMerkleRoot as param...
+  np = data['transaction']['numPending']; // let np declared above
+  np++; // add 1 for block miner's reward
+  let mr = getMerkleRoot(np);
   theader += 'Merkle root: <span style="color:blue;">' + mr + '</span><br>';
 
   // MINE BLOCK TO GET HASH

@@ -32,34 +32,6 @@ function fBlockMiner(ph, pt) {
   return [d, nonce, ha];
 } // END of function fBlockMiner
 
-// function fBlockMiner(ph, pt) {
-//   // input param ph is header
-//   // input param pt is target = # zeros needed at start of hash
-//   let mn;
-//   let ha;
-//   let s;
-//   let zz;
-//   let z = '';
-//   // get string of zeros to match
-//   for (let i = 0; i < pt; i++) {
-//     z += '0';
-//   }
-//   for (i = 0; i < 300000; i++) {
-//     // i is our mining nonce
-//     mn = ph;
-//     mn += 'Nonce: ' + i.toString();
-//     ha = fMD2(mn);
-//     s = ha.slice(0,pt);
-//     if (s == z) {
-//       console.log('break at i = ' + i);
-//       break;
-//     } // END of if
-//   } // END of for
-//   console.log('mn = ' + mn);
-//   console.log('ha = ' + ha);
-//   return [mn, ha];
-// } // END of function fBlockMiner
-
 function fHashit() {
   let ms = document.getElementById('textarea_enter_message').value;
   let h = fMD2(ms);

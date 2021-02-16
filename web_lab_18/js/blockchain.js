@@ -37,6 +37,7 @@ let data = {
     data['balance'][3] = '10';
     data['balance'][4] = '10';
     data['transaction'] = new Object();
+    data['transaction']['minToBuild'] = 2; // min user entered trans to build block
     // 'numPending' does not include block miner's reward
     data['transaction']['numPending'] = 0; // number of pending transactions
     data['transaction']['pendingList'] = ''; // actual list of pending trans
@@ -265,6 +266,9 @@ function transVerify() {
 
   if (tFlag1 & tFlag2) {
     addTransToPending(tFromIndex,tToIndex,tAmount);
+  } else {
+    el = document.getElementById('field_check_sufficient_funds_LABEL');
+    el.innerHTML = 'Bad transaction, check funds, addresses';
   }
 
 } // END of function transVerify
@@ -315,6 +319,19 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
   // SAVE HASH FOR MERKLE TREE IN PENDING BLOCK
   data['transaction'][np] = tHash; //save [0] for miner's block reward
   console.log('new hash of verified trans = ' + data['transaction'][np-1]);
+
+  // UPDATE NOTICE FIELDS
+  el = document.getElementById('field_check_sufficient_funds_LABEL');
+  el.innerHTML = 'Good transaction, adding to pending';
+  el = document.getElementById('field_transactions_pending_LABEL');
+  el.innerHTML = np + ' pending';
+
+  el = document.getElementById('field_transactions_ready_LABEL');
+  if (np >= data['transaction']['minToBuild']) {
+    el.innerHTML = 'can build block';
+  } else {
+    el.innerHTML = 'add more';
+  }
 
   // CLEAR TRANSACTION FIELD
   el = document.getElementById('div_TEXTDIV_transaction');
@@ -372,8 +389,8 @@ function buildBlock() {
     return;
   }
 
-  if (data['transaction']['numPending'] < 2) {
-    console.log('not minimum 2 transactions, exit buildBlock');
+  if (data['transaction']['numPending'] < data['transaction']['minToBuild']) {
+    console.log('not minimum # transactions, exit buildBlock');
     return;
   }
 

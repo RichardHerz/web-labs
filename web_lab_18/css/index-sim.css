@@ -253,7 +253,7 @@ border-style: solid;
   LCshowBorder: true;
 }
 
-#field_check_sufficient_funds_ {
+#field_check_sufficient_funds_LABEL {
   position: absolute;
   left: 6px;
   top: 542px;

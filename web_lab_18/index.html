@@ -83,7 +83,7 @@
     on which provisional block created by miners should be added to the blockchain next.
     Since a real peer network will have many miners, each of whom can build a provisional block,
     they must reach consensus on which block to add next. The first successful miner receives
-    a reward of new tokens created by the blockchain algorithm. See more on mining below.
+    a reward of new tokens created by the blockchain algorithm.
   </p>
   </li>
   <li>
@@ -93,31 +93,6 @@
   </p>
   </li>
   </ol>
-  <p>
-    Of many methods available to achieve consensus on which block to add next,
-    the one used by Bitcoin
-    <a href="https://en.wikipedia.org/wiki/History_of_bitcoin">[ref]</a>
-    and Teddy Token is &quot;proof of work&quot;
-    <a href="https://en.wikipedia.org/wiki/Proof_of_work">[ref]</a>.
-    This requires the miner to find a number which they add to the block
-    header such that the hash
-    <a href="https://en.wikipedia.org/wiki/Cryptographic_hash_function">[ref]</a>
-    of the block header starts with the target number of zeros.
-    This number is called the nonce: a number used once
-    <a href="https://en.wikipedia.org/wiki/Cryptographic_nonce">[ref]</a>.
-    The first miner to reach
-    the target can add their block to the blockchain and earn the block mining reward.
-  </p>
-  <p>
-    The target here is a small value so that the mining is fast.
-    Real blockchains require a target value of many zeros such that mining
-    requires significant time and computer power.
-    Since only the block header is hashed, the header
-    includes a hash - the Merkle root
-    <a href="https://en.wikipedia.org/wiki/Merkle_tree">[ref]</a> -
-    of the transactions to prevent tampering with them.
-  </p>
-
   <p><em><strong>ABOUT</strong></em></p>
   <p>
     Teddy Token's purpose is to show, in a simplified way, how blockchains and cryptocoins work.
@@ -133,24 +108,49 @@
     <a href="https://en.wikipedia.org/wiki/Ethereum">[ref]</a>.
   </p>
   <p>
-    Each block of transactions, as well as each individual transaction in a block, are identified by a
-    hash value that prevents the transactions and the blockchain from being tampered with.
-    The hashes also allow individual transactions and blocks to be located in the blockchain.
-  </p>
-  <p>
     <em><strong>Hashes are key to blockchains</strong></em>.
-    They are values created by cryptographic hash algorithms operating on information such as public keys.
+    They are values created by cryptographic hash algorithms operating on information such as
+    blockchain transactions.
+    <a href="https://en.wikipedia.org/wiki/Cryptographic_hash_function">[ref]</a>.
     They ensure that any future change in information, such as how many coins you have sent me,
     becomes obvious by a large change in the hash of the information, thus preventing tampering
-    with the blockchain. Each block contains the hash of the previous block such that tampering with any
-    block changes the hashes of all successive blocks, thus allowing identification and location of the problem.
+    with the blockchain.
   </p>
   <p>
     See <a href="https://reactorlab.net/web_labs/web_lab_17/">Web Lab 17</a>
     for a demonstration and explanation of hashing.
-    <a href="https://reactorlab.net/web_labs/web_lab_16/">Web Lab 16</a>
-    has a demonstration of public-key encryption
-    <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">[ref]</a>.
+    A user's anonymous address is the hash of the user's public cryptographic key.
+    See <a href="https://reactorlab.net/web_labs/web_lab_16/">Web Lab 16</a>,
+    <em>which may load slowly</em>,
+    for a demonstration and explanation of public-key cryptography.
+  </p>
+  <p>
+    Each block of transactions, as well as each individual transaction in a block, is identified by a
+    hash value that prevents the transaction and the blockchain from being tampered with.
+    The hashes also allow individual transactions and blocks to be located in the blockchain.
+    Each block contains the hash of the previous block such that tampering with any
+    block changes the hashes of all successive blocks, thus allowing identification and
+    location of the problem.
+    Since only the block header is hashed, the header
+    includes a hash - the Merkle root
+    <a href="https://en.wikipedia.org/wiki/Merkle_tree">[ref]</a> -
+    of the transactions to prevent tampering with them.
+  </p>
+  <p>
+    Of many methods available to achieve consensus on which block to add next,
+    the one used by Bitcoin
+    <a href="https://en.wikipedia.org/wiki/History_of_bitcoin">[ref]</a>
+    and Teddy Token is &quot;proof of work&quot;
+    <a href="https://en.wikipedia.org/wiki/Proof_of_work">[ref]</a>.
+    This requires the miner to find a number which they add to the block
+    header such that the hash - a code representing the block header -
+    starts with the target number of zeros.
+    This number is called the nonce: a number used once.
+    The first miner to reach the target can add their block to the blockchain
+    and earn the block mining reward.
+    The target here is a small value so that the mining is fast.
+    Real blockchains require a target value of many zeros such that mining
+    requires significant time and computer power.
   </p>
   <p>
     Cryptocoins have several additional advantages in addition to that of security.
@@ -182,7 +182,7 @@
     <a href="https://en.wikipedia.org/wiki/Fiat_money">[ref]</a>.
     Fiat currency is not backed by a real asset
     such as gold, and depends on user confidence for value.
-    Hmmm, that description also applies to cryptocurrency...
+    <em><strong>Hmmm</strong>, that description also applies to cryptocurrency...</em>
   </p>
   <p>
     There is no fixed price for cryptocoins. The coins are auctioned such that <em><strong>their value in

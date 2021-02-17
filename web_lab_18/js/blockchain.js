@@ -268,7 +268,7 @@ function transVerify() {
     addTransToPending(tFromIndex,tToIndex,tAmount);
   } else {
     el = document.getElementById('field_check_sufficient_funds_LABEL');
-    el.innerHTML = 'Bad transaction, check funds, addresses';
+    el.innerHTML = 'Bad transaction, check funds & names';
   }
 
 } // END of function transVerify

@@ -64,7 +64,7 @@ canvas {
 
 #div_page_header {
   position: relative;
-  border-width: 1px;
+  border-width: 0px;
 }
 
 #div_simFrame_01 {
@@ -377,7 +377,7 @@ border-style: solid;
   /* left: 527px;
   top: 5px; */
   width: 336px;
-  height: 784px;
+  height: 789px;
   visibility: visible;
   border-width: 1px;
   border-style: dotted;
@@ -437,7 +437,7 @@ border-style: solid;
 #field_mined_block_LABEL {
   position: absolute;
   left: 6px;
-  top: 385px;
+  top: 386px;
   width: 136px;
   height: 24px;
   border-width: 1px;
@@ -456,7 +456,7 @@ border-style: solid;
   display: block;
   position: absolute;
   left: 6px;
-  top: 427px;
+  top: 432px;
   width: 324px;
   height: 351px;
   visibility: visible;
@@ -501,7 +501,7 @@ border-style: solid;
   /* left: 538px;
   top: 3px; */
   width: 352px;
-  height: 784px;
+  height: 789px;
   visibility: visible;
   border-width: 1px;
   border-style: dotted;
@@ -568,7 +568,7 @@ border-style: solid;
   left: 6px;
   top: 285px;
   width: 340px;
-  height: 493px;
+  height: 498px;
   visibility: visible;
   border-width: 1px;
   border-style: outset;

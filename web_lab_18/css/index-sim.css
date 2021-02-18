@@ -420,6 +420,14 @@ border-style: solid;
   border-color: DodgerBlue;
 }
 
+/* USE PROGRESS CURSOR WHEN ONLY THIS BUTTON CLICKED */
+html input[id="button_mine_block"]:active {
+cursor: progress;
+}
+html input[id="button_mine_block"]:disabled {
+cursor: default ;
+}
+
 #button_mine_block {
   position: absolute;
   left: 6px;

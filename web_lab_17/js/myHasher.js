@@ -7,6 +7,10 @@ function fHashit() {
 function fCopyit() {
   let ms = document.getElementById('textarea_enter_message').value;
   let h = document.getElementById('field_hash_result').innerHTML;
+  // sometimes contents not being completely replaced on a second copy
+  // so try to completely clear them first...
+  document.getElementById('field_message_COPY').innerHTML = '';
+  document.getElementById('field_hash_result_COPY').innerHTML = '';
   document.getElementById('field_message_COPY').innerHTML = ms;
   document.getElementById('field_hash_result_COPY').innerHTML = h;
 } // END of function copyit

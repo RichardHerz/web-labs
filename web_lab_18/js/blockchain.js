@@ -320,12 +320,11 @@ function addTransToPending(pFromIndex,pToIndex,pAmt) {
   data['transaction'][np] = tHash; //save [0] for miner's block reward
   console.log('new hash of verified trans = ' + data['transaction'][np-1]);
 
-  // UPDATE NOTICE FIELDS
+  // UPDATE VERIFY TRANSACTION NOTICE FIELDS
   el = document.getElementById('field_check_sufficient_funds_LABEL');
   el.innerHTML = 'Good transaction, adding to pending';
   el = document.getElementById('field_transactions_pending_LABEL');
   el.innerHTML = np + ' pending';
-
   el = document.getElementById('field_transactions_ready_LABEL');
   if (np >= data['transaction']['minToBuild']) {
     el.innerHTML = 'can build block';
@@ -426,6 +425,14 @@ function buildBlock() {
   data['transaction']['pendingList'] = ttrans;
   el2.innerHTML = '';
 
+  // RESET VERIFY TRANSACTION NOTICE FIELDS
+  el = document.getElementById('field_check_sufficient_funds_LABEL');
+  el.innerHTML = '';
+  el = document.getElementById('field_transactions_pending_LABEL');
+  el.innerHTML = '0 pending';
+  el = document.getElementById('field_transactions_ready_LABEL');
+  el.innerHTML = 'add more';
+
   console.log('exit buildBlock');
 } // END of function buildBlock
 
@@ -503,6 +510,16 @@ function mineBlock() {
   console.log('elcontlen = ' + elcontlen + ', elcont = ' + elcont);
   if (elcont !== 0) {
     console.log('mined block still pending, can not build new block, exit mineBlock');
+    return;
+  }
+
+  el = document.getElementById('div_TEXTDIV_provisional_block');
+  elcont = el.innerHTML;
+  elcont = Number(elcont);
+  elcontlen = elcont.length;
+  console.log('elcontlen = ' + elcontlen + ', elcont = ' + elcont);
+  if (elcont == 0) {
+    console.log('provisional block empty can not build new block, exit mineBlock');
     return;
   }
 
@@ -587,6 +604,8 @@ function mineBlock() {
 
   console.log('minBlock, before el.innerHTML = tText;');
   console.log('tText = ' + tText);
+  // get el again, make sure putting correct place in case of changes above
+  el = document.getElementById('div_TEXTDIV_mined_block');
   el.innerHTML = tText;
 
   //save b&w no color version for final blockchain
@@ -635,5 +654,8 @@ function updateChain() {
   // clear mined block display
   el = document.getElementById('div_TEXTDIV_mined_block');
   el.innerHTML = '';
+
+  // // clear mined block data
+  // data['minedBlock'] = '';
 
 } // END of function updateChain

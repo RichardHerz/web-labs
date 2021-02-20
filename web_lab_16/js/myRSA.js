@@ -12,11 +12,12 @@ function fClearFields() {
 }
 
 function fGetRandomPQ() {
+  // uses function fClearFields()
   fClearFields();
   // WARNING: prMin in fPrimes must be a prime!!!
   let prMin = 1009; // WARNING: must be a prime number!!!
   let prMax = 10000;
-  let pr = fPrimes(prMin, prMax);
+  let pr = fGetPrimesInRange(prMin, prMax);
   let prLen = pr.length;
   let i = Math.floor(Math.random() * prLen);
   let p = pr[i];
@@ -31,7 +32,7 @@ function fGetRandomPQ() {
 } // END of function fGetRandomPQ
 
 function fGetKeys() {
-  // uses functions fPrimes() and fGCD_two_numbers()
+  // uses functions fClearFields(), fGetPrimes() and fGCD_two_numbers()
   // console.log('enter main function fGetKeys');
   // DEVELOPMENT
   // declare variables
@@ -52,45 +53,18 @@ function fGetKeys() {
   let n = p*q;
   let phi = (p-1)*(q-1);
 
+  // get array of primes ep from which to select e
+
   timerDate = new Date();
   timerStart = timerDate.getTime();
-  // // console.log('timerStart = ' + timerStart);
 
-  // get array of primes ep from which to select e
-  let ep =[]; // declare ep
-  let eplen; // declare eplen
-  let pLim = 24999983;
-  if (phi > pLim) {
-    let ep1 = fPrimesList();
-    // WARNING: pMin in fPrimes must be a prime!!!
-    let pMin = 25000033; // start at  next prime after pLim
-    let ep2 = fPrimes(pMin, phi); // this function listed below in this file
-    ep = ep.concat(ep1, ep2);
-    eplen = ep.length;
-  } else {
-    // get from pre-generated list in file primesList.js
-    // only to this limit so this is very fast
-    // MATLAB primes(25000000) returns 1,565,927 primes from 2 to 24999983 (6.3%)
-    ep = fPrimesList(); // this function in file primesList.js
-    // need to estimate eplen because won't need all those in this array
-    eplen = ep.length; // TEMPORARY FOR NOW
-    // coefficients of 3rd order polynomial fit of fraction of primes >2 in list
-    // vs. natural log of max number in list - coefficients from fit in MATLAB
-    let coef = [-0.000099758947246, 0.004513664869385, -0.073043961967510, 0.490056200524824];
-    let plog = Math.log(phi);
-    let pfrac = coef[0]*plog**3 + coef[1]*plog**2 + coef[2]*plog + coef[3];
-    pfrac = 0.99*pfrac; // lower a little so don't overshoot length estimate
-    eplen = Math.round(pfrac*phi);
-    // console.log('eplen calc = ' + eplen)
-  }
+  let ep = fGetPrimes(phi); // computes & returns primes from 3 to phi
+  let eplen = ep.length;
 
   timerDate = new Date();
   timerEnd = timerDate.getTime();
-  // // console.log('timerEnd = ' + timerEnd);
   timerElapsed = timerEnd - timerStart;
-  // console.log('TIME (ms) to get PRIMES = ' + timerElapsed);
-
-  // // console.log('ep = ' + ep); // WARNING: THIS LOGGING IS VERY SLOW WITH LONG LIST
+  console.log('TIME (ms) to get PRIMES = ' + timerElapsed);
 
   // find a random value in primes that is coprime with phi
   // this produces different keys every run
@@ -116,13 +90,8 @@ function fGetKeys() {
       // console.log('in function fGetKeys, no GCD found');
       break;
     }
-    // i = i++;
-    // // break out if start at fixed i and don't find GCD
-    // if (i > ep.length) {
-    //   // console.log('in function fGetKeys, no GCD found');
-    //   break;
-    // }
-  }
+  } // END of while loop
+
   let e = ep[i];
 
   timerDate = new Date();
@@ -224,44 +193,6 @@ function fGCD_two_numbers(x, y) {
   return x;
 } // END of function fGCD_two_numbers
 
-function fPrimes(min, max) {
-  // WARNING: input min must be a prime number!!!
-  // thanks to vitaly-t on stackoverflow
-  // uses function fNextPrime()
-  // // console.log('enter function primes');
-  let value = min;
-  let result = [];
-  while (value < max) {
-      value = fNextPrime(value);
-      result.push(value);
-  }
-  let tlast = result[result.length - 1];
-  if (tlast > max) {
-    result.pop();
-  }
-  return result;
-} // END of function primes
-
-function fNextPrime(value) {
-  // WARNING: input value must be a prime number!!!
-  // thanks to vitaly-t on stackoverflow
-  // // console.log('enter function fNextPrime');
-  if (value > 2) {
-      let i;
-      let q;
-      do {
-          i = 3;
-          value += 2;
-          q = Math.floor(Math.sqrt(value));
-          while (i <= q && value % i) {
-              i += 2;
-          }
-      } while (i <= q);
-      return value;
-  }
-  return value === 2 ? 3 : 2;
-} // END of function fNextPrime
-
 function fModExp(m,key) {
   //
   // return r = m**key[1] % key[0], where ** is exponentiate and % is mod
@@ -304,3 +235,171 @@ function fModExp(m,key) {
   // console.log('end function fModExp, r = ' + r);
   return r;
 } // END of function fModExp
+
+function fGetPrimes(n) {
+  // thanks to
+  // https://www.geeksforgeeks.org/new-algorithm-to-generate-prime-numbers-from-1-to-nth-number/ 
+
+  let count = 0; // count the primes
+
+  let arr1 = new Array(n+1); // after this, can access indexes 0 to n
+  let arr2 = new Array(n+1);
+
+  // // arrayName.fill(value,startIndex,end);
+  // arr1.fill(0,0,n+1); // after this, can access indexes 0 to n
+  // arr2.fill(1,0,n+1);
+  // inputs start and end are optional
+  // default is start = startIndex = 0, end at length of array
+  arr1.fill(0);
+  arr2.fill(1);
+
+  // 2 and 3 are primes
+  arr1[2] = arr1[3] = 1;
+  // arr2 are all 1's at this point
+
+  // Update arr1[] to mark all the primes
+  let d = 5;
+  while (d <= n) {
+    arr1[d] = 1;
+    arr1[d+2] = 1;
+    d += 6;
+  }
+
+  // Update arr2[] to mark all pseudo primes
+  let i;
+  let j;
+  let temp1;
+  let temp2;
+  let temp3;
+  let temp4;
+  let flag;
+  for(i = 5; i*i <= n; i += 6) {
+    j = 0;
+    while (1) {
+      flag = 0;
+
+      // Eqn 1
+      temp1 = 6 * i * (j + 1) + i;
+      // Equation 2
+      temp2 = ((6 * i * j) + i * i);
+      // Equation 3
+      temp3 = ((6 * (i + 2) * j)
+              + ((i + 2) * (i + 2)));
+      // Equation 4
+      temp4 = ((6 * (i + 2) * (j + 1))
+              + ((i + 2) * (i + 2)) - 2 * (i + 2));
+
+      // If obtained pseudo prime number <=n then its
+      // corresponding index in arr2 is set to 0
+
+      // Result of equation 1
+      if (temp1 <= n) {
+        arr2[temp1] = 0;
+      }
+      else {
+        flag++;
+      }
+
+      // Result of equation 2
+      if (temp2 <= n) {
+        arr2[temp2] = 0;
+      }
+      else {
+        flag++;
+      }
+
+      // Result of equation 3
+      if (temp3 <= n) {
+        arr2[temp3] = 0;
+      }
+      else {
+        flag++;
+      }
+
+      // Result of equation 4
+      if (temp4 <= n) {
+        arr2[temp4] = 0;
+      }
+      else {
+        flag++;
+      }
+
+      if (flag == 4) {
+        break;
+      }
+      j++;
+    } // END of while(1)
+  } // END if for loop
+
+  let aPrimes = []; // collect the prime values
+
+  // // OPTIONAL - include 2 - but don't want 2 for current purposes
+  // if (n >= 2) {
+  //     count++;
+  //     aPrimes.push(2);
+  // }
+
+  // Include 3
+  if (n >= 3) {
+      count++;
+      aPrimes.push(3);
+  }
+
+  // If arr1[i] = 1 && arr2[i] = 1 then i is prime number
+  // i.e. it is a prime which is not a pseudo prime
+  for (let p = 5; p <= n; p = p + 6) {
+    if (arr2[p] == 1 && arr1[p] == 1) {
+      count++;
+      aPrimes.push(p);
+    }
+    if (arr2[p + 2] == 1 && arr1[p + 2] == 1) {
+      count++;
+      aPrimes.push(p+2);
+    }
+  }
+
+  console.log('fGetPrimes count = ' + count);
+  // console.log('aPrimes = ' + aPrimes);
+
+  return aPrimes;
+} // END of function fGetPrimes
+
+function fGetPrimesInRange(min, max) {
+  // WARNING: input min must be a prime number!!!
+  // used by fGetRandomPQ()
+  // uses function fNextPrime()
+  // thanks to vitaly-t on stackoverflow
+  // // console.log('enter function primes');
+  let value = min;
+  let result = [];
+  while (value < max) {
+      value = fNextPrime(value);
+      result.push(value);
+  }
+  let tlast = result[result.length - 1];
+  if (tlast > max) {
+    result.pop();
+  }
+  return result;
+} // END of function fGetPrimesInRange
+
+function fNextPrime(value) {
+  // WARNING: input value must be a prime number!!!
+  // used by function fGetPrimesInRange()
+  // thanks to vitaly-t on stackoverflow
+  // // console.log('enter function fNextPrime');
+  if (value > 2) {
+      let i;
+      let q;
+      do {
+          i = 3;
+          value += 2;
+          q = Math.floor(Math.sqrt(value));
+          while (i <= q && value % i) {
+              i += 2;
+          }
+      } while (i <= q);
+      return value;
+  }
+  return value === 2 ? 3 : 2;
+} // END of function fNextPrime

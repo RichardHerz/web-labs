@@ -1,5 +1,5 @@
 function fListPrimes() {
-
+  // list primes to 5000 
   let tText = '<p style="font-family:';
   tText += "'Courier New'; font-size:12px;";
   tText += '">';

@@ -1,7 +1,0 @@
-myRSAx (main) and myRSAx_F (function) encrypt a single numeric value and returns a single numeric value but can handle large numeric values 
-
-myRSA4 (main) and myRSA4_F (function) encrypt a char string one char at a time 
-
-see notes for hexlen variable in myRSA4_F
-
-note that, with regard to RSA proof, that no info about phi value is received by en/decrypt function other than how phi determines sk(2) key value (d) 

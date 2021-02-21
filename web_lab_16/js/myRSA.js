@@ -241,6 +241,8 @@ function fModExp(m,key) {
 } // END of function fModExp
 
 function fGetPrimes(n) {
+  // returns primes from 3 (optionally 2) to n
+  // number in count var agrees with list obtained by MATLAB rand()
   // thanks to
   // https://www.geeksforgeeks.org/new-algorithm-to-generate-prime-numbers-from-1-to-nth-number/ 
 

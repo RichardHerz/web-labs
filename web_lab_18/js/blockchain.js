@@ -61,7 +61,9 @@ function updateBody() {
   updateSelectMenus();
   updateChainHeader();
   updateChainGenesis();
-}
+  // jQuery JS library needs to have been loaded for this to work
+  $.post("../webAppRunLog.lc",{webAppNumber: "18, Teddy Token blockchain"});
+} // END of function updateBody()
 
 function updatePeople() {
   // called by updateBody(), addTransToPending(), updateChain()

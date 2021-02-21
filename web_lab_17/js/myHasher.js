@@ -2,6 +2,8 @@ function fHashit() {
   let ms = document.getElementById('textarea_enter_message').value;
   let h = fMD2(ms);
   document.getElementById('field_hash_result').innerHTML = h;
+  // jQuery JS library needs to have been loaded for this to work
+  $.post("../webAppRunLog.lc",{webAppNumber: "17, cryptographic hash"});
 } // END of function hashitfunction hashit() {
 
 function fCopyit() {

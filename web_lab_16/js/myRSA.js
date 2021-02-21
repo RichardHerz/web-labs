@@ -148,6 +148,10 @@ function fGetKeys() {
 
 function fEncode() {
   // uses function fModExp()
+
+  // jQuery JS library needs to have been loaded for this to work
+  $.post("../webAppRunLog.lc",{webAppNumber: "16, RSA encryption"});
+
   let pk0 = document.getElementById('field_public_key_0').innerHTML;
   let pk1 = document.getElementById('field_public_key_1').innerHTML;
   let pk = [];

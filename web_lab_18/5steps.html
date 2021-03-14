@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>ReactorLab.net, Cryptocoin Blockchain</title>
+
+  <!--
+    Design, text, images and code by Richard K. Herz, 2017-2021
+    Copyrights held by Richard K. Herz
+    Licensed for use under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.en.html
+  -->
+
+  <meta name='description' author='Richard Herz'>
+  <meta name="description" content="The Reactor Lab provides interactive chemical reactor
+  simulations for active learning. Web Labs and desktop versions of ReactorLab
+  and SimzLab, including PureWaterLab, are available. Software is provided free of charge
+  and is open source and available at our GitHub site, github.com/RichardHerz. The code is
+  structured to allow fast construction of new simulations of chemical reactors and other systems."/>
+
+</head>
+<p>
+  Return to <a href="index-sim.html">Teddy Token simulation</a> at ReactorLab.net
+  <!-- need full URL to get to WordPress page -->
+</p>
+
+  <p style="color:Red;"><em><strong>5 STEPS to building the blockchain:</strong></em></p>
+  <p> On opening the simulation, only the &quot;<em>Genesis Block</em>&quot; is
+    present in the blockchain field on the far right or far bottom of the page, depending on your screen
+    size and orientation.
+    The Genesis Block is block number 0, in which Catoshi created tokens and
+    distributed them to 5 friends.
+  </p>
+  <ol>
+  <li>
+  <p>
+    <em><strong>Create a transaction:</strong></em> Select To, From and enter an amount.
+    Transactions show the addresses, not the names of the people to whom the address belongs.
+    This makes transactions anonymous.
+  </p>
+  </li>
+  <li>
+  <p>
+    <em><strong>Verify the transaction:</strong></em> This step checks to make sure two different
+    addresses have been entered and a nonzero amount that is less than or equal to the current
+    balance of the From address has been entered. After verification, the transaction is added
+    to a pool of pending transactions on the peer network.
+  </p>
+  </li>
+  <li>
+  <p>
+    <em><strong>Build block:</strong></em> This step checks to make sure you have entered at least
+    two verified transactions, then creates a provisional block. Real blockchains have blocks
+    with thousands of transactions in order to reduce the cost per transaction. Miners on the peer
+    network collect pending transactions and form provisional blocks.
+  </p>
+  </li>
+  <li>
+  <p>
+    <em><strong>Mine block:</strong></em> This step performs computations in order to achieve consensus
+    on which provisional block created by miners should be added to the blockchain next.
+    Since a real peer network will have many miners, each of whom can build a provisional block,
+    they must reach consensus on which block to add next. The block of the first successful miner
+    is added to the blockchain and they receive a reward of new tokens created by the blockchain algorithm.
+  </p>
+  </li>
+  <li>
+  <p>
+    <em><strong>Add block to chain:</strong></em> This step adds the new block to the top of the
+    blockchain and also updates the balances of all users in the blockchain header.
+  </p>
+  </li>
+  </ol>
+</body>
+</html>

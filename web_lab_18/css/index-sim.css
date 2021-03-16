@@ -534,11 +534,11 @@ cursor: default ;
   LCshowBorder: true;
 }
 
-#field_blockchain_header_LABEL {
+#field_blockchain_ledger_LABEL {
   position: absolute;
   left: 6px;
   top: 21px;
-  width: 136px;
+  width: 220px;
   height: 24px;
   border-width: 1px;
   visibility: visible;
@@ -556,7 +556,7 @@ cursor: default ;
   position: absolute;
   left: 6px;
   top: 240px;
-  width: 141px;
+  width: 220px;
   height: 24px;
   border-width: 1px;
   visibility: visible;
@@ -591,7 +591,7 @@ cursor: default ;
   LCvScrollbar: false;
 }
 
-#div_TEXTDIV_blockchain_header {
+#div_TEXTDIV_blockchain_ledger {
   display: block;
   position: absolute;
   left: 6px;

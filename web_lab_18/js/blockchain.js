@@ -100,7 +100,7 @@ function updateSelectMenus(){
 
 function updateChainHeader() {
   // called by updateBody() and updateChain()
-  let el = document.getElementById('div_TEXTDIV_blockchain_header');
+  let el = document.getElementById('div_TEXTDIV_blockchain_ledger');
   el.innerHTML = ''; // clear any old before filling
   let tText = '';
   let ol = Object.keys(data['people']);

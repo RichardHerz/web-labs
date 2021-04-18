@@ -91,11 +91,18 @@ function fMD2(ms) {
   let md = []; // initialize decimal representation of message
   let cd;
 
+  // console.log('------ ENTER HASHER ---------------- ');
+
   // convert message string from ASCII char to ASCII decimal array
   // do all processing in decimal, then, at end, convert hash to hex string
   for (let i in ms) {
     cd = ms.charCodeAt(i);
     md.push(cd);
+    // if (i < 4) {
+    //   console.log('i = ' + i);
+    //   console.log('ms[i] = ' + ms[i]);
+    //   console.log('cd = ' + cd);
+    // }
   }
 
   // "Step 1. Append Padding Bytes" -----------------------
@@ -121,11 +128,20 @@ function fMD2(ms) {
   mdl = md.length;
   let N = mdl / hb;
 
+// console.log('>> ENTER APPEND CHECKSUM << ')
+
   for (let i = 0; i < N; i++) {
     for (let j=0; j < hb; j++) {
       // see  https://decimaltobinary.pro/
       // ^ is bitwise XOR in JavaScript
       C[j] = S[md[i*hb+j] ^ L];
+
+// console.log('i, j, i*hb+j = ' + i +', '+ j + ', ' + i*hb+j);
+// console.log('md[i*hb+j]  = ' + md[i*hb+j]);
+// console.log('L = ' + L);
+// console.log('C[j] = S[md[i*hb+j] ^ L] = ' + C[j]);
+
+
       L = C[j];
     }
   }

@@ -185,7 +185,11 @@ function puArtificialZoo(pUnitIndex) {
     // let ye = y;
     // svgElement.setAttribute("d", "M" + xs + "," + ys + " L" + xe + "," + ye );
 
-    var newLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+    // EXAMPLE OF ADDING NEW SVG ELEMENT IN JS
+    // see answer by thatOneGuy at
+    // https://stackoverflow.com/questions/35134131/svg-adding-a-line-with-javascript
+    let svgNS = 'http://www.w3.org/2000/svg';
+    var newLine = document.createElementNS(svgNS,'line');
     newLine.setAttribute('id','line2');
     newLine.setAttribute('x1','0');
     newLine.setAttribute('y1','0');

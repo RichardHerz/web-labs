@@ -1,8 +1,7 @@
-Lab 000 – Artificial Zoo using SVG graphics 
+Lab 000 – Artificial Zoo using SVG graphics
 
-my "artificial zoo" program is an L-system - see photo at this link, from this link
+my "artificial zoo" program is an L-system
 https://en.wikipedia.org/wiki/L-system
-
 
 which, it appears to me, is a particular implementation of an Iterated Function System https://en.wikipedia.org/wiki/Iterated_function_system
 

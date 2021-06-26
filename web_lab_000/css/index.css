@@ -24,20 +24,6 @@
   z-index : -1; // need svg below input fields
 }
 
-#button_resetButton {
-  position: absolute;
-  left: 90px;
-  top: 9px;
-  width: 82px;
-}
-
-#button_runButton {
-  position: absolute;
-  left: 4px;
-  top: 9px;
-  width: 82px;
-}
-
 /* @media for responsive design                    */
 /* requires meta viewport element in HTML head     */
 /* styling above this holds except, e.g.,          */

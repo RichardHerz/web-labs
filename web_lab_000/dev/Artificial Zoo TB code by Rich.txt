@@ -1,0 +1,547 @@
+! gene instructions
+
+! all genes are stored as string values
+! genes 1-3 are numbers stored as strings,
+! use VAL() to convert to numeric value
+
+! gene$(1) is increment of angle rotation (degrees, 0 points right, + is CCW)
+! gene$(2) is generation length change factor df for new shoot off major bud B
+! gene$(3) is generation length change factor df for new shoot off minor bud b
+! gene$(4 on) are growth instructions
+
+! F = make one step forward of length d drawing line
+! J = jump, by making one step forward of length d not drawing line
+! + = rotate by increment of angle rotation specified by gene$(1)
+! - = rotate by NEGATIVE of increment of angle rotation specified by gene$(1)
+! [ = remember this x,y coordinate and direction (angle)
+! ] = return to x,y coordinate and direction (angle) of [ of this [] pair
+! B = major bud location, after following this set of instructions
+!     return to each new bud location and repeat entire set of instructions
+! b = minor bud location, after following this set of instructions
+!     return to each new bud location and repeat entire set of instructions
+
+SUB menu(ch$)
+    CLEAR
+    SET COLOR "black"
+    PRINT "Menu"
+    PRINT
+    PRINT "A. Bracken"
+    PRINT "B. Dragon"
+    PRINT "C. Serpinksi gasket"
+    PRINT "D. Koch 6"
+    PRINT "E. Koch 8"
+    PRINT "F. Islands and Lakes"
+    PRINT "Q. Quit"
+    PRINT
+    PRINT "Press key of your choice... ";
+    GET KEY code
+    LET ch$ = chr$(code)
+    PRINT ch$
+    PAUSE 0.5
+    CLEAR
+END SUB
+
+SUB islands(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+
+    ! xxx this is different from others because it has more
+    ! xxx than one initial bud
+
+    ! specify island and lakes genes
+    LET gene$(1) = "90"
+    LET gene$(2) = "0.15"
+    LET gene$(3) = "1"
+    LET temp$ = "BF+J-BFBF+BF+BFBF+BFJ+BFBF-J+BFBF-BF-BFBF-BFJ-BFBFBF"
+
+    SET COLOR "black"
+
+    ! xxx MULTIPLE INITIAL BUDS, SET x,y,a SEPARATELY BELOW
+
+    LET d0 = 80
+    LET budType = 2               ! major (B) = 2, minor (b) = 1
+
+    ! set number of "generations" to draw
+    LET maxGen = 2
+
+    FOR g = 1 to len(temp$)
+        LET gene$(g+3) = temp$[g:g]
+    NEXT g
+
+    IF budType = 2 then
+       LET d = d0/val(gene$(2))
+    ELSE
+       LET d = d0/val(gene$(3))
+    END IF
+
+    LET x0 = 700
+    LET y0 = 250
+
+    LET newBud = 1
+    LET newGen(newBud,1) = x0
+    LET newGen(newBud,2) = y0
+    LET newGen(newBud,3) = 90
+    LET newGen(newBud,4) = d
+    LET newGen(newBud,5) = budType
+
+    LET newBud = 2
+    LET newGen(newBud,1) = x0
+    LET newGen(newBud,2) = y0 + 6*d0
+    LET newGen(newBud,3) = 180
+    LET newGen(newBud,4) = d
+    LET newGen(newBud,5) = budType
+
+    LET newBud = 3
+    LET newGen(newBud,1) = x0 - 6*d0
+    LET newGen(newBud,2) = y0 + 6*d0
+    LET newGen(newBud,3) = 270
+    LET newGen(newBud,4) = d
+    LET newGen(newBud,5) = budType
+
+    LET newBud = 4
+    LET newGen(newBud,1) = x0 - 6*d0
+    LET newGen(newBud,2) = y0
+    LET newGen(newBud,3) = 0
+    LET newGen(newBud,4) = d
+    LET newGen(newBud,5) = budType
+
+END SUB
+
+SUB koch6(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+
+    ! specify genes FOR KOCH CURVE
+    LET gene$(1) = "60"
+    LET gene$(2) = "0.333333333"
+    LET gene$(3) = "0.333333333"
+
+    ! xxx note lots of repetition in this gene, anyway to shorten this? xxx
+    LET temp$ = "BF+BF--BF+BF--BF+BF--BF+BF--BF+BF--BF+BF--BF+BF--BF+BF"
+    ! LET temp$ = "BF+BF--BF+BF"
+
+    ! specify starting bud
+    LET x = 225
+    LET y = 250
+    LET a = 60
+    LET d = 200
+    LET budType = 2               ! major (B) = 2, minor (b) = 1
+
+    ! Set number of "generations" to draw
+    LET maxGen = 4
+
+    SET COLOR "blue"
+
+    LET gravSwitch = 0            ! off = 0, on = 1
+
+    CALL finishGene(temp$,d,gene$())
+
+    LET newBud = 1
+    LET newGen(newBud,1) = x
+    LET newGen(newBud,2) = y
+    LET newGen(newBud,3) = a      ! angle to head
+    LET newGen(newBud,4) = d      ! length of parent shoot
+    LET newGen(newBud,5) = budType     ! bud type, 1 = "b", 2 = "B"
+
+END SUB
+
+SUB koch8(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+
+    ! specify genes FOR KOCH CURVE
+    LET gene$(1) = "45"
+    LET n = 1/(2 + 2^0.5)
+    LET gene$(2) = str$(n)
+    LET gene$(3) = str$(n)
+
+    ! xxx LET temp$ = "BF+BF--BF+BF" ! xxx original try
+
+    ! xxx note lots of repetition in this gene, anyway to shorten this? xxx
+    LET temp$ = "BF+BF--BF+BF--BF+BF--BF+BF--BF+BF--BF+BF--BF+BF--BF+BF"
+
+    ! xxx this has equivalent geometry but "fills in" in a different progression
+    ! xxx since second generation on starting side is detailed whereas
+    ! xxx first lines along the top are only drawn in the second generation
+    ! LET gene$(2) = "1"
+    ! LET temp$ = "[J+J--J+J--B]bF+bF--bF+bF"
+
+    ! should work to have 1st generation having 4 initial buds (diff. x,y,a),
+    ! each at a different corner of the cube and pointing different directions,
+    ! then the genes are only:  LET temp$ = "BF+BF--BF+BF"
+
+    ! specify starting bud
+    LET x = 225
+    LET y = 250
+    LET a = 90                    ! angle new shoot will go from bud
+    LET d = 150
+    LET budType = 2               ! 1 = minor bud, 2 = major bud
+
+    ! set number of "generations" to draw
+    LET maxGen = 4
+
+    SET COLOR "blue"
+
+    LET gravSwitch = 0            ! off = 0, on = 1
+
+    CALL finishGene(temp$,d,gene$())
+
+    LET newBud = 1
+    LET newGen(newBud,1) = x
+    LET newGen(newBud,2) = y
+    LET newGen(newBud,3) = a      ! angle to head
+    LET newGen(newBud,4) = d      ! length of parent shoot
+    LET newGen(newBud,5) = budType     ! bud type, 1 = "b", 2 = "B"
+
+END SUB
+
+SUB serpinksi(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+
+    ! specify genes
+    LET gene$(1) = "120"
+    LET gene$(2) = "0.5"
+    LET gene$(3) = "1"
+    LET temp$ = "BFBF-FF-F[-B]F"
+
+    ! specify initial bud
+    LET x = 800
+    LET y = 150
+    LET a = 180
+    LET d = 350
+    LET budType = 2
+
+    ! set number of "generations" to draw
+    LET maxGen = 7                ! this value is what you want if any buds in gene
+
+    SET COLOR "red"
+
+    LET gravSwitch = 0            ! off = 0, on = 1
+
+    CALL finishGene(temp$,d,gene$())
+
+    LET newBud = 1
+    LET newGen(newBud,1) = x
+    LET newGen(newBud,2) = y
+    LET newGen(newBud,3) = a      ! angle to head
+    LET newGen(newBud,4) = d      ! length of parent shoot
+    LET newGen(newBud,5) = budType     ! bud type, 1 = "b", 2 = "B"
+
+END SUB
+
+SUB dragon(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+
+    ! specify Dragon genes
+    LET gene$(1) = "45"
+    LET gene$(2) = "0.7071067812"      ! = 1/2^0.5
+    LET gene$(3) = "1"
+    LET temp$ = "-BF++F----B"
+
+    ! specify initial bud
+    LET x = 250
+    LET y = 600
+    LET a = 0
+    LET d = 400
+    LET budType = 2               ! major (B) = 2, minor (b) = 1
+
+    ! set number of "generations" to draw
+    LET maxGen = 14
+
+    SET COLOR "red"
+
+    LET gravSwitch = 0            ! off = 0, on = 1
+
+    CALL finishGene(temp$,d,gene$())
+
+    LET newBud = 1
+    LET newGen(newBud,1) = x
+    LET newGen(newBud,2) = y
+    LET newGen(newBud,3) = a      ! angle to head
+    LET newGen(newBud,4) = d      ! length of parent shoot
+    LET newGen(newBud,5) = budType     ! bud type, 1 = "b", 2 = "B"
+
+END SUB
+
+SUB bracken(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+
+    LET gene$(1) = "45"
+    LET gene$(2) = "0.8"
+    LET gene$(3) = "0.4"
+    ! temp$ will automatically be translated below into genes 4 on
+    LET temp$ = "FF[+Fb]F[-Fb]FB"
+
+    ! specify initial bud
+
+    LET x = 500                   ! horizontal coordinate of bud
+    LET y = 100                   ! vertical coordinate of bud
+    LET a = 90                    ! angle bud points
+    LET d = 40                    ! length of first shoot
+    LET budType = 2               ! major (B) = 2, minor (b) = 1
+
+    ! specify number of "generations" to draw
+
+    LET maxGen = 9
+
+    SET COLOR "green"
+
+    LET gravSwitch = 1            ! off = 0, on = 1
+
+    CALL finishGene(temp$,d,gene$())
+
+    ! copy initial bud specifications to newGen(,) array
+
+    LET newBud = 1
+    LET newGen(newBud,1) = x
+    LET newGen(newBud,2) = y
+    LET newGen(newBud,3) = a      ! angle to head
+    LET newGen(newBud,4) = d      ! length of parent shoot
+    LET newGen(newBud,5) = budType     ! bud type, 1 = "b", 2 = "B"
+
+END SUB
+
+SUB finishGene(temp$,d,gene$())
+
+    ! copy gene specifications from temp$ to gene$()
+    FOR g = 1 to len(temp$)
+        LET gene$(g+3) = temp$[g:g]
+    NEXT g
+
+    ! reset d so 1st line drawn equal to d value set above
+    IF budType = 2 then
+       LET d = d/val(gene$(2))
+    ELSE
+       LET d = d/val(gene$(3))
+    END IF
+
+END SUB
+
+SET MODE "graphics"
+LET squeeze = 100                 ! correction for screen aspect ratio
+SET WINDOW 0-squeeze,1000+squeeze,0,1000
+RANDOMIZE
+
+DIM lastGen(12000,5)              ! 1st dim >= (number buds in a gene)^(maxGen - 1)
+DIM newGen(12000,5)
+DIM gene$(100)                    ! contains growth instructions
+
+DO
+
+   LET menuFlag = 0               ! set to 1 if invalid choice entered
+
+   FOR g = 1 to 100
+       LET gene$(g) = ""
+   NEXT g
+
+   FOR b = 1 to 12000
+       LET newGen(b,5) = 0
+       LET lastGen(b,5) = 0
+   NEXT b
+
+   CALL menu(ch$)
+
+   SELECT CASE ch$
+   CASE "A","a"
+        CALL bracken(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+   CASE "B","b"
+        CALL dragon(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+   CASE "C","c"
+        CALL serpinksi(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+   CASE "D","d"
+        CALL koch6(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+   CASE "E","e"
+        CALL koch8(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+   CASE "F","f"
+        CALL islands(gene$(),newGen(,),maxGen,newBud,gravSwitch)
+   CASE "Q","q"
+        EXIT DO
+   CASE else
+        PRINT "Invalid selection!"
+        LET menuFlag = 1
+        PAUSE 0.5
+   END SELECT
+
+   IF menuFlag <> 1 then
+
+      LET thisGen = 1             ! incremented as sub grow calls itself recursively
+
+      ! grow the thing!
+
+      CALL grow(gene$(),lastGen(,),newGen(,),maxGen,thisGen,newBud,gravSwitch)
+
+      SET COLOR "black"
+      SET CURSOR 1,1
+      PRINT "DONE, press any key to continue... ";
+      GET KEY code
+
+   END IF
+
+LOOP
+
+CLEAR
+SET COLOR "black"
+PRINT "program has ended, click anywhere to return to source code..."
+
+END
+
+! ******* END OF MAIN PROGRAM, EXTERNAL PROCEDURES FOLLOW *******
+
+SUB grow(gene$(),lastGen(,),newGen(,),maxGen,thisGen,newBud,gravSwitch)
+
+    ! sub grow is a "recursive procedure" because it calls itself
+    ! see near the end of the sub for the call
+    ! the result, however, it an "iterative process"
+
+    ! these local arrays save coordinates and angle for nested []
+    DIM xOLD(100)
+    DIM yOLD(100)
+    DIM aOLD(100)
+
+    ! copy newGen(,) to lastGen(,)
+
+    FOR r = 1 to newBud
+        FOR c = 1 to 5
+            LET lastGen(r,c) = newGen(r,c)
+        NEXT c
+    NEXT r
+
+    LET newBud = 0                ! incremented below with each new bud formed
+    LET oldBud = 1                ! incremented below before end of do-loop
+
+    DO while lastGen(oldBud,5) > 0     ! repeat for all last buds
+
+       ! read next bud from lastGen(,)
+       LET x= lastGen(oldBud,1)
+       LET y = lastGen(oldBud,2)
+       LET a = lastGen(oldBud,3)
+       LET d = lastGen(oldBud,4)  ! length of parent shoot
+       LET budType = lastGen(oldBud,5)      ! type of bud (0 = "b", 1 = "B")
+
+       ! "gene" values
+       ! gene$(1) is increment of angle rotation (degrees, 0 points right, + is CCW)
+       ! gene$(2) is generation length change factor for new shoot off major bud B
+       ! gene$(3) is generation length change factor for new shoot off minor bud b
+       ! gene$(4 on) are growth instructions
+
+       LET arot = val(gene$(1))   ! increment of angle rotation (+ CCW)
+       LET majorChange = val(gene$(2))      ! length change from one gen to next
+       LET minorChange = val(gene$(3))      ! length change from one gen to next
+
+       IF budType = 2 then
+          LET d = d*majorChange
+       ELSE
+          LET d = d*minorChange
+       END IF
+
+       IF gravSwitch = 1 then
+
+          ! get angle off zero so gravity can take effect
+          DO while a < 0
+             LET a = a + 360
+          LOOP
+          DO until a <> 90
+             LET a = a + 1*(1 - 2*rnd)
+          LOOP
+
+          ! add effect of gravity, a = 90 is straight up
+          LET factor = 4
+          IF a > 90 and a < (270 - factor) then
+             LET a = a + factor
+          ELSE IF a > (270 + factor) and a < 360 then
+             LET a = a - factor
+          ELSE IF a > 0 and a < 90 then
+             LET a = a  - factor
+          END IF
+
+       END IF
+
+       ! initialize bracket counters
+       LET right_bracket = 0
+       LET left_bracket = 0
+
+       LET ng = 4
+       DO while gene$(ng) <> ""
+          SET CURSOR 10,1
+
+          SELECT CASE gene$(ng)
+          CASE "F"
+               ! step and draw line
+               CALL Fsub(x,y,a,d)
+          CASE "J"
+               ! jump with no line
+               CALL Jsub(x,y,a,d)
+          CASE "["
+               ! remember this x,y coordinate and direction (angle)
+               LET left_bracket = left_bracket + 1
+               LET xOLD(left_bracket) = x
+               LET yOLD(left_bracket) = y
+               LET aOLD(left_bracket) = a
+          CASE "]"
+               ! reset x,y coordinate and direction to last in this pair
+               LET right_bracket = right_bracket + 1
+               LET theOne = left_bracket - right_bracket + 1
+               LET x = xOLD(theOne)
+               LET y = yOLD(theOne)
+               LET a = aOLD(theOne)
+               IF right_bracket = left_bracket then
+                  ! matched all pairs so far, reset counters
+                  LET right_bracket = 0
+                  LET left_bracket = 0
+               END IF
+          CASE "+"
+               LET a = a + arot
+          CASE "-"
+               LET a = a - arot
+          CASE "B", "b"
+               IF thisGen < maxGen then     ! save memory if ending growth at maxGen
+                  ! record this x,y coordinate as a new bud
+                  LET newBud = newBud + 1
+                  LET newGen(newBud,1) = x
+                  LET newGen(newBud,2) = y
+                  LET newGen(newBud,3) = a
+                  LET newGen(newBud,4) = d
+                  IF gene$(ng) = "B" then
+                     LET newGen(newBud,5) = 2    ! a new major bud
+                  ELSE
+                     LET newGen(newBud,5) = 1    ! a new minor bud
+                  END IF
+               END IF
+          CASE else
+               PRINT "bad gene = ",gene$(ng)
+               PAUSE 2
+          END SELECT
+          LET ng = ng+1
+       LOOP
+
+       LET oldBud = oldBud + 1    ! increment so read next old bud
+
+    LOOP
+
+    ! this is where sub grow calls itself
+    ! sub grow increments thisGen and calls itself
+    ! while thisGen < maxGen
+
+    IF thisGen < maxGen then
+       LET thisGen = thisGen + 1
+       CALL grow(gene$(),lastGen(,),newGen(,),maxGen,thisGen,newBud,gravSwitch)
+    END IF
+
+END SUB
+
+SUB Fsub(x,y,a,d)                 ! draw a line of length d at angle a
+
+    OPTION ANGLE degrees
+
+    LET x2 = x + d*cos(a)
+    LET y2 = y + d*sin(a)
+
+    PLOT LINES: x,y; x2,y2
+
+    LET x = x2
+    LET y = y2
+
+END SUB
+
+SUB Jsub(x,y,a,d)                 ! jump length d at angle a
+
+    OPTION ANGLE degrees
+
+    LET x2 = x + d*cos(a)
+    LET y2 = y + d*sin(a)
+
+    LET x = x2
+    LET y = y2
+
+END SUB

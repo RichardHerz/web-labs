@@ -25,11 +25,11 @@ function updateBody() {
 
 function updateDisplay() {
 
-  newSVGline(10,10,100,100,'green','l1');
+  newSVGline(10,10,100,100,'green','4px','line01');
 
 } // END of updateDisplay method
 
-function newSVGline(x1,y1,x2,y2,color,id) {
+function newSVGline(x1,y1,x2,y2,color,width,id) {
 
   // SET REFERENCE TO SVG NAME SPACE
   // https://developer.mozilla.org/en-US/docs/Web/SVG/Namespaces_Crash_Course
@@ -44,12 +44,13 @@ function newSVGline(x1,y1,x2,y2,color,id) {
   // for this example, see answer by thatOneGuy at
   //   https://stackoverflow.com/questions/35134131/svg-adding-a-line-with-javascript
   let newLine = document.createElementNS(svgNS,'line');
-  newLine.setAttribute('id',id);
   newLine.setAttribute('x1',x1);
   newLine.setAttribute('y1',y1);
   newLine.setAttribute('x2',x2);
   newLine.setAttribute('y2',y2);
-  newLine.setAttribute("stroke", color)
+  newLine.setAttribute("stroke", color);
+  newLine.setAttribute("stroke-width", width);
+  newLine.setAttribute('id',id);
   $("svg").append(newLine);
 
 }

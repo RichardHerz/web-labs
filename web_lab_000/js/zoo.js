@@ -22,19 +22,26 @@ let data = {
     data.gravSwitch = 0; // off = 0, on = 1
     data['gene'] = new Array();
 
-    // console.log('data initialize, new array gene length = ' + data['gene'].length);
-    // console.log("data['gene'][0] = " + data['gene'][0]);
-    // data['gene'][0] = 0;
-    // console.log("data['gene'][0] = " + data['gene'][0]);
+    console.log('data initialize, new array gene length = ' + data['gene'].length);
+    console.log("data['gene'][0] = " + data['gene'][0]);
+    data['gene'][0] = 0;
+    console.log("data['gene'][0] = " + data['gene'][0]);
 
     // reverse indexes from TB and LiveCode to data['newGen'][0-4][gen#]
     // so don't have to specify number generations here
-    data['newGen'] = new Array(5); // create array of length 5
-    for (i in data['newGen']) {
-      data['newGen'][i] = new Array(); // add index
+    let alen = 5;
+    data['newGen'] = new Array(alen); // create array of length 5
+    for (i = 0; i < alen; i++) {
+
+      console.log("i in data['newGen'], i = " + i);
+
+      data['newGen'][i] = []; // add index
     }
-    data['lastGen'] = new Array(5);
-    for (i in data['lastGen']) {
+
+    console.log( "data['newGen'][0] = " + data['newGen'][0] );
+
+    data['lastGen'] = new Array(alen);
+    for (i = 0; i < alen; i++) {
       data['lastGen'][i] = new Array();
     }
 
@@ -56,7 +63,7 @@ function updateDisplay() {
   let a = 30; // angle in degrees
   let d = 100; // distance, length of line
   let color = 'green';
-  let width = 3;
+  let width = '3px';
   let id = '';
   result = fFgene(data.x1,data.y1,a,d,color,width,id);
   data.x1 = result[0];
@@ -76,9 +83,26 @@ function updateDisplay() {
   data.x1 = result[0];
   data.y1 = result[1];
 
+  // xxx should return result from fTestDNA and assign to data['gene']
+  // xxx and not do internally to function
+  fTestDNA();
+
+  console.log( "after fTestDNA(), data['gene'] = " + data['gene'] );
+
+  data.color = 'blue';
+  data.width = '1px';
+
+  for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
+    console.log('updateDisplay: thisGen = ' + thisGen );
+    fGrow(thisGen);
+    console.log('updateDisplay: after fGrow(thisGen) call' );
+  }
+
 } // END of updateDisplay method
 
-function fGrow() {
+function fGrow(thisGen) {
+
+  console.log('enter function fGrow');
 
   // copy newGen to lastGen
   // newGen is initialized in the commands that specify the genes for this "zoo animal"
@@ -98,8 +122,8 @@ function fGrow() {
 
   // put 0 into newBud -- incremented below with each new bud formed
   // put 1 into oldBud -- incremented below before end of do-loop
-  let newBud = -1; // so array index = 0 after first increment
-  let oldBud = 0;
+  let newBud = -1; // was 0 in TB,LC - here so array index = 0 after 1st increment
+  let oldBud = 0; // was 1 in TB, LC
 
   // bud type, 1 = "b", 2 = "B"
 
@@ -174,7 +198,7 @@ function fGrow() {
           data.x1 = result[0];
           data.y1 = result[1];
           break;
-        case 'J';
+        case 'J':
           result = fJgene(tX,tY,tA,tD);
           data.x1 = result[0];
           data.y1 = result[1];
@@ -203,7 +227,7 @@ function fGrow() {
           case '-':
             tA = tA - tArot;
             break;
-          case 'B';
+          case 'B':
             // no break, falls through and B vs. b considered in IF below
           case 'b':
             if(thisGen < maxGen) {
@@ -230,11 +254,13 @@ function fGrow() {
 
     oldBud = oldBud + 1; // increment so read next old bud
 
-  } // END OF while ((data['lastGen'][4][oldBud] ... 
+  } // END OF while ((data['lastGen'][4][oldBud] ...
 
 } // END OF function fGrow
 
 function fNewSVGline(x1,y1,x2,y2,color,width,id) {
+
+  console.log('enter function fNewSVGline, x1 = ' + x1);
 
   // SET REFERENCE TO SVG NAME SPACE
   // https://developer.mozilla.org/en-US/docs/Web/SVG/Namespaces_Crash_Course
@@ -257,13 +283,24 @@ function fNewSVGline(x1,y1,x2,y2,color,width,id) {
   newLine.setAttribute("stroke-width", width);
   newLine.setAttribute('id',id);
   $("svg").append(newLine);
-substr(start, length)
+
 } // END OF function fNewSVGline
 
 function fFinishGene(geneTail) {
 
-  for (g in geneTail) {
+  for (g = 0; g < geneTail.length; g++ ) {
+    // CAN NOT USE THIS, g is string here: for (g in geneTail) {
     data['gene'][g+3] = geneTail.substr(g, 1);
+
+    // console.log('fFinishGene 1: g, substr = ' + g + ', ' + geneTail.substr(g, 1) );
+    // let x = g+3;
+    // console.log("fFinishGene 1: data['gene'][" + x + "] = " + data['gene'][g+3] );
+
+  }
+
+  for (i in data['gene']) {
+    // THIS WORKS HERE: for (i in data['gene'])
+    console.log("fFinishGene 2 : data['gene'][" + i + "] = " + data['gene'][i] );
   }
 
   // reset d to increase d so 1st line drawn equal to d value set above

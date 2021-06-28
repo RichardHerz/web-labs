@@ -1,0 +1,3 @@
+ALSO SEE in LiveCode "Koch Island: Fractal Basics with LiveCode" http://livecode.com/koch-island-fractal-basics-with-livecode/
+
+ALSO SEE in LiveCode "The Evolution of Dragons" with LiveCode http://livecode.com/the-evolution-of-dragons/

@@ -1,4 +1,4 @@
-script "Artificial_Zoo"
+﻿script "Artificial_Zoo"
 /*
 by Richard K. Herz, www.ReactorLab.net, github.com/RichardHerz
 
@@ -35,7 +35,7 @@ local tLineColors
 -- arrays
 local newGen, gene$
 
--- 1st dimension of lastGen and newGen lastGenarrays >= (number buds in a gene)^(maxGen - 1)
+-- 1st dimension of lastGen and newGen arrays >= (number buds in a gene)^(maxGen - 1)
 -- array gene$ contains growth instructions
 
 -----------------------
@@ -401,12 +401,14 @@ on TestDNA
    put 2 into budType -- major (B) = 2, minor (b) = 1
 
    -- specify number of "generations" to draw
+
    put 3 into maxGen
+
    put 0 into gravSwitch -- off = 0, on = 1
 
-   finishGene temp$
+finishGene temp$
 
-  -- copy initial bud specifications to newGen(,) array
+   -- copy initial bud specifications to newGen(,) array
 
    put 1 into newBud
    put x into newGen[newBud][1]

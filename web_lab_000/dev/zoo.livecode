@@ -35,7 +35,7 @@ local tLineColors
 -- arrays
 local newGen, gene$
 
--- 1st dimension of lastGen and newGen arrays >= (number buds in a gene)^(maxGen - 1)
+-- 1st dimension of lastGen and newGen lastGenarrays >= (number buds in a gene)^(maxGen - 1)
 -- array gene$ contains growth instructions
 
 -----------------------
@@ -230,7 +230,7 @@ on grow
          -- add effect of gravity, a = 90 is straight up
          put 4 into factor
          if tA > 90 and tA < (270 - factor) then
-            put tA + factor into a
+            put tA + factor into tA
          else if tA > (270 + factor) and tA < 360 then
             put tA - factor into tA
          else if tA > 0 and tA < 90 then
@@ -328,6 +328,7 @@ function Ffunction pX, pY, pA, pD
    -- was Fsub x,y,a,d
 
    -- draw a line of length d at angle a
+
    -- angles specified in degrees but LC functions need radians
    put pA*pi/180 into tRadians
    put pD*cos(tRadians) into newDX
@@ -363,7 +364,6 @@ function Jfunction pX, pY, pA, pD
 
    -- jump length d at angle a
 
-   -- draw a line of length d at angle a
    -- angles specified in degrees but LC functions need radians
    put pA*pi/180 into tRadians
    put pD*cos(tRadians) into newDX
@@ -401,14 +401,12 @@ on TestDNA
    put 2 into budType -- major (B) = 2, minor (b) = 1
 
    -- specify number of "generations" to draw
-
    put 3 into maxGen
-
    put 0 into gravSwitch -- off = 0, on = 1
 
-finishGene temp$
+   finishGene temp$
 
-   -- copy initial bud specifications to newGen(,) array
+  -- copy initial bud specifications to newGen(,) array
 
    put 1 into newBud
    put x into newGen[newBud][1]

@@ -9,8 +9,8 @@ let data = {
   //           in regular web labs but do I need it here?
   // ANSWER: Yes I do need initialize method: tried without it and doesn't work
   initialize : function() {
-    data.x1 = 200;
-    data.y1 = 200;
+    data.x1 = 100;
+    data.y1 = 100;
     data.a = 0; // angle bud points
     data.d = 10; // length of first shoot
     data.budType = 2; // major (B) = 2, minor (b) = 1
@@ -22,10 +22,10 @@ let data = {
     data.gravSwitch = 0; // off = 0, on = 1
     data['gene'] = new Array();
 
-    console.log('data initialize, new array gene length = ' + data['gene'].length);
-    console.log("data['gene'][0] = " + data['gene'][0]);
+    // console.log('data initialize, new array gene length = ' + data['gene'].length);
+    // console.log("data['gene'][0] = " + data['gene'][0]);
     data['gene'][0] = 0;
-    console.log("data['gene'][0] = " + data['gene'][0]);
+    // console.log("data['gene'][0] = " + data['gene'][0]);
 
     // reverse indexes from TB and LiveCode to data['newGen'][0-4][gen#]
     // so don't have to specify number generations here
@@ -33,12 +33,12 @@ let data = {
     data['newGen'] = new Array(alen); // create array of length 5
     for (i = 0; i < alen; i++) {
 
-      console.log("i in data['newGen'], i = " + i);
+      // console.log("i in data['newGen'], i = " + i);
 
       data['newGen'][i] = []; // add index
     }
 
-    console.log( "data['newGen'][0] = " + data['newGen'][0] );
+    // console.log( "data['newGen'][0] = " + data['newGen'][0] );
 
     data['lastGen'] = new Array(alen);
     for (i = 0; i < alen; i++) {
@@ -59,50 +59,57 @@ function updateDisplay() {
 
   let result = [];
 
-  // test F gene
-  let a = 30; // angle in degrees
-  let d = 100; // distance, length of line
-  let color = 'green';
-  let width = '3px';
-  let id = '';
-  result = fFgene(data.x1,data.y1,a,d,color,width,id);
-  data.x1 = result[0];
-  data.y1 = result[1];
-
-  // test J gene
-  a = 45;
-  d = 50;
-  result = fJgene(data.x1,data.y1,a,d);
-  data.x1 = result[0];
-  data.y1 = result[1];
-
-  // test F gene
-  a = -45; // angle in degrees
-  d = 50; // distance, length of line
-  result = fFgene(data.x1,data.y1,a,d,data.color,data.width,data.id);
-  data.x1 = result[0];
-  data.y1 = result[1];
+  // // test F gene
+  // let a = 30; // angle in degrees
+  // let d = 100; // distance, length of line
+  // let color = 'green';
+  // let width = '3px';
+  // let id = '';
+  // result = fFgene(data.x1,data.y1,a,d,color,width,id);
+  // data.x1 = result[0];
+  // data.y1 = result[1];
+  //
+  // // test J gene
+  // a = 45;
+  // d = 50;
+  // result = fJgene(data.x1,data.y1,a,d);
+  // data.x1 = result[0];
+  // data.y1 = result[1];
+  //
+  // // test F gene
+  // a = -45; // angle in degrees
+  // d = 50; // distance, length of line
+  // result = fFgene(data.x1,data.y1,a,d,data.color,data.width,data.id);
+  // data.x1 = result[0];
+  // data.y1 = result[1];
 
   // xxx should return result from fTestDNA and assign to data['gene']
   // xxx and not do internally to function
-  fTestDNA();
 
-  console.log( "after fTestDNA(), data['gene'] = " + data['gene'] );
+  // fTestDNA();
+  // // console.log( "after fTestDNA(), data['gene'] = " + data['gene'] );
+  // data.color = 'blue';
+  // data.width = '1px';
+  // for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
+  //   // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
+  //   fGrow(thisGen);
+  //   // console.log('updateDisplay: after fGrow(thisGen) call' );
+  // }
 
-  data.color = 'blue';
+  fSierpinski();
+  data.color = 'red';
   data.width = '1px';
-
   for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
-    console.log('updateDisplay: thisGen = ' + thisGen );
+    // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
     fGrow(thisGen);
-    console.log('updateDisplay: after fGrow(thisGen) call' );
+    // console.log('updateDisplay: after fGrow(thisGen) call' );
   }
 
 } // END of updateDisplay method
 
 function fGrow(thisGen) {
 
-  console.log('enter function fGrow');
+  // console.log('enter function fGrow');
 
   // copy newGen to lastGen
   // newGen is initialized in the commands that specify the genes for this "zoo animal"
@@ -187,64 +194,77 @@ function fGrow(thisGen) {
     let left_bracket = -1;
 
     // put 4 into ng
-    let ng = 3;
+    let ng = 0;
 
     // repeat while gene$[ng] is not empty
     while(data.gene[ng]) {
 
+      // console.log( 'fGrow: ng = ' + ng );
+      // console.log( 'fGrow: while(data.gene[ng]), data.gene[ng] = ' + data.gene[ng] );
+
       switch(data.gene[ng]) {
         case 'F':
+          // console.log('case F');
           result = fFgene(tX,tY,tA,tD,data.color,data.width,data.id);
-          data.x1 = result[0];
-          data.y1 = result[1];
+          tX = result[0];
+          tY = result[1];
           break;
         case 'J':
+          // console.log('case J');
           result = fJgene(tX,tY,tA,tD);
-          data.x1 = result[0];
-          data.y1 = result[1];
+          tX = result[0];
+          tY = result[1];
           break;
-          case '[':
-            // remember this x,y coordinate and direction (angle)
-            left_bracket = left_bracket + 1;
-            xOLD[left_bracket] = tX;
-            yOLD[left_bracket] = tY;
-            aOLD[left_bracket] = tA;
-          case ']':
-            right_bracket = right_bracket + 1;
-            let theOne = left_bracket - right_bracket;
-            tX = xOLD[theOne];
-            tY = yOLD[theOne];
-            tA = aOLD[theOne];
-            if(right_bracket == left_bracket) {
-              // matched all pairs so far, reset counters
-              right_bracket = -1; // so array index = 0 after first increment
-              left_bracket = -1;
+        case '[':
+          // console.log('case [');
+          // remember this x,y coordinate and direction (angle)
+          left_bracket = left_bracket + 1;
+          xOLD[left_bracket] = tX;
+          yOLD[left_bracket] = tY;
+          aOLD[left_bracket] = tA;
+          break;
+        case ']':
+          // console.log('case ]');
+          right_bracket = right_bracket + 1;
+          let theOne = left_bracket - right_bracket;
+          tX = xOLD[theOne];
+          tY = yOLD[theOne];
+          tA = aOLD[theOne];
+          if(right_bracket == left_bracket) {
+            // matched all pairs so far, reset counters
+            right_bracket = -1; // so array index = 0 after first increment
+            left_bracket = -1;
+          }
+          break;
+        case '+':
+          // console.log('case +');
+          tA = tA + tArot;
+          break;
+        case '-':
+          // console.log('case -');
+          tA = tA - tArot;
+          break;
+        case 'B':
+          // console.log('case B');
+          // no break, falls through and B vs. b considered in IF below
+        case 'b':
+          // console.log('case b');
+          if(thisGen < data.maxGen) {
+            // record this x,y coordinate as a new bud
+            newBud = newBud + 1;
+            data['newGen'][0][newBud] = tX;
+            data['newGen'][1][newBud] = tY;
+            data['newGen'][2][newBud] = tA;
+            data['newGen'][3][newBud] = tD;
+            if(data['gene'][ng] == 'B') {
+              data['newGen'][4][newBud] = 2;
+            } else {
+              data['newGen'][4][newBud] = 1;
             }
-            break;
-          case '+':
-            tA = tA + tArot;
-            break;
-          case '-':
-            tA = tA - tArot;
-            break;
-          case 'B':
-            // no break, falls through and B vs. b considered in IF below
-          case 'b':
-            if(thisGen < maxGen) {
-              // record this x,y coordinate as a new bud
-              newBud = newBud + 1;
-              data['newGen'][0][newBud] = tX;
-              data['newGen'][1][newBud] = tY;
-              data['newGen'][2][newBud] = tA;
-              data['newGen'][3][newBud] = tD;
-              if(data['gene'][ng] == 'B') {
-                data['newGen'][4][newBud] = 2;
-              } else {
-                data['newGen'][4][newBud] = 1;
-              }
-            } // END OF if(thisGen < maxGen)
-            break;
-          default:
+          } // END OF if(thisGen < data.maxGen)
+          break;
+        default:
+          // console.log('while default');
           // bad gene
        } // END OF switch
 
@@ -260,7 +280,7 @@ function fGrow(thisGen) {
 
 function fNewSVGline(x1,y1,x2,y2,color,width,id) {
 
-  console.log('enter function fNewSVGline, x1 = ' + x1);
+  // console.log('enter function fNewSVGline, x1 = ' + x1);
 
   // SET REFERENCE TO SVG NAME SPACE
   // https://developer.mozilla.org/en-US/docs/Web/SVG/Namespaces_Crash_Course
@@ -292,16 +312,16 @@ function fFinishGene(geneTail) {
     // CAN NOT USE THIS, g is string here: for (g in geneTail) {
     data['gene'][g+3] = geneTail.substr(g, 1);
 
-    // console.log('fFinishGene 1: g, substr = ' + g + ', ' + geneTail.substr(g, 1) );
+    // // console.log('fFinishGene 1: g, substr = ' + g + ', ' + geneTail.substr(g, 1) );
     // let x = g+3;
-    // console.log("fFinishGene 1: data['gene'][" + x + "] = " + data['gene'][g+3] );
+    // // console.log("fFinishGene 1: data['gene'][" + x + "] = " + data['gene'][g+3] );
 
   }
 
-  for (i in data['gene']) {
-    // THIS WORKS HERE: for (i in data['gene'])
-    console.log("fFinishGene 2 : data['gene'][" + i + "] = " + data['gene'][i] );
-  }
+  // for (i in data['gene']) {
+  //   // THIS WORKS HERE: for (i in data['gene'])
+  //   // console.log("fFinishGene 2 : data['gene'][" + i + "] = " + data['gene'][i] );
+  // }
 
   // reset d to increase d so 1st line drawn equal to d value set above
   // since scale factor will be applied 1st time d used
@@ -316,11 +336,41 @@ function fFinishGene(geneTail) {
 
 } // END OF function fFinishGene
 
+function fSierpinski() {
+  // 120,0.5,1,BFBF-FF-F[-B]F
+
+  // specify initial bud
+  data.x1 = 450;
+  data.y1 = 350;
+  data.a = 180; // angle bud points
+  data.d = 200; // length of first shoot
+  data.budType = 2; // major (B) = 2, minor (b) = 1
+
+  data.maxGen = 4;
+  data.gravSwitch = 0; // off = 0, on = 1
+
+  // specify gene
+  data['gene'][0] = 120;
+  data['gene'][1] = 0.5;
+  data['gene'][2] = 1;
+  let temp = 'BFBF-FF-F[-B]F';
+  fFinishGene(temp);
+
+  // copy initial bud specifications to newGen array
+   let newBud = 0;
+   data['newGen'][0][newBud] = data.x1;
+   data['newGen'][1][newBud] = data.y1;
+   data['newGen'][2][newBud] = data.a;
+   data['newGen'][3][newBud] = data.d;
+   data['newGen'][4][newBud] = data.budType;
+
+} // END OF function fSierpinski
+
 function fTestDNA() {
 
   // specify initial bud
-  data.x1 = 100;
-  data.y1 = 600;
+  data.x1 = 150;
+  data.y1 = 150;
   data.a = 0; // angle bud points
   data.d = 20; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1

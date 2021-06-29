@@ -59,30 +59,6 @@ function updateDisplay() {
 
   let result = [];
 
-  // // test F gene
-  // let a = 30; // angle in degrees
-  // let d = 100; // distance, length of line
-  // let color = 'green';
-  // let width = '3px';
-  // let id = '';
-  // result = fFgene(data.x1,data.y1,a,d,color,width,id);
-  // data.x1 = result[0];
-  // data.y1 = result[1];
-  //
-  // // test J gene
-  // a = 45;
-  // d = 50;
-  // result = fJgene(data.x1,data.y1,a,d);
-  // data.x1 = result[0];
-  // data.y1 = result[1];
-  //
-  // // test F gene
-  // a = -45; // angle in degrees
-  // d = 50; // distance, length of line
-  // result = fFgene(data.x1,data.y1,a,d,data.color,data.width,data.id);
-  // data.x1 = result[0];
-  // data.y1 = result[1];
-
   // xxx should return result from fTestDNA and assign to data['gene']
   // xxx and not do internally to function
 
@@ -96,9 +72,18 @@ function updateDisplay() {
   //   // console.log('updateDisplay: after fGrow(thisGen) call' );
   // }
 
-  fSierpinski();
-  data.color = 'red';
-  data.width = '1px';
+  // fSierpinski();
+  // data.color = 'red';
+  // data.width = '1px';
+  // for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
+  //   // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
+  //   fGrow(thisGen);
+  //   // console.log('updateDisplay: after fGrow(thisGen) call' );
+  // }
+
+  fBracken();
+  data.color = 'green';
+  data.width = '3px';
   for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
     // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
     fGrow(thisGen);
@@ -178,7 +163,7 @@ function fGrow(thisGen) {
       }
 
       // add effect of gravity, a = 90 is straight up
-      let factor = 4;
+      let factor = 16;
       if( (tA > 90) && (tA < (270 - factor)) ) {
         tA = tA + factor;
       } else if( (tA > (270 + factor)) && (tA < 360) ) {
@@ -336,6 +321,68 @@ function fFinishGene(geneTail) {
 
 } // END OF function fFinishGene
 
+function fBracken2() {
+  // 45, 0.8, 0.4, "FF[+Fb]F[-Fb]FB"
+
+  // specify initial bud
+  data.x1 = 300;
+  data.y1 = 600;
+  data.a = 91; // angle bud points
+  data.d = 35; // length of first shoot
+  data.budType = 2; // major (B) = 2, minor (b) = 1
+
+  data.maxGen = 4;
+  data.gravSwitch = 1; // off = 0, on = 1
+
+  // specify gene
+  data['gene'][0] = 45;
+  data['gene'][1] = 0.4;
+  data['gene'][2] = 0.8;
+  // let temp = 'FF[+Fb]F[-Fb]FB';
+  let temp = 'FF[+Fb]F[-Fb]FB';
+  fFinishGene(temp);
+
+  // copy initial bud specifications to newGen array
+   let newBud = 0;
+   data['newGen'][0][newBud] = data.x1;
+   data['newGen'][1][newBud] = data.y1;
+   data['newGen'][2][newBud] = data.a;
+   data['newGen'][3][newBud] = data.d;
+   data['newGen'][4][newBud] = data.budType;
+
+} // END OF function fBracken2
+
+function fBracken() {
+  // 45, 0.8, 0.4, "FF[+Fb]F[-Fb]FB"
+
+  // specify initial bud
+  data.x1 = 400;
+  data.y1 = 600;
+  data.a = 91; // angle bud points
+  data.d = 35; // length of first shoot
+  data.budType = 2; // major (B) = 2, minor (b) = 1
+
+  data.maxGen = 8;
+  data.gravSwitch = 1; // off = 0, on = 1
+
+  // specify gene
+  data['gene'][0] = 45;
+  data['gene'][1] = 0.8;
+  data['gene'][2] = 0.4;
+  // let temp = 'FF[+Fb]F[-Fb]FB';
+  let temp = 'FF[+Fb]F[-Fb]FB';
+  fFinishGene(temp);
+
+  // copy initial bud specifications to newGen array
+   let newBud = 0;
+   data['newGen'][0][newBud] = data.x1;
+   data['newGen'][1][newBud] = data.y1;
+   data['newGen'][2][newBud] = data.a;
+   data['newGen'][3][newBud] = data.d;
+   data['newGen'][4][newBud] = data.budType;
+
+} // END OF function fBracken
+
 function fSierpinski() {
   // 120,0.5,1,BFBF-FF-F[-B]F
 
@@ -346,7 +393,7 @@ function fSierpinski() {
   data.d = 200; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  data.maxGen = 4;
+  data.maxGen = 6;
   data.gravSwitch = 0; // off = 0, on = 1
 
   // specify gene

@@ -20,12 +20,18 @@
 //     return to each new bud location and repeat entire set of instructions
 
 function openThisLab() {
-
-  // data.initialize(); // xxx MOVE TO BEFORE EACH NEW IMAGE DRAWN
-
   // WARNING: can only alter HTML if this function called by
   //          onload property in BODY TAG (not onload in page header)
 }
+
+// these are used by function eraseSVG to remove all svg elements on display before
+// drawing a new set of images - if covered but not removed, they take up
+// memory and increase processing time
+// the svg element id's are updated in fNewSVGline when new lines are added
+// the data object gets re-initialized if add more than one image to display
+// so make these vars independent to keep track of all svg elements on display
+let globalSVGidNumber = -1; // increment in fNewSVGline such that 1st used is zero
+let globalSVGidPrefix = 'svg-';
 
 let data = {
   // QUESTION: I apparently need the initialize method called by openThisLab
@@ -46,27 +52,25 @@ let data = {
     data.gravFac = 8;
     data['gene'] = new Array();
 
+    data.evenOddFlag = 0; // for use only with fGrowEven() and fGrowOdd()
+
     // console.log('data initialize, new array gene length = ' + data['gene'].length);
     // console.log("data['gene'][0] = " + data['gene'][0]);
     data['gene'][0] = 0;
     // console.log("data['gene'][0] = " + data['gene'][0]);
 
-    // reverse indexes from TB and LiveCode to this >> data['newGen'][0-4][gen#]
-    // so don't have to specify number generations here
+    // arrays data['newGen'] and data['lastGen'] contain bud info (loc, angle, type...)
+    // reverse indexes from TB and LiveCode to this >> data['newGen'][0-4][bud#]
+    // so don't have to specify number buds here, which is different for different
+    // genes and increase in number each generation
     let alen = 5;
     data['newGen'] = new Array(alen); // create array of length 5
     for (i = 0; i < alen; i++) {
-
-      // console.log("i in data['newGen'], i = " + i);
-
       data['newGen'][i] = []; // add index
     }
-
-    // console.log( "data['newGen'][0] = " + data['newGen'][0] );
-
     data['lastGen'] = new Array(alen);
     for (i = 0; i < alen; i++) {
-      data['lastGen'][i] = new Array();
+      data['lastGen'][i] = []; // add index
     }
 
   } // END of function data.initialize()
@@ -81,53 +85,49 @@ function openZoo() {
   // called by onclick of run button
   $.post("../webAppRunLog.lc",{webAppNumber: "000, Artificial Zoo"});
 
-  data.initialize(); // need this to be able to run again without reload page
+  // data.initialize(); // need this to be able to run again without reload page
   updateDisplay();
 
 } // END OF function openZoo
 
 function eraseSVG() {
   // called by onclick of erase button
+  console.log('ENTER function eraseSVG')
 
-  // xxx this just covers svg with a rect
-  // xxx what is a better way, e.g., delete lines?
-  let svgNS = 'http://www.w3.org/2000/svg';
-  let clipRect = document.createElementNS(svgNS,'rect');
-  clipRect.setAttribute('x',0);
-  clipRect.setAttribute('y',200);
-  clipRect.setAttribute('width',600);
-  clipRect.setAttribute('height',200);
-  clipRect.setAttribute('color','yellow');
-  clipRect.setAttribute('fill','currentcolor');
-  $("svg").append(clipRect);
+  // globalSVGidNumber and globalSVGidPrefix are used here to remove all svg
+  // elements on display before drawing a new set of images
+  // if covered but not removed, they take up memory and increase processing time
+  // the svg element id's are updated in fNewSVGline when new lines are added
+  // the data object gets re-initialized if add more than one image to display
+  // so make these vars independent to keep track of all svg elements on display
+
+  // solution by Diaco at
+  // https://greensock.com/forums/topic/10892-how-do-you-remove-an-svg-element-when-youre-done-animating-it/
+  let tSVGid;
+  let tSVG;
+  let parent;
+  // globalSVGidNumber ranges from 0 to number elements-1
+  for (i = 0; i < 1+globalSVGidNumber; i++) {
+    tSVGid = globalSVGidPrefix + i;
+    tSVG = document.getElementById(tSVGid);
+    parent = tSVG.parentNode;
+    parent.removeChild(tSVG);
+  }
+
+  console.log('globalSVGidNumber = ' + globalSVGidNumber);
+  console.log('END OF function eraseSVG')
 
 } // END OF function eraseSVG
 
 function updateDisplay() {
+  console.log('enter updateDisplay');
+  console.log('globalSVGidNumber = ' + globalSVGidNumber);
 
   // xxx should return result from the gene specification function,
   // xxx e.g., fTestDNA, and assign to data['gene']
   // xxx and not do internally to the gene specification function
 
-  // fTestDNA();
-  // // console.log( "after fTestDNA(), data['gene'] = " + data['gene'] );
-  // data.color = 'blue';
-  // data.width = '1px';
-  // for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
-  //   // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
-  //   fGrow(thisGen);
-  //   // console.log('updateDisplay: after fGrow(thisGen) call' );
-  // }
-
-  // fSierpinski();
-  // data.color = 'red';
-  // data.width = '1px';
-  // for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
-  //   // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
-  //   fGrow(thisGen);
-  //   // console.log('updateDisplay: after fGrow(thisGen) call' );
-  // }
-
+  data.initialize();
   fBracken();
   data.color = 'green';
   data.width = '3px';
@@ -135,7 +135,22 @@ function updateDisplay() {
     // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
     fGrow(thisGen);
     // console.log('updateDisplay: after fGrow(thisGen) call' );
-  }
+  } // END OF for(let thisGen = 0; ...
+
+  // NEED TO RE-INITIALIZE BEFORE EACH ZOO ANIMAL IN ONE PAGE LOAD
+
+  data.initialize();
+  fSierpinski();
+  data.color = 'blue';
+  data.width = '1px';
+  for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
+    // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
+    fGrow(thisGen);
+    // console.log('updateDisplay: after fGrow(thisGen) call' );
+  } // END OF for(let thisGen = 0; ...
+
+  console.log('globalSVGidNumber = ' + globalSVGidNumber);
+  console.log('END of updateDisplay method')
 
 } // END of updateDisplay method
 
@@ -143,30 +158,37 @@ function fGrow(thisGen) {
 
   // console.log('enter function fGrow');
 
+  // put 0 into newBud -- incremented below with each new bud formed
+  // put 1 into oldBud -- incremented below before end of do-loop
+  let newBud = -1; // was 0 in TB,LC - here so array index = 0 after 1st increment
+  let oldBud = 0; // was 1 in TB, LC
+
   // copy newGen to lastGen
-  // newGen is initialized in the commands that specify the genes for this "zoo animal"
-  // newGen is updated below when a bud gene is encountered
-  // last 2 array indexes reversed here from LC and TB versions
-
-  // xxx need to review this - do we have to copy everything?
-  // can we copy by value or reference?
-  // see https://holycoders.com/javscript-copy-array/
-  // see https://orizens.com/blog/javascript-arrays-passing-by-reference-or-by-value/
-
+  // THIS ARRAY COPY TAKES INSIGNIFICANT TIME COMPARED TO APPENDING SVG LINES
+  //  as determined in tests alternately calling fGrowEven and fGrowOdd and
+  //  having those alternatively read one and write one of data['newGen'] or data['lastGen']
   for (i = 0; i < 5; i++) {
     for (j in data['newGen'][i]) {
       data['lastGen'][i][j] = data['newGen'][i][j];
     }
   }
 
-  // put 0 into newBud -- incremented below with each new bud formed
-  // put 1 into oldBud -- incremented below before end of do-loop
-  let newBud = -1; // was 0 in TB,LC - here so array index = 0 after 1st increment
-  let oldBud = 0; // was 1 in TB, LC
+  // newGen and lastGen arrays contain only info on buds: their x,y start loc,
+  // their angles, length info, budType (1,2)
+  // each has unique info for their generation only
+  // after array copy lastGen << newGen
+  // lastGen has buds from gen currently being read, i.e., thisGen = 0; thisGen < data.maxGen;
+  // and newGen is updated below with the buds that will grow the next generation
 
-  // bud type, 1 = "b", 2 = "B"
+  // the number of buds in thisGen = (# buds in gene)^thisGen
+  // e.g., for bracken with 3 buds in gene, thisGen = 0 has 1 bud = 3^0
+  // for thisGen = 1 has 3 buds = 3^1, for thisGen = 2 has 9 buds = 3^2
+  // for thisGen = 7 (last of 8 generations) has 2187 buds = 3^7
+  // the number of line segments in thisGen is # buds * # F's (6 in bracken)
 
-  // repeat while (lastGen[oldBud][5] = 1) or (lastGen[oldBud][5] = 2) -- repeat for all last buds
+  // data['lastGen'] elements (arrays) are the descriptions of buds in the current
+  // generation being grown, i.e., x,y loc, angle, length info, budType
+  // data['lastGen'][4] elements are bud type, 1 = "b", 2 = "B"
 
   while ((data['lastGen'][4][oldBud] == 1) || (data['lastGen'][4][oldBud] == 2)) {
 
@@ -224,7 +246,6 @@ function fGrow(thisGen) {
     let right_bracket = -1; // so array index = 0 after first increment
     let left_bracket = -1;
 
-    // put 4 into ng
     let ng = 0;
 
     // repeat while gene$[ng] is not empty
@@ -236,7 +257,7 @@ function fGrow(thisGen) {
       switch(data.gene[ng]) {
         case 'F':
           // console.log('case F');
-          result = fFgene(tX,tY,tA,tD,data.color,data.width,data.id);
+          result = fFgene(tX,tY,tA,tD,data.color,data.width);
           tX = result[0];
           tY = result[1];
           break;
@@ -309,11 +330,11 @@ function fGrow(thisGen) {
 
 } // END OF function fGrow
 
-function fNewSVGline(x1,y1,x2,y2,color,width,id) {
+function fNewSVGline(x1,y1,x2,y2,color,width) {
 
-  // console.log('enter function fNewSVGline, x1 = ' + x1);
+  // console.log('enter function fNewSVGline');
 
-  // SET REFERENCE TO SVG NAME SPACE
+  // first need to set reference to svg namespace
   // https://developer.mozilla.org/en-US/docs/Web/SVG/Namespaces_Crash_Course
   // https://oreillymedia.github.io/Using_SVG/extras/ch03-namespaces.html
   // 2000 version used by examples in both links listed below
@@ -321,10 +342,10 @@ function fNewSVGline(x1,y1,x2,y2,color,width,id) {
   //   http://tutorials.jenkov.com/svg/
   //   see answer by thatOneGuy at
   //     https://stackoverflow.com/questions/35134131/svg-adding-a-line-with-javascript
-  let svgNS = 'http://www.w3.org/2000/svg';
-
+  //
   // for this example, see answer by thatOneGuy at
   //   https://stackoverflow.com/questions/35134131/svg-adding-a-line-with-javascript
+  let svgNS = 'http://www.w3.org/2000/svg';
   let newLine = document.createElementNS(svgNS,'line');
   newLine.setAttribute('x1',x1);
   newLine.setAttribute('y1',y1);
@@ -332,7 +353,10 @@ function fNewSVGline(x1,y1,x2,y2,color,width,id) {
   newLine.setAttribute('y2',y2);
   newLine.setAttribute("stroke", color);
   newLine.setAttribute("stroke-width", width);
-  newLine.setAttribute('id',id);
+  // increment id - need id if later want to delete image on display
+  globalSVGidNumber = globalSVGidNumber + 1;
+  let svgID = globalSVGidPrefix + globalSVGidNumber;
+  newLine.setAttribute('id',svgID);
   $("svg").append(newLine);
 
 } // END OF function fNewSVGline
@@ -490,7 +514,7 @@ function fTestDNA() {
 
 } // END OF function fTestDNA
 
-function fFgene(x1,y1,a,d,color,width,id) {
+function fFgene(x1,y1,a,d,color,width) {
 
    // draw a line of length d at angle a from x1,y1
    // angles specified in degrees but JS functions need radians
@@ -503,7 +527,7 @@ function fFgene(x1,y1,a,d,color,width,id) {
   let x2 = x1 + dx;
   let y2 = y1 - dy;
 
-  fNewSVGline(x1,y1,x2,y2,color,width,id); // ,color,width,id);
+  fNewSVGline(x1,y1,x2,y2,color,width);
 
   let result = [];
   result[0] = x2;

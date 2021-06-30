@@ -16,8 +16,23 @@
 }
 
 #selectZoo {
-  /* position: relative; */
-  /* left: 60px; */
+  position: relative;
+  top: 10px;
+  left: 10px;
+}
+
+#field_gene {
+  position: relative;
+  border : dashed;
+  border-width: 0px;
+  border-color : red;
+}
+
+#field_status {
+  position: relative;
+  border : dashed;
+  border-width: 0px;
+  border-color : DodgerBlue;
 }
 
 #svg_zoo {

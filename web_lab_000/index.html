@@ -48,7 +48,16 @@
     <p><a href="/web-labs/#lab_000">Return to Web Labs</a> at ReactorLab.net</p>
     <p><b><i>Artificial Zoo</i></b></p>
     <p>
-      Under development.
+      This lab grows zoo creatures with an L-system. The gene of a zoo
+      creature defines its form by repeating the gene instructions at each generation
+      of growth.
+    </p>
+    <p>
+      The three numeric values at the start of a gene
+      are the angle of rotation (+ and -) and the relative
+      size of line segments in the next generation grown from major (B) and minor (b)
+      buds. F means to grow a line, J means to jump, ] means to return
+      to the location at [.
     </p>
   </div> <!-- end of div div_page_header -->
 
@@ -65,6 +74,9 @@
       <option value="Gasket">Sierpinski Gasket</option>
       <option value="Test">Test DNA</option>
     </select>
+
+    <p id='field_gene'>&nbsp;</p>
+    <p id='field_status'>&nbsp;</p>
 
     <svg id="svg_zoo" width="600" height="610"></svg>
 

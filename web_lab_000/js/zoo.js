@@ -123,6 +123,8 @@ function fEraseSVG() {
 
 function fSelectZoo() {
 
+  // console.log('enter function fSelectZoo');
+
   fEraseSVG();
   data.initialize();
 
@@ -130,7 +132,7 @@ function fSelectZoo() {
   // Bracken, Gasket, Dragon, Koch6, Koch8, Islands, TestDNA
 
   switch (zoo) {
-    case "select":
+    case 'select':
       // do nothing additional
       // this is value of select menu when page first loads
       break;
@@ -147,46 +149,41 @@ function fSelectZoo() {
       // bad selection
   } // END OF switch
 
-  updateDisplay();
+  if (zoo == 'select') {
+    document.getElementById('field_gene').innerHTML = "";
+  } else {
+    document.getElementById('field_gene').innerHTML = " generations: " + data.maxGen
+      + ", gene: " + data['gene'];
+    document.getElementById('field_status').innerHTML = 'growing...';
+    window.document.body.style.cursor = 'wait'; // sets the cursor shape to wait
+  }
+
+  // console.log('just before setTimeout');
+
+  // need to call updateDisplay after a delay in which I can
+  // update notice fields and the select menu button label can change
+
+
+  window.setTimeout(updateDisplay, 500);
+
+  // console.log('leave function fSelectZoo');
 
 } // END OF function fSelectZoo
 
 function updateDisplay() {
-  console.log('enter updateDisplay');
-  console.log('globalSVGidNumber = ' + globalSVGidNumber);
-
-  // xxx should return result from the gene specification function,
-  // xxx e.g., fTestDNA, and assign to data['gene']
-  // xxx and not do internally to the gene specification function
-
-  // data.initialize();
-  // fBracken();
-  // data.color = 'green';
-  // data.width = '3px';
-  // for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
-  //   // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
-  //   fGrow(thisGen);
-  //   // console.log('updateDisplay: after fGrow(thisGen) call' );
-  // } // END OF for(let thisGen = 0; ...
-  //
-  // // NEED TO RE-INITIALIZE BEFORE EACH ZOO ANIMAL IN ONE PAGE LOAD
-  //
-  // data.initialize();
-  // fSierpinski();
-  // data.color = 'blue';
-  // data.width = '1px';
+  // console.log('enter updateDisplay');
+  // console.log('globalSVGidNumber = ' + globalSVGidNumber);
 
   for (let thisGen = 0; thisGen < data.maxGen; thisGen++) {
-    // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
     fGrow(thisGen);
-    // console.log('updateDisplay: after fGrow(thisGen) call' );
-  } // END OF for(let thisGen = 0; ...
+  }
 
-  // window.document.body.style.cursor = ""; // sets the cursor shape to default
+  window.document.body.style.cursor = ""; // sets the cursor shape to default
 
+  document.getElementById('field_status').innerHTML = '';
 
-  console.log('globalSVGidNumber = ' + globalSVGidNumber);
-  console.log('END of updateDisplay method')
+  // console.log('globalSVGidNumber = ' + globalSVGidNumber);
+  // console.log('END of updateDisplay method')
 
 } // END of updateDisplay method
 
@@ -476,7 +473,7 @@ function fBracken() {
 
   // specify initial bud
   data.x1 = 350;
-  data.y1 = 560;
+  data.y1 = 500;
   data.a = 91; // angle bud points
   data.d = 35; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
@@ -484,6 +481,9 @@ function fBracken() {
   data.maxGen = 8;
   data.gravSwitch = 1; // off = 0, on = 1
   data.gravFac = 8;
+
+  data.color = 'green';
+  data.width = '4px';
 
   // specify gene
   data['gene'][0] = 45;
@@ -547,6 +547,10 @@ function fSierpinski() {
 
   data.maxGen = 6;
   data.gravSwitch = 0; // off = 0, on = 1
+  data.gravFac = 16;
+
+  data.color = 'blue';
+  data.width = '3px';
 
   // specify gene
   data['gene'][0] = 120;
@@ -568,14 +572,17 @@ function fSierpinski() {
 function fTestDNA() {
 
   // specify initial bud
-  data.x1 = 150;
-  data.y1 = 150;
+  data.x1 = 300;
+  data.y1 = 300;
   data.a = 0; // angle bud points
-  data.d = 20; // length of first shoot
+  data.d = 40; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  data.maxGen = 3;
+  data.maxGen = 6;
   data.gravSwitch = 0; // off = 0, on = 1
+
+  data.color = 'red';
+  data.width = '2px';
 
   // specify gene
   data['gene'][0] = 45;

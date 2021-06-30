@@ -22,7 +22,7 @@
 function openThisLab() {
   // WARNING: can only alter HTML if this function called by
   //          onload property in BODY TAG (not onload in page header)
-}
+} // END OF function openThisLab
 
 // these are used by function eraseSVG to remove all svg elements on display before
 // drawing a new set of images - if covered but not removed, they take up
@@ -34,9 +34,6 @@ let globalSVGidNumber = -1; // increment in fNewSVGline such that 1st used is ze
 let globalSVGidPrefix = 'svg-';
 
 let data = {
-  // QUESTION: I apparently need the initialize method called by openThisLab
-  //           in regular web labs but do I need it here?
-  // ANSWER: Yes I do need initialize method: tried without it and doesn't work
   initialize : function() {
     data.x1 = 100;
     data.y1 = 100;
@@ -51,8 +48,6 @@ let data = {
     data.gravSwitch = 0; // off = 0, on = 1
     data.gravFac = 8;
     data['gene'] = new Array();
-
-    data.evenOddFlag = 0; // for use only with fGrowEven() and fGrowOdd()
 
     // console.log('data initialize, new array gene length = ' + data['gene'].length);
     // console.log("data['gene'][0] = " + data['gene'][0]);
@@ -78,21 +73,27 @@ let data = {
 
 function updateBody() {
   // called in body tag onload so can alter HTML elements
-  // jQuery JS library needs to have been loaded for next line to work
-} // END of function updateBody()
+  // console.log('enter updateBody');
+  // data.initialize();
+  // fBracken();
+  // updateDisplay();
+  // console.log('end updateBody');
+} // END OF function updateBody
 
-function openZoo() {
-  // called by onclick of run button
+function fOpenZoo() {
+  // called by onclick of run "draw" button
   $.post("../webAppRunLog.lc",{webAppNumber: "000, Artificial Zoo"});
 
   // data.initialize(); // need this to be able to run again without reload page
   updateDisplay();
 
-} // END OF function openZoo
+} // END OF function fOpenZoo
 
-function eraseSVG() {
-  // called by onclick of erase button
-  console.log('ENTER function eraseSVG')
+function fEraseSVG() {
+  // called by onclick of erase button and fSelectZoo()
+
+  // console.log('ENTER function eraseSVG')
+  // console.log('globalSVGidNumber = ' + globalSVGidNumber);
 
   // globalSVGidNumber and globalSVGidPrefix are used here to remove all svg
   // elements on display before drawing a new set of images
@@ -101,23 +102,54 @@ function eraseSVG() {
   // the data object gets re-initialized if add more than one image to display
   // so make these vars independent to keep track of all svg elements on display
 
-  // solution by Diaco at
-  // https://greensock.com/forums/topic/10892-how-do-you-remove-an-svg-element-when-youre-done-animating-it/
-  let tSVGid;
-  let tSVG;
-  let parent;
-  // globalSVGidNumber ranges from 0 to number elements-1
-  for (i = 0; i < 1+globalSVGidNumber; i++) {
-    tSVGid = globalSVGidPrefix + i;
-    tSVG = document.getElementById(tSVGid);
-    parent = tSVG.parentNode;
-    parent.removeChild(tSVG);
-  }
+  if (globalSVGidNumber >= 0) {
+    let tSVGid;
+    let tSVG;
+    let parent;
+    // globalSVGidNumber ranges from 0 to number elements-1
+    for (i = 0; i < 1+globalSVGidNumber; i++) {
+      tSVGid = globalSVGidPrefix + i;
+      tSVG = document.getElementById(tSVGid);
+      parent = tSVG.parentNode;
+      parent.removeChild(tSVG);
+    } // END OF for
+    globalSVGidNumber = -1;
+  } // END OF if
 
-  console.log('globalSVGidNumber = ' + globalSVGidNumber);
-  console.log('END OF function eraseSVG')
+  // console.log('globalSVGidNumber = ' + globalSVGidNumber);
+  // console.log('END OF function eraseSVG')
 
-} // END OF function eraseSVG
+} // END OF function fEraseSVG
+
+function fSelectZoo() {
+
+  fEraseSVG();
+  data.initialize();
+
+  let zoo = document.getElementById("selectZoo").value;
+  // Bracken, Gasket, Dragon, Koch6, Koch8, Islands, TestDNA
+
+  switch (zoo) {
+    case "select":
+      // do nothing additional
+      // this is value of select menu when page first loads
+      break;
+    case 'Bracken':
+      fBracken();
+      break;
+    case 'Gasket':
+      fSierpinski();
+      break;
+    case 'Test':
+      fTestDNA();
+      break;
+    default:
+      // bad selection
+  } // END OF switch
+
+  updateDisplay();
+
+} // END OF function fSelectZoo
 
 function updateDisplay() {
   console.log('enter updateDisplay');
@@ -127,27 +159,31 @@ function updateDisplay() {
   // xxx e.g., fTestDNA, and assign to data['gene']
   // xxx and not do internally to the gene specification function
 
-  data.initialize();
-  fBracken();
-  data.color = 'green';
-  data.width = '3px';
-  for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
+  // data.initialize();
+  // fBracken();
+  // data.color = 'green';
+  // data.width = '3px';
+  // for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
+  //   // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
+  //   fGrow(thisGen);
+  //   // console.log('updateDisplay: after fGrow(thisGen) call' );
+  // } // END OF for(let thisGen = 0; ...
+  //
+  // // NEED TO RE-INITIALIZE BEFORE EACH ZOO ANIMAL IN ONE PAGE LOAD
+  //
+  // data.initialize();
+  // fSierpinski();
+  // data.color = 'blue';
+  // data.width = '1px';
+
+  for (let thisGen = 0; thisGen < data.maxGen; thisGen++) {
     // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
     fGrow(thisGen);
     // console.log('updateDisplay: after fGrow(thisGen) call' );
   } // END OF for(let thisGen = 0; ...
 
-  // NEED TO RE-INITIALIZE BEFORE EACH ZOO ANIMAL IN ONE PAGE LOAD
+  // window.document.body.style.cursor = ""; // sets the cursor shape to default
 
-  data.initialize();
-  fSierpinski();
-  data.color = 'blue';
-  data.width = '1px';
-  for(let thisGen = 0; thisGen < data.maxGen; thisGen++) {
-    // console.log('updateDisplay: fGrow(thisGen) call, thisGen = ' + thisGen );
-    fGrow(thisGen);
-    // console.log('updateDisplay: after fGrow(thisGen) call' );
-  } // END OF for(let thisGen = 0; ...
 
   console.log('globalSVGidNumber = ' + globalSVGidNumber);
   console.log('END of updateDisplay method')
@@ -391,6 +427,50 @@ function fFinishGene(geneTail) {
 
 } // END OF function fFinishGene
 
+function fFgene(x1,y1,a,d,color,width) {
+
+   // draw a line of length d at angle a from x1,y1
+   // angles specified in degrees but JS functions need radians
+   let arad = a * data.degTOrad;
+   let dx = d * Math.cos(arad);
+   let dy = d * Math.sin(arad);
+
+  dx = Math.round(dx);
+  dy = Math.round(dy);
+  let x2 = x1 + dx;
+  let y2 = y1 - dy;
+
+  fNewSVGline(x1,y1,x2,y2,color,width);
+
+  let result = [];
+  result[0] = x2;
+  result[1] = y2;
+  return result
+
+} // END OF function fFgene
+
+function fJgene(x1,y1,a,d) {
+
+   // jump length d at angle a from x1,y1
+   // angles specified in degrees but JS functions need radians
+   let arad = a * data.degTOrad;
+   let dx = d * Math.cos(arad);
+   let dy = d * Math.sin(arad);
+
+  dx = Math.round(dx);
+  dy = Math.round(dy);
+  let x2 = x1 + dx;
+  let y2 = y1 - dy;
+
+  let result = [];
+  result[0] = x2;
+  result[1] = y2;
+  return result
+
+} // END OF function fJgene
+
+// ------- ZOO ANIMAL DEFINITIONS BELOW --------------
+
 function fBracken() {
   // 45, 0.8, 0.4, "FF[+Fb]F[-Fb]FB"
 
@@ -513,45 +593,3 @@ function fTestDNA() {
    data['newGen'][4][newBud] = data.budType;
 
 } // END OF function fTestDNA
-
-function fFgene(x1,y1,a,d,color,width) {
-
-   // draw a line of length d at angle a from x1,y1
-   // angles specified in degrees but JS functions need radians
-   let arad = a * data.degTOrad;
-   let dx = d * Math.cos(arad);
-   let dy = d * Math.sin(arad);
-
-  dx = Math.round(dx);
-  dy = Math.round(dy);
-  let x2 = x1 + dx;
-  let y2 = y1 - dy;
-
-  fNewSVGline(x1,y1,x2,y2,color,width);
-
-  let result = [];
-  result[0] = x2;
-  result[1] = y2;
-  return result
-
-} // END OF function fFgene
-
-function fJgene(x1,y1,a,d) {
-
-   // jump length d at angle a from x1,y1
-   // angles specified in degrees but JS functions need radians
-   let arad = a * data.degTOrad;
-   let dx = d * Math.cos(arad);
-   let dy = d * Math.sin(arad);
-
-  dx = Math.round(dx);
-  dy = Math.round(dy);
-  let x2 = x1 + dx;
-  let y2 = y1 - dy;
-
-  let result = [];
-  result[0] = x2;
-  result[1] = y2;
-  return result
-
-} // END OF function fJgene

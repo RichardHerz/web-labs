@@ -54,9 +54,17 @@
 
   <div id="div_simFrame">
 
-    <input type='button' id = 'button_runButton' value='run' onclick='openZoo()'>
-    <br><br>
-    <input type='button' id = 'erase_runButton' value='erase' onclick='eraseSVG()'>
+    <!-- <input type='button' id = 'button_runButton' value='draw' onclick='fOpenZoo()'>
+    <br>
+    <input type='button' id = 'erase_runButton' value='erase' onclick='fEraseSVG()'> -->
+
+    <select id='selectZoo' onchange="fSelectZoo()">
+      <!-- Bracken, Gasket, Dragon, Koch6, Koch8, Islands, TestDNA -->
+      <option value="select">make selection...</option>
+      <option value="Bracken">Bracken</option>
+      <option value="Gasket">Sierpinski Gasket</option>
+      <option value="Test">Test DNA</option>
+    </select>
 
     <svg id="svg_zoo" width="600" height="610"></svg>
 

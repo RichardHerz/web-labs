@@ -440,7 +440,7 @@ on Bracken
 
   -- specify number of "generations" to draw
 
-  put 7 into maxGen -- was 9 in TB
+  put 4 into maxGen -- was 9 in TB
 
   put 1 into gravSwitch -- off = 0, on = 1
 

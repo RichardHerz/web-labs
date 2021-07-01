@@ -80,15 +80,6 @@ function updateBody() {
   // console.log('end updateBody');
 } // END OF function updateBody
 
-function fOpenZoo() {
-  // called by onclick of run "draw" button
-  $.post("../webAppRunLog.lc",{webAppNumber: "000, Artificial Zoo"});
-
-  // data.initialize(); // need this to be able to run again without reload page
-  updateDisplay();
-
-} // END OF function fOpenZoo
-
 function fEraseSVG() {
   // called by onclick of erase button and fSelectZoo()
 
@@ -123,7 +114,15 @@ function fEraseSVG() {
 
 function fSelectZoo() {
 
-  // console.log('enter function fSelectZoo');
+  // called by html element select id='selectZoo'
+
+  // let runLoggerURL = "../webAppRunLog.lc",
+  // $.post( runLoggerURL,{webAppNumber: "000, Artificial Zoo"} )
+  //   .done(
+  //     function(data) {} // END OF function(data)
+  //   ) // END OF .done(
+
+  $.post("../webAppRunLog.lc",{webAppNumber: "000, Artificial Zoo"});
 
   fEraseSVG();
   data.initialize();

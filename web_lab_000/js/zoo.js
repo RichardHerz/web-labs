@@ -142,6 +142,15 @@ function fSelectZoo() {
     case 'Gasket':
       fSierpinski();
       break;
+    case 'Dragon':
+      fDragon();
+      break;
+    case 'Koch6':
+      fKoch6();
+      break;
+    case 'Islands':
+      fIslands();
+      break;
     case 'Test':
       fTestDNA();
       break;
@@ -241,16 +250,16 @@ function fGrow(thisGen) {
     let yOLD = [];
     let aOLD = [];
 
-    if(tBudType == 2) {
+    if (tBudType == 2) {
       tD = tD * tMajorChange;
     } else {
       tD = tD * tMinorChange;
     }
 
-    if(data.gravSwitch == 1) {
+    if (data.gravSwitch == 1) {
 
       // get angle off zero so gravity can take effect
-      while(tA < 0) {
+      while (tA < 0) {
         tA = tA + 360;
       }
 
@@ -260,20 +269,20 @@ function fGrow(thisGen) {
       //    put (random(1001)-1)/1000 into rnd
       //    put tA + 1*(1 - 2*rnd) into tA
       // end repeat
-      while(tA == 90){
+      while (tA == 90){
         tA = tA + (1 - 2 * Math.random());
       }
 
       // add effect of gravity, a = 90 is straight up
-      if( (tA > 90) && (tA < (270 - data.gravFac)) ) {
+      if ( (tA > 90) && (tA < (270 - data.gravFac)) ) {
         tA = tA + data.gravFac;
-      } else if( (tA > (270 + data.gravFac)) && (tA < 360) ) {
+      } else if ( (tA > (270 + data.gravFac)) && (tA < 360) ) {
         tA = tA - data.gravFac;
-      } else if( (tA > 0) && (tA < 90) ) {
+      } else if ( (tA > 0) && (tA < 90) ) {
         tA = tA - data.gravFac;
-      } // END OF if( (tA > 90) ...
+      } // END OF if ( (tA > 90) ...
 
-    } // END OF if(data.gravSwitch == 1)
+    } // END OF if (data.gravSwitch == 1)
 
     // initialize bracket counters
     let right_bracket = -1; // so array index = 0 after first increment
@@ -282,12 +291,12 @@ function fGrow(thisGen) {
     let ng = 0;
 
     // repeat while gene$[ng] is not empty
-    while(data.gene[ng]) {
+    while (data.gene[ng]) {
 
       // console.log( 'fGrow: ng = ' + ng );
-      // console.log( 'fGrow: while(data.gene[ng]), data.gene[ng] = ' + data.gene[ng] );
+      // console.log( 'fGrow: while (data.gene[ng]), data.gene[ng] = ' + data.gene[ng] );
 
-      switch(data.gene[ng]) {
+      switch (data.gene[ng]) {
         case 'F':
           // console.log('case F');
           result = fFgene(tX,tY,tA,tD,data.color,data.width);
@@ -315,7 +324,7 @@ function fGrow(thisGen) {
           tX = xOLD[theOne];
           tY = yOLD[theOne];
           tA = aOLD[theOne];
-          if(right_bracket == left_bracket) {
+          if (right_bracket == left_bracket) {
             // matched all pairs so far, reset counters
             right_bracket = -1; // so array index = 0 after first increment
             left_bracket = -1;
@@ -334,19 +343,19 @@ function fGrow(thisGen) {
           // no break, falls through and B vs. b considered in IF below
         case 'b':
           // console.log('case b');
-          if(thisGen < data.maxGen) {
+          if (thisGen < data.maxGen) {
             // record this x,y coordinate as a new bud
             newBud = newBud + 1;
             data['newGen'][0][newBud] = tX;
             data['newGen'][1][newBud] = tY;
             data['newGen'][2][newBud] = tA;
             data['newGen'][3][newBud] = tD;
-            if(data['gene'][ng] == 'B') {
+            if (data['gene'][ng] == 'B') {
               data['newGen'][4][newBud] = 2;
             } else {
               data['newGen'][4][newBud] = 1;
             }
-          } // END OF if(thisGen < data.maxGen)
+          } // END OF if (thisGen < data.maxGen)
           break;
         default:
           // console.log('while default');
@@ -355,7 +364,7 @@ function fGrow(thisGen) {
 
        ng = ng + 1;
 
-    } // END OF while(data.gene[ng])
+    } // END OF while (data.gene[ng])
 
     oldBud = oldBud + 1; // increment so read next old bud
 
@@ -414,13 +423,11 @@ function fFinishGene(geneTail) {
   // reset d to increase d so 1st line drawn equal to d value set above
   // since scale factor will be applied 1st time d used
 
-  if(data.budType == 2) {
+  if (data.budType == 2) {
     data.d = data.d/data.gene[1];
   } else {
     data.d = data.d/data.gene[2];
   }
-
-  // xxx display gene in web page
 
 } // END OF function fFinishGene
 
@@ -575,10 +582,10 @@ function fTestDNA() {
   data.x1 = 300;
   data.y1 = 300;
   data.a = 0; // angle bud points
-  data.d = 40; // length of first shoot
+  data.d = 60; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  data.maxGen = 6;
+  data.maxGen = 10;
   data.gravSwitch = 0; // off = 0, on = 1
 
   data.color = 'red';
@@ -600,3 +607,133 @@ function fTestDNA() {
    data['newGen'][4][newBud] = data.budType;
 
 } // END OF function fTestDNA
+
+function fDragon() {
+
+  // specify initial bud
+  data.x1 = 150;
+  data.y1 = 200;
+  data.a = 0; // angle bud points
+  data.d = 250;
+  data.budType = 2; // major (B) = 2, minor (b) = 1
+
+  data.maxGen = 12;
+  data.gravSwitch = 0; // off = 0, on = 1
+
+  data.color = 'red';
+  data.width = '1px';
+
+  // specify gene
+  data['gene'][0] = 45;
+  data['gene'][1] = 0.707; // 1/Math.sqrt(2) would need to be rounded for display
+  data['gene'][2] = 1;
+  let temp = '-BF++F----B';
+  fFinishGene(temp);
+
+  // copy initial bud specifications to newGen array
+   let newBud = 0;
+   data['newGen'][0][newBud] = data.x1;
+   data['newGen'][1][newBud] = data.y1;
+   data['newGen'][2][newBud] = data.a;
+   data['newGen'][3][newBud] = data.d;
+   data['newGen'][4][newBud] = data.budType;
+
+} // END OF function fDragon
+
+function fKoch6() {
+
+  // specify initial bud
+  data.x1 = 140;
+  data.y1 = 260;
+  data.a = 60; // angle bud points
+  data.d = 100;
+  data.budType = 2; // major (B) = 2, minor (b) = 1
+
+  data.maxGen = 4;
+  data.gravSwitch = 0; // off = 0, on = 1
+
+  data.color = 'DodgerBlue';
+  data.width = '1px';
+
+  // specify gene
+  data['gene'][0] = 60;
+  data['gene'][1] = 0.333; // 1/3 would need to be rounded for display
+  data['gene'][2] = 0.333;
+  // note: lots of repetition, anyway to reduce, e.g., by adding []...
+  let temp = 'BF+BF--BF+BF--BF+BF--BF+BF--BF+BF--BF+BF';
+  fFinishGene(temp);
+
+  // copy initial bud specifications to newGen array
+   let newBud = 0;
+   data['newGen'][0][newBud] = data.x1;
+   data['newGen'][1][newBud] = data.y1;
+   data['newGen'][2][newBud] = data.a;
+   data['newGen'][3][newBud] = data.d;
+   data['newGen'][4][newBud] = data.budType;
+
+} // END OF function fKoch6
+
+function fIslands() {
+
+  // specify initial bud
+  data.x1 = 400;
+  data.y1 = 350;
+  data.a = 90; // angle bud points
+  data.d = 40;
+  data.budType = 2; // major (B) = 2, minor (b) = 1
+
+  data.maxGen = 2;
+  data.gravSwitch = 0; // off = 0, on = 1
+
+  data.color = 'DodgerBlue';
+  data.width = '1px';
+
+  // specify gene
+  data['gene'][0] = 90;
+  data['gene'][1] = 0.15;
+  data['gene'][2] = 1;
+  // note: lots of repetition, anyway to reduce, e.g., by adding []...
+  let temp = 'BF+J-BFBF+BF+BFBF+BFJ+BFBF-J+BFBF-BF-BFBF-BFJ-BFBFBF';
+
+  fFinishGene(temp);
+
+  // THIS LAB HAS MORE THAN ONE STARTING LOCATION
+
+  let newBud;
+  let tFac = 0.9; // << NOTE: this differs greatly from other versions
+
+  // NOTE: TB version has screen y direction reversed from LC and here
+
+  // NOTE: I had to adjst tFac and data.d values to get the four segments
+  //       to match up at corners of the square...
+
+  // copy initial bud specifications to newGen array
+  newBud = 0;
+  data['newGen'][0][newBud] = data.x1;
+  data['newGen'][1][newBud] = data.y1;
+  data['newGen'][2][newBud] = data.a;
+  data['newGen'][3][newBud] = data.d;
+  data['newGen'][4][newBud] = data.budType;
+
+  newBud = 1;
+  data['newGen'][0][newBud] = data.x1;
+  data['newGen'][1][newBud] = data.y1 - tFac*data.d;
+  data['newGen'][2][newBud] = 2 * data.a;
+  data['newGen'][3][newBud] = data.d;
+  data['newGen'][4][newBud] = data.budType;
+
+  newBud = 2;
+  data['newGen'][0][newBud] = data.x1 - tFac*data.d;
+  data['newGen'][1][newBud] = data.y1 - tFac*data.d;
+  data['newGen'][2][newBud] = 3 * data.a;
+  data['newGen'][3][newBud] = data.d;
+  data['newGen'][4][newBud] = data.budType;
+
+  newBud = 3;
+  data['newGen'][0][newBud] = data.x1 - tFac*data.d;
+  data['newGen'][1][newBud] = data.y1;
+  data['newGen'][2][newBud] = 0;
+  data['newGen'][3][newBud] = data.d;
+  data['newGen'][4][newBud] = data.budType;
+
+} // END OF function fIslands

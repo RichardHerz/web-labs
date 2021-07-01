@@ -50,14 +50,16 @@
     <p>
       This lab grows zoo creatures with an L-system. The gene of a zoo
       creature defines its form by repeating the gene instructions at each generation
-      of growth.
+      of growth. This lab was inspired when I read Richard Dawkins' book
+      The Blind Watchmaker.
     </p>
     <p>
       The three numeric values at the start of a gene
       are the angle of rotation (+ and -) and the relative
       size of line segments in the next generation grown from major (B) and minor (b)
       buds. F means to grow a line, J means to jump, ] means to return
-      to the location at [.
+      to the location at [. Future plans are to let you enter your own gene
+      and grow your own creature.
     </p>
   </div> <!-- end of div div_page_header -->
 
@@ -70,8 +72,11 @@
     <select id='selectZoo' onchange="fSelectZoo()">
       <!-- Bracken, Gasket, Dragon, Koch6, Koch8, Islands, TestDNA -->
       <option value="select">make selection...</option>
+      <option value="Dragon">Dragon</option>
       <option value="Bracken">Bracken</option>
       <option value="Gasket">Sierpinski Gasket</option>
+      <option value="Koch6">Koch snowflake</option>
+      <option value="Islands">Islands</option>
       <option value="Test">Test DNA</option>
     </select>
 

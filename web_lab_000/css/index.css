@@ -1,4 +1,8 @@
-#div_simFrame {
+p {
+  word-wrap: break-word;
+  }
+
+  #div_simFrame {
   display: block;
   position: relative;
   left: 5px;
@@ -23,6 +27,8 @@
 
 #field_gene {
   position: relative;
+  left: 10px;
+  width: 600px;
   border : dashed;
   border-width: 0px;
   border-color : red;
@@ -30,6 +36,7 @@
 
 #field_status {
   position: relative;
+  left: 10px;
   border : dashed;
   border-width: 0px;
   border-color : DodgerBlue;

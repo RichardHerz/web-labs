@@ -122,13 +122,16 @@ function fSelectZoo() {
   //     function(data) {} // END OF function(data)
   //   ) // END OF .done(
 
-  $.post("../webAppRunLog.lc",{webAppNumber: "000, Artificial Zoo"});
+  // move post below so can add which creature is drawn
+  // $.post("../webAppRunLog.lc",{webAppNumber: "000, Artificial Zoo"});
 
   fEraseSVG();
   data.initialize();
 
   let zoo = document.getElementById("selectZoo").value;
   // Bracken, Gasket, Dragon, Koch6, Koch8, Islands, TestDNA
+
+  $.post("../webAppRunLog.lc",{webAppNumber: "000, Artificial Zoo, " + zoo});
 
   switch (zoo) {
     case 'select':
@@ -170,8 +173,7 @@ function fSelectZoo() {
 
   // need to call updateDisplay after a delay in which I can
   // update notice fields and the select menu button label can change
-
-
+  // and can show a wait progress cursor
   window.setTimeout(updateDisplay, 500);
 
   // console.log('leave function fSelectZoo');
@@ -179,25 +181,22 @@ function fSelectZoo() {
 } // END OF function fSelectZoo
 
 function updateDisplay() {
-  // console.log('enter updateDisplay');
-  // console.log('globalSVGidNumber = ' + globalSVGidNumber);
 
+  // call fGrow with timeout so can see each generation drawn separately
+  // at end of fGrow when last gen drawn, wait cursor and notice field are cleared
+  let timestep = 500;
   for (let thisGen = 0; thisGen < data.maxGen; thisGen++) {
-    fGrow(thisGen);
+    window.setTimeout(fGrow, timestep*thisGen, thisGen);
   }
 
-  window.document.body.style.cursor = ""; // sets the cursor shape to default
+  // window.document.body.style.cursor = ""; // sets the cursor shape to default
+  // document.getElementById('field_status').innerHTML = '';
 
-  document.getElementById('field_status').innerHTML = '';
-
-  // console.log('globalSVGidNumber = ' + globalSVGidNumber);
-  // console.log('END of updateDisplay method')
-
-} // END of updateDisplay method
+} // END OF function updateDisplay
 
 function fGrow(thisGen) {
 
-  // console.log('enter function fGrow');
+  // console.log('enter function fGrow, thisGen = ' + thisGen);
 
   // put 0 into newBud -- incremented below with each new bud formed
   // put 1 into oldBud -- incremented below before end of do-loop
@@ -368,6 +367,11 @@ function fGrow(thisGen) {
     oldBud = oldBud + 1; // increment so read next old bud
 
   } // END OF while ((data['lastGen'][4][oldBud] ...
+
+  if (thisGen == data.maxGen-1) {
+    window.document.body.style.cursor = ""; // sets the cursor shape to default
+    document.getElementById('field_status').innerHTML = '';
+  }
 
 } // END OF function fGrow
 

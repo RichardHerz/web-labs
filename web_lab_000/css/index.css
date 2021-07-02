@@ -43,8 +43,10 @@ p {
 }
 
 #svg_zoo {
-  position: relative;
-  top: 30px;
+  /* set absolute position so doesn't shift up when  */
+  /* notice field clears */
+  position: absolute;
+  top: 120px;
   border : none;
   border-width: 1px;
   border-color : DodgerBlue;

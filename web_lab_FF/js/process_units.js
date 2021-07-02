@@ -398,4 +398,4 @@ class Tree {
     }
 
   } // END OF updateState method of class Ant
-} // END OF class Ant definition
+} // END OF class Tree definition

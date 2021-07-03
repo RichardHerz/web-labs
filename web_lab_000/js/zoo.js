@@ -113,8 +113,9 @@ function fEraseSVG() {
 
 function fSelectZooStart() {
   // called by html element select id='selectZoo'
-  // when select new creature, set max gen menu button to default
-  // so function defining new creature will use its default maxGen
+  // when select new creature, function defining new creature will use its
+  // default maxGen
+  // after creature is drawn first time, then user can change maxGen
   document.getElementById("selectMaxGen").value = 'select';
   fSelectZooFinish();
 } // END OF function fSelectZooStart
@@ -129,13 +130,15 @@ function fSelectZooFinish() {
 
   $.post("../webAppRunLog.lc",{webAppNumber: "000, Artificial Zoo, " + zoo});
 
-  console.log('fSelectZoo, before switch, data.maxGen = ' + data.maxGen);
+  // console.log('fSelectZoo, before switch, data.maxGen = ' + data.maxGen);
 
   switch (zoo) {
     case 'select':
-      // do nothing additional
+      // do nothing, return
       // this is value of select menu when page first loads
-      break;
+      // fSelectZooFinish gets called when user selects maxgen
+      // but don't want to do anything if no zoo creature selected
+      return;
     case 'Bracken':
       fBracken();
       break;
@@ -161,8 +164,7 @@ function fSelectZooFinish() {
   if (zoo == 'select') {
     document.getElementById('field_gene').innerHTML = "";
   } else {
-    document.getElementById('field_gene').innerHTML = " generations: " + data.maxGen
-      + ", gene: " + data['gene'];
+    document.getElementById('field_gene').innerHTML = "gene: " + data['gene'];
     document.getElementById('field_status').innerHTML = 'growing...';
     window.document.body.style.cursor = 'wait'; // sets the cursor shape to wait
   }
@@ -509,7 +511,7 @@ function fBracken() {
   let mg = document.getElementById("selectMaxGen").value;
   if (mg == 'select') {
     data.maxGen = 8;
-    document.getElementById("selectMaxGen").value = data.maxGen
+    document.getElementById("selectMaxGen").value = data.maxGen;
   }
 
   data.gravSwitch = 1; // off = 0, on = 1
@@ -549,7 +551,7 @@ function fBracken2() {
   let mg = document.getElementById("selectMaxGen").value;
   if (mg == 'select') {
     data.maxGen = 4;
-    document.getElementById("selectMaxGen").value = data.maxGen
+    document.getElementById("selectMaxGen").value = data.maxGen;
   }
 
   data.gravSwitch = 1; // off = 0, on = 1
@@ -586,7 +588,7 @@ function fSierpinski() {
   let mg = document.getElementById("selectMaxGen").value;
   if (mg == 'select') {
     data.maxGen = 6;
-    document.getElementById("selectMaxGen").value = data.maxGen
+    document.getElementById("selectMaxGen").value = data.maxGen;
   }
 
   data.gravSwitch = 0; // off = 0, on = 1
@@ -624,7 +626,7 @@ function fTestDNA() {
   let mg = document.getElementById("selectMaxGen").value;
   if (mg == 'select') {
     data.maxGen = 10;
-    document.getElementById("selectMaxGen").value = data.maxGen
+    document.getElementById("selectMaxGen").value = data.maxGen;
   }
 
   data.gravSwitch = 0; // off = 0, on = 1
@@ -661,7 +663,7 @@ function fDragon() {
   let mg = document.getElementById("selectMaxGen").value;
   if (mg == 'select') {
     data.maxGen = 12;
-    document.getElementById("selectMaxGen").value = data.maxGen
+    document.getElementById("selectMaxGen").value = data.maxGen;
   }
 
   data.gravSwitch = 0; // off = 0, on = 1
@@ -698,7 +700,7 @@ function fKoch6() {
   let mg = document.getElementById("selectMaxGen").value;
   if (mg == 'select') {
     data.maxGen = 4;
-    document.getElementById("selectMaxGen").value = data.maxGen
+    document.getElementById("selectMaxGen").value = data.maxGen;
   }
 
   data.gravSwitch = 0; // off = 0, on = 1
@@ -741,7 +743,7 @@ function fIslands() {
   let mg = document.getElementById("selectMaxGen").value;
   if (mg == 'select') {
     data.maxGen = 2;
-    document.getElementById("selectMaxGen").value = data.maxGen
+    document.getElementById("selectMaxGen").value = data.maxGen;
   }
 
   data.gravSwitch = 0; // off = 0, on = 1

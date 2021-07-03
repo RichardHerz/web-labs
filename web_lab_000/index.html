@@ -50,7 +50,7 @@
     <p>
       This lab grows zoo creatures with an L-system. The gene of a zoo
       creature defines its form by repeating the gene instructions at each generation
-      of growth. This lab was inspired when I read Richard Dawkins' book
+      of growth. The lab was inspired when I read Richard Dawkins' book
       The Blind Watchmaker.
     </p>
     <p>
@@ -58,8 +58,14 @@
       are the angle of rotation (+ and -) and the relative
       size of line segments in the next generation grown from major (B) and minor (b)
       buds. F means to grow a line, J means to jump, ] means to return
-      to the location at [. Future plans are to let you enter your own gene
-      and grow your own creature.
+      to the location at [.
+    </p>
+    <p>
+      When first selected, creatures are grown with the recommended number of
+      generations. You may then change the number to see how growth
+      occurs, but be careful about increasing past the recommended value.
+      For example, Islands takes an unreasonable amount of time above 2. In that
+      case, reload the page.
     </p>
   </div> <!-- end of div div_page_header -->
 
@@ -67,7 +73,7 @@
 
     <select id='selectZoo' onchange="fSelectZooStart()">
       <!-- Bracken, Gasket, Dragon, Koch6, Koch8, Islands, TestDNA -->
-      <option value="select">make selection...</option>
+      <option value="select">select creature...</option>
       <option value="Dragon">Dragon</option>
       <option value="Bracken">Bracken</option>
       <option value="Gasket">Sierpinski Gasket</option>
@@ -81,18 +87,18 @@
 
     <select id='selectMaxGen' onchange="fSelectMaxGen()">
       <option value="select">set maxGen</option>
-      <option value=1>1</option>
-      <option value=2>2</option>
-      <option value=3>3</option>
-      <option value=4>4</option>
-      <option value=5>5</option>
-      <option value=6>6</option>
-      <option value=7>7</option>
-      <option value=8>8</option>
-      <option value=9>9</option>
-      <option value=10>10</option>
-      <option value=11>11</option>
-      <option value=12>12</option>
+      <option value=1>generations: 1</option>
+      <option value=2>generations: 2</option>
+      <option value=3>generations: 3</option>
+      <option value=4>generations: 4</option>
+      <option value=5>generations: 5</option>
+      <option value=6>generations: 6</option>
+      <option value=7>generations: 7</option>
+      <option value=8>generations: 8</option>
+      <option value=9>generations: 9</option>
+      <option value=10>generations: 10</option>
+      <option value=11>generations: 11</option>
+      <option value=12>generations: 12</option>
     </select>
 
 

@@ -44,7 +44,6 @@ let data = {
     data.width = '4px';
     data.pi = Math.pi;
     data.degTOrad = Math.PI / 180;
-    data.maxGen = 3;
     data.gravSwitch = 0; // off = 0, on = 1
     data.gravFac = 8;
     data['gene'] = new Array();
@@ -112,26 +111,25 @@ function fEraseSVG() {
 
 } // END OF function fEraseSVG
 
-function fSelectZoo() {
-
+function fSelectZooStart() {
   // called by html element select id='selectZoo'
+  // when select new creature, set max gen menu button to default
+  // so function defining new creature will use its default maxGen
+  document.getElementById("selectMaxGen").value = 'select';
+  fSelectZooFinish();
+} // END OF function fSelectZooStart
 
-  // let runLoggerURL = "../webAppRunLog.lc",
-  // $.post( runLoggerURL,{webAppNumber: "000, Artificial Zoo"} )
-  //   .done(
-  //     function(data) {} // END OF function(data)
-  //   ) // END OF .done(
-
-  // move post below so can add which creature is drawn
-  // $.post("../webAppRunLog.lc",{webAppNumber: "000, Artificial Zoo"});
+function fSelectZooFinish() {
 
   fEraseSVG();
   data.initialize();
 
   let zoo = document.getElementById("selectZoo").value;
-  // Bracken, Gasket, Dragon, Koch6, Koch8, Islands, TestDNA
+  // Bracken, Gasket, Dragon, Koch6, Islands, TestDNA
 
   $.post("../webAppRunLog.lc",{webAppNumber: "000, Artificial Zoo, " + zoo});
+
+  console.log('fSelectZoo, before switch, data.maxGen = ' + data.maxGen);
 
   switch (zoo) {
     case 'select':
@@ -180,7 +178,26 @@ function fSelectZoo() {
 
 } // END OF function fSelectZoo
 
+function fSelectMaxGen() {
+
+  let temp = document.getElementById("selectMaxGen").value;
+  if (temp == 'select') {
+    return;
+  }
+
+  data.maxGen = temp;
+
+  console.log('fSelectMaxGen, data.maxGen = ' + data.maxGen);
+
+  fSelectZooFinish();
+
+  console.log('fSelectMaxGen, after fSelectZoo, data.maxGen = ' + data.maxGen);
+
+} // END OF function fSelectMaxGen
+
 function updateDisplay() {
+
+  console.log('updateDisplay, data.maxGen = ' + data.maxGen);
 
   // call fGrow with timeout so can see each generation drawn separately
   // at end of fGrow when last gen drawn, wait cursor and notice field are cleared
@@ -189,14 +206,15 @@ function updateDisplay() {
     window.setTimeout(fGrow, timestep*thisGen, thisGen);
   }
 
-  // window.document.body.style.cursor = ""; // sets the cursor shape to default
-  // document.getElementById('field_status').innerHTML = '';
-
 } // END OF function updateDisplay
 
 function fGrow(thisGen) {
 
   // console.log('enter function fGrow, thisGen = ' + thisGen);
+
+  // display thisGen from 1 since variable thisGen starts at 0
+  let gennum = thisGen+1;
+  document.getElementById('field_status').innerHTML = 'growing generation ' + gennum;
 
   // put 0 into newBud -- incremented below with each new bud formed
   // put 1 into oldBud -- incremented below before end of do-loop
@@ -488,7 +506,12 @@ function fBracken() {
   data.d = 35; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  data.maxGen = 8;
+  let mg = document.getElementById("selectMaxGen").value;
+  if (mg == 'select') {
+    data.maxGen = 8;
+    document.getElementById("selectMaxGen").value = data.maxGen
+  }
+
   data.gravSwitch = 1; // off = 0, on = 1
   data.gravFac = 8;
 
@@ -523,7 +546,12 @@ function fBracken2() {
   data.d = 35; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  data.maxGen = 4;
+  let mg = document.getElementById("selectMaxGen").value;
+  if (mg == 'select') {
+    data.maxGen = 4;
+    document.getElementById("selectMaxGen").value = data.maxGen
+  }
+
   data.gravSwitch = 1; // off = 0, on = 1
   data.gravFac = 8;
 
@@ -555,7 +583,12 @@ function fSierpinski() {
   data.d = 200; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  data.maxGen = 6;
+  let mg = document.getElementById("selectMaxGen").value;
+  if (mg == 'select') {
+    data.maxGen = 6;
+    document.getElementById("selectMaxGen").value = data.maxGen
+  }
+
   data.gravSwitch = 0; // off = 0, on = 1
   data.gravFac = 16;
 
@@ -588,7 +621,12 @@ function fTestDNA() {
   data.d = 60; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  data.maxGen = 10;
+  let mg = document.getElementById("selectMaxGen").value;
+  if (mg == 'select') {
+    data.maxGen = 10;
+    document.getElementById("selectMaxGen").value = data.maxGen
+  }
+
   data.gravSwitch = 0; // off = 0, on = 1
 
   data.color = 'red';
@@ -620,7 +658,12 @@ function fDragon() {
   data.d = 250;
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  data.maxGen = 12;
+  let mg = document.getElementById("selectMaxGen").value;
+  if (mg == 'select') {
+    data.maxGen = 12;
+    document.getElementById("selectMaxGen").value = data.maxGen
+  }
+
   data.gravSwitch = 0; // off = 0, on = 1
 
   data.color = 'red';
@@ -652,7 +695,12 @@ function fKoch6() {
   data.d = 100;
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  data.maxGen = 4;
+  let mg = document.getElementById("selectMaxGen").value;
+  if (mg == 'select') {
+    data.maxGen = 4;
+    document.getElementById("selectMaxGen").value = data.maxGen
+  }
+
   data.gravSwitch = 0; // off = 0, on = 1
 
   data.color = 'DodgerBlue';
@@ -678,6 +726,11 @@ function fKoch6() {
 
 function fIslands() {
 
+  // console.log('enter fIslands');
+  // let selGenVal = document.getElementById("selectMaxGen").value;
+  // console.log('fIslands, selGenVal = ' + selGenVal);
+  // console.log('fIslands, maxGen = ' + data.maxGen);
+
   // specify initial bud
   data.x1 = 400;
   data.y1 = 350;
@@ -685,7 +738,12 @@ function fIslands() {
   data.d = 40;
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  data.maxGen = 2;
+  let mg = document.getElementById("selectMaxGen").value;
+  if (mg == 'select') {
+    data.maxGen = 2;
+    document.getElementById("selectMaxGen").value = data.maxGen
+  }
+
   data.gravSwitch = 0; // off = 0, on = 1
 
   data.color = 'DodgerBlue';

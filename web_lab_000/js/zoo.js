@@ -834,7 +834,7 @@ function fCustomGene() {
 
   // specify initial bud
   data.x1 = 300;
-  data.y1 = 400;
+  data.y1 = 300;
   data.a1 = 90; // angle bud points
   data.d1 = 30; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1

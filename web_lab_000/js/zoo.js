@@ -37,8 +37,8 @@ let data = {
   initialize : function() {
     data.x1 = 100;
     data.y1 = 100;
-    data.a = 0; // angle bud points
-    data.d = 10; // length of first shoot
+    data.a1 = 0; // angle bud points
+    data.d1 = 10; // length of first shoot
     data.budType = 2; // major (B) = 2, minor (b) = 1
     data.color = 'green';
     data.width = '4px';
@@ -149,10 +149,12 @@ function fSelectZooContinue() {
       fSierpinski();
       break;
     case 'Dragon':
-      fDragon();
+      // fDragon();
+      fCustomGene();
       break;
     case 'Koch6':
-      fKoch6();
+      // fKoch6();
+      fCustomGeneTest();
       break;
     case 'Islands':
       fIslands();
@@ -178,10 +180,55 @@ function fSelectZooContinue() {
 function fDrawCustomGene() {
   // get gene from input_custom_gene
   // need three numbers, then other genes, each separated by commas
-  let str = document.getElementById('input_custom_gene').value;
-  data['gene'] = str.split(",");
-  // console.log('OVERIDE custom gene');
-  // data['gene'] = [45,0.8,0.4,'F','+','F','B'];
+
+  // xxx currently, the starting location info is set only
+  // xxx by fCustomGene
+
+  console.log('enter fDrawCustomGene');
+  console.log('data x1 = ' + data.x1);
+  console.log('data y1 = ' + data.y1);
+  console.log('data a = ' + data.a1);
+  console.log('data d = ' + data.d1);
+
+  // check reading gene placed by fCustomGene
+  let tcheck = document.getElementById('input_custom_gene').value;
+  if (tcheck == data['gene']) {
+    console.log('fDrawCustomGene, tcheck EQUIV data gene');
+  } else {
+    console.log('fDrawCustomGene, tcheck NOT equiv data gene');
+  }
+
+  // xxx when use data['gene'] directly, get good image,
+  // xxx but when set data['gene'] to input, get bad image, even
+  // xxx when IF above is EQUIV...
+  // xxx so something different, maybe in how array is compared in the
+  // xxx IF... will have to get input then process to make sure in correct
+  // xxx form in memory...
+
+  // data['gene'] = document.getElementById('input_custom_gene').value;
+
+  console.log('OVERRIDE custom gene');
+  data['gene'] = [45,0.8,0.4,'F','+','F','[','-','F',']','+','F','B'];
+  tcheck = '45,0.8,0.4,F,+,F,[,-,F,],+,F,B';
+  if (tcheck == data['gene']) {
+    console.log('fDrawCustomGene, OVERRIDE tcheck EQUIV data gene');
+  } else {
+    console.log('fDrawCustomGene, OVERRIDE tcheck NOT equiv data gene');
+  }
+
+  // // lines above say tcheck equiv but then if put that into gene
+  // // then get bad result
+  // console.log('USE EQUIV OVERRIDE');
+  // data['gene'] = '45,0.8,0.4,F,+,F,[,-,F,],+,F,B';
+
+  // // below doesn't work
+  // console.log('check .split()');
+  // tsplit = tcheck.split(",");
+  // data['gene'] = tsplit;
+
+  // >> GOING TO HAVE TO PROCESS STRING ENTERED BY USER CHAR-BY-CHAR
+  // >> IN MANNER SIMILAR TO fFinishGene
+
   console.log('CUSTOM GENE = ' + data['gene']);
   document.getElementById('field_gene').innerHTML = "gene: " + data['gene'];
   document.getElementById('field_status').innerHTML = '';
@@ -465,7 +512,7 @@ function fNewSVGline(x1,y1,x2,y2,color,width) {
 function fFinishGene(geneTail) {
 
   for (g = 0; g < geneTail.length; g++ ) {
-    // CAN NOT USE THIS, apparently g is string here >> for (g in geneTail) {
+    // CAN NOT USE for (g in geneTail), apparently g is string here
     data['gene'][g+3] = geneTail.substr(g, 1);
 
     // // console.log('fFinishGene 1: g, substr = ' + g + ', ' + geneTail.substr(g, 1) );
@@ -483,9 +530,9 @@ function fFinishGene(geneTail) {
   // since scale factor will be applied 1st time d used
 
   if (data.budType == 2) {
-    data.d = data.d/data.gene[1];
+    data.d1 = data.d1/data.gene[1];
   } else {
-    data.d = data.d/data.gene[2];
+    data.d1 = data.d1/data.gene[2];
   }
 
 } // END OF function fFinishGene
@@ -540,8 +587,8 @@ function fBracken() {
   // specify initial bud
   data.x1 = 350;
   data.y1 = 580;
-  data.a = 91; // angle bud points
-  data.d = 35; // length of first shoot
+  data.a1 = 91; // angle bud points
+  data.d1 = 35; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
   let mg = document.getElementById("selectMaxGen").value;
@@ -568,8 +615,8 @@ function fBracken() {
    let newBud = 0;
    data['newGen'][0][newBud] = data.x1;
    data['newGen'][1][newBud] = data.y1;
-   data['newGen'][2][newBud] = data.a;
-   data['newGen'][3][newBud] = data.d;
+   data['newGen'][2][newBud] = data.a1;
+   data['newGen'][3][newBud] = data.d1;
    data['newGen'][4][newBud] = data.budType;
 
 } // END OF function fBracken
@@ -580,8 +627,8 @@ function fBracken2() {
   // specify initial bud
   data.x1 = 300;
   data.y1 = 600;
-  data.a = 91; // angle bud points
-  data.d = 35; // length of first shoot
+  data.a1 = 91; // angle bud points
+  data.d1 = 35; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
   let mg = document.getElementById("selectMaxGen").value;
@@ -605,8 +652,8 @@ function fBracken2() {
    let newBud = 0;
    data['newGen'][0][newBud] = data.x1;
    data['newGen'][1][newBud] = data.y1;
-   data['newGen'][2][newBud] = data.a;
-   data['newGen'][3][newBud] = data.d;
+   data['newGen'][2][newBud] = data.a1;
+   data['newGen'][3][newBud] = data.d1;
    data['newGen'][4][newBud] = data.budType;
 
 } // END OF function fBracken2
@@ -617,8 +664,8 @@ function fSierpinski() {
   // specify initial bud
   data.x1 = 450;
   data.y1 = 350;
-  data.a = 180; // angle bud points
-  data.d = 200; // length of first shoot
+  data.a1 = 180; // angle bud points
+  data.d1 = 200; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
   let mg = document.getElementById("selectMaxGen").value;
@@ -644,61 +691,19 @@ function fSierpinski() {
    let newBud = 0;
    data['newGen'][0][newBud] = data.x1;
    data['newGen'][1][newBud] = data.y1;
-   data['newGen'][2][newBud] = data.a;
-   data['newGen'][3][newBud] = data.d;
+   data['newGen'][2][newBud] = data.a1;
+   data['newGen'][3][newBud] = data.d1;
    data['newGen'][4][newBud] = data.budType;
 
 } // END OF function fSierpinski
-
-function fCustomGene() {
-
-  console.log('enter fCustomGene');
-
-  // specify initial bud
-  data.x1 = 300;
-  data.y1 = 300;
-  data.a = 0; // angle bud points
-  data.d = 20; // length of first shoot
-  data.budType = 2; // major (B) = 2, minor (b) = 1
-
-  let mg = document.getElementById("selectMaxGen").value;
-  if (mg == 'select') {
-    data.maxGen = 3;
-    document.getElementById("selectMaxGen").value = data.maxGen;
-  }
-
-  data.gravSwitch = 0; // off = 0, on = 1
-
-  data.color = 'red';
-  data.width = '2px';
-
-  // specify gene
-  data['gene'][0] = 45;
-  data['gene'][1] = 0.8;
-  data['gene'][2] = 0.4;
-  let temp = 'F+F[-F]+FB';
-  fFinishGene(temp); // updates data['gene']
-
-  document.getElementById('input_custom_gene').value = data['gene'];
-  document.getElementById('field_gene').value = data['gene'];
-
-  // copy initial bud specifications to newGen array
-   let newBud = 0;
-   data['newGen'][0][newBud] = data.x1;
-   data['newGen'][1][newBud] = data.y1;
-   data['newGen'][2][newBud] = data.a;
-   data['newGen'][3][newBud] = data.d;
-   data['newGen'][4][newBud] = data.budType;
-
-} // END OF function fCustomGene
 
 function fDragon() {
 
   // specify initial bud
   data.x1 = 150;
   data.y1 = 200;
-  data.a = 0; // angle bud points
-  data.d = 250;
+  data.a1 = 0; // angle bud points
+  data.d1 = 250;
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
   let mg = document.getElementById("selectMaxGen").value;
@@ -723,8 +728,8 @@ function fDragon() {
    let newBud = 0;
    data['newGen'][0][newBud] = data.x1;
    data['newGen'][1][newBud] = data.y1;
-   data['newGen'][2][newBud] = data.a;
-   data['newGen'][3][newBud] = data.d;
+   data['newGen'][2][newBud] = data.a1;
+   data['newGen'][3][newBud] = data.d1;
    data['newGen'][4][newBud] = data.budType;
 
 } // END OF function fDragon
@@ -734,8 +739,8 @@ function fKoch6() {
   // specify initial bud
   data.x1 = 140;
   data.y1 = 260;
-  data.a = 60; // angle bud points
-  data.d = 100;
+  data.a1 = 60; // angle bud points
+  data.d1 = 100;
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
   let mg = document.getElementById("selectMaxGen").value;
@@ -761,8 +766,8 @@ function fKoch6() {
    let newBud = 0;
    data['newGen'][0][newBud] = data.x1;
    data['newGen'][1][newBud] = data.y1;
-   data['newGen'][2][newBud] = data.a;
-   data['newGen'][3][newBud] = data.d;
+   data['newGen'][2][newBud] = data.a1;
+   data['newGen'][3][newBud] = data.d1;
    data['newGen'][4][newBud] = data.budType;
 
 } // END OF function fKoch6
@@ -777,8 +782,8 @@ function fIslands() {
   // specify initial bud
   data.x1 = 400;
   data.y1 = 350;
-  data.a = 90; // angle bud points
-  data.d = 40;
+  data.a1 = 90; // angle bud points
+  data.d1 = 40;
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
   let mg = document.getElementById("selectMaxGen").value;
@@ -808,36 +813,146 @@ function fIslands() {
 
   // NOTE: TB version has screen y direction reversed from LC and here
 
-  // NOTE: I had to adjst tFac and data.d values to get the four segments
+  // NOTE: I had to adjst tFac and data.d1 values to get the four segments
   //       to match up at corners of the square...
 
   // copy initial bud specifications to newGen array
   newBud = 0;
   data['newGen'][0][newBud] = data.x1;
   data['newGen'][1][newBud] = data.y1;
-  data['newGen'][2][newBud] = data.a;
-  data['newGen'][3][newBud] = data.d;
+  data['newGen'][2][newBud] = data.a1;
+  data['newGen'][3][newBud] = data.d1;
   data['newGen'][4][newBud] = data.budType;
 
   newBud = 1;
   data['newGen'][0][newBud] = data.x1;
-  data['newGen'][1][newBud] = data.y1 - tFac*data.d;
-  data['newGen'][2][newBud] = 2 * data.a;
-  data['newGen'][3][newBud] = data.d;
+  data['newGen'][1][newBud] = data.y1 - tFac*data.d1;
+  data['newGen'][2][newBud] = 2 * data.a1;
+  data['newGen'][3][newBud] = data.d1;
   data['newGen'][4][newBud] = data.budType;
 
   newBud = 2;
-  data['newGen'][0][newBud] = data.x1 - tFac*data.d;
-  data['newGen'][1][newBud] = data.y1 - tFac*data.d;
-  data['newGen'][2][newBud] = 3 * data.a;
-  data['newGen'][3][newBud] = data.d;
+  data['newGen'][0][newBud] = data.x1 - tFac*data.d1;
+  data['newGen'][1][newBud] = data.y1 - tFac*data.d1;
+  data['newGen'][2][newBud] = 3 * data.a1;
+  data['newGen'][3][newBud] = data.d1;
   data['newGen'][4][newBud] = data.budType;
 
   newBud = 3;
-  data['newGen'][0][newBud] = data.x1 - tFac*data.d;
+  data['newGen'][0][newBud] = data.x1 - tFac*data.d1;
   data['newGen'][1][newBud] = data.y1;
   data['newGen'][2][newBud] = 0;
-  data['newGen'][3][newBud] = data.d;
+  data['newGen'][3][newBud] = data.d1;
   data['newGen'][4][newBud] = data.budType;
 
 } // END OF function fIslands
+
+function fCustomGene() {
+
+  console.log('enter fCustomGene');
+
+  // specify initial bud
+  data.x1 = 300;
+  data.y1 = 300;
+  data.a1 = 0; // angle bud points
+  data.d1 = 20; // length of first shoot
+  data.budType = 2; // major (B) = 2, minor (b) = 1
+
+  let mg = document.getElementById("selectMaxGen").value;
+  if (mg == 'select') {
+    data.maxGen = 3;
+    document.getElementById("selectMaxGen").value = data.maxGen;
+  }
+
+  data.gravSwitch = 0; // off = 0, on = 1
+
+  data.color = 'red';
+  data.width = '2px';
+
+  // specify gene
+  data['gene'][0] = 45;
+  data['gene'][1] = 0.8;
+  data['gene'][2] = 0.4;
+  let temp = 'F+F[-F]+FB';
+  fFinishGene(temp); // updates data['gene']
+
+  document.getElementById('input_custom_gene').value = data['gene'];
+  document.getElementById('field_gene').value = data['gene'];
+
+  let tcheck = document.getElementById('input_custom_gene').value;
+  if (tcheck == data['gene']) {
+    console.log('fCustomGene, tcheck EQUIV data gene');
+  } else {
+    console.log('fCustomGene, tcheck NOT equiv data gene');
+  }
+
+  // copy initial bud specifications to newGen array
+   let newBud = 0;
+   data['newGen'][0][newBud] = data.x1;
+   data['newGen'][1][newBud] = data.y1;
+   data['newGen'][2][newBud] = data.a1;
+   data['newGen'][3][newBud] = data.d1;
+   data['newGen'][4][newBud] = data.budType;
+
+   console.log('leave fCustomGene');
+   console.log('data x1 = ' + data.x1);
+   console.log('data y1 = ' + data.y1);
+   console.log('data a = ' + data.a1);
+   console.log('data d = ' + data.d1);
+
+} // END OF function fCustomGene
+
+function fCustomGeneTest() {
+
+  console.log('enter fCustomGeneTest');
+
+  // specify initial bud
+  data.x1 = 300;
+  data.y1 = 300;
+  data.a1 = 0; // angle bud points
+  data.d1 = 20; // length of first shoot
+  data.budType = 2; // major (B) = 2, minor (b) = 1
+
+  let mg = document.getElementById("selectMaxGen").value;
+  if (mg == 'select') {
+    data.maxGen = 3;
+    document.getElementById("selectMaxGen").value = data.maxGen;
+  }
+
+  data.gravSwitch = 0; // off = 0, on = 1
+
+  data.color = 'red';
+  data.width = '2px';
+
+  // specify gene
+  data['gene'][0] = 45;
+  data['gene'][1] = 0.8;
+  data['gene'][2] = 0.4;
+  let temp = 'F+F[-F]+FB';
+  fFinishGene(temp); // updates data['gene']
+
+  document.getElementById('input_custom_gene').value = data['gene'];
+  document.getElementById('field_gene').value = data['gene'];
+
+  let tcheck = document.getElementById('input_custom_gene').value;
+  if (tcheck == data['gene']) {
+    console.log('fCustomGeneTest, tcheck EQUIV data gene');
+  } else {
+    console.log('fCustomGeneTest, tcheck NOT equiv data gene');
+  }
+
+  // copy initial bud specifications to newGen array
+   let newBud = 0;
+   data['newGen'][0][newBud] = data.x1;
+   data['newGen'][1][newBud] = data.y1;
+   data['newGen'][2][newBud] = data.a1;
+   data['newGen'][3][newBud] = data.d1;
+   data['newGen'][4][newBud] = data.budType;
+
+   console.log('leave fCustomGeneTest');
+   console.log('data x1 = ' + data.x1);
+   console.log('data y1 = ' + data.y1);
+   console.log('data a = ' + data.a1);
+   console.log('data d = ' + data.d1);
+
+} // END OF function fCustomGeneTest

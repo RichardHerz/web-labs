@@ -54,18 +54,19 @@
       The Blind Watchmaker.
     </p>
     <p>
+      Select a creature to get started.
+      When first selected, creatures are grown with the recommended number of
+      generations. You may then reduce the number to see how growth
+      occurs, <span style="color:red"><b>but be careful about increasing past the recommended value</b></span>.
+      For example, Islands takes an unreasonable amount of time above 2. In that
+      case, reload the page.
+    </p>
+    <p>
       The three numeric values at the start of a gene
       are the angle of rotation (+ and -) and the relative
       size of line segments in the next generation grown from major (B) and minor (b)
       buds. F means to grow a line, J means to jump, ] means to return
       to the location at [.
-    </p>
-    <p>
-      When first selected, creatures are grown with the recommended number of
-      generations. You may then reduce the number to see how growth
-      occurs, but be careful about increasing past the recommended value.
-      For example, Islands takes an unreasonable amount of time above 2. In that
-      case, reload the page.
     </p>
   </div> <!-- end of div div_page_header -->
 
@@ -85,7 +86,7 @@
       </select>
 
       <select id='selectMaxGen' onchange="fSelectMaxGen()">
-        <option value="select">set maxGen</option>
+        <option value="select">set maxGen...</option>
         <option value=1>generations: 1</option>
         <option value=2>generations: 2</option>
         <option value=3>generations: 3</option>
@@ -102,8 +103,8 @@
 
       <div id='div_custom_gene'>
         <p id='field_custom_gene_label'>enter gene:</p>
-        <input type='text' id='input_custom_gene'></input>
-        <input type='button' id='button_custom_draw' value='draw' onclick='fDrawCustomGene()'></input>
+        <input type='text' id='input_custom_gene' onchange='fHandleCustomInputChange()'></input>
+        <input type='button' id='button_custom_draw' value='grow custom' onclick='fDrawCustomGene()'></input>
         <!-- <input type='button' id='button_custom_erase' value='erase' onclick='fEraseSVG()'></input> -->
       </div>
 
@@ -112,7 +113,7 @@
 
     </div> <!-- end of div div_controls -->
 
-    <svg id="svg_zoo" width="614" height="592"></svg>
+    <svg id="svg_zoo" width="619" height="597"></svg>
 
   </div> <!-- end of div div_simFrame-->
   <!-- div_rlnoticetext filled by interfacer.resetThisLab()

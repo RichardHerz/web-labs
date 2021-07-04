@@ -62,7 +62,7 @@ p {
   position: relative;
   left: 5px;
   width: 620px;
-  height: 800px;
+  height: 760px;
   visibility: visible;
   border : solid;
   border-width: 1px;
@@ -76,8 +76,8 @@ p {
 
 #div_controls {
   position: relative;
-  height: 200px;
-  border : dashed;
+  height: 160px;
+  border : solid;
   border-width: 1px;
   border-color : DodgerBlue;
 }
@@ -115,7 +115,7 @@ p {
   width: 79px;
   height: 20px;
   border : dashed;
-  border-width: 1px;
+  border-width: 0px;
   border-color : red;
 }
 
@@ -127,16 +127,16 @@ p {
   height: 20px;
   text-align: left;
   border : dashed;
-  border-width: 1px;
+  border-width: 0px;
   border-color : green;
 }
 
 #button_custom_draw {
   position: absolute;
-  top: -33px;
+  top: -31px;
   left: 300px;
-  width: 69px;
-  height: 23px;
+  width: 90px;
+  height: 20px;
 }
 
 /* #button_custom_erase {
@@ -154,7 +154,7 @@ p {
   width: 600px;
   height: 54px;
   border : dashed;
-  border-width: 1px;
+  border-width: 0px;
   border-color : green;
 }
 
@@ -165,15 +165,15 @@ p {
   width: 600px;
   height: 20px;
   border : dashed;
-  border-width: 1px;
+  border-width: 0px;
   border-color : red;
 }
 
 #svg_zoo {
   position: relative;
-  border : solid;
-  border-width: 3px;
-  border-color : red;
+  border : none;
+  border-width: 1px;
+  border-color : DodgerBlue;
   z-index : 1; // need svg below input fields
 }
 

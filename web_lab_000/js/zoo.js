@@ -201,6 +201,17 @@ function fDrawCustomGene() {
 
   // console.log("data['gene'] = " + data['gene']);
 
+  // need to clear all of data['newGen'] or can get
+  // new growth at left over buds
+  let alen = 5;
+  let tt = data['newGen'][0];
+  let blen = tt.length;
+  for (i = 0; i < alen; i++) {
+    for (j = 0; j < blen; j++) {
+      data['newGen'][i][j] = '';
+    }
+  }
+
   // get initial settings for the one starting bud for this creature
   tgene = document.getElementById('input_custom_settings').value;
   tsplit = tgene.split(",");
@@ -216,6 +227,7 @@ function fDrawCustomGene() {
   data.x1 = data['newGen'][0][newBud];
   data.y1 = data['newGen'][1][newBud];
   data.a1 = data['newGen'][2][newBud];
+  // as in fFinishGene, correct d1 so will be specified length at start
   if (data.budType == 2) {
     data.d1 = data['newGen'][3][newBud]/data.gene[1];
   } else {
@@ -822,8 +834,8 @@ function fCustomGene() {
 
   // specify initial bud
   data.x1 = 300;
-  data.y1 = 300;
-  data.a1 = 0; // angle bud points
+  data.y1 = 400;
+  data.a1 = 90; // angle bud points
   data.d1 = 30; // length of first shoot
   data.budType = 2; // major (B) = 2, minor (b) = 1
 
@@ -835,14 +847,15 @@ function fCustomGene() {
 
   data.gravSwitch = 0; // off = 0, on = 1
 
-  data.color = 'red';
+  data.color = 'green';
   data.width = '2px';
 
   // specify gene
   data['gene'][0] = 45;
   data['gene'][1] = 0.8;
-  data['gene'][2] = 0.4;
-  let temp = 'F+F[-F]+FB';
+  data['gene'][2] = 1.2;
+  // let temp = 'F+F[-F]+FB';
+  let temp = 'F[-Fb][+Fb]';
   fFinishGene(temp); // updates data['gene']
 
   document.getElementById('input_custom_gene').value = data['gene'];

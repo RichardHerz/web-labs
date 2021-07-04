@@ -262,6 +262,11 @@ function fSelectMaxGen() {
 
   // console.log('fSelectMaxGen, data.maxGen = ' + data.maxGen);
 
+  temp = document.getElementById("selectZoo").value;
+  if (temp == 'Custom') {
+    return;
+  }
+
   fSelectZooContinue();
 
   // console.log('fSelectMaxGen, after fSelectZoo, data.maxGen = ' + data.maxGen);
@@ -807,7 +812,7 @@ function fCustomGene() {
 
   // console.log('enter fCustomGene');
 
-  // PROVIDE THIS AS EXAMPLE TO USER 
+  // PROVIDE THIS AS EXAMPLE TO USER
 
   // specify initial bud
   data.x1 = 300;

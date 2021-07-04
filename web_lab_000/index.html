@@ -62,7 +62,7 @@
     </p>
     <p>
       When first selected, creatures are grown with the recommended number of
-      generations. You may then change the number to see how growth
+      generations. You may then reduce the number to see how growth
       occurs, but be careful about increasing past the recommended value.
       For example, Islands takes an unreasonable amount of time above 2. In that
       case, reload the page.
@@ -71,38 +71,48 @@
 
   <div id="div_simFrame">
 
-    <select id='selectZoo' onchange="fSelectZooStart()">
-      <!-- Bracken, Gasket, Dragon, Koch6, Koch8, Islands, TestDNA -->
-      <option value="select">select creature...</option>
-      <option value="Dragon">Dragon</option>
-      <option value="Bracken">Bracken</option>
-      <option value="Gasket">Sierpinski Gasket</option>
-      <option value="Koch6">Koch snowflake</option>
-      <option value="Islands">Islands</option>
-      <option value="Test">Test DNA</option>
-    </select>
+    <div id="div_controls">
 
-    <p id='field_gene'>&nbsp;</p>
-    <p id='field_status'>&nbsp;</p>
+      <select id='selectZoo' onchange="fSelectZooStart()">
+        <!-- Bracken, Gasket, Dragon, Koch6, Koch8, Islands, TestDNA -->
+        <option value="select">select creature...</option>
+        <option value="Dragon">Dragon</option>
+        <option value="Bracken">Bracken</option>
+        <option value="Gasket">Sierpinski Gasket</option>
+        <option value="Koch6">Koch snowflake</option>
+        <option value="Islands">Islands</option>
+        <option value="Custom">Custom gene</option>
+      </select>
 
-    <select id='selectMaxGen' onchange="fSelectMaxGen()">
-      <option value="select">set maxGen</option>
-      <option value=1>generations: 1</option>
-      <option value=2>generations: 2</option>
-      <option value=3>generations: 3</option>
-      <option value=4>generations: 4</option>
-      <option value=5>generations: 5</option>
-      <option value=6>generations: 6</option>
-      <option value=7>generations: 7</option>
-      <option value=8>generations: 8</option>
-      <option value=9>generations: 9</option>
-      <option value=10>generations: 10</option>
-      <option value=11>generations: 11</option>
-      <option value=12>generations: 12</option>
-    </select>
+      <select id='selectMaxGen' onchange="fSelectMaxGen()">
+        <option value="select">set maxGen</option>
+        <option value=1>generations: 1</option>
+        <option value=2>generations: 2</option>
+        <option value=3>generations: 3</option>
+        <option value=4>generations: 4</option>
+        <option value=5>generations: 5</option>
+        <option value=6>generations: 6</option>
+        <option value=7>generations: 7</option>
+        <option value=8>generations: 8</option>
+        <option value=9>generations: 9</option>
+        <option value=10>generations: 10</option>
+        <option value=11>generations: 11</option>
+        <option value=12>generations: 12</option>
+      </select>
 
+      <div id='div_custom_gene'>
+        <p id='field_custom_gene_label'>enter gene:</p>
+        <input type='text' id='input_custom_gene'></input>
+        <input type='button' id='button_custom_draw' value='draw' onclick='fDrawCustomGene()'></input>
+        <!-- <input type='button' id='button_custom_erase' value='erase' onclick='fEraseSVG()'></input> -->
+      </div>
 
-    <svg id="svg_zoo" width="600" height="610"></svg>
+      <p id='field_gene'>&nbsp;</p>
+      <p id='field_status'>&nbsp;</p>
+
+    </div> <!-- end of div div_controls -->
+
+    <svg id="svg_zoo" width="614" height="592"></svg>
 
   </div> <!-- end of div div_simFrame-->
   <!-- div_rlnoticetext filled by interfacer.resetThisLab()

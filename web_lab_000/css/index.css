@@ -1,13 +1,68 @@
+sup {
+  font-size: smaller;
+}
+
+sub {
+  font-size: smaller;
+}
+
+input {
+  display: block;
+  position: absolute;
+  text-align: center;
+}
+
+input, button {
+  text-align: center;
+}
+
+/* do NOT write general style for div since interferes
+    with plotting by jquery.flot.js */
+
+p {
+  display: block;
+  text-align: left;
+}
+
+label {
+  display: block;
+  position: absolute;
+}
+
+img {
+  display: block;
+  position: absolute;
+}
+
+select {
+  display: block;
+  position: absolute;
+}
+
+canvas {
+  display: block;
+  position: absolute;
+  text-align: left;
+}
+
+::-ms-tooltip {
+  display: none;
+}
+
+#div_page_header {
+  /* background-color: lightYellow; */
+}
+
 p {
   word-wrap: break-word;
-  }
+}
 
-  #div_simFrame {
+#div_simFrame {
   display: block;
   position: relative;
   left: 5px;
   width: 620px;
-  height: 650px;
+  height: 800px;
   visibility: visible;
   border : solid;
   border-width: 1px;
@@ -19,38 +74,107 @@ p {
   LCshowBorder: false;
 }
 
-#selectZoo {
+#div_controls {
   position: relative;
-  top: 10px;
-  left: 10px;
+  height: 200px;
+  border : dashed;
+  border-width: 1px;
+  border-color : DodgerBlue;
 }
 
-#field_gene {
-  position: relative;
+#selectZoo {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 140px;
+}
+
+#selectMaxGen {
+  position: absolute;
+  top: 10px;
+  left: 160px;
+  width: 140px;
+}
+
+#div_custom_gene {
+  visibility: hidden;
+  position: absolute;
+  top: 40px;
   left: 10px;
   width: 600px;
-  border : dashed;
-  border-width: 0px;
+  height: 30px;
+  border : solid;
+  border-width: 1px;
   border-color : red;
 }
 
-#field_status {
-  position: relative;
-  left: 10px;
+#field_custom_gene_label {
+  position: absolute;
+  top: -12px;
+  left: 0px;
+  width: 79px;
+  height: 20px;
   border : dashed;
-  border-width: 0px;
-  border-color : DodgerBlue;
+  border-width: 1px;
+  border-color : red;
+}
+
+#input_custom_gene {
+  position: absolute;
+  top: 4px;
+  left: 80px;
+  width: 516px;
+  height: 20px;
+  text-align: left;
+  border : dashed;
+  border-width: 1px;
+  border-color : green;
+}
+
+#button_custom_draw {
+  position: absolute;
+  top: -33px;
+  left: 300px;
+  width: 69px;
+  height: 23px;
+}
+
+/* #button_custom_erase {
+  position: absolute;
+  top: -33px;
+  left: 380px;
+  width: 69px;
+  height: 23px;
+} */
+
+#field_gene {
+  position: absolute;
+  top: 60px;
+  left: 10px;
+  width: 600px;
+  height: 54px;
+  border : dashed;
+  border-width: 1px;
+  border-color : green;
+}
+
+#field_status {
+  position: absolute;
+  left: 10px;
+  top: 120px;
+  width: 600px;
+  height: 20px;
+  border : dashed;
+  border-width: 1px;
+  border-color : red;
 }
 
 #svg_zoo {
-  /* set absolute position so doesn't shift up when  */
-  /* notice field clears */
-  position: absolute;
-  top: 120px;
-  border : none;
-  border-width: 1px;
-  border-color : DodgerBlue;
-  z-index : -1; // need svg below input fields
+  position: relative;
+  border : solid;
+  border-width: 3px;
+  border-color : red;
+  z-index : 1; // need svg below input fields
 }
 
 /* @media for responsive design                    */

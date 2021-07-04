@@ -133,6 +133,7 @@ function fSelectZooContinue() {
   // need to clear gene field above switch or a long gene (islands)
   // will only have first line replaced by a short gene (gasket)
   document.getElementById('field_gene').innerHTML = '';
+  document.getElementById('field_gene').style.visibility = 'visible';
 
   switch (zoo) {
     case 'select':
@@ -159,8 +160,7 @@ function fSelectZooContinue() {
     case 'Custom':
       document.getElementById("div_custom_gene").style.visibility = 'visible';
       document.getElementById('field_gene').innerHTML = '';
-      let ttext = 'edit example above, 3 numbers first, all separated by commas';
-      document.getElementById('field_gene').innerHTML = ttext;
+      document.getElementById('field_gene').style.visibility = 'hidden';
       fCustomGene();
       break;
     default:
@@ -190,16 +190,7 @@ function fDrawCustomGene() {
   let tgene = document.getElementById('input_custom_gene').value;
   // get rid of the commas
   let tsplit = tgene.split(",");
-
-  // console.log('tgene = ' + tgene);
-  // console.log('tsplit = ' + tsplit);
-
-  // for (i = 0; i < tsplit.length; i++) {
-  //   // console.log('i, tsplit[i] = ' + i + ', ' + tsplit[i]);
-  // }
-
   data['gene'] = new Array();
-
   for (i = 0; i < tsplit.length; i++) {
     if (i < 3) {
       data['gene'][i] = Number(tsplit[i]);
@@ -210,15 +201,28 @@ function fDrawCustomGene() {
 
   // console.log("data['gene'] = " + data['gene']);
 
-  // need to copy here initial bud specifications to newGen array
-   let newBud = 0;
-   data['newGen'][0][newBud] = data.x1;
-   data['newGen'][1][newBud] = data.y1;
-   data['newGen'][2][newBud] = data.a1;
-   data['newGen'][3][newBud] = data.d1;
-   data['newGen'][4][newBud] = data.budType;
+  // get initial settings for the one starting bud for this creature
+  tgene = document.getElementById('input_custom_settings').value;
+  tsplit = tgene.split(",");
+  let tlen = 4; // tsplit.length; // should be 4
+  let newBud = 0; // custom creature can have only one starting bud
+  for (i = 0; i < tlen; i++) {
+      data['newGen'][i][newBud] = Number(tsplit[i]);
+  }
+  data['newGen'][4][newBud] = 2;
+  // note: non-custom can have more than one starting bud, each of budType B or b
 
-  document.getElementById('field_gene').innerHTML = "gene: " + data['gene'];
+  // copy initial bud specifications
+  data.x1 = data['newGen'][0][newBud];
+  data.y1 = data['newGen'][1][newBud];
+  data.a1 = data['newGen'][2][newBud];
+  if (data.budType == 2) {
+    data.d1 = data['newGen'][3][newBud]/data.gene[1];
+  } else {
+    data.d1 = data['newGen'][3][newBud]/data.gene[2];
+  }
+  data.budType = data['newGen'][4][newBud];
+
   document.getElementById('field_status').innerHTML = '';
 
   window.document.body.style.cursor = 'wait'; // sets the cursor shape to wait
@@ -337,7 +341,8 @@ function fGrow(thisGen) {
     let tY = data['lastGen'][1][oldBud];
     let tA = data['lastGen'][2][oldBud]; // angle
     let tD = data['lastGen'][3][oldBud]; // length parent shoot
-    let tBudType = data['lastGen'][4][oldBud]; // xxx use or need data.budType?
+    // note: can have more than one starting bud, each of budType B or b, e.g., Islands
+    let tBudType = data['lastGen'][4][oldBud];
 
     let tArot = data.gene[0];
     let tMajorChange = data.gene[1];
@@ -525,6 +530,7 @@ function fFinishGene(geneTail) {
 
   // reset d to increase d so 1st line drawn equal to d value set above
   // since scale factor will be applied 1st time d used
+  // note: can have more than one starting bud, each of budType B or b, e.g., Islands
 
   if (data.budType == 2) {
     data.d1 = data.d1/data.gene[1];
@@ -767,7 +773,7 @@ function fIslands() {
 
   fFinishGene(temp);
 
-  // THIS LAB ALLOWS UP TO FOUR STARTING LOCATION
+  // THIS LAB ALLOWS UP TO FOUR STARTING LOCATION BUDS
 
   let newBud;
   let tFac = 0.9; // << NOTE: this differs greatly from other versions
@@ -840,22 +846,18 @@ function fCustomGene() {
   fFinishGene(temp); // updates data['gene']
 
   document.getElementById('input_custom_gene').value = data['gene'];
-  document.getElementById('field_gene').value = data['gene'];
 
-  let tcheck = document.getElementById('input_custom_gene').value;
-  if (tcheck == data['gene']) {
-    // console.log('fCustomGene, tcheck EQUIV data gene');
+  // need to reverse change in d1 from fFinishGene because
+  // that correction will be applied when input custom settings
+  if (data.budType == 2) {
+    data.d1 = data.d1 *data.gene[1];
   } else {
-    // console.log('fCustomGene, tcheck NOT equiv data gene');
+    data.d1 = data.d1 * data.gene[2];
   }
 
-  // copy initial bud specifications to newGen array
-   let newBud = 0;
-   data['newGen'][0][newBud] = data.x1;
-   data['newGen'][1][newBud] = data.y1;
-   data['newGen'][2][newBud] = data.a1;
-   data['newGen'][3][newBud] = data.d1;
-   data['newGen'][4][newBud] = data.budType;
+   // copy initial bud specifications to custom input
+   temp = data.x1 + ',' + data.y1 + ',' + data.a1 + ',' + data.d1;
+   document.getElementById('input_custom_settings').value = temp;
 
    // console.log('leave fCustomGene');
    // console.log('data x1 = ' + data.x1);

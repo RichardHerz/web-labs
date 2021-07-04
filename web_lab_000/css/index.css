@@ -102,18 +102,19 @@ p {
   top: 40px;
   left: 10px;
   width: 600px;
-  height: 30px;
+  height: 62px;
   border : solid;
   border-width: 1px;
-  border-color : red;
+  border-color : DodgerBlue;
 }
 
 #field_custom_gene_label {
   position: absolute;
-  top: -12px;
+  top: -9px;
   left: 0px;
-  width: 79px;
+  width: 80px;
   height: 20px;
+  margin-left: 2px;
   border : dashed;
   border-width: 0px;
   border-color : red;
@@ -122,9 +123,49 @@ p {
 #input_custom_gene {
   position: absolute;
   top: 4px;
-  left: 80px;
-  width: 516px;
+  left: 85px;
+  width: 508px;
   height: 20px;
+  margin-left: 2px;
+  text-align: left;
+  border : solid;
+  border-width: 1px;
+  border-color : green;
+}
+
+#field_custom_settings_label {
+  position: absolute;
+  top: 20px;
+  left: 0px;
+  width: 220px;
+  height: 20px;
+  margin-left: 2px;
+  text-align: left;
+  border : dashed;
+  border-width: 0px;
+  border-color : green;
+}
+
+#input_custom_settings {
+  position: absolute;
+  top: 36px;
+  left: 223px;
+  width: 300px;
+  height: 20px;
+  text-align: left;
+  margin-left: 2px;
+  border : solid;
+  border-width: 1px;
+  border-color : green;
+}
+
+#field_custom_instructions {
+  position: absolute;
+  top: 48px;
+  left: 0px;
+  width: 600px;
+  height: 20px;
+  margin-left: 2px;
   text-align: left;
   border : dashed;
   border-width: 0px;

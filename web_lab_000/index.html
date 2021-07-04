@@ -54,7 +54,7 @@
       The Blind Watchmaker.
     </p>
     <p>
-      <span style="color:blue">Select a creature to get started</span>. 
+      <span style="color:blue">Select a creature to get started</span>.
       When first selected, creatures are grown with the recommended number of
       generations. You may then reduce the number to see how growth
       occurs, <span style="color:red"><b>but be careful about increasing past
@@ -106,7 +106,9 @@
         <p id='field_custom_gene_label'>enter gene:</p>
         <input type='text' id='input_custom_gene' onchange='fHandleCustomInputChange()'></input>
         <input type='button' id='button_custom_draw' value='grow custom' onclick='fDrawCustomGene()'></input>
-        <!-- <input type='button' id='button_custom_erase' value='erase' onclick='fEraseSVG()'></input> -->
+        <input type='text' id='input_custom_settings' onchange='fHandleCustomInputChange()'></input>
+        <p id='field_custom_settings_label'>enter starting x, y, angle, length:</p>
+        <p id='field_custom_instructions'>edit gene (3 numbers first) & starting values (larger y is down), values separated by commas</p>
       </div>
 
       <p id='field_gene'>&nbsp;</p>

@@ -184,50 +184,65 @@ function fDrawCustomGene() {
   // xxx currently, the starting location info is set only
   // xxx by fCustomGene
 
-  console.log('enter fDrawCustomGene');
-  console.log('data x1 = ' + data.x1);
-  console.log('data y1 = ' + data.y1);
-  console.log('data a = ' + data.a1);
-  console.log('data d = ' + data.d1);
+  fEraseSVG();
+
+  // // arrays data['newGen'] and data['lastGen'] contain bud info (loc, angle, type...)
+  // // reverse indexes from TB and LiveCode to this >> data['newGen'][0-4][bud#]
+  // // so don't have to specify number buds here, which is different for different
+  // // genes and increase in number each generation
+  // let alen = 5;
+  // for (i = 0; i < alen; i++) {
+  //   data['newGen'][i] = []; // add index
+  // }
+  // for (i = 0; i < alen; i++) {
+  //   data['lastGen'][i] = []; // add index
+  // }
+
+  // for (i = 0; i < 5; i++) {
+  //   for (j in data['newGen'][i]) {
+  //     data['newGen'][i][j] = '';
+  //   }
+  // }
 
   // check reading gene placed by fCustomGene
   let tcheck = document.getElementById('input_custom_gene').value;
-  if (tcheck == data['gene']) {
-    console.log('fDrawCustomGene, tcheck EQUIV data gene');
-  } else {
-    console.log('fDrawCustomGene, tcheck NOT equiv data gene');
+
+  // get rid of the commas
+  let tsplit = tcheck.split(",");
+
+  console.log('tcheck = ' + tcheck);
+  console.log('tsplit = ' + tsplit);
+
+  for (i=0; i<tsplit.length; i++) {
+    console.log('i, tsplit[i] = ' + i + ', ' + tsplit[i]);
   }
 
-  // xxx when use data['gene'] directly, get good image,
-  // xxx but when set data['gene'] to input, get bad image, even
-  // xxx when IF above is EQUIV...
-  // xxx so something different, maybe in how array is compared in the
-  // xxx IF... will have to get input then process to make sure in correct
-  // xxx form in memory...
+  data['gene'] = new Array();
 
-  // data['gene'] = document.getElementById('input_custom_gene').value;
-
-  console.log('OVERRIDE custom gene');
-  data['gene'] = [45,0.8,0.4,'F','+','F','[','-','F',']','+','F','B'];
-  tcheck = '45,0.8,0.4,F,+,F,[,-,F,],+,F,B';
-  if (tcheck == data['gene']) {
-    console.log('fDrawCustomGene, OVERRIDE tcheck EQUIV data gene');
-  } else {
-    console.log('fDrawCustomGene, OVERRIDE tcheck NOT equiv data gene');
+  for (i=0; i<tsplit.length; i++) {
+    if (i<3) {
+      data['gene'][i] = Number(tsplit[i]);
+    } else {
+      data['gene'][i] = tsplit[i];
+    }
+    console.log('i, tsplit[i] = ' + i + ', ' + tsplit[i]);
+    console.log("i, data['gene'][i] = " + i + ", " + data['gene'][i] );
   }
 
-  // // lines above say tcheck equiv but then if put that into gene
-  // // then get bad result
-  // console.log('USE EQUIV OVERRIDE');
-  // data['gene'] = '45,0.8,0.4,F,+,F,[,-,F,],+,F,B';
+  console.log("data['gene'] = " + data['gene']);
 
-  // // below doesn't work
-  // console.log('check .split()');
-  // tsplit = tcheck.split(",");
-  // data['gene'] = tsplit;
+  // specify initial bud
+  data.x1 = 300;
+  data.y1 = 300;
+  data.a1 = 0; // angle bud points
+  data.d1 = 20; // length of first shoot
+  data.budType = 2; // major (B) = 2, minor (b) = 1
 
-  // >> GOING TO HAVE TO PROCESS STRING ENTERED BY USER CHAR-BY-CHAR
-  // >> IN MANNER SIMILAR TO fFinishGene
+  if (data.budType == 2) {
+    data.d1 = data.d1/data.gene[1];
+  } else {
+    data.d1 = data.d1/data.gene[2];
+  }
 
   console.log('CUSTOM GENE = ' + data['gene']);
   document.getElementById('field_gene').innerHTML = "gene: " + data['gene'];

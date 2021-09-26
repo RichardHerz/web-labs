@@ -1,0 +1,76 @@
+EXAMPLE OF DEFINING A UNIT AS A JAVASCRIPT OBJECT  
+
+=====================================================  
+
+WEB LAB 8 
+
+--------------------------------------------------  
+
+FILE puAdiabaticPackedBedPFR.js 
+
+let puAdiabaticPackedBedPFR = {
+  unitIndex : 0, // index of this unit as child in processUnits parent object
+  // unitIndex used in this object's updateUIparams() method
+  name : 'Adiabatic Packed Bed PFR',
+
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
+
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
+
+FILE process_units.js 
+
+let processUnits = new Object();
+// assign process unit objects to this object
+// as indexed child objects in order to allow object controller
+// to access them in a repeat with numeric index
+// the numeric order of process units does not affect the simulation
+// contents must be only the process units as child objects
+// child objects optionally can be defined in separate script files, which
+// makes them easier to edit,
+// then inserted into processUnits, e.g.,
+// USING CONSTRUCTOR FUNCTION OR CLASS DEFINITION...
+//   processUnits[0] = new puHeatExchanger(0); // [] and () index # must match
+// OR USING OBJECT
+//   processUnits[0] = puHeatExchanger; // puHeatExchanger is an object
+//   processUnits[0].unitIndex = 0; // assign unitIndex to match processUnits index
+// then object cleared for garbage collection, e.g.,
+//   puHeatExchanger = null; // puHeatExchanger is an object
+// WARNING: if reorder unit index numbers, then need to edit         << SEE NOTE BELOW << 
+//   those numbers in each unit's inputs array
+
+processUnits[0] = puAdiabaticPackedBedPFR;
+processUnits[0].unitIndex = 0;
+processUnits[1] = puCounterCurrentHeatExchanger;
+processUnits[1].unitIndex = 1;
+
+// clear separate process units for garbage collection
+puAdiabaticPackedBedPFR = null;
+puCounterCurrentHeatExchanger = null;
+
+=====================================================  
+
+SEE WARNING at bottom process_units.js 
+
+The "private inputs array" means definition of the input connections to the unit, e.g., from WEB LAB 1:
+
+function puWaterTank(pUnitIndex) {
+  // constructor function for process unit
+  //
+  // for other info shared with other units and objects, see public properties
+  // and search for controller. & interfacer. & plotter. & simParams. & plotInfo
+
+  // *******************************************
+  //  define INPUT CONNECTIONS from other units
+  // *******************************************
+
+  // define this unit's variables that are to receive input values from other units
+  let flowRate = 0; // input flow rate from feed process unit
+  let command = 0; // input command from controller process unit
+
+  this.updateInputs = function() {
+    flowRate = processUnits[0].flowRate;
+    command = processUnits[2].command;
+  }

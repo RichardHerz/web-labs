@@ -37,7 +37,7 @@ let processUnits = new Object();
 // WARNING: if reorder unit index numbers, then need to edit
 //   those numbers in each unit's inputs array
 
-processUnits[0] = puAdiabaticPackedBedPFR;
+processUnits[0] = Object.create(puAdiabaticPackedBedPFR);
 processUnits[0].unitIndex = 0;
 processUnits[1] = puCounterCurrentHeatExchanger;
 processUnits[1].unitIndex = 1;

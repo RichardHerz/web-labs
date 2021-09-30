@@ -19,10 +19,11 @@ let simParams = {
 
   title : 'Batch Reactor, isothermal, nth order reaction', // title of simulation
 
-  // valid values for labType are 'Dynamic' (default), or any other value
-  // if not specified or set to '', 0, or false, then gets set to 'Dynamic' in controller
-  // if then set to 'Dynamic', then controller.updateProcess is called repeatedly on Run
+  // valid values for labType are 'Dynamic' or any other value
+  // if set to 'Dynamic', then controller.updateProcess is called repeatedly on Run
+  // by interacer.runThisLab
   // if is set to any other value, controller.updateProcess is called once on Run
+  // by interacer.runThisLab
   labType : 'Static',
 
   runButtonID : "button_runButton", // for functions to run, reset, copy data

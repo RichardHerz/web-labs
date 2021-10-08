@@ -32,6 +32,7 @@ html input[type="button"] {
   color: black;
   border-color: black;
   border-width: 1px;
+  border-radius: 2px;
   border-style: outset;
   height: 23px;
 }

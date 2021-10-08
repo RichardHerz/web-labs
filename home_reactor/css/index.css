@@ -98,7 +98,8 @@ canvas {
   width: 82px;
   height: 28px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
+  border-radius: 2px;
   border-style: outset;
 }
 
@@ -109,7 +110,8 @@ canvas {
   width: 82px;
   height: 28px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
+  border-radius: 2px;
   border-style: outset;
 }
 
@@ -120,7 +122,8 @@ canvas {
   width: 82px;
   height: 33px;
   visibility: visible;
-  border-width: 2px;
+  border-width: 1px;
+  border-radius: 2px;
   border-style: outset;
 }
 

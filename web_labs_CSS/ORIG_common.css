@@ -24,13 +24,9 @@ html input[disabled] {
 }
 
 /* set basic style of buttons */
-/* https://www.w3schools.com/csS/css3_buttons.asp */
 
 html input[type="button"] {
   background-color: #ccccff;
-  /* color property is color of text inside button */
-  color: black;
-  border-color: black;
   border-width: 1px;
   border-style: outset;
   height: 23px;

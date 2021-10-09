@@ -394,6 +394,11 @@ border-style: solid;
   top: 230px;
   width: 90px;
   height: 20px;
+  background-color: #ddddff;
+  /* color property is color of text inside button */
+  color: black;
+  border-color: black;
+  border-width: 1px;
 }
 
 #selectYvar {
@@ -402,6 +407,11 @@ border-style: solid;
   left: 0px;
   top: 98px;
   width: 90px;
+  background-color: #ddddff;
+  /* color property is color of text inside button */
+  color: black;
+  border-color: black;
+  border-width: 1px;
 }
 
 #div_plot_X_label_cover {

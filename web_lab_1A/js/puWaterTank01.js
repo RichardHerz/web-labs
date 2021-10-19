@@ -1,4 +1,4 @@
-function puWaterTank(pUnitIndex) {
+function puWaterTank01(pUnitIndex) {
   // constructor function for process unit
   //
   // for other info shared with other units and objects, see public properties
@@ -9,17 +9,17 @@ function puWaterTank(pUnitIndex) {
   // *******************************************
 
   // define this unit's variables that are to receive input values from other units
-  let flowRate = 0; // input flow rate from feed process unit
+  let flowRateIN = 0; // input flow rate from feed process unit
 
   this.updateInputs = function() {
-    flowRate = processUnits[0].flowRate;
+    flowRateIN = processUnits[0].flowRate;
   }
 
   // *******************************************
   //  define OUTPUT CONNECTIONS to other units
   // *******************************************
 
-  this.level = 0; // output water level in this tank
+  this.flowRateOUT = 0; // output water flow rate from this tank
 
   // *******************************************
   //        define PRIVATE properties
@@ -29,9 +29,9 @@ function puWaterTank(pUnitIndex) {
   // unitIndex may be used in this unit's updateUIparams method
 
   // SPECIAL - DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
-  const theDisplayWaterDivID = "#div_water";
+  const theDisplayWaterDivID = "#div_water_1";
   // theDisplayWaterDivBtm = SUM orig CSS file specs of top+height pixels for water div
-  const theDisplayWaterDivBtm = 268; // PIXELS, bottom of html water div IN PIXELS
+  const theDisplayWaterDivBtm = 232; // PIXELS, bottom of html water div IN PIXELS
 
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
@@ -42,7 +42,7 @@ function puWaterTank(pUnitIndex) {
   //         define PUBLIC properties
   // *******************************************
 
-  this.name = 'process unit Water Tank'; // used by interfacer.copyData()
+  this.name = 'process unit Water Tank 1'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
   // define arrays to hold info for variables
@@ -100,7 +100,7 @@ function puWaterTank(pUnitIndex) {
 
     // initialize strip chart data array
     // initPlotData(numStripVars,numStripPts)
-    let numStripVars = 1; // flowRate
+    let numStripVars = 1; // level01
     let numStripPts = plotInfo[0]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts);
 
@@ -142,8 +142,8 @@ function puWaterTank(pUnitIndex) {
     // increasing command to valve results in decreasing valve coefficient
 
     const Ax = 10; // cross sectional area of tank
-    const maxValveCoeff = 3;
-    let newCoef = maxValveCoeff*(1 - command);
+    const maxValveCoeff = 2; // 0-3
+    let newCoef = maxValveCoeff;
 
     if (newCoef > maxValveCoeff) {
       newCoef = maxValveCoeff;
@@ -152,8 +152,9 @@ function puWaterTank(pUnitIndex) {
       newCoef = 0;
     }
 
-    let exprValue = (this.level +
-      unitTimeStep / Ax * (flowRate - newCoef * Math.pow(this.level,0.5)));
+    this.flowRateOUT = flowRateIN - newCoef * Math.pow(this.level,0.5);
+
+    let exprValue = (this.level + unitTimeStep * this.flowRateOUT / Ax);
 
     // make sure within limits
     // see puWaterController function updateInputs, maxSPvalue, minSPvalue
@@ -233,14 +234,12 @@ function puWaterTank(pUnitIndex) {
     // figures to left decimal point so toFixed() does not return string "0.###"
     // WARNING: too many sig figs will prevent detecting steady state
     //
-    let rc = 1.0e3 * flowRate;
-    let rt = 1.0e3 * command;
+    let rc = 1.0e3 * flowRateIN;
     let lt = 1.0e3 * this.level;
     rc = rc.toFixed(0); // strings
-    rt = rt.toFixed(0);
     lt = lt.toFixed(0);
     // concatenate strings
-    let newCheckSum = rc +'.'+ rt +'.'+ lt;
+    let newCheckSum = rc +'.'+ lt;
     //
     let oldSScheckSum = ssCheckSum;
     let ssFlag = false;
@@ -250,4 +249,4 @@ function puWaterTank(pUnitIndex) {
     return ssFlag;
   } // END checkForSteadyState method
 
-} // END of puWaterTank
+} // END of puWaterTank01

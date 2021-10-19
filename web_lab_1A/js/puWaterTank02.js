@@ -1,4 +1,4 @@
-function puWaterTank(pUnitIndex) {
+function puWaterTank02(pUnitIndex) {
   // constructor function for process unit
   //
   // for other info shared with other units and objects, see public properties
@@ -9,11 +9,11 @@ function puWaterTank(pUnitIndex) {
   // *******************************************
 
   // define this unit's variables that are to receive input values from other units
-  let flowRate = 0; // input flow rate from feed process unit
+  let flowRate = 0; // input flow rate from tank 1
   let command = 0; // input command from controller process unit
 
   this.updateInputs = function() {
-    flowRate = processUnits[0].flowRate;
+    flowRate = processUnits[1].flowRate; // flow rate from tank 1
     command = processUnits[2].command;
   }
 
@@ -31,9 +31,9 @@ function puWaterTank(pUnitIndex) {
   // unitIndex may be used in this unit's updateUIparams method
 
   // SPECIAL - DISPLAY CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS, see updateDisplay below
-  const theDisplayWaterDivID = "#div_water";
+  const theDisplayWaterDivID = "#div_water_2";
   // theDisplayWaterDivBtm = SUM orig CSS file specs of top+height pixels for water div
-  const theDisplayWaterDivBtm = 268; // PIXELS, bottom of html water div IN PIXELS
+  const theDisplayWaterDivBtm = 356; // PIXELS, bottom of html water div IN PIXELS
 
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
@@ -44,7 +44,7 @@ function puWaterTank(pUnitIndex) {
   //         define PUBLIC properties
   // *******************************************
 
-  this.name = 'process unit Water Tank'; // used by interfacer.copyData()
+  this.name = 'process unit Water Tank 2'; // used by interfacer.copyData()
   this.residenceTime = 0; // used by controller.checkForSteadyState()
 
   // define arrays to hold info for variables
@@ -252,4 +252,4 @@ function puWaterTank(pUnitIndex) {
     return ssFlag;
   } // END checkForSteadyState method
 
-} // END of puWaterTank
+} // END of puWaterTank02

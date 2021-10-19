@@ -73,10 +73,10 @@ let plotInfo = {
     plotInfo[pnum]['varYaxis'][vnum] = 'left';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
-    vnum = 1; // 2nd variable
-    plotInfo[pnum]['varUnitIndex'][vnum] = 1; // value is index of unit in processUnits object
+    vnum = 1; // 2nd variable - tank 2 water level
+    plotInfo[pnum]['varUnitIndex'][vnum] = 2; // value is index of unit in processUnits object
     plotInfo[pnum]['var'][vnum] = 0; // value is variable index in plot data array
-    plotInfo[pnum]['varLabel'][vnum] = 'Water Level';
+    plotInfo[pnum]['varLabel'][vnum] = 'Level Tank 2';
     // varDataUnits are dimensional units used in copy data table, along with varLabel
     plotInfo[pnum]['varDataUnits'][vnum] = 'm'; // processUnits[1]['dataUnits'][4]; // 1st var
     // varShow values are 'show' to show on plot and legend,
@@ -88,7 +88,7 @@ let plotInfo = {
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
     vnum = 2; // 3rd variable
-    plotInfo[pnum]['varUnitIndex'][vnum] = 2;
+    plotInfo[pnum]['varUnitIndex'][vnum] = 3;
     plotInfo[pnum]['var'][vnum] = 0;
     plotInfo[pnum]['varLabel'][vnum] = 'Set Point';
     plotInfo[pnum]['varDataUnits'][vnum] = 'm';
@@ -97,7 +97,7 @@ let plotInfo = {
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
     vnum = 3; // 4th variable
-    plotInfo[pnum]['varUnitIndex'][vnum] = 2;
+    plotInfo[pnum]['varUnitIndex'][vnum] = 3;
     plotInfo[pnum]['var'][vnum] = 1;
     plotInfo[pnum]['varLabel'][vnum] = 'Command';
     plotInfo[pnum]['varDataUnits'][vnum] = '0-1';
@@ -105,6 +105,20 @@ let plotInfo = {
     plotInfo[pnum]['varYaxis'][vnum] = 'right';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
+    vnum = 4; // 5th variable - tank 1 water level
+    plotInfo[pnum]['varUnitIndex'][vnum] = 1; // value is index of unit in processUnits object
+    plotInfo[pnum]['var'][vnum] = 0; // value is variable index in plot data array
+    plotInfo[pnum]['varLabel'][vnum] = 'Level Tank 1';
+    // varDataUnits are dimensional units used in copy data table, along with varLabel
+    plotInfo[pnum]['varDataUnits'][vnum] = 'm'; // processUnits[1]['dataUnits'][4]; // 1st var
+    // varShow values are 'show' to show on plot and legend,
+    // 'tabled' to not show on plot nor legend but list in copy data table
+    // and any other value, e.g., 'hide' to not show on plot but do show in legend
+    // varShow value can be changed by javascript if want to show/hide curve with checkbox
+    plotInfo[pnum]['varShow'][vnum] = 'show';
+    plotInfo[pnum]['varYaxis'][vnum] = 'right';
+    plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
+
 
   }, // end initialize method of plotInfo
 

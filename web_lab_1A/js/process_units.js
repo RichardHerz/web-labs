@@ -38,5 +38,6 @@ let processUnits = new Object();
 //   those numbers in each unit's private inputs array
 
 processUnits[0] = new puWaterFeed(0);
-processUnits[1] = new puWaterTank(1);
-processUnits[2] = new puWaterController(2);
+processUnits[1] = new puWaterTank01(1);
+processUnits[2] = new puWaterTank02(2);
+processUnits[3] = new puWaterController(3);

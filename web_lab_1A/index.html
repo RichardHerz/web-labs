@@ -64,11 +64,11 @@
     <!-- uncomment next line and comment the following <p> and contents -->
     <!-- <p id="field_output_field"></p> -->
     <p><a href="/web-labs/#lab_1">Return to Web Labs</a> at ReactorLab.net</p>
-    <p><b><i>Level Control in Water Tank</i></b></p>
+    <p><b><i>Level Control in Two Water Tanks in Series</i></b></p>
     <p>
-      There are three process units: a water source that empties into a tank, a
-      tank with a variable-flow outlet valve, and a feedback controller. The controller
-      controls the water level by sending a command to the valve. The controller has Proportional
+      There are four process units: a water source that empties into the upper tank, an upper tank,
+      a lower tank with a variable-flow outlet valve, and a feedback controller. The controller
+      controls the water level in the lower tank by sending a command to the valve. The controller has Proportional
       and Integral (PI) action with anti-windup.
       <br>
       <br><font color="#0000FF">Click the Run button to start. Hit the enter key or click out of field after changing inputs.</font>
@@ -88,7 +88,7 @@
      oninput="processUnits[0].updateUIfeedSlider()"
      onchange="processUnits[0].updateUIfeedSlider()">
    </input>
-   <img id="image_tank-from-LC_png" src="images/tank-from-LC.png">
+   <img id="image_2-tanks_png" src="images/2-tanks.png">
    <div id="div_controller">
       <p id="field_enterResetTime_label">
             Enter reset time ( &gt; 0 s)
@@ -109,8 +109,10 @@
       </div> <!-- end of div div_PLOTDIV_plotData -->
       <input type="button" id="button_copyDataButton" value="Copy Data" onclick="interfacer.copyData(0)"></input>
     </div> <!-- end of div div_controller-->
-   <div id="div_water">
-   </div> <!-- end of div div_water-->
+   <div id="div_water_1">
+   </div> <!-- end of div div_water_1-->
+   <div id="div_water_2">
+   </div> <!-- end of div div_water_2-->
   </div> <!-- end of div div_simFrame-->
   <!-- div_rlnoticetext filled by interfacer.resetThisLab()
   and formatted by web_labs_CSS/common.css -->

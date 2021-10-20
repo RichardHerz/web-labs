@@ -23,7 +23,7 @@ let simParams = {
   // if set to 'Dynamic', then controller.updateProcess is called repeatedly on Run
   // by interacer.runThisLab
   // if is set to any other value, controller.updateProcess is called once on Run
-  // by interacer.runThisLab 
+  // by interacer.runThisLab
   labType : 'Dynamic',
 
   runButtonID : "button_runButton", // required for interfacer object methods
@@ -55,7 +55,7 @@ let simParams = {
     // WARNING: NEED LITERAL, e.g., "field_run_counter" below
     //      e.g., this.runCounterFieldID does NOT work
     //
-    $.post(this.runLoggerURL,{webAppNumber: "1, Water Tank Level Control"})
+    $.post(this.runLoggerURL,{webAppNumber: "1A, Level Control, two tanks in series"})
       .done(
         function(data) {
           // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>";

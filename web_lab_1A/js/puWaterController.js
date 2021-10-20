@@ -82,7 +82,7 @@ function puWaterController(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
-    this.dataDefault[v] = 1;
+    this.dataDefault[v] = 1.5;
     //
     v = 1;
     this.dataHeaders[v] = 'gain';
@@ -179,8 +179,6 @@ function puWaterController(pUnitIndex) {
     // compute new value of PI controller command
     let error = setPoint - processVariable
     this.command = gain * (error + (1/resetTime) * errorIntegral);
-
-    console.log('setPoint = ' + setPoint);
 
     // stop integration at command limits
     // to prevent integral windup

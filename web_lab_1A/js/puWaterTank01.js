@@ -144,7 +144,7 @@ function puWaterTank01(pUnitIndex) {
     // increasing command to valve results in decreasing valve coefficient
 
     const Ax = 10; // cross sectional area of tank
-    const maxValveCoeff = 1; // 0-3
+    const maxValveCoeff = 2; // 0-3
     let newCoef = maxValveCoeff;
 
     if (newCoef > maxValveCoeff) {
@@ -167,9 +167,7 @@ function puWaterTank01(pUnitIndex) {
 
     // set new value
     level = exprValue;
-
-    console.log('flowRateIn 01, level 01 = ' + flowRateIN +', '+ level);
-    console.log('this.flowRateOUT 01 = ' + this.flowRateOUT );
+    
   } // END of updateState() method
 
   this.updateDisplay = function() {

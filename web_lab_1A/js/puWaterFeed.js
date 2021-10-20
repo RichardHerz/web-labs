@@ -72,16 +72,16 @@ function puWaterFeed(pUnitIndex) {
     this.dataInputs[v] = 'input_field_enterFlowRate';
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 3;
-    this.dataDefault[v] = 2;
+    this.dataMax[v] = 2.5;
+    this.dataDefault[v] = 1.5;
     //
     v = 1;
     this.dataHeaders[v] = 'Flow Rate';
     this.dataInputs[v] = 'range_slider_enterFlowRate';
     this.dataUnits[v] = 'm3/s';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 3;
-    this.dataDefault[v] = 2;
+    this.dataMax[v] = 2.5;
+    this.dataDefault[v] = 1.5;
     //
     // END OF INPUT VARS
     // record number of input variables, varCount

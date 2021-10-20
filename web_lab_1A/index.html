@@ -68,13 +68,14 @@
     <p><b><i>Level Control in Two Water Tanks in Series</i></b></p>
     <p>
       There are four process units: a water source that empties into the upper tank, an upper tank,
-      a lower tank with a variable-flow outlet valve, and a feedback controller. The controller
-      controls the water level in the lower tank by sending a command to the valve. The controller has Proportional
-      and Integral (PI) action with anti-windup.
+      a lower tank with a variable-flow outlet control valve, and a feedback controller. The controller
+      controls the water level in the lower tank by sending a command to the control valve.
+      The control valve is normally open and increasing command closes the valve.
+      The controller has Proportional and Integral (PI) action with anti-windup.
+      The diameter of each tank is 3.568 m.
       <br>
-      <br><font color="#FF6600">xxx need to add VALVE STEM INDICATOR, check time step, dimensions of tanks, flow coefficients, etc.</font>
       <br>
-      <br><font color="#0000FF">Click the Run button to start. Hit the enter key or click out of field after changing inputs.</font>
+      <font color="#0000FF">Click the Run button to start. Hit the enter key or click out of field after changing inputs.</font>
     </p>
     <!-- <p id="field_output_field">&nbsp; development field output field for idle time check</p> -->
   </div> <!-- end of div div_page_header -->
@@ -96,7 +97,7 @@
       <p id="field_enterResetTime_label">
             Enter reset time ( &gt; 0 to 40 s)
       </p>
-      <input id="input_field_enterSetpoint" value="1.5" onchange="processUnits[3].updateUIparams()">
+      <input id="input_field_enterSetpoint" value="1" onchange="processUnits[3].updateUIparams()">
       </input>
       <p id="field_enterSetPoint_label">
             Enter level setpoint (0-2 m)
@@ -111,11 +112,13 @@
       <div id="div_PLOTDIV_plotData">
       </div> <!-- end of div div_PLOTDIV_plotData -->
       <input type="button" id="button_copyDataButton" value="Copy Data" onclick="interfacer.copyData(0)"></input>
-    </div> <!-- end of div div_controller-->
+   </div> <!-- end of div div_controller-->
    <div id="div_water_1">
    </div> <!-- end of div div_water_1-->
    <div id="div_water_2">
    </div> <!-- end of div div_water_2-->
+   <div id="div_valve_stem">
+   </div> <!-- end of div div_valve_stem-->
   </div> <!-- end of div div_simFrame-->
   <!-- div_rlnoticetext filled by interfacer.resetThisLab()
   and formatted by web_labs_CSS/common.css -->

@@ -11,6 +11,8 @@
 
 let plotInfo = {
 
+  const span = 1020; // for x-axis span in number points, used in two places below
+
   initialize : function() {
 
     // plot 0 info
@@ -20,7 +22,7 @@ let plotInfo = {
     plotInfo[pnum]['title'] = 'Water Tank Level Control';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    plotInfo[pnum]['numberPoints'] = 563; // WARNING: value used below in ['xAxisMax']
+    plotInfo[pnum]['numberPoints'] = span; // WARNING: value used below in ['xAxisMax']
     plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time >'; // label for copy data table
     plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
@@ -28,7 +30,7 @@ let plotInfo = {
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true
     plotInfo[pnum]['xAxisMin'] = 0;
     // multiplier in line below is numberPoints for this plot
-    plotInfo[pnum]['xAxisMax'] = 563 * simParams.simTimeStep * simParams.simStepRepeats; // numberPoints * ...
+    plotInfo[pnum]['xAxisMax'] = span * simParams.simTimeStep * simParams.simStepRepeats; // numberPoints * ...
     plotInfo[pnum]['xAxisReversed'] = 1; // 0 false, 1 true, when true, xmax on left
     plotInfo[pnum]['yLeftAxisLabel'] = 'Inlet Flow Rate';
     plotInfo[pnum]['yLeftAxisMin'] = 0;

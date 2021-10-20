@@ -144,7 +144,7 @@ function puWaterTank01(pUnitIndex) {
     // increasing command to valve results in decreasing valve coefficient
 
     const Ax = 10; // cross sectional area of tank
-    const maxValveCoeff = 2; // 0-3
+    const maxValveCoeff = 1.55; // 0-3
     let newCoef = maxValveCoeff;
 
     if (newCoef > maxValveCoeff) {
@@ -162,7 +162,7 @@ function puWaterTank01(pUnitIndex) {
 
     // make sure within limits
     // see puWaterController function updateInputs, maxSPvalue, minSPvalue
-    if (exprValue > 2){exprValue = 2}
+    if (exprValue > 2.5){exprValue = 2.5}
     if (exprValue < 0){exprValue = 0}
 
     // set new value

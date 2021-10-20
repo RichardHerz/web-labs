@@ -35,6 +35,12 @@ function puWaterTank02(pUnitIndex) {
   // theDisplayWaterDivBtm = SUM orig CSS file specs of top+height pixels for water div
   const theDisplayWaterDivBtm = 356; // PIXELS, bottom of html water div IN PIXELS
 
+  // SPECIAL - DISPLAY CONNECTIONS TO VALVE STEM INDICATOR, see updateDisplay below
+  const theDisplayValveStemID = "#div_valve_stem";
+  const theDisplayValveStemTravel = 15; // PIXELS, range of valve stem travel
+  const theDisplayValveStemZERO = 54; // PIXELS, start of valve stem travel
+  // see CSS for this div, left: 54px to 69px
+
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
@@ -172,6 +178,12 @@ function puWaterTank02(pUnitIndex) {
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
+    // SET VALVE STEM INDICATOR
+    //    increasing command closes the valve - normally open valve
+    let stem = theDisplayValveStemZERO + (1-command) * theDisplayValveStemTravel;
+    let el = document.querySelector(theDisplayValveStemID);
+    el.style.left = stem + "px";
+
     // SET LEVEL OF WATER IN TANK
     //    css top & left sets top-left of water rectangle
     //    from top of browser window - can't use css bottom because
@@ -182,7 +194,7 @@ function puWaterTank02(pUnitIndex) {
     const pixPerHtUnit = 35; // was 50,then 48
     let newHt = pixPerHtUnit * this.level;
     let origBtm = theDisplayWaterDivBtm;
-    let el = document.querySelector(theDisplayWaterDivID);
+    el = document.querySelector(theDisplayWaterDivID);
     el.style.height = newHt + "px";
     el.style.top = (origBtm - newHt) + "px";
 

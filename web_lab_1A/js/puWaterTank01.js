@@ -38,6 +38,8 @@ function puWaterTank01(pUnitIndex) {
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
   let ssCheckSum = 0; // used in this.checkForSteadyState() method
 
+  let level = 0; // water level in this process unit
+
   // *******************************************
   //         define PUBLIC properties
   // *******************************************
@@ -142,7 +144,7 @@ function puWaterTank01(pUnitIndex) {
     // increasing command to valve results in decreasing valve coefficient
 
     const Ax = 10; // cross sectional area of tank
-    const maxValveCoeff = 2; // 0-3
+    const maxValveCoeff = 1; // 0-3
     let newCoef = maxValveCoeff;
 
     if (newCoef > maxValveCoeff) {
@@ -152,9 +154,11 @@ function puWaterTank01(pUnitIndex) {
       newCoef = 0;
     }
 
-    this.flowRateOUT = flowRateIN - newCoef * Math.pow(this.level,0.5);
+    this.flowRateOUT = newCoef * Math.pow(level,0.5);
 
-    let exprValue = (this.level + unitTimeStep * this.flowRateOUT / Ax);
+    // this.flowRateOUT = 0.01; // xxx test
+
+    let exprValue = level + unitTimeStep / Ax * (flowRateIN - this.flowRateOUT );
 
     // make sure within limits
     // see puWaterController function updateInputs, maxSPvalue, minSPvalue
@@ -162,8 +166,10 @@ function puWaterTank01(pUnitIndex) {
     if (exprValue < 0){exprValue = 0}
 
     // set new value
-    this.level = exprValue;
+    level = exprValue;
 
+    console.log('flowRateIn 01, level 01 = ' + flowRateIN +', '+ level);
+    console.log('this.flowRateOUT 01 = ' + this.flowRateOUT );
   } // END of updateState() method
 
   this.updateDisplay = function() {
@@ -179,7 +185,7 @@ function puWaterTank01(pUnitIndex) {
     //    so must compute new top value to keep bottom of water rect
     //    constant value from top of browser window
     const pixPerHtUnit = 48; // was 50
-    let newHt = pixPerHtUnit * this.level;
+    let newHt = pixPerHtUnit * level;
     let origBtm = theDisplayWaterDivBtm;
     let el = document.querySelector(theDisplayWaterDivID);
     el.style.height = newHt + "px";
@@ -199,7 +205,7 @@ function puWaterTank01(pUnitIndex) {
     // delete first and oldest element which is an [x,y] pair array
     tempArray.shift();
     // add the new [x.y] pair array at end
-    tempArray.push( [0,this.level] );
+    tempArray.push( [0,level] );
     // update the variable being processed
     this.stripData[v] = tempArray;
 
@@ -235,7 +241,7 @@ function puWaterTank01(pUnitIndex) {
     // WARNING: too many sig figs will prevent detecting steady state
     //
     let rc = 1.0e3 * flowRateIN;
-    let lt = 1.0e3 * this.level;
+    let lt = 1.0e3 * level;
     rc = rc.toFixed(0); // strings
     lt = lt.toFixed(0);
     // concatenate strings

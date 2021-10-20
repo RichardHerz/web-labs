@@ -85,6 +85,7 @@
  border-style: outset;
  opacity: 1;
  border-width: 0px;
+ z-index: 0;
 }
 
 #div_controller {

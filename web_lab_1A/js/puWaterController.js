@@ -180,6 +180,8 @@ function puWaterController(pUnitIndex) {
     let error = setPoint - processVariable
     this.command = gain * (error + (1/resetTime) * errorIntegral);
 
+    console.log('setPoint = ' + setPoint);
+
     // stop integration at command limits
     // to prevent integral windup
 

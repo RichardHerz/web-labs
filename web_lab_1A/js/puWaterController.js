@@ -81,7 +81,7 @@ function puWaterController(pUnitIndex) {
     this.dataInputs[v] = 'input_field_enterSetpoint';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 2;
+    this.dataMax[v] = 2.5;
     this.dataDefault[v] = 1;
     //
     v = 1;

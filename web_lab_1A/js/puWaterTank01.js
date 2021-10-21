@@ -143,8 +143,9 @@ function puWaterTank01(pUnitIndex) {
     // here have normally open valve
     // increasing command to valve results in decreasing valve coefficient
 
-    const Ax = 10; // cross sectional area of tank
-    const maxValveCoeff = 1.55; // 0-3
+    const diam = 2; // m, diameter of tank
+    const Ax = Math.pow(diam,2) / 4 * Math.PI; // cross sectional area of tank
+    const maxValveCoeff = 1.45; // 0-3
     let newCoef = maxValveCoeff;
 
     if (newCoef > maxValveCoeff) {
@@ -162,7 +163,7 @@ function puWaterTank01(pUnitIndex) {
 
     // make sure within limits
     // see puWaterController function updateInputs, maxSPvalue, minSPvalue
-    if (exprValue > 2.5){exprValue = 2.5}
+    if (exprValue > 3){exprValue = 3}
     if (exprValue < 0){exprValue = 0}
 
     // set new value
@@ -182,7 +183,7 @@ function puWaterTank01(pUnitIndex) {
     //    and bottom of browser window can be moved by user,
     //    so must compute new top value to keep bottom of water rect
     //    constant value from top of browser window
-    const pixPerHtUnit = 35; // was 50,then 48
+    const pixPerHtUnit = 28.5; // 28.5 for 2 m diam, 2 m high
     let newHt = pixPerHtUnit * level;
     let origBtm = theDisplayWaterDivBtm;
     let el = document.querySelector(theDisplayWaterDivID);

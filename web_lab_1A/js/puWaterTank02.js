@@ -197,7 +197,7 @@ function puWaterTank02(pUnitIndex) {
     //    and bottom of browser window can be moved by user,
     //    so must compute new top value to keep bottom of water rect
     //    constant value from top of browser window
-    const pixPerHtUnit = 28.5; // 28.5 for 2 m diam, 2 m high
+    const pixPerHtUnit = 28.5; // 28.5 for 2 m diam, 3 m high
     let newHt = pixPerHtUnit * this.level;
     let origBtm = theDisplayWaterDivBtm;
     el = document.querySelector(theDisplayWaterDivID);

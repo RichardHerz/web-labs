@@ -11,9 +11,9 @@
 
 let plotInfo = {
 
-  const span = 1020; // for x-axis span in number points, used in two places below
-
   initialize : function() {
+
+    const span = 500; // for x-axis span in number points, used in two places below
 
     // plot 0 info
     let pnum = 0;

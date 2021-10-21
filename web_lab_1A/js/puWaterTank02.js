@@ -155,8 +155,10 @@ function puWaterTank02(pUnitIndex) {
     // // tank image is 55 px wide by 87 high - 1.582 ratio
     // console.log('tank height (m) = ' + 1.582*diam);
     // console.log('pixels per meter high = ' + 87 / (1.582*diam) );
+    // // RESULT OF LAST LINE IS 27.5 - value used below in updateDisplay
+    // // tank is 3.164 m high for 2 m diam
 
-    const maxValveCoeff = 4;
+    const maxValveCoeff = 4; // keep water below 3 m high on transients
     let newCoef = maxValveCoeff*(1 - command);
 
     if (newCoef > maxValveCoeff) {
@@ -169,7 +171,7 @@ function puWaterTank02(pUnitIndex) {
     let exprValue = (this.level +
       unitTimeStep / Ax * (flowRate - newCoef * Math.pow(this.level,0.5)));
 
-    // make sure within limits
+    // make sure water level within limits
     // see puWaterController function updateInputs, maxSPvalue, minSPvalue
     if (exprValue > 3){exprValue = 3}
     if (exprValue < 0){exprValue = 0}
@@ -197,7 +199,8 @@ function puWaterTank02(pUnitIndex) {
     //    and bottom of browser window can be moved by user,
     //    so must compute new top value to keep bottom of water rect
     //    constant value from top of browser window
-    const pixPerHtUnit = 28.5; // 28.5 for 2 m diam, 3 m high
+    // pixPerHtUnit = 29 better on image than 27.5 for 2 m diam, computed above
+    const pixPerHtUnit = 29;
     let newHt = pixPerHtUnit * this.level;
     let origBtm = theDisplayWaterDivBtm;
     el = document.querySelector(theDisplayWaterDivID);

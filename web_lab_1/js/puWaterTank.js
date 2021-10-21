@@ -35,6 +35,12 @@ function puWaterTank(pUnitIndex) {
   // theDisplayWaterDivBtm = SUM orig CSS file specs of top+height pixels for water div
   const theDisplayWaterDivBtm = 268; // PIXELS, bottom of html water div IN PIXELS
 
+  // SPECIAL - DISPLAY CONNECTIONS TO VALVE STEM INDICATOR, see updateDisplay below
+  const theDisplayValveStemID = "#div_valve_stem";
+  const theDisplayValveStemTravel = 15; // PIXELS, range of valve stem travel
+  const theDisplayValveStemZERO = 55; // PIXELS, start of valve stem travel
+  // see CSS for this div, left: 55px to 70px
+
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
@@ -143,8 +149,16 @@ function puWaterTank(pUnitIndex) {
     // here have normally open valve
     // increasing command to valve results in decreasing valve coefficient
 
-    const Ax = 10; // cross sectional area of tank
-    const maxValveCoeff = 3;
+    const diam = 2; // m, diameter of tank
+    const Ax = Math.pow(diam,2) / 4 * Math.PI; // cross sectional area of tank
+
+    // // tank image is 55 px wide by 95 high - 1.727 ratio
+    // console.log('tank height (m) = ' + 1.727*diam);
+    // console.log('pixels per meter high = ' + 95 / (1.727*diam) );
+    // // RESULT OF LAST LINE IS 27.5 - value used below in updateDisplay
+    // // tank is 3.454 m high for diam 2 m
+
+    const maxValveCoeff = 3; // keep water below 3 m high on transients
     let newCoef = maxValveCoeff*(1 - command);
 
     if (newCoef > maxValveCoeff) {
@@ -159,7 +173,7 @@ function puWaterTank(pUnitIndex) {
 
     // make sure within limits
     // see puWaterController function updateInputs, maxSPvalue, minSPvalue
-    if (exprValue > 2){exprValue = 2}
+    if (exprValue > 3){exprValue = 3}
     if (exprValue < 0){exprValue = 0}
 
     // set new value
@@ -172,6 +186,12 @@ function puWaterTank(pUnitIndex) {
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
+    // SET VALVE STEM INDICATOR
+    //    increasing command closes the valve - normally open valve
+    let stem = theDisplayValveStemZERO + (1-command) * theDisplayValveStemTravel;
+    let el = document.querySelector(theDisplayValveStemID);
+    el.style.left = stem + "px";
+
     // SET LEVEL OF WATER IN TANK
     //    css top & left sets top-left of water rectangle
     //    from top of browser window - can't use css bottom because
@@ -179,10 +199,11 @@ function puWaterTank(pUnitIndex) {
     //    and bottom of browser window can be moved by user,
     //    so must compute new top value to keep bottom of water rect
     //    constant value from top of browser window
-    const pixPerHtUnit = 48; // was 50
+    // pixPerHtUnit = 27.5 for 2 m diam computed above, agrees on image
+    const pixPerHtUnit = 27.5;
     let newHt = pixPerHtUnit * this.level;
     let origBtm = theDisplayWaterDivBtm;
-    let el = document.querySelector(theDisplayWaterDivID);
+    el = document.querySelector(theDisplayWaterDivID);
     el.style.height = newHt + "px";
     el.style.top = (origBtm - newHt) + "px";
 

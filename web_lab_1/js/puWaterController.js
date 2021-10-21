@@ -81,7 +81,7 @@ function puWaterController(pUnitIndex) {
     this.dataInputs[v] = 'input_field_enterSetpoint';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 2;
+    this.dataMax[v] = 2.5;
     this.dataDefault[v] = 1;
     //
     v = 1;
@@ -89,16 +89,16 @@ function puWaterController(pUnitIndex) {
     this.dataInputs[v] = 'input_field_enterGain';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 20;
-    this.dataDefault[v] = 5;
+    this.dataMax[v] = 10;
+    this.dataDefault[v] = 1;
     //
     v = 2;
     this.dataHeaders[v] = 'reset time';
     this.dataInputs[v] = 'input_field_enterResetTime';
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
-    this.dataMax[v] = 20;
-    this.dataDefault[v] = 2;
+    this.dataMax[v] = 40;
+    this.dataDefault[v] = 20;
     //
     // END OF INPUT VARS
     // record number of input variables, varCount

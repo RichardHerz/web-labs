@@ -90,7 +90,7 @@ function puWaterController(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 10;
-    this.dataDefault[v] = 0.5;
+    this.dataDefault[v] = 1;
     //
     v = 2;
     this.dataHeaders[v] = 'reset time';

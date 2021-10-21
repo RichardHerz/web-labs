@@ -24,6 +24,21 @@
  opacity: 1;
 }
 
+#div_valve_stem {
+  display: block;
+  position: absolute;
+  /* left: 55px to 70px */
+  left: 70px;
+  top: 310px;
+  width: 3px;
+  height: 12px;
+  visibiity: visible;
+  border-width: 1px;
+  background-color: rgb(255,140,102);
+  border-style: none;
+  opacity: 1;
+}
+
 #button_resetButton {
  left: 92px;
  top: 20px;

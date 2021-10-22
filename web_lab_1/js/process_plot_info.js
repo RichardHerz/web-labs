@@ -23,8 +23,8 @@ let plotInfo = {
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     plotInfo[pnum]['numberPoints'] = span; // WARNING: value used below in ['xAxisMax']
-    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time >'; // label for copy data table
-    plotInfo[pnum]['xAxisTableLabel'] = 'Time (s)'; // label for copy data table
+    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (min) >'; // label for copy data table
+    plotInfo[pnum]['xAxisTableLabel'] = 'Time (min)'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
     plotInfo[pnum]['xAxisShow'] = 1; // 0 false, 1 true

@@ -67,9 +67,11 @@
     <p><b><i>Level Control in a Water Tank</i></b></p>
     <p>
       There are three process units: a water source that empties into a tank, a
-      tank with a variable-flow outlet valve, and a feedback controller. The controller
-      controls the water level by sending a command to the valve. The controller has Proportional
-      and Integral (PI) action with anti-windup The diameter of the tank is 2 m.
+      tank with a variable-flow outlet control valve, and a feedback controller. The controller
+      controls the water level in the tank by sending a command to the control valve.
+      The control valve is normally open and increasing command closes the valve.
+      The controller has Proportional and Integral (PI) action with anti-windup.
+      The diameter of the tank is 2 m.
       <br>
       <br><font color="#0000FF">Click the Run button to start. Hit the enter key or click out of field after changing inputs.</font>
     </p>
@@ -79,7 +81,7 @@
    <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
    <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
    <p id="field_enterFlowRate_label">
-      Set flow rate (m<sup shift="-4">3</sup>/s) :
+      Set flow rate (m<sup shift="-4">3</sup>/min) :
    </p>
    <input id="input_field_enterFlowRate" value="2" onchange="processUnits[0].updateUIfeedInput()">
    </input>
@@ -91,7 +93,7 @@
    <img id="image_tank-from-LC_png" src="images/tank-from-LC.png">
    <div id="div_controller">
       <p id="field_enterResetTime_label">
-            Enter reset time ( &gt; 0 to 40 s)
+            Enter reset time ( &gt; 0 min)
       </p>
       <input id="input_field_enterSetpoint" value="2" onchange="processUnits[2].updateUIparams()">
       </input>

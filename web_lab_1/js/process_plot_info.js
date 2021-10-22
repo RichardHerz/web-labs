@@ -13,7 +13,7 @@ let plotInfo = {
 
   initialize : function() {
 
-    const span = 500; // for x-axis span in number points, used in two places below
+    const span = 200; // for x-axis span in number points, used in two places below
 
     // plot 0 info
     let pnum = 0;

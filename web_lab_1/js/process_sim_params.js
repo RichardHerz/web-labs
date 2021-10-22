@@ -23,7 +23,7 @@ let simParams = {
   // if set to 'Dynamic', then controller.updateProcess is called repeatedly on Run
   // by interacer.runThisLab
   // if is set to any other value, controller.updateProcess is called once on Run
-  // by interacer.runThisLab 
+  // by interacer.runThisLab
   labType : 'Dynamic',
 
   runButtonID : "button_runButton", // required for interfacer object methods
@@ -35,15 +35,18 @@ let simParams = {
 
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
-  simStepRepeats : 1, // integer number of unit updates between display updates
-  simTimeStep : 0.1, // time step value, simulation time, of main repeat
+  // WARNING: CHECK FOR NUMERICAL INSTABILITY CAUSED BY EULER METHOD TIME STEPPING
+  //          reduce simTimeStep until no further change in results
+
+  simStepRepeats : 4, // integer number of unit updates between display updates
+  simTimeStep : 0.025, // time step value, simulation time, of main repeat
 
   // individual units may do more steps in one unit updateState()
   // see individual units for any unitTimeStep and unitStepRepeats
 
   // set updateDisplayTimingMs to 50 ms because runs too fast on fast desktop
   // and 50 ms gives about same speed as 0 ms on my laptop
-  updateDisplayTimingMs : 30, // real time milliseconds between display updates
+  updateDisplayTimingMs : 120, // real time milliseconds between display updates
 
   // WARNING: NEED LITERAL, e.g., "field_run_counter" in methods below
   //      e.g., this.runCounterFieldID does NOT work

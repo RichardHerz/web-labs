@@ -90,7 +90,7 @@ function puWaterController(pUnitIndex) {
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 10;
-    this.dataDefault[v] = 1;
+    this.dataDefault[v] = 2;
     //
     v = 2;
     this.dataHeaders[v] = 'reset time';
@@ -98,7 +98,7 @@ function puWaterController(pUnitIndex) {
     this.dataUnits[v] = 'min';
     this.dataMin[v] = 1;
     this.dataMax[v] = 40;
-    this.dataDefault[v] = 20;
+    this.dataDefault[v] = 10;
     //
     // END OF INPUT VARS
     // record number of input variables, varCount

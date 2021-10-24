@@ -3,7 +3,7 @@
  position: relative;
  left: 5px;
  width: 620px;
- height: 900px;
+ height: 950px;
  visibility: visible;
  border-width: 1px;
  border-style: outset;
@@ -97,9 +97,9 @@
  width: 338px;
  height: 360px;
  visibility: visible;
- border-style: outset;
+ border-style: dashed;
  opacity: 1;
- border-width: 0px;
+ border-width: 1px;
  z-index: 0;
 }
 
@@ -107,12 +107,12 @@
  display: block;
  position: absolute;
  left: 10px;
- top: 415px;
+ top: 470px;
  width: 414px;
- height: 307px;
+ height: 450px;
  visibility: visible;
- border-width: 2px;
- border-style: none;
+ border-width: 1px;
+ border-style: dashed;
  opacity: 1;
 }
 

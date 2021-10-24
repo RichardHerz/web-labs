@@ -99,7 +99,7 @@
  visibility: visible;
  border-style: dashed;
  opacity: 1;
- border-width: 1px;
+ border-width: 0px;
  z-index: 0;
 }
 
@@ -111,7 +111,7 @@
  width: 414px;
  height: 450px;
  visibility: visible;
- border-width: 1px;
+ border-width: 0px;
  border-style: dashed;
  opacity: 1;
 }

@@ -73,7 +73,7 @@ let interfacer = {
       + 'at the University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>, '
       + 'in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>. '
       + 'Please let us know if you use the Lab or the code. Thanks! '
-      + '<a href="mailto:rherz@ucsd.edu">rherz@ucsd.edu</a>';
+      + '<a href="mailto:rherz@ucsd.edu?subject=Reactor Lab">rherz@ucsd.edu</a>';
     document.getElementById('div_rlnoticetext').innerHTML = txt;
     // see web_labs_CSS/common.css file for formatting on page
 

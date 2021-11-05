@@ -165,7 +165,7 @@ let plotInfo = {
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     nPts = processUnits[unum].numStripPts; // used in several places below
     plotInfo[pnum]['numberPoints'] = nPts; // WARNING: value used below in xAxisMax & plot 4
-    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
+    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time >';
     plotInfo[pnum]['xAxisTableLabel'] = 'Time'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers
@@ -225,7 +225,7 @@ let plotInfo = {
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
     nPts = processUnits[unum].numStripPts; // used in several places below
     plotInfo[pnum]['numberPoints'] = nPts; // WARNING: value used below in xAxisMax
-    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time (s) >';
+    plotInfo[pnum]['xAxisLabel'] = '< recent time | earlier time >';
     plotInfo[pnum]['xAxisTableLabel'] = 'Time'; // label for copy data table
     // xAxisShow false does not show numbers, nor label, nor grid for x-axis
     // might be better to cover numbers if desire not to show numbers

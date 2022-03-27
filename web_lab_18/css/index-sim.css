@@ -125,13 +125,13 @@ canvas {
   position: absolute;
   left: 6px;
   top: 307px;
-  width: 319px;
+  width: 160px;
   height: 24px;
   border-width: 1px;
   visibility: visible;
   border-style: dotted;
   opacity: 1;
-  background-color: #ccccff;
+  background-color: lightgoldenrodyellow;
   LCvScrollbar: false;
   LCthreeD: true;
   LCshowBorder: true;
@@ -185,7 +185,7 @@ canvas {
   border-width: 1px;
   border-style: outset;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgb(107,181,255);
   LCthreeD: true;
   LCshowBorder: true;
 }
@@ -200,7 +200,7 @@ canvas {
   border-width: 1px;
   border-style: outset;
   opacity: 1;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgb(107,181,255);
   LCthreeD: true;
   LCshowBorder: true;
 }
@@ -392,7 +392,7 @@ border-style: solid;
   position: absolute;
   left: 6px;
   top: 6px;
-  width: 118px;
+  width: 318px;
   height: 23px;
   visibility: visible;
   border-width: 1px;

@@ -72,7 +72,7 @@
         <!-- filled by updateBody called in body tag onload -->
       </div> <!-- end of div div_TEXTDIV_people -->
       <p id="field_transaction_LABEL">
-        1) Create at least two transactions
+        1) Create a transaction
       </p>
       <p id="field_enter_From_person_LABEL">
         Select TO:
@@ -90,7 +90,7 @@
         Enter amount:
       </p>
       <input id="input_field_enter_amount" value="" onchange="transAmount(this.value)">
-      <input type="button" id="button_verify_transaction" value="2) Verify each transaction"
+      <input type="button" id="button_verify_transaction" value="2) Verify the transaction"
         onclick='transVerify()'>
       <p id="field_check_sufficient_funds_LABEL">
       </p>
@@ -108,7 +108,7 @@
       </div> <!-- end of div div_TEXTDIV_transactions_pending -->
     </div> <!-- end of div div_simFrame_01 -->
     <div id="div_simFrame_02">
-      <input type="button" id="button_build_block" value="3) Build block"
+      <input type="button" id="button_build_block" value="3) Build block with 2 or more transactions"
         onclick="buildBlock()">
       <p id="field_provisional_block_LABEL">
         Provisional Block

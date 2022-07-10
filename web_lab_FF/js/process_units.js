@@ -370,7 +370,7 @@ class Tree {
 
     this.dtemp_dt = (1/this.mass/cp) * ( rr + cc - u0 * this.dm_dt - gamma * (this.temperature - 300) );
 
-  } // END OF class Ant updateRates method
+  } // END OF class Tree updateRates method
 
   updateState() {
 
@@ -397,5 +397,5 @@ class Tree {
       this.temperature = minT;
     }
 
-  } // END OF updateState method of class Ant
+  } // END OF updateState method of class Tree
 } // END OF class Tree definition

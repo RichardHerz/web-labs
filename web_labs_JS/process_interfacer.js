@@ -64,8 +64,6 @@ let interfacer = {
     let txt = 'The Reactor Lab provides interactive '
       + 'simulations for active learning. The web site is '
       + '<a href="https://reactorlab.net/">ReactorLab.net</a>. '
-      + 'Web Labs and desktop versions of ReactorLab and SimzLab, '
-      + 'which includes PureWaterLab, are available. '
       + 'The lab is provided free of charge and code is open source and available '
       + 'at <a href="https://github.com/RichardHerz">our GitHub site</a>. '
       + 'The code is structured to allow fast construction of new simulations of reactors and other systems. '

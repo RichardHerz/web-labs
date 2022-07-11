@@ -539,4 +539,4 @@ let puCounterCurrentHeatExchanger = {
     return ssFlag;
   } // END checkForSteadyState method
 
-} // END let puHeatExchanger
+} // END process unit definition 

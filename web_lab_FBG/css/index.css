@@ -1,0 +1,70 @@
+#div_simFrame {
+  display: block;
+  position: relative;
+  border-color: DodgerBlue;
+  left: 11px;
+  top: 0px;
+  width: 560px;
+  height: 540px;
+  visibility: visible;
+  border-width: 0px;
+  border-style: dotted;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0);
+  LCvScrollbar: false;
+  LCthreeD: true;
+  LCshowBorder: false;
+}
+
+/* canvas element width & height must be set in HTML and not in CSS */
+
+#canvas_CANVAS_bed_0 {
+  display: block;
+  position: absolute;
+  top: 28px;
+  left: 0px;
+}
+
+#canvas_CANVAS_bed_1 {
+  display: block;
+  position: absolute;
+  top: 28px;
+  left: 300px;
+}
+
+#button_runButton {
+  position: absolute;
+  left: 30px;
+  top: 0px;
+  width: 72px;
+  height: 23px;
+}
+
+#button_resetButton {
+  position: absolute;
+  left: 112px;
+  top: 0px;
+  width: 72px;
+  height: 23px;
+}
+
+/* @media for responsive design                    */
+/* requires meta viewport element in HTML head     */
+/* styling above this holds except, e.g.,          */
+/*    when width is >= 640px : (min-width: 640px)  */
+/*    when width is <= 640px : (max-width: 640px)  */
+/*    then styling below holds                     */
+/* min- below holds for bigger than #              */
+/* max- below holds for smaller than #             */
+/* (orientation: portrait) - below holds for narrow field */
+/* (orientation: landscape) - below holds for wide field  */
+
+@media(min-width: 640px) {
+  #div_page_header {
+    width: 640px;
+  }
+  #div_rlnoticetext {
+    font-size: 50%;
+    width: 640px;
+  }
+}

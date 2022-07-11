@@ -537,4 +537,4 @@ let puAdiabaticPackedBedPFR = {
     return ssFlag;
   } // END OF checkForSteadyState()
 
-}; // END let puPlugFlowReactor
+} // END process unit definition 

@@ -1,5 +1,5 @@
 function fListPrimes() {
-  // list primes to 5000 
+  // list primes to 5000
   let tText = '<p style="font-family:';
   tText += "'Courier New'; font-size:12px;";
   tText += '">';
@@ -232,7 +232,7 @@ function fListModExp() {
   tText += "function fModExp(m,key) { <br><br>"
   tText += "  // return r = m**key[1] % key[0], where ** is exponentiate and % is mod <br>"
   tText += "  // using modular exponentiation <br><br>"
-  tText += "  // convert key[2] to binary char array <br>"
+  tText += "  // convert key[1] to binary char array <br>"
   tText += "  // so we know which terms we will need in modular exponentiation below <br>"
   tText += "  let b = key[1].toString(2); // toString(2) means return binary representation <br><br>"
   tText += "  // get results in array p of successive squares of m mod key[0] <br>"

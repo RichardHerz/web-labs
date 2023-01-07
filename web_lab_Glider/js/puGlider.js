@@ -34,24 +34,25 @@ function puGlider(pUnitIndex) {
   const gravity = 9.8; // (m/s2), // used in updateState & updateDisplay
   const pi = Math.PI; // used in reset & updateState
   const degTOrad = Math.PI / 180; // used in updateUIparams
-  const radius = 1; // (m), radius, rod length, used in updateState & updateDisplay
 
-  let velocity = 0; // (m/s), tangential velocity
-  let angleDeg = 0; // (degree)
-  let angle = 0; // (radian)
-  let fricFrac = 0; // friction factor used in initialize & updateUIparams
-  let accel = 0; // (m/s2), acceleration in tangential direction
+  let gliderSpeed = 0; // (m/s), in 2D, xy plane
+  let windSpeed = 0; // (m/s), wind flow is horizontal
+  let airSpeed = 0; // (m/s), apparent wind speed
+  let angleDeg = 0; // (degree), attack angle
+  let angle = 0; // (radian), attack angle
+  let liftFac = 0; // lift factor
+  let dragFac = 0; // drag factor
 
-  // THIS UNIT ALSO HAS A CHECKBOX INPUT
-  let inputCheckBoxVectors = "checkbox_vec";
-  // THIS UNIT ALSO HAS A DISPLAY FIELD FOR simTime
-  let displayTimeField = "field_time";
+  // // THIS UNIT ALSO HAS A CHECKBOX INPUT
+  // let inputCheckBoxVectors = "checkbox_vec";
+  // // THIS UNIT ALSO HAS A DISPLAY FIELD FOR simTime
+  // let displayTimeField = "field_time";
 
   // *******************************************
   //         define PUBLIC properties
   // *******************************************
 
-  this.name = 'process unit Pendulum'; // used by interfacer.copyData()
+  this.name = 'process unit Glider'; // used by interfacer.copyData()
   this.residenceTime = 10; // used by controller.checkForSteadyState()
 
   // define arrays to hold data for plots, color canvas
@@ -85,29 +86,21 @@ function puGlider(pUnitIndex) {
     //
     // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
     //
-    let v = 0;
-    this.dataHeaders[v] = 'velocity';
-    this.dataInputs[v] = 'input_field_initial_velocity';
-    this.dataUnits[v] = 'm/s';
-    this.dataMin[v] = -10;
-    this.dataMax[v] = 10;
-    this.dataDefault[v] = 1;
-    //
-    v = 1;
-    this.dataHeaders[v] = 'angle';
-    this.dataInputs[v] = "input_field_theta";
-    this.dataUnits[v] = 'degree';
-    this.dataMin[v] = -180;
-    this.dataMax[v] = 180;
-    this.dataDefault[v] = 90;
-    //
-    v = 2;
-    this.dataHeaders[v] = 'friction factor';
-    this.dataInputs[v] = "input_field_friction_factor";
-    this.dataUnits[v] = '';
-    this.dataMin[v] = 0;
-    this.dataMax[v] = 1;
-    this.dataDefault[v] = 0;
+    // let v = 0;
+    // this.dataHeaders[v] = 'velocity';
+    // this.dataInputs[v] = 'input_field_initial_velocity';
+    // this.dataUnits[v] = 'm/s';
+    // this.dataMin[v] = -10;
+    // this.dataMax[v] = 10;
+    // this.dataDefault[v] = 1;
+    // //
+    // v = 1;
+    // this.dataHeaders[v] = 'angle';
+    // this.dataInputs[v] = "input_field_theta";
+    // this.dataUnits[v] = 'degree';
+    // this.dataMin[v] = -180;
+    // this.dataMax[v] = 180;
+    // this.dataDefault[v] = 90;
     //
     // END OF INPUT VARS
     // record number of input variables, varCount
@@ -152,15 +145,9 @@ function puGlider(pUnitIndex) {
     //   is only used in copyData to report input values
 
     let unum = unitIndex;
-    velocity = this.dataValues[0] = interfacer.getInputValue(unum, 0);
-    angleDeg = this.dataValues[1] = interfacer.getInputValue(unum, 1);
-    fricFrac = this.dataValues[2] = interfacer.getInputValue(unum, 2);
-
-    // SPECIAL - compensate for Euler method errors, add 0.0016 to 0.003
-    // do this here so only added once, NOT in updateState
-    fricFrac = fricFrac + 0.0016;
-    angle = angleDeg * degTOrad; // convert user input in degrees to radians
-    accel = gravity * Math.sin(-angle); // update accel for angle changes
+    // velocity = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    // angleDeg = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    // fricFrac = this.dataValues[2] = interfacer.getInputValue(unum, 2);
 
   } // END of updateUIparams method
 
@@ -177,27 +164,43 @@ function puGlider(pUnitIndex) {
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-    accel = gravity * Math.sin(-angle);
-    let newVelocity = velocity + accel * unitTimeStep;
-    // apply friction
-    let friction = fricFrac * velocity;
-    newVelocity = newVelocity - friction * unitTimeStep;
+    // we need to update the x,y position of the glider
+    // xnew = xold + dx_dt * dt, where dx_dt is derivative dx/dt
+    // ynew = yold + dy_dt * dt
+    // and check for conditions to turn, which would change sign of
+    //   x-component of speed
+    //
+    // dx_dt (m/s) = effect of x-components of speed, drag,... and lift?
+    // dy_dt = effect of y-components of lift and gravity,... and drag?
 
-    let angularVelocity = velocity * radius; // (radian/s)
-    let newAngle = angle + angularVelocity * unitTimeStep;
 
-    // correct angle if pendulum goes past top in CCW direction
-    if (newAngle > pi) {
-      newAngle = -pi + newAngle % pi;  // % is JS modulo operator,
-    }
-
-    // update current values
-    angle = newAngle;
-    velocity = newVelocity;
+    // accel = gravity * Math.sin(-angle);
+    // let newVelocity = velocity + accel * unitTimeStep;
+    // // apply friction
+    // let friction = fricFrac * velocity;
+    // newVelocity = newVelocity - friction * unitTimeStep;
+    //
+    // let angularVelocity = velocity * radius; // (radian/s)
+    // let newAngle = angle + angularVelocity * unitTimeStep;
+    //
+    // // correct angle if pendulum goes past top in CCW direction
+    // if (newAngle > pi) {
+    //   newAngle = -pi + newAngle % pi;  // % is JS modulo operator,
+    // }
+    //
+    // // update current values
+    // angle = newAngle;
+    // velocity = newVelocity;
 
   } // END of updateState method
 
   this.updateDisplay = function() {
+
+    // UNDER DEVELOPMENT
+
+  } // END of updateDisplay method
+
+  this.updateDisplayPENDULUM = function() {
 
     document.getElementById(displayTimeField).innerHTML =  controller.simTime.toFixed(2);
 
@@ -280,7 +283,7 @@ function puGlider(pUnitIndex) {
     ye = y-dY;
     svgElement.setAttribute("d", "M" + xs + "," + ys + " L" + xe + "," + ye );
 
-  } // END of updateDisplay method
+  } // END of updateDisplayPENDULUM method
 
   this.checkForSteadyState = function() {
     // required - called by controller object
@@ -291,18 +294,18 @@ function puGlider(pUnitIndex) {
 
     let ssFlag = false;
 
-    // need narrow ranges for this check, not == 0
-    // do not check at the top, unstable SS
-    let mmax = 0.0001;
-    let mmin = -mmax;
-    if ((angle > mmin) && (angle < mmax)) {
-      if ((velocity > mmin) && (velocity < mmax)) {
-        if ((accel > mmin) && (accel < mmax)) {
-          ssFlag = true;
-          // console.log('SS zeroed, ssFlag to true');
-        }
-      }
-    }
+    // // need narrow ranges for this check, not == 0
+    // // do not check at the top, unstable SS
+    // let mmax = 0.0001;
+    // let mmin = -mmax;
+    // if ((angle > mmin) && (angle < mmax)) {
+    //   if ((velocity > mmin) && (velocity < mmax)) {
+    //     if ((accel > mmin) && (accel < mmax)) {
+    //       ssFlag = true;
+    //       // console.log('SS zeroed, ssFlag to true');
+    //     }
+    //   }
+    // }
 
     // if (ssFlag == false) {
     //   console.log('SS not zeroed');

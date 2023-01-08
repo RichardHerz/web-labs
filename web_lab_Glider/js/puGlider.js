@@ -164,16 +164,43 @@ function puGlider(pUnitIndex) {
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-    // we need to update the x,y position of the glider
-    // xnew = xold + dx_dt * dt, where dx_dt is derivative dx/dt
-    // ynew = yold + dy_dt * dt
-    // and check for conditions to turn, which would change sign of
-    //   x-component of speed
+    // I am using static 2D cartesian frame of reference
+    // at each time step update x & y components of position, speed, forces, etc.
+    // and check for conditions to turn, which would change signs
+    // for each x and y d_dt, consider: speed, drag, lift, and gravity
+    // drag and lift are varying forces (kg-m/s2) = mass (kg) * accel (m/s2)
+    // gravity is a constant acceleration (d2y/dt2, m/s2)
     //
-    // dx_dt (m/s) = effect of x-components of speed, drag,... and lift?
-    // dy_dt = effect of y-components of lift and gravity,... and drag?
+    // SEE MY ZOTERO REF: Numerical integration in dynamic soaring...
+    // new_velocity = old_velocity + acceleration * delta_time;
+    // new_position = position + new_velocity * delta_time;
+    //
+    // LIFT & DRAG FORCES are functions of angle of attack with respect
+    //   to the apparent wind direction, where Vair is apparent air speed
+    // FORCE = coeffic * Area * 0.5 * fluid_density * Vair^2
+    //
+    // u here is magnitude (speed) of glider velocity vector in x,y space
+    // zero angle points along x-axis to right, with positive angle CCW
+    // alpha is angle of direction of glider in x,y space
+    // beta is 180 - alpha in degrees here
+    // y-length of glider speed vector = u * sin(beta), x-length = u * cos(beta)
+    // Tw is magnitude of true wind, whose direction is always zero degrees here
+    // Aw is magnitude of apparent wind at glider...
+    //   which should be glider's airspeed
+    // 180 - gamma is angle of apparent wind
+    // beta - gamma is angle of attack of glider to apparent wind
+    // x0 and y0 is current glider location
+    // gamma = arctan( (y0 + u*sin(beta)) / (Tw + (x0 - u*cos(beta)) )
+    // Aw = (y0 + u*sin(beta)) / sin(gamma)
+    //
+    // call functions to get lift and drag coeff's using beta-gamma attack angle
+    // from square of airspeed Aw^2 and coeff's, get lift and drag forces
+    // these are vectors relative to the glider's body, so need to get x,y components
+    //
 
 
+
+    // ====== OLD BELOW FROM PENDULUM LAB ==========
     // accel = gravity * Math.sin(-angle);
     // let newVelocity = velocity + accel * unitTimeStep;
     // // apply friction

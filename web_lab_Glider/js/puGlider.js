@@ -31,17 +31,26 @@ function puGlider(pUnitIndex) {
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-  const gravity = 9.8; // (m/s2), // used in updateState & updateDisplay
+  // COORDINATE AND ANGLE SYSTEM
+  // 2D x,y coordinates, positive y is up, positive x points downwind to right
+  // zero angle points toward positive x at zero y
+  // positive angle is CCW
+
+  // HERE DELCARE CONSTANTS & VARIABLES WE WISH TO CARRY BETWEEN UPDATES
+
+  const gravity = -9.8; // (m/s2), acts in negative y-coordinate direction
   const pi = Math.PI; // used in reset & updateState
   const degTOrad = Math.PI / 180; // used in updateUIparams
 
-  let gliderSpeed = 0; // (m/s), in 2D, xy plane
-  let windSpeed = 0; // (m/s), wind flow is horizontal
-  let airSpeed = 0; // (m/s), apparent wind speed
-  let angleDeg = 0; // (degree), attack angle
-  let angle = 0; // (radian), attack angle
-  let liftFac = 0; // lift factor
-  let dragFac = 0; // drag factor
+  const wingArea = 1; // (m2)
+  const gliderMass = 1; // (kg)
+  const airDens = 1.2; // (kg/m3), https://en.wikipedia.org/wiki/Density_of_air
+
+  let windProfileOption = 0;
+  let gliderSpeed = 10; // (m/s), magnitude of glider velocity vector
+  let gliderAngle = 0.8 * pi; // (rad), angle of glider in x,y coordinates
+  let yGliderLoc = 50; // (m), glider altitude
+  let xGliderLoc = 50; // (m), glider ground position
 
   // // THIS UNIT ALSO HAS A CHECKBOX INPUT
   // let inputCheckBoxVectors = "checkbox_vec";
@@ -164,41 +173,65 @@ function puGlider(pUnitIndex) {
     // check for change in overall main time step simTimeStep
     unitTimeStep = simParams.simTimeStep / unitStepRepeats;
 
-    // I am using static 2D cartesian frame of reference
-    // at each time step update x & y components of position, speed, forces, etc.
-    // and check for conditions to turn, which would change signs
-    // for each x and y d_dt, consider: speed, drag, lift, and gravity
-    // drag and lift are varying forces (kg-m/s2) = mass (kg) * accel (m/s2)
-    // gravity is a constant acceleration (d2y/dt2, m/s2)
-    //
-    // SEE MY ZOTERO REF: Numerical integration in dynamic soaring...
-    // new_velocity = old_velocity + acceleration * delta_time;
-    // new_position = position + new_velocity * delta_time;
-    //
-    // LIFT & DRAG FORCES are functions of angle of attack with respect
-    //   to the apparent wind direction, where Vair is apparent air speed
-    // FORCE = coeffic * Area * 0.5 * fluid_density * Vair^2
-    //
-    // u here is magnitude (speed) of glider velocity vector in x,y space
-    // zero angle points along x-axis to right, with positive angle CCW
-    // alpha is angle of direction of glider in x,y space
-    // beta is 180 - alpha in degrees here
-    // y-length of glider speed vector = u * sin(beta), x-length = u * cos(beta)
-    // Tw is magnitude of true wind, whose direction is always zero degrees here
-    // Aw is magnitude of apparent wind at glider...
-    //   which should be glider's airspeed
-    // 180 - gamma is angle of apparent wind
+    // WARNING: DOUBLE-CHECK ANGLE SIGNS AND VECTOR DIRECTIONS!!
+
+    // gliderAngle is angle of glider heading relative to coordinate system
+    // downwind heading is -pi/2 <= gliderAngle <= pi/2
+    // upwind heading is pi/2 <= gliderAngle <= -pi/2
+    // angle of true wind = zero relative to coordinate system & constant
+    // beta = pi - angle of glider with respect to true wind
+    let beta = (pi - gliderAngle);
+    // gliderSpeed = magnitude of glider velocity vector
+    let xGliderSpeed = gliderSpeed * Math.cos(beta);
+    let yGliderSpeed = gliderSpeed * Math.sin(beta); // (m/s)
+
+    let trueWindSpeed = getTrueWindSpeed(yGliderLoc, windProfileOption);
+
+    // gamma = pi - angle of apparent wind relative to coordinate system
+    // attackAngle = angle of glider relative to apparent wind = (beta - gamma)
+    let gamma = Math.atan( (yGliderLoc + gliderSpeed * Math.sin(beta)) / (trueWindSpeed + (xGliderLoc - gliderSpeed * Math.cos(beta)) );
     // beta - gamma is angle of attack of glider to apparent wind
-    // x0 and y0 is current glider location
-    // gamma = arctan( (y0 + u*sin(beta)) / (Tw + (x0 - u*cos(beta)) )
-    // Aw = (y0 + u*sin(beta)) / sin(gamma)
-    //
-    // call functions to get lift and drag coeff's using beta-gamma attack angle
-    // from square of airspeed Aw^2 and coeff's, get lift and drag forces
+    let attackAngle = (beta - gamma);
+    let appWindSpeed = (yGliderLoc + gliderSpeed * Math.sin(beta)) / Math.sin(gamma);
+
+    // call functions to get lift and drag coeff's using attack angle
+    // then from square of airspeed Aw^2 and coeff's, get lift and drag forces
     // these are vectors relative to the glider's body, so need to get x,y components
     //
+    let tempFactor = 0.5 * wingArea * airDens * appWindSpeed**2;
+    let liftForceVectorMag = tempFactor * getLiftCoeff(attackAngle);
+    let dragForceVectorMag = tempFactor * getDragCoeff(attackAngle);
+    //
+    // now need to get x and y components of these vectors
+    // lift is normal to glider direction, drag parallel to glider direction
+    //
+    // WARNING - need to check and correct angle signs
+    //           and vector directions with respect to x,y coordinate system
+    //
+    let delta = 90 - beta;
+    let xLiftForce = liftForceVectorMag * Math.cos(delta);
+    let yLiftForce = liftForceVectorMag * Math.sin(delta); // kg-m/s2
+    let xDragForce = dragForceVectorMag * Math.cos(beta);
+    let yDragForce = dragForceVectorMag * Math.sin(beta);
 
+    // force = gliderMass * acceleration
+    // acceleration = force / gliderMass
 
+    let xLiftAccel = xLiftForce / gliderMass;
+    let yLiftAccel = yLiftForce / gliderMass; // m/s2
+    let yDragAccel = yDragForce / gliderMass;
+    let xDragAccel = xDragForce / gliderMass;
+    let xGravAccel = 0;
+    let yGravAccel = gravity; // m/s2
+
+    // STEP IN TIME TO UPDATE SPEED, LOCATION AND ANGLE
+    // See my Zotero ref: Numerical integration in dynamic soaring...
+    // new_velocity = old_velocity + acceleration * delta_time;
+    // new_position = position + new_velocity * delta_time;
+    xGliderSpeed = xGliderSpeed + (xLiftAccel + xDragAccel + xGravAccel) * unitTimeStep;
+    yGliderSpeed = yGliderSpeed + (yLiftAccel + yDragAccel + yGravAccel) * unitTimeStep;
+    xGliderLoc = xGliderLoc + xGliderSpeed * unitTimeStep;
+    yGliderLoc = yGliderLoc + yGliderSpeed * unitTimeStep;
 
     // ====== OLD BELOW FROM PENDULUM LAB ==========
     // accel = gravity * Math.sin(-angle);
@@ -220,6 +253,22 @@ function puGlider(pUnitIndex) {
     // velocity = newVelocity;
 
   } // END of updateState method
+
+  this.getTrueWindSpeed = function(pAltitude,pOption) {
+    // need different option cases
+    let wind = 10; // (m/s)
+    return wind;
+  } // END of getTrueWindSpeed
+
+  this.getLiftCoeff = function(pAttackAngle) {
+    let liftCoeff = 0.5;
+    return liftCoeff;
+  } // END of getLiftCoeff
+
+  this.getDragCoeff = function(pAttackAngle) {
+    let dragCoeff = 0.5;
+    return dragCoeff;
+  } // END of getDragCoeff
 
   this.updateDisplay = function() {
 

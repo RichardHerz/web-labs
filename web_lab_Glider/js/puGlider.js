@@ -50,10 +50,10 @@ function puGlider(pUnitIndex) {
   const airDens = 1.2; // (kg/m3), https://en.wikipedia.org/wiki/Density_of_air
 
   let windProfileOption = 0;
-  let gliderSpeed = -60; // (m/s), magnitude of glider velocity vector
-  let gliderAngle = 1 * pi; // (rad), angle of glider in x,y coordinates
-  let yGliderLoc = 10; // (m), glider altitude
-  let xGliderLoc = 50; // (m), glider ground position
+  let gliderSpeed = 30; // (m/s), magnitude of glider velocity vector
+  let gliderAngle = 0.9 * pi; // (rad), CCW angle of glider from x axis
+  let yGliderLoc = 30; // (m), glider altitude
+  let xGliderLoc = 30; // (m), glider ground position
 
   // // THIS UNIT ALSO HAS A CHECKBOX INPUT
   // let inputCheckBoxVectors = "checkbox_vec";
@@ -249,7 +249,7 @@ function puGlider(pUnitIndex) {
   } // END of getTrueWindSpeed
 
   this.getLiftCoeff = function(pAttackAngle) {
-    let liftCoeff = 10;
+    let liftCoeff = 0.5;
     return liftCoeff;
   } // END of getLiftCoeff
 

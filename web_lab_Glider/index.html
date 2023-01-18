@@ -56,7 +56,7 @@
     <p><a href="/web-labs/fun-with-graphics-and-javascript/">Return to Web Labs</a> at ReactorLab.net</p>
     <p><b><i>Dynamic Soaring Glider</i></b></p>
     <p>
-      This is a very simple model of a glider.
+      This is a very simple model of a glider in 2 Dimensions.
       Our goal is to have the glider fly a closed-loop path.
       Wish us luck!
       <br>
@@ -94,11 +94,12 @@
     </div>
   -->
 
-    <svg id="svg_glider" width="600" height="610">
+    <svg id="svg_glider" width="600" height="600">
 
       <defs>
         <!-- refX and refY are positions in marker that is end of line that marker is set -->
-        <marker id="markerArrowHead" markerWidth="13" markerHeight="13" refX="2" refY="6"
+        <!-- refX="2" refY="6" -->
+        <marker id="markerArrowHead" markerWidth="13" markerHeight="13" refX="20" refY="6"
                orient="auto">
             <path d="M2,2 L2,11 L10,6 L2,2" style="fill:#000000;" />
         </marker>
@@ -107,9 +108,9 @@
       <!-- https://jenkov.com/tutorials/svg/path-element.html -->
       <!-- lower case "el" l#,# is relative to M#,# (L#,# would be absolute) -->
 
-      <path id="glider" d="M100,150 l50,50"
+      <path id="glider" d="M100,150 l10,10"
         style="stroke: black; stroke-width: 1px; fill: none;
-          marker-end: url(#markerArrowHead);"
+          marker-start: url(#markerArrowHead);"
       />
 
       <!-- https://jenkov.com/tutorials/svg/polygon-element.html -->

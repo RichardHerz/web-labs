@@ -38,7 +38,10 @@ function puGlider(pUnitIndex) {
 
   // HERE DELCARE CONSTANTS & VARIABLES WE WISH TO CARRY BETWEEN UPDATES
 
-  const gravity = -9.8; // (m/s2), acts in negative y-coordinate direction
+  // NOTE - COMPUTE FOR POSITIVE VERTICAL COORDINATE y POINTING UP
+  // THEN TRANSFORM FOR SCREEN VERTICAL COORD POINTING DOWN IN updateDisplay
+
+  const gravity = -9.8; // (m/s2)
   const pi = Math.PI; // used in reset & updateState
   const degTOrad = Math.PI / 180; // used in updateUIparams
 
@@ -47,9 +50,9 @@ function puGlider(pUnitIndex) {
   const airDens = 1.2; // (kg/m3), https://en.wikipedia.org/wiki/Density_of_air
 
   let windProfileOption = 0;
-  let gliderSpeed = 10; // (m/s), magnitude of glider velocity vector
-  let gliderAngle = 0.8 * pi; // (rad), angle of glider in x,y coordinates
-  let yGliderLoc = 50; // (m), glider altitude
+  let gliderSpeed = -60; // (m/s), magnitude of glider velocity vector
+  let gliderAngle = 1 * pi; // (rad), angle of glider in x,y coordinates
+  let yGliderLoc = 10; // (m), glider altitude
   let xGliderLoc = 50; // (m), glider ground position
 
   // // THIS UNIT ALSO HAS A CHECKBOX INPUT
@@ -115,7 +118,7 @@ function puGlider(pUnitIndex) {
     // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
-    this.varCount = v;
+    // this.varCount = v;
     //
     // OPTIONAL - add entries for output variables if want to use min-max to
     //            constrain values in updateState or dimensional units in plotInfo
@@ -185,11 +188,12 @@ function puGlider(pUnitIndex) {
     let xGliderSpeed = gliderSpeed * Math.cos(beta);
     let yGliderSpeed = gliderSpeed * Math.sin(beta); // (m/s)
 
-    let trueWindSpeed = getTrueWindSpeed(yGliderLoc, windProfileOption);
+    let trueWindSpeed = this.getTrueWindSpeed(yGliderLoc, windProfileOption);
 
     // gamma = pi - angle of apparent wind relative to coordinate system
     // attackAngle = angle of glider relative to apparent wind = (beta - gamma)
-    let gamma = Math.atan( (yGliderLoc + gliderSpeed * Math.sin(beta)) / (trueWindSpeed + (xGliderLoc - gliderSpeed * Math.cos(beta)) );
+    let gamma = Math.atan( (yGliderLoc + gliderSpeed * Math.sin(beta)) /
+                (trueWindSpeed + (xGliderLoc - gliderSpeed * Math.cos(beta))) );
     // beta - gamma is angle of attack of glider to apparent wind
     let attackAngle = (beta - gamma);
     let appWindSpeed = (yGliderLoc + gliderSpeed * Math.sin(beta)) / Math.sin(gamma);
@@ -199,8 +203,8 @@ function puGlider(pUnitIndex) {
     // these are vectors relative to the glider's body, so need to get x,y components
     //
     let tempFactor = 0.5 * wingArea * airDens * appWindSpeed**2;
-    let liftForceVectorMag = tempFactor * getLiftCoeff(attackAngle);
-    let dragForceVectorMag = tempFactor * getDragCoeff(attackAngle);
+    let liftForceVectorMag = tempFactor * this.getLiftCoeff(attackAngle);
+    let dragForceVectorMag = tempFactor * this.getDragCoeff(attackAngle);
     //
     // now need to get x and y components of these vectors
     // lift is normal to glider direction, drag parallel to glider direction
@@ -234,17 +238,18 @@ function puGlider(pUnitIndex) {
     yGliderLoc = yGliderLoc + yGliderSpeed * unitTimeStep;
 
     // *** TO DO - need user-controlled elevators for attack angle adjustment ***
-    
+
   } // END of updateState method
 
   this.getTrueWindSpeed = function(pAltitude,pOption) {
     // need different option cases
-    let wind = 10; // (m/s)
+    // miles per hour number approx double m/s number
+    let wind = 10 + 6 * pAltitude; // (m/s)
     return wind;
   } // END of getTrueWindSpeed
 
   this.getLiftCoeff = function(pAttackAngle) {
-    let liftCoeff = 0.5;
+    let liftCoeff = 10;
     return liftCoeff;
   } // END of getLiftCoeff
 
@@ -257,20 +262,27 @@ function puGlider(pUnitIndex) {
 
     // https://jenkov.com/tutorials/svg/path-element.html
 
-    const pixPerMeter = 1; // (px/m)
-    const x0 = 300; // (px), x location of x = 0 of coordinate system
-    const y0 = 300; // (px), y location of y = 0
+    const pixPerMeter = 10; // (px/m)
+
+    const y0 = 0; // (px), y location of y = 0
+    const x0 = 0; // (px), x location of x = 0
 
     // coordinates for glider
     let xs = x0 + xGliderLoc * pixPerMeter; // (px)
     let ys = y0 + yGliderLoc * pixPerMeter;
 
+    // NOTE - y COMPUTED ABOVE FOR POSITIVE VERTICAL COORDINATE POINTS UP
+    //        NOW TRANSFORM BELOW FOR SVG VERTICAL COORDINATE POINTING DOWN
+    // yHeight = height in index's <svg id="svg_glider" width="600" height="600">
+    const yHeight = 600; // (px)
+    ys = yHeight - ys;
+
     svgElement = document.getElementById("glider");
     // with lowercase "el" lxe,ye is relative to path start at xs,ys
     // compute ending xe,ye with gliderAngle
     // use constants during development
-    let xe = 50;
-    let ye = 50;
+    let xe = 10;
+    let ye = 10;
     svgElement.setAttribute("d", "M" + xs + "," + ys + " l" + xe + "," + ye );
 
   } // END of updateDisplay method

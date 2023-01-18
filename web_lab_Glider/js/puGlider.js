@@ -209,20 +209,20 @@ function puGlider(pUnitIndex) {
     //           and vector directions with respect to x,y coordinate system
     //
     let delta = 90 - beta;
-    let xLiftForce = liftForceVectorMag * Math.cos(delta);
-    let yLiftForce = liftForceVectorMag * Math.sin(delta); // kg-m/s2
+    let xLiftForce = liftForceVectorMag * Math.cos(delta); // (kg-m/s2)
+    let yLiftForce = liftForceVectorMag * Math.sin(delta);
     let xDragForce = dragForceVectorMag * Math.cos(beta);
     let yDragForce = dragForceVectorMag * Math.sin(beta);
 
     // force = gliderMass * acceleration
     // acceleration = force / gliderMass
 
-    let xLiftAccel = xLiftForce / gliderMass;
-    let yLiftAccel = yLiftForce / gliderMass; // m/s2
+    let xLiftAccel = xLiftForce / gliderMass; // (m/s2)
+    let yLiftAccel = yLiftForce / gliderMass;
     let yDragAccel = yDragForce / gliderMass;
     let xDragAccel = xDragForce / gliderMass;
     let xGravAccel = 0;
-    let yGravAccel = gravity; // m/s2
+    let yGravAccel = gravity;
 
     // STEP IN TIME TO UPDATE SPEED, LOCATION AND ANGLE
     // See my Zotero ref: Numerical integration in dynamic soaring...
@@ -233,25 +233,8 @@ function puGlider(pUnitIndex) {
     xGliderLoc = xGliderLoc + xGliderSpeed * unitTimeStep;
     yGliderLoc = yGliderLoc + yGliderSpeed * unitTimeStep;
 
-    // ====== OLD BELOW FROM PENDULUM LAB ==========
-    // accel = gravity * Math.sin(-angle);
-    // let newVelocity = velocity + accel * unitTimeStep;
-    // // apply friction
-    // let friction = fricFrac * velocity;
-    // newVelocity = newVelocity - friction * unitTimeStep;
-    //
-    // let angularVelocity = velocity * radius; // (radian/s)
-    // let newAngle = angle + angularVelocity * unitTimeStep;
-    //
-    // // correct angle if pendulum goes past top in CCW direction
-    // if (newAngle > pi) {
-    //   newAngle = -pi + newAngle % pi;  // % is JS modulo operator,
-    // }
-    //
-    // // update current values
-    // angle = newAngle;
-    // velocity = newVelocity;
-
+    // *** TO DO - need user-controlled elevators for attack angle adjustment ***
+    
   } // END of updateState method
 
   this.getTrueWindSpeed = function(pAltitude,pOption) {
@@ -272,94 +255,25 @@ function puGlider(pUnitIndex) {
 
   this.updateDisplay = function() {
 
-    // UNDER DEVELOPMENT
+    // https://jenkov.com/tutorials/svg/path-element.html
+
+    const pixPerMeter = 1; // (px/m)
+    const x0 = 300; // (px), x location of x = 0 of coordinate system
+    const y0 = 300; // (px), y location of y = 0
+
+    // coordinates for glider
+    let xs = x0 + xGliderLoc * pixPerMeter; // (px)
+    let ys = y0 + yGliderLoc * pixPerMeter;
+
+    svgElement = document.getElementById("glider");
+    // with lowercase "el" lxe,ye is relative to path start at xs,ys
+    // compute ending xe,ye with gliderAngle
+    // use constants during development
+    let xe = 50;
+    let ye = 50;
+    svgElement.setAttribute("d", "M" + xs + "," + ys + " l" + xe + "," + ye );
 
   } // END of updateDisplay method
-
-  this.updateDisplayPENDULUM = function() {
-
-    document.getElementById(displayTimeField).innerHTML =  controller.simTime.toFixed(2);
-
-    const pixPerMeter = 200; // (px/m)
-    const rpix = radius * pixPerMeter; // (px), pixel length of rod-radius
-    const xc = 300; // (px), x location of center of rotation
-    const yc = 300; // 250; // (px), y location of center of rotation
-
-    // coordinates for bobANDrod
-    let x = xc + rpix * Math.sin(angle);
-    let y = yc + rpix * Math.cos(angle);
-
-    // coordinates for velocVector
-    let pixFac = 0.15;
-    let xv = x + pixFac * pixPerMeter * velocity * Math.cos(angle);
-    let yv = y - pixFac * pixPerMeter * velocity * Math.sin(angle);
-    // velocVector is x,y to xv,yv
-
-    // coordinates for accelVector
-    pixFac = 0.05;
-    let xa = x + pixFac * pixPerMeter * accel * Math.cos(angle);
-    let ya = y - pixFac * pixPerMeter * accel * Math.sin(angle);
-    // accelVector is x,y to xa,ya
-
-    // coordinates for accelVectorDown
-    //   component of tangential accel that is gravity pulling down
-    let tDownY = y + pixFac * pixPerMeter * gravity;
-    // accelVectorDown is x,y to x,tDownY
-
-    // coordinates for accelVectorRod
-    //   component of tangential accel that is rod holding bob (radial accel)
-    //   with rod in tension when bob below horizontal and
-    //   rod in compression when bob above horizontal
-    let tRod = gravity * Math.cos(angle);
-    let dX = pixFac * pixPerMeter * (tRod * Math.sin(angle));
-    let dY = pixFac * pixPerMeter * (tRod * Math.cos(angle));
-    // accelVectorRod is x,y to x-dX,y-dY
-
-    // Set new vector positions
-    //   bobANDrod is xc,yc to x,y
-    //   velocVector is x,y to xv,yv
-    //   accelVector is x,y to xa,ya
-    //   accelVectorDown is x,y to x,tDownY
-    //   accelVectorRod is x,y to x-dX,y-dY
-
-    // http://tutorials.jenkov.com/svg/
-
-    let svgElement = document.getElementById("bobANDrod");
-    let xs = xc;
-    let xe = x;
-    let ys = yc;
-    let ye = y;
-    svgElement.setAttribute("d", "M" + xs + "," + ys + " L" + xe + "," + ye );
-
-    svgElement = document.getElementById("velocVector");
-    xs = x;
-    xe = xv;
-    ys = y;
-    ye = yv;
-    svgElement.setAttribute("d", "M" + xs + "," + ys + " L" + xe + "," + ye );
-
-    svgElement = document.getElementById("accelVector");
-    xs = x;
-    xe = xa;
-    ys = y;
-    ye = ya;
-    svgElement.setAttribute("d", "M" + xs + "," + ys + " L" + xe + "," + ye );
-
-    svgElement = document.getElementById("accelVectorDown");
-    xs = x;
-    xe = x;
-    ys = y;
-    ye = tDownY;
-    svgElement.setAttribute("d", "M" + xs + "," + ys + " L" + xe + "," + ye );
-
-    svgElement = document.getElementById("accelVectorRod");
-    xs = x;
-    xe = x-dX;
-    ys = y;
-    ye = y-dY;
-    svgElement.setAttribute("d", "M" + xs + "," + ys + " L" + xe + "," + ye );
-
-  } // END of updateDisplayPENDULUM method
 
   this.checkForSteadyState = function() {
     // required - called by controller object
@@ -370,6 +284,8 @@ function puGlider(pUnitIndex) {
 
     let ssFlag = false;
 
+    // // // BELOW FROM PENDULUM AS EXAMPLE
+    // // //
     // // need narrow ranges for this check, not == 0
     // // do not check at the top, unstable SS
     // let mmax = 0.0001;

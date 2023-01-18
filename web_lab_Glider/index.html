@@ -98,46 +98,25 @@
 
       <defs>
         <!-- refX and refY are positions in marker that is end of line that marker is set -->
-        <marker id="markerEmptyCircle" markerWidth="14" markerHeight="10" refX="5" refY="5">
-            <circle cx="5" cy="5" r="4" style="stroke: #000000; fill: none;"/>
-        </marker>
-
-        <marker id="markerFilledCircle" markerWidth="20" markerHeight="20" refX="10" refY="10">
-            <circle cx="10" cy="10" r="10" style="stroke: none; fill: #000000;"/>
-        </marker>
-
         <marker id="markerArrowHead" markerWidth="13" markerHeight="13" refX="2" refY="6"
                orient="auto">
             <path d="M2,2 L2,11 L10,6 L2,2" style="fill:#000000;" />
         </marker>
       </defs>
 
-      <path id="bobANDrod" d="M100,150 l50,50"
+      <!-- https://jenkov.com/tutorials/svg/path-element.html -->
+      <!-- lower case "el" l#,# is relative to M#,# (L#,# would be absolute) -->
+
+      <path id="glider" d="M100,150 l50,50"
         style="stroke: black; stroke-width: 1px; fill: none;
-          marker-start: url(#markerEmptyCircle);
-          marker-end: url(#markerFilledCircle);"
-      />
-
-      <path id="velocVector" d="M100,150 l50,50"
-        style="stroke: green; stroke-width: 1px; fill: none;
           marker-end: url(#markerArrowHead);"
       />
 
-      <path id="accelVector" d="M100,150 l50,50"
-        style="stroke: blue; stroke-width: 1px; fill: none;
-          marker-end: url(#markerArrowHead);"
-      />
+      <!-- https://jenkov.com/tutorials/svg/polygon-element.html -->
 
-      <path id="accelVectorDown" d="M100,150 l50,50"
-        style="stroke: blue; stroke-width: 1px; fill: none;
-          marker-end: url(#markerArrowHead);
-          stroke-dasharray: 4 2;"
-      />
-
-      <path id="accelVectorRod" d="M100,150 l50,50"
-        style="stroke: blue; stroke-width: 1px; fill: none;
-          marker-end: url(#markerArrowHead);"
-      />
+      <!-- <polygon id="glider" points="110,100  160,100  135,150"
+         style="stroke:#660000; fill:#cc3333;"
+      /> -->
 
     </svg>
 

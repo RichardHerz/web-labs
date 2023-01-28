@@ -50,7 +50,7 @@ function puGlider(pUnitIndex) {
   const airDens = 1.2; // (kg/m3), https://en.wikipedia.org/wiki/Density_of_air
 
   let windProfileOption = 0;
-  let gliderSpeed = 30; // (m/s), magnitude of glider velocity vector
+  let gliderSpeed = 1; // (m/s), magnitude of glider velocity vector
   let gliderAngle = 0.9 * pi; // (rad), CCW angle of glider from x axis
   let yGliderLoc = 30; // (m), glider altitude
   let xGliderLoc = 30; // (m), glider ground position
@@ -178,47 +178,151 @@ function puGlider(pUnitIndex) {
 
     // WARNING: DOUBLE-CHECK ANGLE SIGNS AND VECTOR DIRECTIONS!!
 
+    // https://www.embibe.com/exams/scalene-triangle-formula/
+
     // gliderAngle is angle of glider heading relative to coordinate system
     // downwind heading is -pi/2 <= gliderAngle <= pi/2
     // upwind heading is pi/2 <= gliderAngle <= -pi/2
     // angle of true wind = zero relative to coordinate system & constant
-    // beta = pi - angle of glider with respect to true wind
-    let beta = (pi - gliderAngle);
-    // gliderSpeed = magnitude of glider velocity vector
-    let xGliderSpeed = gliderSpeed * Math.cos(beta);
-    let yGliderSpeed = gliderSpeed * Math.sin(beta); // (m/s)
 
+    // get quadrant into which glider points
+    let quad;
+    if (gliderAngle >= 0 && gliderAngle < 0.5*pi ) {
+      quad = 1;
+    } else if (gliderAngle >= 0.5*pi && gliderAngle < pi) {
+      quad = 2;
+    } else if (gliderAngle >= pi && gliderAngle < 1.5*pi) {
+      quad = 3;
+    } else (gliderAngle >= 1.5*pi && gliderAngle < 0) {
+      quad = 4;
+    }
+
+    let attackAngle;
+    let appWindSpeed;
+    let alpha;
+    let beta;
+    let tanAlpha;
+    let yV;
+    let xV;
     let trueWindSpeed = this.getTrueWindSpeed(yGliderLoc, windProfileOption);
 
-    // gamma = pi - angle of apparent wind relative to coordinate system
-    // attackAngle = angle of glider relative to apparent wind = (beta - gamma)
-    let gamma = Math.atan( (yGliderLoc + gliderSpeed * Math.sin(beta)) /
-                (trueWindSpeed + (xGliderLoc - gliderSpeed * Math.cos(beta))) );
-    // beta - gamma is angle of attack of glider to apparent wind
-    let attackAngle = (beta - gamma);
-    let appWindSpeed = (yGliderLoc + gliderSpeed * Math.sin(beta)) / Math.sin(gamma);
+    // SEE FOR APPARENT WIND
+    //     https://www.sailbetter.com/apparent-wind/
+    //     http://www.phys.unsw.edu.au/~jw/sailing.html
+
+    // MY VECTOR CONSTRUCTION follows that in https://www.sailbetter.com/apparent-wind/
+    //    is to put heat of V (gliderSpeed vector) or "boat speed WIND" to head of glider
+    //    then head of W (trueWindSpeed vector) to tail of V
+    //    then tail of A (apparent wind vector) at tail of W to A head at head of glider
+
+    // VECTOR CONSTRUCTION in http://www.phys.unsw.edu.au/~jw/sailing.html
+    //    is to put tail of V or "boat speed" to head of glider
+    //    then put tail of W at tail of V
+    //    then A tail at head of V to A head at head of W
+
+    // BOTH CONSTRUCTIONS RESULT IN THE SAME APPARENT WIND VECTOR
+
+    // >>> WARNING: these might only work for glider speed > wind speed <<<
+
+    // for now at least, handle each direction quadrant separately
+    // then look for similarities which may allow combining some or all
+    switch (quad) {
+      case 1:
+        beta = gliderAngle;
+        // sin > 0, cos > 0
+        xV = gliderSpeed * Math.cos(beta); // should be + x direction
+        yV = gliderSpeed * Math.sin(beta); // should be + y direction
+// >>> WARNING: have to check signs for tanAlpha and alpha for all 4 cases <<< 
+        tanAlpha = yV / (xV - trueWindSpeed);
+        alpha = Math.atan(tanAlpha); // alpha = beta + attackAngle
+        attackAngle = alpha - beta;
+        break;
+      case 2:
+        beta = pi - gliderAngle;
+        // sin > 0, cos < 0
+        xV = gliderSpeed * Math.cos(beta); // should be - x direction
+        yV = gliderSpeed * Math.sin(beta); // should be + y direction
+        tanAlpha = yV / (xV + trueWindSpeed);
+        alpha = Math.atan(tanAlpha); // alpha = beta - attackAngle
+        attackAngle = beta - alpha;
+        break;
+      case 3:
+        beta = gliderAngle - pi;
+        // sin > 0, cos < 0
+        xV = gliderSpeed * Math.cos(beta) * -1; // should be + x direction
+        yV = gliderSpeed * Math.sin(beta); // should be + y direction
+        tanAlpha = yV / (xV + trueWindSpeed);
+        alpha = Math.atan(tanAlpha); // alpha = beta - attackAngle
+        attackAngle = beta - alpha;
+        break;
+      case 4:
+        beta = 2 * pi - gliderAngle;
+        // sin < 0, cos > 0
+        xV = gliderSpeed * Math.cos(beta); // should be + x direction
+        yV = gliderSpeed * Math.sin(beta) * -1; // should be + y direction
+        tanAlpha = yV / (xV - trueWindSpeed);
+        alpha = Math.atan(tanAlpha); // alpha = beta + attackAngle
+        attackAngle = alpha - beta;
+        break;
+      default:
+        // code block
+    }
+    appWindSpeed = yV / Math.sin(alpha);
 
     // call functions to get lift and drag coeff's using attack angle
     // then from square of airspeed Aw^2 and coeff's, get lift and drag forces
     // these are vectors relative to the glider's body, so need to get x,y components
     //
     let tempFactor = 0.5 * wingArea * airDens * appWindSpeed**2;
-    let liftForceVectorMag = tempFactor * this.getLiftCoeff(attackAngle);
-    let dragForceVectorMag = tempFactor * this.getDragCoeff(attackAngle);
+    let liftForce = tempFactor * this.getLiftCoeff(attackAngle);
+    let dragForce = tempFactor * this.getDragCoeff(attackAngle);
     //
     // now need to get x and y components of these vectors
     // lift is normal to glider direction, drag parallel to glider direction
     //
-    // WARNING - need to check and correct angle signs
-    //           and vector directions with respect to x,y coordinate system
-    //
-    let delta = 90 - beta;
-    let xLiftForce = liftForceVectorMag * Math.cos(delta); // (kg-m/s2)
-    let yLiftForce = liftForceVectorMag * Math.sin(delta);
-    let xDragForce = dragForceVectorMag * Math.cos(beta);
-    let yDragForce = dragForceVectorMag * Math.sin(beta);
 
-    // force = gliderMass * acceleration
+    let xLiftForce; // (kg-m/s2)
+    let yLiftForce;
+    let xDragForce;
+    let yDragForce;
+    switch (quad) {
+      case 1:
+        beta = gliderAngle;
+        // sin > 0, cos > 0
+        xLiftForce = liftForce * Math.sin(beta) * -1; // should be - x direction
+        yLiftForce = liftForce * Math.cos(beta); // should be + y direction
+        xDragForce = dragForce * Math.cos(beta) * -1; // should be - x direction
+        yDragForce = dragForce * Math.sin(beta) * -1; // should be - y direction
+        break;
+      case 2:
+        beta = pi - gliderAngle;
+        // sin > 0, cos < 0
+        xLiftForce = liftForce * Math.sin(beta); // should be + x direction
+        yLiftForce = liftForce * Math.cos(beta) * -1; // should be + y direction
+        xDragForce = dragForce * Math.cos(beta) * -1; // should be + x direction
+        yDragForce = dragForce * Math.sin(beta) * -1; // should be - y direction
+        break;
+      case 3:
+        beta = gliderAngle - pi;
+        // sin < 0, cos < 0
+        xLiftForce = liftForce * Math.sin(beta); // should be - x direction
+        yLiftForce = liftForce * Math.cos(beta) * -1; // should be + y direction
+        xDragForce = dragForce * Math.cos(beta) * -1; // should be + x direction
+        yDragForce = dragForce * Math.sin(beta) * -1; // should be + y direction
+        break;
+      case 4:
+        beta = 2 * pi - gliderAngle;
+        // sin < 0, cos > 0
+        xLiftForce = liftForce * Math.sin(beta) * -1; // should be + x direction
+        yLiftForce = liftForce * Math.cos(beta); // should be + y direction
+        xDragForce = dragForce * Math.cos(beta) * -1; // should be - x direction
+        yDragForce = dragForce * Math.sin(beta) * -1; // should be + y direction
+        break;
+      default:
+        // code block
+    }
+
+    // force (kg-m/s2) = gliderMass (kg) * acceleration (m/s2)
     // acceleration = force / gliderMass
 
     let xLiftAccel = xLiftForce / gliderMass; // (m/s2)
@@ -232,6 +336,8 @@ function puGlider(pUnitIndex) {
     // See my Zotero ref: Numerical integration in dynamic soaring...
     // new_velocity = old_velocity + acceleration * delta_time;
     // new_position = position + new_velocity * delta_time;
+    let xGliderSpeed;
+    let yGliderSpeed;
     xGliderSpeed = xGliderSpeed + (xLiftAccel + xDragAccel + xGravAccel) * unitTimeStep;
     yGliderSpeed = yGliderSpeed + (yLiftAccel + yDragAccel + yGravAccel) * unitTimeStep;
     xGliderLoc = xGliderLoc + xGliderSpeed * unitTimeStep;

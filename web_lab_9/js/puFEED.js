@@ -166,7 +166,6 @@ function puFEED(pUnitIndex) {
     // called in HTML input element so must be a publc method
     let unum = unitIndex;
     this.conc = this.dataValues[1] = interfacer.getInputValue(unum, 1);
-    // alert('input: this.conc = ' + this.conc);
     // update position of the range slider
     if (document.getElementById(thisConcSliderID)) {
       // alert('input, slider exists');

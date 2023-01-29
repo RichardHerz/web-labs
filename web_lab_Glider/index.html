@@ -72,27 +72,16 @@
     <p id="field_time_label">simulation time (s):</p>
     <p id="field_time">0</p>
 
-<!--
-    <div id="div_input_group">
-      <p id="field_v_label">
-            initial tangential velocity (m/s):
-      </p>
-      <input id="input_field_initial_velocity" value="1" onchange="processUnits[0].updateUIparams()">
-      <p id="field_th_label">
-            start angle (-180&#176; to 180&#176;):
-      </p>
-       <input id="input_field_theta" value="90" onchange="processUnits[0].updateUIparams()">
-       <p id="field_ff_label">
-             friction factor (dimensionless):
-       </p>
-       <input id="input_field_friction_factor" value="0" onchange="processUnits[0].updateUIparams()">
-
-       <label id="checkbox_vec_LABEL">
-             <input type="checkbox" id="checkbox_vec" onchange="processUnits[0].updateUIparams()">
-             <span id="checkbox_vec_SPAN">vec</span>
-       </label>
-    </div>
-  -->
+    <p id="field_setGliderAngle_label">
+      Enter glider angle (0-2pi rad):
+    </p>
+    <input id="input_setGliderAngle_value" value="0.8" onchange="processUnits[0].updateUIgliderAngle()">
+    </input>
+    <!-- note about range slider: need event onchange for Win IE, oninput for others -->
+      <input type="range" id="range_setGliderAngle_slider" min="0" max="2" step="0.01" value="0.8"
+      oninput="processUnits[0].updateUIgliderAngleSlider()"
+      onchange="processUnits[0].updateUIgliderAngleSlider()">
+    </input>
 
     <svg id="svg_glider" width="600" height="600">
 

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>ReactorLab.net, Fluidized Bed Biomass Gasifier</title>
+
+  <!--
+    Design, text, images and code by Richard K. Herz, 2017-2020
+    Copyrights held by Richard K. Herz
+    Licensed for use under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.en.html
+  -->
+
+  <meta name='description' author='Richard Herz'>
+  <meta name="description" content="The Reactor Lab provides interactive chemical reactor
+  simulations for active learning. Web Labs and desktop versions of ReactorLab
+  and SimzLab, including PureWaterLab, are available. Software is provided free of charge
+  and is open source and available at our GitHub site, github.com/RichardHerz. The code is
+  structured to allow fast construction of new simulations of chemical reactors and other systems."/>
+
+  <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
+  <meta name="viewport" content="width=device-width, initial-scale=0.67">
+
+  <!-- load COMMON CSS style sheets FIRST -->
+  <link rel="stylesheet" href="../web_labs_CSS/common.css">
+
+  <!-- load CSS style sheets for this lab  -->
+  <link rel="stylesheet" href="css/index.css">
+
+  <!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
+  <script language="javascript" src="js/process_sim_params.js" type="text/javascript"></script>
+  <script language="javascript" src="js/puFluidBedAnimation_0.js" type="text/javascript"></script>
+  <script language="javascript" src="js/puFluidBedAnimation_1.js" type="text/javascript"></script>
+  <script language="javascript" src="js/process_units.js" type="text/javascript"></script>
+  <script language="javascript" src="js/process_plot_info.js" type="text/javascript"></script>
+
+  <!-- load COMMON JAVASCRIPT for Web Labs -->
+  <script language="javascript" src="../web_labs_JS/process_controller.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_interfacer.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_plotter_flot.js" type="text/javascript"></script>
+
+  <!-- load JQUERY LIBRARY -->
+  <script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
+
+  <!-- initialize simulation after loading of this window -->
+  <script language="javascript">
+      // this works as script in html file but not in external js files
+      window.onload = controller.openThisLab; // can NOT use () after openThisLab
+  </script>
+
+</head>
+  <body>
+    <div id="div_page_header">
+      <p><a href="/web-labs/fun-with-graphics-and-javascript/">Return to Web Labs</a> at ReactorLab.net</p>
+      <p><b><i>Fluildized Bed Biomass Gasifier</i></b></p>
+      <p>
+      UNDER DEVELOPMENT
+      </p>
+    </div> <!-- end of div div_page_header -->
+    <div id="div_simFrame">
+       <canvas id="canvas_CANVAS_bed_0" width="200" height="500"></canvas> <!-- canvas for colormap graphic -->
+       <canvas id="canvas_CANVAS_bed_1" width="200" height="500"></canvas> <!-- canvas for colormap graphic -->
+       <!-- canvas element width & height must be specified here in HTML and not in CSS -->
+       <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
+       <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
+       <!-- ** HIDE INPUTS FOR NOW ** -->
+       <!-- <input id="input_field_N" value="20">
+       <p id="field_input_N_LABEL">
+          input N
+       </p> -->
+    </div> <!-- end of div div_simFrame -->
+    <!-- div_rlnoticetext filled by interfacer.resetThisLab()
+    and formatted by web_labs_CSS/common.css -->
+    <div id="div_rlnoticetext"></div>
+  </body>
+</html>

@@ -78,6 +78,9 @@ let interfacer = {
   }, // END OF function resetThisLab
 
   getInputValue : function(u,v) {
+
+    // console.log('--- enter interfacer getInputValue ---');
+
     // GET INPUT VALUE - CALLED IN UNITS updateUIparams()
     // USES OBJECT processUnits
 
@@ -87,6 +90,9 @@ let interfacer = {
     // processUnits[u].dataInputs.v does *NOT* work
 
     let varInputID = processUnits[u]['dataInputs'][v];
+
+    // console.log('  varInputID = ' + varInputID);
+
     let varDefault = processUnits[u]['dataDefault'][v];
     let varMin = processUnits[u]['dataMin'][v];
     let varMax = processUnits[u]['dataMax'][v];
@@ -107,6 +113,9 @@ let interfacer = {
       if (document.getElementById(varInputID)) {
         // the input exists so get the value and make sure it is within range
         varValue = document.getElementById(varInputID).value;
+
+        // console.log('   varValue = ' + varValue);
+
         varValue = Number(varValue); // force any number as string to numeric number
         if (isNaN(varValue)) {varValue = varDefault;} // handle e.g., 259x, xxx
         if (varValue < varMin) {varValue = varMin;}
@@ -121,6 +130,9 @@ let interfacer = {
         // this 'else' is in case there is no input on the web page yet in order to
         // allow for independence and portability of this process unit
         varValue = varDefault;
+
+        // console.log('  default varValue = ' + varValue);
+
       }
     }
     return varValue;

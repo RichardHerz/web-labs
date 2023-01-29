@@ -30,6 +30,7 @@ function puGlider(pUnitIndex) {
   // allow this unit to take more than one step within one main loop step in updateState method
   const unitStepRepeats = 1;
   let unitTimeStep = simParams.simTimeStep / unitStepRepeats;
+  let ssCheckSum = 0; // used in checkForSteadyState method
 
   // COORDINATE AND ANGLE SYSTEM
   // 2D x,y coordinates, positive y is up, positive x points downwind to right
@@ -51,15 +52,17 @@ function puGlider(pUnitIndex) {
   const airDens = 1.2; // (kg/m3), https://en.wikipedia.org/wiki/Density_of_air
 
   let windProfileOption = 0;
-  let gliderSpeed = 1; // (m/s), magnitude of glider velocity vector
-  let gliderAngle = 1.8 * pi; // (rad), CCW angle of glider from x axis
+  let gliderSpeed = 2; // (m/s), magnitude of glider velocity vector
+  let gliderAngle = 0.8 * pi; // (rad), CCW angle of glider from x axis
   let yGliderLoc = 30; // (m), glider altitude
   let xGliderLoc = 30; // (m), glider ground position
 
-  // // THIS UNIT ALSO HAS A CHECKBOX INPUT
-  // let inputCheckBoxVectors = "checkbox_vec";
-  // THIS UNIT ALSO HAS A DISPLAY FIELD FOR simTime
-  let displayTimeField = "field_time";
+  // CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS
+  // **** currently use these but also see IDs in initialize method
+  // **** where they are used for process_interfacer.getInputValue
+  let displayTimeField = 'field_time';
+  let thisGliderAngleSliderID = 'range_setGliderAngle_slider';
+  let thisGliderAngleFieldID = 'input_setGliderAngle_value';
 
   // *******************************************
   //         define PUBLIC properties
@@ -96,35 +99,40 @@ function puGlider(pUnitIndex) {
   // *****************************************
 
   this.initialize = function() {
+
+    // console.log('enter this.initialize, this unitIndex = ' + unitIndex); // xxx
+
     //
     // ADD ENTRIES FOR UI PARAMETER INPUTS FIRST, then output vars below
     //
-    // let v = 0;
-    // this.dataHeaders[v] = 'velocity';
-    // this.dataInputs[v] = 'input_field_initial_velocity';
-    // this.dataUnits[v] = 'm/s';
-    // this.dataMin[v] = -10;
-    // this.dataMax[v] = 10;
-    // this.dataDefault[v] = 1;
-    // //
-    // v = 1;
-    // this.dataHeaders[v] = 'angle';
-    // this.dataInputs[v] = "input_field_theta";
-    // this.dataUnits[v] = 'degree';
-    // this.dataMin[v] = -180;
-    // this.dataMax[v] = 180;
-    // this.dataDefault[v] = 90;
+    let v = 0;
+    this.dataHeaders[v] = 'Glider Angle';
+    this.dataInputs[v] = 'range_setGliderAngle_slider';
+    this.dataUnits[v] = '';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 2;
+    this.dataDefault[v] = 0.8;
+    //
+    v = 1;
+    this.dataHeaders[v] = 'Glider Angle';
+    this.dataInputs[v] = 'input_setGliderAngle_value';
+    this.dataUnits[v] = '';
+    this.dataMin[v] = 0;
+    this.dataMax[v] = 2;
+    this.dataDefault[v] = 0.8;
+    //
     //
     // END OF INPUT VARS
     // record number of input variables, varCount
     // used, e.g., in copy data to table
     //
-    // this.varCount = v;
+    this.varCount = v;
     //
     // OPTIONAL - add entries for output variables if want to use min-max to
     //            constrain values in updateState or dimensional units in plotInfo
     //
-  } // END of initialize method
+
+  } // END of initialize()
 
   this.reset = function() {
     // On 1st load or reload page, the html file fills the fields with html file
@@ -141,7 +149,10 @@ function puGlider(pUnitIndex) {
 
   } // END of reset method
 
-  this.updateUIparams = function() {
+  this.updateUIparams = function(){
+
+  // console.log('enter this.updateUIparams, this unitIndex = ' + unitIndex); // xxx
+
     //
     // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     // SPECIFY REFERENCES TO HTML UI COMPONENTS ABOVE in this unit definition
@@ -149,20 +160,12 @@ function puGlider(pUnitIndex) {
     // need to reset controller.ssFlag to false to get sim to run
     // after change in UI params when previously at steady state
     controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    ssCheckSum = 1;
 
-    // check input fields for new values
-    // function getInputValue is defined in file process_interfacer.js
-    // getInputValue(unit # in processUnits object, variable # in dataInputs array)
-    // see variable numbers above in initialize
-    // note: this.dataValues.[pVar]
-    //   is only used in copyData to report input values
+    this.updateUIgliderAngle();
 
-    let unum = unitIndex;
-    // velocity = this.dataValues[0] = interfacer.getInputValue(unum, 0);
-    // angleDeg = this.dataValues[1] = interfacer.getInputValue(unum, 1);
-    // fricFrac = this.dataValues[2] = interfacer.getInputValue(unum, 2);
-
-  } // END of updateUIparams method
+  } // END updateUIparams
 
   this.updateState = function() {
     //
@@ -407,19 +410,64 @@ if (controller.simTime > 0) {
   this.getTrueWindSpeed = function(pAltitude,pOption) {
     // need different option cases
     // miles per hour number approx double m/s number
-    let wind = 0.2 ; // + 0.1 * pAltitude; // (m/s)
+    let wind = 1 ; // + 0.1 * pAltitude; // (m/s)
     return wind;
   } // END of getTrueWindSpeed
 
   this.getLiftCoeff = function(pAttackAngle) {
-    let liftCoeff = 0.3;
+    // SEE FOR PLOT https://en.wikipedia.org/wiki/Airfoil
+    let liftCoeff = 0.7;
     return liftCoeff;
   } // END of getLiftCoeff
 
   this.getDragCoeff = function(pAttackAngle) {
-    let dragCoeff = 0.1;
+    // SEE FOR PLOT https://en.wikipedia.org/wiki/Airfoil
+    let dragCoeff = 0.05;
     return dragCoeff;
   } // END of getDragCoeff
+
+  this.updateUIgliderAngle = function() {
+    // console.log('*** ENTER updateUIgliderAngle ***');
+    // SPECIAL FOR THIS UNIT
+    // called in HTML input element so must be a publc method
+    let unum = unitIndex;
+    let gliderAngleRaw = this.dataValues[1] = interfacer.getInputValue(unum, 1);
+    gliderAngle = pi * gliderAngleRaw;
+    // console.log('*** in updateUIgliderAngle, gliderAngle = ' + gliderAngle);
+    // alert('input: this.conc = ' + this.conc);
+    // update position of the range slider
+    if (document.getElementById(thisGliderAngleSliderID)) {
+      // alert('input, slider exists');
+      document.getElementById(thisGliderAngleSliderID).value = gliderAngleRaw;
+    }
+    // need to reset controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    ssCheckSum = 1;
+    this.updateDisplay();
+  }, // END method updateUIgliderAngle()
+
+  this.updateUIgliderAngleSlider = function() {
+    // console.log('*** ENTER updateUIgliderAngleSlider ***')
+    // SPECIAL FOR THIS UNIT
+    // called in HTML input element so must be a publc method
+    let unum = unitIndex;
+    let gliderAngleRaw = this.dataValues[0] = interfacer.getInputValue(unum, 0);
+    gliderAngle = pi * gliderAngleRaw;
+    // console.log('*** in updateUIgliderAngleSlider, gliderAngle = ' + gliderAngle);
+    // update input field display
+    // alert('slider: this.conc = ' + this.conc);
+    if (document.getElementById(thisGliderAngleFieldID)) {
+      document.getElementById(thisGliderAngleFieldID).value = gliderAngleRaw;
+    }
+    // need to reset controller.ssFlag to false to get sim to run
+    // after change in UI params when previously at steady state
+    controller.resetSSflagsFalse();
+    // set ssCheckSum != 0 used in checkForSteadyState() method to check for SS
+    ssCheckSum = 1;
+    this.updateDisplay();
+  } // END method updateUIgliderAngleSlider()
 
   this.updateDisplay = function() {
 

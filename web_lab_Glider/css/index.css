@@ -15,6 +15,41 @@
   LCshowBorder: false;
 }
 
+#input_setGliderAngle_value {
+  position: absolute;
+  left: 220px;
+  top: 68px;
+  width: 70px;
+  height: 21px;
+  border-width: 1px;
+  border-style: solid;
+  visibility: visible;
+  opacity: 1;
+  LCvScrollbar: false;
+  font-size: 16px;
+ }
+
+#field_setGliderAngle_label {
+  position: absolute;
+  left: 20px;
+  top: 55px;
+  width: 300px;
+  height: 21px;
+  border-width: 1px;
+  visibility: visible;
+  border-style: none;
+  opacity: 1;
+  LCvScrollbar: false;
+  font-size: 16px;
+ }
+
+#range_setGliderAngle_slider {
+  left: 27px;
+  top: 106px;
+  width: 257px;
+ height: 24px;
+}
+
 #svg_glider {
   position: relative;
   top: 30px;

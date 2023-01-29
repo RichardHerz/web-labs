@@ -57,8 +57,8 @@ function puGlider(pUnitIndex) {
 
   // // THIS UNIT ALSO HAS A CHECKBOX INPUT
   // let inputCheckBoxVectors = "checkbox_vec";
-  // // THIS UNIT ALSO HAS A DISPLAY FIELD FOR simTime
-  // let displayTimeField = "field_time";
+  // THIS UNIT ALSO HAS A DISPLAY FIELD FOR simTime
+  let displayTimeField = "field_time";
 
   // *******************************************
   //         define PUBLIC properties
@@ -185,6 +185,13 @@ function puGlider(pUnitIndex) {
     // upwind heading is pi/2 <= gliderAngle <= -pi/2
     // angle of true wind = zero relative to coordinate system & constant
 
+    // ensure gliderAngle between 0 and 2*pi
+    if (gliderAngle < 0) {
+      gliderAngle = gliderAngle + 2 * pi;
+    } else if (gliderAngle > (2 * pi)) {
+      gliderAngle = gliderAngle - 2 * pi;
+    }
+
     // get quadrant into which glider points
     let quad;
     if (gliderAngle >= 0 && gliderAngle < 0.5*pi ) {
@@ -193,7 +200,7 @@ function puGlider(pUnitIndex) {
       quad = 2;
     } else if (gliderAngle >= pi && gliderAngle < 1.5*pi) {
       quad = 3;
-    } else (gliderAngle >= 1.5*pi && gliderAngle < 0) {
+    } else if (gliderAngle >= 1.5*pi && gliderAngle < 0) {
       quad = 4;
     }
 
@@ -202,8 +209,11 @@ function puGlider(pUnitIndex) {
     let alpha;
     let beta;
     let tanAlpha;
-    let yV;
     let xV;
+    let yV;
+    let xGliderSpeed;
+    let yGliderSpeed;
+
     let trueWindSpeed = this.getTrueWindSpeed(yGliderLoc, windProfileOption);
 
     // SEE FOR APPARENT WIND
@@ -222,44 +232,52 @@ function puGlider(pUnitIndex) {
 
     // BOTH CONSTRUCTIONS RESULT IN THE SAME APPARENT WIND VECTOR
 
-    // >>> WARNING: these might only work for glider speed > wind speed <<<
+    // >>> WARNING: these might only work for glider speed xV > wind speed <<<
 
     // for now at least, handle each direction quadrant separately
     // then look for similarities which may allow combining some or all
+    //
+    // angle beta such that both sin and cos > 0 but
+    // x and y glider speed components may be < 0, so adjust for each quad
+    // and xV and yV should be > 0 for my vector construction
+    //
     switch (quad) {
       case 1:
         beta = gliderAngle;
-        // sin > 0, cos > 0
-        xV = gliderSpeed * Math.cos(beta); // should be + x direction
-        yV = gliderSpeed * Math.sin(beta); // should be + y direction
-// >>> WARNING: have to check signs for tanAlpha and alpha for all 4 cases <<< 
+        xGliderSpeed = gliderSpeed * Math.cos(beta); // should be + x direction
+        yGliderSpeed = gliderSpeed * Math.sin(beta); // should be + y direction
+        xV = Math.abs(xGliderSpeed);
+        yV = Math.abs(yGliderSpeed);
         tanAlpha = yV / (xV - trueWindSpeed);
         alpha = Math.atan(tanAlpha); // alpha = beta + attackAngle
         attackAngle = alpha - beta;
         break;
       case 2:
         beta = pi - gliderAngle;
-        // sin > 0, cos < 0
-        xV = gliderSpeed * Math.cos(beta); // should be - x direction
-        yV = gliderSpeed * Math.sin(beta); // should be + y direction
+        xGliderSpeed = gliderSpeed * Math.cos(beta) * -1; // should be - x direction
+        yGliderSpeed = gliderSpeed * Math.sin(beta); // should be + y direction
+        xV = Math.abs(xGliderSpeed);
+        yV = Math.abs(yGliderSpeed);
         tanAlpha = yV / (xV + trueWindSpeed);
         alpha = Math.atan(tanAlpha); // alpha = beta - attackAngle
         attackAngle = beta - alpha;
         break;
       case 3:
         beta = gliderAngle - pi;
-        // sin > 0, cos < 0
-        xV = gliderSpeed * Math.cos(beta) * -1; // should be + x direction
-        yV = gliderSpeed * Math.sin(beta); // should be + y direction
+        xGliderSpeed = gliderSpeed * Math.cos(beta) * -1; // should be - x direction
+        yGliderSpeed = gliderSpeed * Math.sin(beta) * -1; // should be - y direction
+        xV = Math.abs(xGliderSpeed);
+        yV = Math.abs(yGliderSpeed);
         tanAlpha = yV / (xV + trueWindSpeed);
         alpha = Math.atan(tanAlpha); // alpha = beta - attackAngle
         attackAngle = beta - alpha;
         break;
       case 4:
         beta = 2 * pi - gliderAngle;
-        // sin < 0, cos > 0
-        xV = gliderSpeed * Math.cos(beta); // should be + x direction
-        yV = gliderSpeed * Math.sin(beta) * -1; // should be + y direction
+        xGliderSpeed = gliderSpeed * Math.cos(beta); // should be + x direction
+        yGliderSpeed = gliderSpeed * Math.sin(beta) * -1; // should be - y direction
+        xV = Math.abs(xGliderSpeed);
+        yV = Math.abs(yGliderSpeed);
         tanAlpha = yV / (xV - trueWindSpeed);
         alpha = Math.atan(tanAlpha); // alpha = beta + attackAngle
         attackAngle = alpha - beta;
@@ -288,7 +306,6 @@ function puGlider(pUnitIndex) {
     switch (quad) {
       case 1:
         beta = gliderAngle;
-        // sin > 0, cos > 0
         xLiftForce = liftForce * Math.sin(beta) * -1; // should be - x direction
         yLiftForce = liftForce * Math.cos(beta); // should be + y direction
         xDragForce = dragForce * Math.cos(beta) * -1; // should be - x direction
@@ -296,27 +313,24 @@ function puGlider(pUnitIndex) {
         break;
       case 2:
         beta = pi - gliderAngle;
-        // sin > 0, cos < 0
         xLiftForce = liftForce * Math.sin(beta); // should be + x direction
-        yLiftForce = liftForce * Math.cos(beta) * -1; // should be + y direction
-        xDragForce = dragForce * Math.cos(beta) * -1; // should be + x direction
+        yLiftForce = liftForce * Math.cos(beta); // should be + y direction
+        xDragForce = dragForce * Math.cos(beta); // should be + x direction
         yDragForce = dragForce * Math.sin(beta) * -1; // should be - y direction
         break;
       case 3:
         beta = gliderAngle - pi;
-        // sin < 0, cos < 0
-        xLiftForce = liftForce * Math.sin(beta); // should be - x direction
-        yLiftForce = liftForce * Math.cos(beta) * -1; // should be + y direction
-        xDragForce = dragForce * Math.cos(beta) * -1; // should be + x direction
-        yDragForce = dragForce * Math.sin(beta) * -1; // should be + y direction
+        xLiftForce = liftForce * Math.sin(beta) * -1; // should be - x direction
+        yLiftForce = liftForce * Math.cos(beta); // should be + y direction
+        xDragForce = dragForce * Math.cos(beta); // should be + x direction
+        yDragForce = dragForce * Math.sin(beta); // should be + y direction
         break;
       case 4:
         beta = 2 * pi - gliderAngle;
-        // sin < 0, cos > 0
-        xLiftForce = liftForce * Math.sin(beta) * -1; // should be + x direction
+        xLiftForce = liftForce * Math.sin(beta); // should be + x direction
         yLiftForce = liftForce * Math.cos(beta); // should be + y direction
         xDragForce = dragForce * Math.cos(beta) * -1; // should be - x direction
-        yDragForce = dragForce * Math.sin(beta) * -1; // should be + y direction
+        yDragForce = dragForce * Math.sin(beta); // should be + y direction
         break;
       default:
         // code block
@@ -327,21 +341,63 @@ function puGlider(pUnitIndex) {
 
     let xLiftAccel = xLiftForce / gliderMass; // (m/s2)
     let yLiftAccel = yLiftForce / gliderMass;
-    let yDragAccel = yDragForce / gliderMass;
     let xDragAccel = xDragForce / gliderMass;
+    let yDragAccel = yDragForce / gliderMass;
     let xGravAccel = 0;
-    let yGravAccel = gravity;
+    let yGravAccel = 0.1 * gravity; // xxx
 
     // STEP IN TIME TO UPDATE SPEED, LOCATION AND ANGLE
     // See my Zotero ref: Numerical integration in dynamic soaring...
     // new_velocity = old_velocity + acceleration * delta_time;
     // new_position = position + new_velocity * delta_time;
-    let xGliderSpeed;
-    let yGliderSpeed;
-    xGliderSpeed = xGliderSpeed + (xLiftAccel + xDragAccel + xGravAccel) * unitTimeStep;
-    yGliderSpeed = yGliderSpeed + (yLiftAccel + yDragAccel + yGravAccel) * unitTimeStep;
-    xGliderLoc = xGliderLoc + xGliderSpeed * unitTimeStep;
-    yGliderLoc = yGliderLoc + yGliderSpeed * unitTimeStep;
+    let gliderSpeed_OLD = gliderSpeed; // for diagnostic reporting
+    let xGliderSpeed_OLD = xGliderSpeed;
+    let yGliderSpeed_OLD = yGliderSpeed;
+    let xSpeedDelta = (xLiftAccel + xDragAccel + xGravAccel) * unitTimeStep;
+    let ySpeedDelta = (yLiftAccel + yDragAccel + yGravAccel) * unitTimeStep;
+    xGliderSpeed = xGliderSpeed + xSpeedDelta;
+    yGliderSpeed = yGliderSpeed + ySpeedDelta;
+    gliderSpeed = Math.sqrt(xGliderSpeed**2 + yGliderSpeed**2);
+
+    let xLocDelta = xGliderSpeed * unitTimeStep;
+    let yLocDelta = yGliderSpeed * unitTimeStep;
+    xGliderLoc = xGliderLoc + xLocDelta;
+    yGliderLoc = yGliderLoc + yLocDelta;
+
+if (controller.simTime > 0) {
+    console.log('------------------------');
+    console.log('simTime = ' + controller.simTime);
+    console.log('gliderAngle = ' + gliderAngle);
+    console.log('quad = ' + quad);
+    console.log('xV = ' + xV);
+    console.log('yV = ' + yV);
+    console.log('beta = ' + beta);
+    console.log('alpha = ' + alpha);
+    console.log('attackAngle = ' + attackAngle);
+    console.log('trueWindSpeed = ' + trueWindSpeed);
+    console.log('appWindSpeed = ' + appWindSpeed);
+    console.log('liftForce = ' + liftForce);
+    console.log('xLiftForce = ' + xLiftForce);
+    console.log('yLiftForce = ' + yLiftForce);
+    console.log('dragForce = ' + dragForce);
+    console.log('xDragForce = ' + xDragForce);
+    console.log('yDragForce = ' + yDragForce);
+
+    console.log('gliderSpeed_OLD = ' + gliderSpeed_OLD);
+    console.log('xGliderSpeed_OLD = ' + xGliderSpeed_OLD);
+    console.log('yGliderSpeed_OLD = ' + yGliderSpeed_OLD);
+
+    console.log('xSpeedDelta = ' + xSpeedDelta);
+    console.log('ySpeedDelta = ' + ySpeedDelta);
+
+    console.log('gliderSpeed = ' + gliderSpeed);
+    console.log('xGliderSpeed = ' + xGliderSpeed);
+    console.log('yGliderSpeed = ' + yGliderSpeed);
+    console.log('xLocDelta = ' + xLocDelta);
+    console.log('yLocDelta = ' + yLocDelta);
+    console.log('xGliderLoc = ' + xGliderLoc);
+    console.log('yGliderLoc = ' + yGliderLoc);
+}
 
     // *** TO DO - need user-controlled elevators for attack angle adjustment ***
 
@@ -350,21 +406,23 @@ function puGlider(pUnitIndex) {
   this.getTrueWindSpeed = function(pAltitude,pOption) {
     // need different option cases
     // miles per hour number approx double m/s number
-    let wind = 10 + 6 * pAltitude; // (m/s)
+    let wind = 0.2 ; // + 0.1 * pAltitude; // (m/s)
     return wind;
   } // END of getTrueWindSpeed
 
   this.getLiftCoeff = function(pAttackAngle) {
-    let liftCoeff = 0.5;
+    let liftCoeff = 0.3;
     return liftCoeff;
   } // END of getLiftCoeff
 
   this.getDragCoeff = function(pAttackAngle) {
-    let dragCoeff = 0.5;
+    let dragCoeff = 0.1;
     return dragCoeff;
   } // END of getDragCoeff
 
   this.updateDisplay = function() {
+
+    document.getElementById(displayTimeField).innerHTML =  controller.simTime.toFixed(2);
 
     // https://jenkov.com/tutorials/svg/path-element.html
 

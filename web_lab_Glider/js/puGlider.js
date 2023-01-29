@@ -36,7 +36,7 @@ function puGlider(pUnitIndex) {
   // zero angle points toward positive x at zero y
   // positive angle is CCW
 
-  // HERE DELCARE CONSTANTS & VARIABLES WE WISH TO CARRY BETWEEN UPDATES
+  // HERE DECLARE CONSTANTS & VARIABLES WE WISH TO CARRY BETWEEN UPDATES
 
   // NOTE - COMPUTE FOR POSITIVE VERTICAL COORDINATE y POINTING UP
   // THEN TRANSFORM FOR SCREEN VERTICAL COORD POINTING DOWN IN updateDisplay
@@ -44,6 +44,7 @@ function puGlider(pUnitIndex) {
   const gravity = -9.8; // (m/s2)
   const pi = Math.PI; // used in reset & updateState
   const degTOrad = Math.PI / 180; // used in updateUIparams
+  const radTOdeg = 180 / Math.PI; // used in updateUIparams
 
   const wingArea = 1; // (m2)
   const gliderMass = 1; // (kg)
@@ -431,23 +432,41 @@ if (controller.simTime > 0) {
     const y0 = 0; // (px), y location of y = 0
     const x0 = 0; // (px), x location of x = 0
 
-    // coordinates for glider
-    let xs = x0 + xGliderLoc * pixPerMeter; // (px)
-    let ys = y0 + yGliderLoc * pixPerMeter;
+    // coordinates for glider point
+    let xp = x0 + xGliderLoc * pixPerMeter; // (px)
+    let yp = y0 + yGliderLoc * pixPerMeter;
 
     // NOTE - y COMPUTED ABOVE FOR POSITIVE VERTICAL COORDINATE POINTS UP
     //        NOW TRANSFORM BELOW FOR SVG VERTICAL COORDINATE POINTING DOWN
     // yHeight = height in index's <svg id="svg_glider" width="600" height="600">
     const yHeight = 600; // (px)
-    ys = yHeight - ys;
+    yp = yHeight - yp;
 
     svgElement = document.getElementById("glider");
-    // with lowercase "el" lxe,ye is relative to path start at xs,ys
-    // compute ending xe,ye with gliderAngle
-    // use constants during development
-    let xe = 10;
-    let ye = 10;
-    svgElement.setAttribute("d", "M" + xs + "," + ys + " l" + xe + "," + ye );
+
+    let angleDeg = -radTOdeg * gliderAngle; // - for CCW
+
+    // LOOKS LIKE MAY HAVE TO ROTATE AND TRANSLATE IN SAME setAttribute
+    // WHICH OPERATE ON ORIGINAL OBJECT AS DEFINED IN HTML index FILE
+    // OR A SECOND ONE OVERRIDES THE FIRST...
+
+    // svgElement.setAttribute('transform','rotate('+angleDeg+',300,300)' );
+    // svgElement.setAttribute('transform','translate('+100+','+50+')' );
+
+    // LOOKS LIKE ROTATION MIGHT ROTATE ENTIRE OBJECT COORDINATE AXES
+    // SO TRANSLATION IS ALONG THOSE NEW DIRECTIONS
+    // AFTER ROTATION OF > PI/2, POSITIVE X TRANSLATION MOVES TO LEFT
+
+    // MIGHT JUST WANT TO COMPUTE AND SET NEW POLYGON POINTS
+    // FOR NEW LOCATION AND DIRECTION...
+    // point at tip glider is xp,yp
+    // then compute two tail points from gliderAngle
+
+    // SEE P. 37 OF O'REILLY BOOK JAVASCRIPT TO SEE 'TEMPLATE LITERALS'
+    // USE BACK TICKS & ${} to include variable values into strings
+    svgElement.setAttribute( 'points' , `${xp},${yp} ${xp+30},${yp-5} ${xp+30},${yp+5}` );
+
+    // svgElement.setAttribute('points','200,200 230,195 230,205' );
 
   } // END of updateDisplay method
 

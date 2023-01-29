@@ -96,28 +96,10 @@
 
     <svg id="svg_glider" width="600" height="600">
 
-      <defs>
-        <!-- refX and refY are positions in marker that is end of line that marker is set -->
-        <!-- refX="2" refY="6" -->
-        <marker id="markerArrowHead" markerWidth="13" markerHeight="13" refX="20" refY="6"
-               orient="auto">
-            <path d="M2,2 L2,11 L10,6 L2,2" style="fill:#000000;" />
-        </marker>
-      </defs>
-
-      <!-- https://jenkov.com/tutorials/svg/path-element.html -->
-      <!-- lower case "el" l#,# is relative to M#,# (L#,# would be absolute) -->
-
-      <path id="glider" d="M100,150 l10,10"
-        style="stroke: black; stroke-width: 1px; fill: none;
-          marker-start: url(#markerArrowHead);"
-      />
-
       <!-- https://jenkov.com/tutorials/svg/polygon-element.html -->
 
-      <!-- <polygon id="glider" points="110,100  160,100  135,150"
-         style="stroke:#660000; fill:#cc3333;"
-      /> -->
+      <polygon id="glider" points="270,295  300,300  270,305"
+         style="stroke:#660000; fill:#cc3333;"/>
 
     </svg>
 

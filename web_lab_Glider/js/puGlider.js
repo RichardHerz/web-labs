@@ -52,7 +52,7 @@ function puGlider(pUnitIndex) {
 
   let windProfileOption = 0;
   let gliderSpeed = 1; // (m/s), magnitude of glider velocity vector
-  let gliderAngle = 0.9 * pi; // (rad), CCW angle of glider from x axis
+  let gliderAngle = 1.8 * pi; // (rad), CCW angle of glider from x axis
   let yGliderLoc = 30; // (m), glider altitude
   let xGliderLoc = 30; // (m), glider ground position
 
@@ -194,14 +194,14 @@ function puGlider(pUnitIndex) {
     }
 
     // get quadrant into which glider points
-    let quad;
+    let quad = 0;
     if (gliderAngle >= 0 && gliderAngle < 0.5*pi ) {
       quad = 1;
     } else if (gliderAngle >= 0.5*pi && gliderAngle < pi) {
       quad = 2;
     } else if (gliderAngle >= pi && gliderAngle < 1.5*pi) {
       quad = 3;
-    } else if (gliderAngle >= 1.5*pi && gliderAngle < 0) {
+    } else if (gliderAngle >= 1.5*pi && gliderAngle <= 2*pi) {
       quad = 4;
     }
 
@@ -284,7 +284,7 @@ function puGlider(pUnitIndex) {
         attackAngle = alpha - beta;
         break;
       default:
-        // code block
+      console.log('in set speed and attack, bad quad = ' + quad);
     }
     appWindSpeed = yV / Math.sin(alpha);
 
@@ -334,7 +334,7 @@ function puGlider(pUnitIndex) {
         yDragForce = dragForce * Math.sin(beta); // should be + y direction
         break;
       default:
-        // code block
+      console.log('in set Lift and Drag, bad quad = ' + quad);
     }
 
     // force (kg-m/s2) = gliderMass (kg) * acceleration (m/s2)
@@ -436,37 +436,89 @@ if (controller.simTime > 0) {
     let xp = x0 + xGliderLoc * pixPerMeter; // (px)
     let yp = y0 + yGliderLoc * pixPerMeter;
 
+    // COMPUTE AND SET NEW POLYGON POINTS FOR GLIDER IMAGE
+    // AT NEW LOCATION AND DIRECTION OF GLIDER
+
+    // get quadrant into which glider points
+    let quad = 0;
+    if (gliderAngle >= 0 && gliderAngle < 0.5*pi ) {
+      quad = 1;
+    } else if (gliderAngle >= 0.5*pi && gliderAngle < pi) {
+      quad = 2;
+    } else if (gliderAngle >= pi && gliderAngle < 1.5*pi) {
+      quad = 3;
+    } else if (gliderAngle >= 1.5*pi && gliderAngle <= 2*pi) {
+      quad = 4;
+    }
+
+    const L = 30; // (px), Length of glider body
+    const F = 10; // (px), height of glider tail Fin
+    let beta; // (radians)
+    let alpha;
+    let xt; // (px), tail x
+    let yt;
+    let xf; // (px), fin x
+    let yf;
+    switch (quad) {
+      case 1:
+        beta = gliderAngle;
+        alpha = 0.5 * pi - beta;
+        xt = xp - L * Math.cos(beta);
+        yt = yp - L * Math.sin(beta);
+        xf = xt - F * Math.cos(alpha);
+        yf = yt + F * Math.sin(alpha);
+        break;
+      case 2:
+        beta = pi - gliderAngle;
+        alpha = 0.5 * pi - beta;
+        xt = xp + L * Math.cos(beta);
+        yt = yp - L * Math.sin(beta);
+        xf = xt + F * Math.cos(alpha);
+        yf = yt + F * Math.sin(alpha);
+        break;
+      case 3:
+        beta = gliderAngle - pi;
+        alpha = 0.5 * pi - beta;
+        xt = xp + L * Math.cos(beta);
+        yt = yp + L * Math.sin(beta);
+        xf = xt - F * Math.cos(alpha);
+        yf = yt + F * Math.sin(alpha);
+        break;
+      case 4:
+        beta = 2 * pi - gliderAngle;
+        alpha = 0.5 * pi - beta;
+        xt = xp - L * Math.cos(beta);
+        yt = yp + L * Math.sin(beta);
+        xf = xt + F * Math.cos(alpha);
+        yf = yt + F * Math.sin(alpha);
+        break;
+      default:
+        console.log('in updateDisplay, bad quad = ' + quad);
+    }
+
+    console.log('---- updateDisplay -----');
+    console.log('quad = ' + quad);
+    console.log('beta = ' + beta);
+    console.log('alpha = ' + alpha);
+    console.log('xt = ' + xt);
+    console.log('yt = ' + yt);
+    console.log('xf = ' + xf);
+    console.log('yf = ' + yf);
+
+
     // NOTE - y COMPUTED ABOVE FOR POSITIVE VERTICAL COORDINATE POINTS UP
     //        NOW TRANSFORM BELOW FOR SVG VERTICAL COORDINATE POINTING DOWN
     // yHeight = height in index's <svg id="svg_glider" width="600" height="600">
     const yHeight = 600; // (px)
     yp = yHeight - yp;
+    yt = yHeight - yt;
+    yf = yHeight - yf;
 
     svgElement = document.getElementById("glider");
 
-    let angleDeg = -radTOdeg * gliderAngle; // - for CCW
-
-    // LOOKS LIKE MAY HAVE TO ROTATE AND TRANSLATE IN SAME setAttribute
-    // WHICH OPERATE ON ORIGINAL OBJECT AS DEFINED IN HTML index FILE
-    // OR A SECOND ONE OVERRIDES THE FIRST...
-
-    // svgElement.setAttribute('transform','rotate('+angleDeg+',300,300)' );
-    // svgElement.setAttribute('transform','translate('+100+','+50+')' );
-
-    // LOOKS LIKE ROTATION MIGHT ROTATE ENTIRE OBJECT COORDINATE AXES
-    // SO TRANSLATION IS ALONG THOSE NEW DIRECTIONS
-    // AFTER ROTATION OF > PI/2, POSITIVE X TRANSLATION MOVES TO LEFT
-
-    // MIGHT JUST WANT TO COMPUTE AND SET NEW POLYGON POINTS
-    // FOR NEW LOCATION AND DIRECTION...
-    // point at tip glider is xp,yp
-    // then compute two tail points from gliderAngle
-
-    // SEE P. 37 OF O'REILLY BOOK JAVASCRIPT TO SEE 'TEMPLATE LITERALS'
+    // SEE P. 37 OF O'REILLY BOOK 'JAVASCRIPT' TO SEE 'TEMPLATE LITERALS'
     // USE BACK TICKS & ${} to include variable values into strings
-    svgElement.setAttribute( 'points' , `${xp},${yp} ${xp+30},${yp-5} ${xp+30},${yp+5}` );
-
-    // svgElement.setAttribute('points','200,200 230,195 230,205' );
+    svgElement.setAttribute( 'points' , `${xp},${yp} ${xt},${yt} ${xf},${yf}` );
 
   } // END of updateDisplay method
 

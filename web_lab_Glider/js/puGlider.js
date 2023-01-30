@@ -58,8 +58,6 @@ function puGlider(pUnitIndex) {
   let xGliderLoc = 30; // (m), glider ground position
 
   // CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS
-  // **** currently use these but also see IDs in initialize method
-  // **** where they are used for process_interfacer.getInputValue
   let displayTimeField = 'field_time';
   let thisGliderAngleSliderID = 'range_setGliderAngle_slider';
   let thisGliderAngleFieldID = 'input_setGliderAngle_value';
@@ -107,7 +105,7 @@ function puGlider(pUnitIndex) {
     //
     let v = 0;
     this.dataHeaders[v] = 'Glider Angle';
-    this.dataInputs[v] = 'range_setGliderAngle_slider';
+    this.dataInputs[v] = thisGliderAngleSliderID;
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
@@ -115,7 +113,7 @@ function puGlider(pUnitIndex) {
     //
     v = 1;
     this.dataHeaders[v] = 'Glider Angle';
-    this.dataInputs[v] = 'input_setGliderAngle_value';
+    this.dataInputs[v] = thisGliderAngleFieldID;
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 2;
@@ -289,7 +287,18 @@ function puGlider(pUnitIndex) {
       default:
       console.log('in set speed and attack, bad quad = ' + quad);
     }
-    appWindSpeed = yV / Math.sin(alpha);
+
+    // prevent divide by zero in calculation of appWindSpeed
+    // which can happen at gliderAngle = 0 or pi
+    if (Math.sin(alpha) > 0) {
+      appWindSpeed = yV / Math.sin(alpha);
+    } else {
+      if (quad == 1 || quad == 4) {
+        appWindSpeed = gliderSpeed - trueWindSpeed;
+      } else if (quad == 2 || quad == 3) {
+        appWindSpeed = gliderSpeed + trueWindSpeed;
+      }
+    }
 
     // call functions to get lift and drag coeff's using attack angle
     // then from square of airspeed Aw^2 and coeff's, get lift and drag forces
@@ -354,9 +363,12 @@ function puGlider(pUnitIndex) {
     // See my Zotero ref: Numerical integration in dynamic soaring...
     // new_velocity = old_velocity + acceleration * delta_time;
     // new_position = position + new_velocity * delta_time;
-    let gliderSpeed_OLD = gliderSpeed; // for diagnostic reporting
+
+    // _OLD for diagnostic reporting
+    let gliderSpeed_OLD = gliderSpeed;
     let xGliderSpeed_OLD = xGliderSpeed;
     let yGliderSpeed_OLD = yGliderSpeed;
+
     let xSpeedDelta = (xLiftAccel + xDragAccel + xGravAccel) * unitTimeStep;
     let ySpeedDelta = (yLiftAccel + yDragAccel + yGravAccel) * unitTimeStep;
     xGliderSpeed = xGliderSpeed + xSpeedDelta;

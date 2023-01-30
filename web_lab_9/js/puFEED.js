@@ -29,8 +29,6 @@ function puFEED(pUnitIndex) {
   let ssCheckSum = 0; // used in checkForSteadyState method
 
   // CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS
-  // **** currently use these but also see IDs in initialize method, where
-  // **** they are not currently used - which is best?
   let thisConcSliderID = 'range_setFeedConc_slider';
   let thisConcFieldID = 'input_setFeedConc_value';
 
@@ -76,7 +74,7 @@ function puFEED(pUnitIndex) {
     //
     let v = 0;
     this.dataHeaders[v] = 'Feed Conc';
-    this.dataInputs[v] = 'range_setFeedConc_slider';
+    this.dataInputs[v] = thisConcSliderID;
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
@@ -84,7 +82,7 @@ function puFEED(pUnitIndex) {
     //
     v = 1;
     this.dataHeaders[v] = 'Feed Conc';
-    this.dataInputs[v] = 'input_setFeedConc_value';
+    this.dataInputs[v] = thisConcFieldID;
     this.dataUnits[v] = '';
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;

@@ -48,12 +48,12 @@ function puGlider(pUnitIndex) {
   const radTOdeg = 180 / Math.PI; // used in updateUIparams
 
   const wingArea = 1; // (m2)
-  const gliderMass = 1; // (kg)
+  const gliderMass = 5; // (kg)
   const airDens = 1.2; // (kg/m3), https://en.wikipedia.org/wiki/Density_of_air
 
   let windProfileOption = 0;
-  let gliderSpeed = 2; // (m/s), magnitude of glider velocity vector
-  let gliderAngle = 0.8 * pi; // (rad), CCW angle of glider from x axis
+  let gliderSpeed = 5; // (m/s), magnitude of glider velocity vector
+  let gliderAngle = 0.95 * pi; // (rad), CCW angle of glider from x axis
   let yGliderLoc = 30; // (m), glider altitude
   let xGliderLoc = 30; // (m), glider ground position
 
@@ -88,9 +88,9 @@ function puGlider(pUnitIndex) {
   this.dataDefault = [];
   this.dataValues = [];
 
-  // *******************************************
+  // *****************************************
   //         define PRIVATE functions
-  // *******************************************
+  // *****************************************
 
   // *****************************************
   //        define PRIVILEGED methods
@@ -357,7 +357,7 @@ function puGlider(pUnitIndex) {
     let xDragAccel = xDragForce / gliderMass;
     let yDragAccel = yDragForce / gliderMass;
     let xGravAccel = 0;
-    let yGravAccel = 0.1 * gravity; // xxx
+    let yGravAccel = gravity;
 
     // STEP IN TIME TO UPDATE SPEED, LOCATION AND ANGLE
     // See my Zotero ref: Numerical integration in dynamic soaring...
@@ -373,14 +373,13 @@ function puGlider(pUnitIndex) {
     let ySpeedDelta = (yLiftAccel + yDragAccel + yGravAccel) * unitTimeStep;
     xGliderSpeed = xGliderSpeed + xSpeedDelta;
     yGliderSpeed = yGliderSpeed + ySpeedDelta;
-    gliderSpeed = Math.sqrt(xGliderSpeed**2 + yGliderSpeed**2);
+    gliderSpeed = Math.sqrt( xGliderSpeed ** 2 + yGliderSpeed ** 2 );
 
     let xLocDelta = xGliderSpeed * unitTimeStep;
     let yLocDelta = yGliderSpeed * unitTimeStep;
     xGliderLoc = xGliderLoc + xLocDelta;
     yGliderLoc = yGliderLoc + yLocDelta;
 
-if (controller.simTime > 0) {
     console.log('------------------------');
     console.log('simTime = ' + controller.simTime);
     console.log('gliderAngle = ' + gliderAngle);
@@ -413,28 +412,33 @@ if (controller.simTime > 0) {
     console.log('yLocDelta = ' + yLocDelta);
     console.log('xGliderLoc = ' + xGliderLoc);
     console.log('yGliderLoc = ' + yGliderLoc);
-}
-
-    // *** TO DO - need user-controlled elevators for attack angle adjustment ***
 
   } // END of updateState method
 
   this.getTrueWindSpeed = function(pAltitude,pOption) {
     // need different option cases
     // miles per hour number approx double m/s number
-    let wind = 1 ; // + 0.1 * pAltitude; // (m/s)
+    let wind = 0 + 0.1 * pAltitude; // + 0.1 * pAltitude; // (m/s)
     return wind;
   } // END of getTrueWindSpeed
 
   this.getLiftCoeff = function(pAttackAngle) {
-    // SEE FOR PLOT https://en.wikipedia.org/wiki/Airfoil
-    let liftCoeff = 0.7;
+    // 3rd order polynomial fit to Clark Y airfoil at aspect ratio 6
+    // from plot at https://en.wikipedia.org/wiki/Airfoil
+    const a = pAttackAngle;
+    const c = [-16.43065980602643, 2.95705979090091, 4.25610006314189, 0.32243504749002];
+    let liftCoeff = c[3]+c[2]*a+c[1]*a**2+c[0]*a**3;
+    if (liftCoeff < 0) {liftCoeff = 0}
     return liftCoeff;
   } // END of getLiftCoeff
 
   this.getDragCoeff = function(pAttackAngle) {
-    // SEE FOR PLOT https://en.wikipedia.org/wiki/Airfoil
-    let dragCoeff = 0.05;
+    // 3rd order polynomial fit to Clark Y airfoil at aspect ratio 6
+    // from plot at https://en.wikipedia.org/wiki/Airfoil
+    const a = pAttackAngle;
+    const c = [20.92506969082500, -1.14454109889221, 0.77909063646772, 0.1280667244844];
+    let dragCoeff = c[3]+c[2]*a+c[1]*a**2+c[0]*a**3;
+    if (dragCoeff < 0) {dragCoeff = 0}
     return dragCoeff;
   } // END of getDragCoeff
 
@@ -487,10 +491,10 @@ if (controller.simTime > 0) {
 
     // https://jenkov.com/tutorials/svg/path-element.html
 
-    const pixPerMeter = 10; // (px/m)
+    const pixPerMeter = 1; // (px/m)
 
-    const y0 = 0; // (px), y location of y = 0
-    const x0 = 0; // (px), x location of x = 0
+    const y0 = 200; // (px), y location of y = 0
+    const x0 = 400; // (px), x location of x = 0
 
     // coordinates for glider point
     let xp = x0 + xGliderLoc * pixPerMeter; // (px)
@@ -556,14 +560,14 @@ if (controller.simTime > 0) {
         console.log('in updateDisplay, bad quad = ' + quad);
     }
 
-    console.log('---- updateDisplay -----');
-    console.log('quad = ' + quad);
-    console.log('beta = ' + beta);
-    console.log('alpha = ' + alpha);
-    console.log('xt = ' + xt);
-    console.log('yt = ' + yt);
-    console.log('xf = ' + xf);
-    console.log('yf = ' + yf);
+    // console.log('---- updateDisplay -----');
+    // console.log('quad = ' + quad);
+    // console.log('beta = ' + beta);
+    // console.log('alpha = ' + alpha);
+    // console.log('xt = ' + xt);
+    // console.log('yt = ' + yt);
+    // console.log('xf = ' + xf);
+    // console.log('yf = ' + yf);
 
 
     // NOTE - y COMPUTED ABOVE FOR POSITIVE VERTICAL COORDINATE POINTS UP

@@ -48,15 +48,14 @@ function puGlider(pUnitIndex) {
   const radTOdeg = 180 / Math.PI; // used in updateUIparams
 
   const wingArea = 1; // (m2)
-  const gliderMass = 6; // (kg)
+  const gliderMass = 4; // (kg)
   const airDens = 1.2; // (kg/m3), https://en.wikipedia.org/wiki/Density_of_air
 
   let windProfileOption = 0;
-  let gliderSpeed = 14; // (m/s), magnitude of glider velocity vector
-  // miles per hour number approx double m/s number
+  let gliderSpeed = 16; // (m/s), magnitude of glider velocity vector
   let gliderAngle = 0.95 * pi; // (rad), CCW angle of glider from x axis
-  let yGliderLoc = 40; // (m), glider altitude
-  let xGliderLoc = 0; // (m), glider ground position
+  let yGliderLoc = 50; // (m), glider altitude
+  let xGliderLoc = 30; // (m), glider ground position
 
   // CONNECTIONS FROM THIS UNIT TO HTML UI CONTROLS
   let displayTimeField = 'field_time';
@@ -201,10 +200,6 @@ function puGlider(pUnitIndex) {
       gliderAngle = gliderAngle - 2 * pi;
     }
 
-    // if (yGliderLoc > 100) {
-    //   gliderAngle = 1.9 * pi;
-    // }
-
     // get quadrant into which glider points
     let quad = 0;
     if (gliderAngle >= 0 && gliderAngle < 0.5*pi ) {
@@ -327,51 +322,34 @@ function puGlider(pUnitIndex) {
     let yLiftForce;
     let xDragForce;
     let yDragForce;
-    let vLiftForce;
-    let vDragForce;
-    let vGravForce;
     switch (quad) {
-      // lift is normal to apparent wind, drag parallel
       case 1:
-        // glider points up with tailwind
         beta = gliderAngle;
-        alpha = beta + attackAngle;
-        gamma = 0.5*pi - beta - attackAngle;
-        xLiftForce = liftForce * Math.cos(gamma) * -1; // should be - x direction
-        yLiftForce = liftForce * Math.sin(gamma); // should be + y direction
-        xDragForce = dragForce * Math.cos(alpha) * -1; // should be - x direction
-        yDragForce = dragForce * Math.sin(alpha) * -1; // should be - y direction
+        xLiftForce = liftForce * Math.sin(beta) * -1; // should be - x direction
+        yLiftForce = liftForce * Math.cos(beta); // should be + y direction
+        xDragForce = dragForce * Math.cos(beta) * -1; // should be - x direction
+        yDragForce = dragForce * Math.sin(beta) * -1; // should be - y direction
         break;
       case 2:
-        // glider points up with headwind
         beta = pi - gliderAngle;
-        alpha = beta - attackAngle;
-        xLiftForce = liftForce * Math.sin(alpha); // should be + x direction
-        yLiftForce = liftForce * Math.cos(alpha); // should be + y direction
-        xDragForce = dragForce * Math.cos(alpha); // should be + x direction
-        yDragForce = dragForce * Math.sin(alpha) * -1; // should be - y direction
-        // xxx try new attack on gliderSpeed
-        vLiftForce = liftForce / Math.cos(attackAngle);
-        vDragForce = dragForce / Math.cos(attackAngle);
-        vGravForce = gliderMass * -gravity * Math.sin(beta);
+        xLiftForce = liftForce * Math.sin(beta); // should be + x direction
+        yLiftForce = liftForce * Math.cos(beta); // should be + y direction
+        xDragForce = dragForce * Math.cos(beta); // should be + x direction
+        yDragForce = dragForce * Math.sin(beta) * -1; // should be - y direction
         break;
       case 3:
-        // glider points down with headwind
         beta = gliderAngle - pi;
-        alpha = beta - attackAngle;
-        xLiftForce = liftForce * Math.sin(alpha) * -1; // should be - x direction
-        yLiftForce = liftForce * Math.cos(alpha); // should be + y direction
-        xDragForce = dragForce * Math.cos(alpha); // should be + x direction
-        yDragForce = dragForce * Math.sin(alpha); // should be + y direction
+        xLiftForce = liftForce * Math.sin(beta) * -1; // should be - x direction
+        yLiftForce = liftForce * Math.cos(beta); // should be + y direction
+        xDragForce = dragForce * Math.cos(beta); // should be + x direction
+        yDragForce = dragForce * Math.sin(beta); // should be + y direction
         break;
       case 4:
-        // glider points down with tailwind
         beta = 2 * pi - gliderAngle;
-        alpha = beta + attackAngle;
-        xLiftForce = liftForce * Math.sin(alpha); // should be + x direction
-        yLiftForce = liftForce * Math.cos(alpha); // should be + y direction
-        xDragForce = dragForce * Math.cos(alpha) * -1; // should be - x direction
-        yDragForce = dragForce * Math.sin(alpha); // should be + y direction
+        xLiftForce = liftForce * Math.sin(beta); // should be + x direction
+        yLiftForce = liftForce * Math.cos(beta); // should be + y direction
+        xDragForce = dragForce * Math.cos(beta) * -1; // should be - x direction
+        yDragForce = dragForce * Math.sin(beta); // should be + y direction
         break;
       default:
       console.log('in set Lift and Drag, bad quad = ' + quad);
@@ -401,12 +379,7 @@ function puGlider(pUnitIndex) {
     let ySpeedDelta = (yLiftAccel + yDragAccel + yGravAccel) * unitTimeStep;
     xGliderSpeed = xGliderSpeed + xSpeedDelta;
     yGliderSpeed = yGliderSpeed + ySpeedDelta;
-
-    // xxx try new attached on gliderSpeed
-    // gliderSpeed = Math.sqrt( xGliderSpeed ** 2 + yGliderSpeed ** 2 );
-    let gliderSpeedAccel = -(0*vLiftForce + 0*vDragForce + 0*vGravForce) / gliderMass;
-    let gliderSpeedDelta = gliderSpeedAccel * unitTimeStep;
-    gliderSpeed = gliderSpeed + gliderSpeedDelta;
+    gliderSpeed = Math.sqrt( xGliderSpeed ** 2 + yGliderSpeed ** 2 );
 
     let xLocDelta = xGliderSpeed * unitTimeStep;
     let yLocDelta = yGliderSpeed * unitTimeStep;
@@ -422,7 +395,6 @@ function puGlider(pUnitIndex) {
     console.log('beta = ' + beta);
     console.log('alpha = ' + alpha);
     console.log('attackAngle = ' + attackAngle);
-    console.log('gliderSpeed_OLD = ' + gliderSpeed_OLD);
     console.log('trueWindSpeed = ' + trueWindSpeed);
     console.log('appWindSpeed = ' + appWindSpeed);
     console.log('liftForce = ' + liftForce);
@@ -434,12 +406,13 @@ function puGlider(pUnitIndex) {
     console.log('xGravAccel = ' + xGravAccel);
     console.log('yGravAccel = ' + yGravAccel);
 
-    console.log('gliderSpeed_OLD = ' + gliderSpeed_OLD);
-    console.log('xGliderSpeed_OLD = ' + xGliderSpeed_OLD);
-    console.log('yGliderSpeed_OLD = ' + yGliderSpeed_OLD);
+    // console.log('gliderSpeed_OLD = ' + gliderSpeed_OLD);
+    // console.log('xGliderSpeed_OLD = ' + xGliderSpeed_OLD);
+    // console.log('yGliderSpeed_OLD = ' + yGliderSpeed_OLD);
 
     console.log('xSpeedDelta = ' + xSpeedDelta);
     console.log('ySpeedDelta = ' + ySpeedDelta);
+
     console.log('gliderSpeed = ' + gliderSpeed);
     console.log('xGliderSpeed = ' + xGliderSpeed);
     console.log('yGliderSpeed = ' + yGliderSpeed);
@@ -453,7 +426,7 @@ function puGlider(pUnitIndex) {
   this.getTrueWindSpeed = function(pAltitude,pOption) {
     // need different option cases
     // miles per hour number approx double m/s number
-    let wind = 1; // 0.5 + 0.1 * pAltitude; // (m/s)
+    let wind = 0 + 0.1 * pAltitude; // (m/s)
     return wind;
   } // END of getTrueWindSpeed
 
@@ -464,7 +437,6 @@ function puGlider(pUnitIndex) {
     const c = [-16.43065980602643, 2.95705979090091, 4.25610006314189, 0.32243504749002];
     let liftCoeff = c[3]+c[2]*a+c[1]*a**2+c[0]*a**3;
     if (liftCoeff < 0) {liftCoeff = 0}
-    if (liftCoeff > 1.2) {liftCoeff = 1.2}
     return liftCoeff;
   } // END of getLiftCoeff
 

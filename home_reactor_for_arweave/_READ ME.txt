@@ -1,3 +1,0 @@
-This folder RL_Home_Reactor is standalone for testing with dragondeploy.xyz 
-
-In addition to the web labs JS and CSS folders being copied into the folder and the lines in html index that reference them being changed, the calls to a livecode .lc file in reactor.js were commented out. 

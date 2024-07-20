@@ -10,4 +10,4 @@ See Readme's of individual labs for screenshots.
 
 Screenshot of web lab 7:
 
-![PFR-image-github](http://reactorlab.net/graphics/github_media/PFR-image-github.png)
+![PFR-image-github](https://github.com/RichardHerz/web-labs/blob/master/images_for_readme/web-lab-7.png)

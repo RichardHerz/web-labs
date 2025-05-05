@@ -53,6 +53,14 @@ class Splitter {
 
     reset() {
         console.log(`enter class ${this.unitID} reset method`);
+        this.portData.inputs.one.concentration = 0;
+        this.portData.inputs.one.flowrate = 0;
+        this.portData.outputs.one.concentration = 0;
+        this.portData.outputs.one.flowrate = 0;
+        this.portData.outputs.two.concentration = 0;
+        this.portData.outputs.two.flowrate = 0;
+        const el = document.getElementById('splitter_info_' + this.unitCount); 
+        el.innerHTML = `c = 0<br>f = 0`;
     } // END OF FUNCTION reset 
 
     updateUIparams() {

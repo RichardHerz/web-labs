@@ -81,7 +81,11 @@
     <p><a href="/web-labs/reactors/">Return to Web Labs</a> at ReactorLab.net</p>
     <p><b><i>Reactor Networks - add units from palette and connect with pipes</i></b></p>
     <p>
-      UNDER CONSTRUCTION. This works with keyboards only: Hold down option/Alt key and click a unit in the palette 
+      UNDER CONSTRUCTION. The flowsheet erases when this page closes. 
+      Only 1st-order reactions are supported in the CSTR and PFR. 
+    </p>
+    <p>
+      This works with keyboards only: Hold down option/Alt key and click a unit in the palette 
       on the left, 
       then click on the scene to the right to add the unit to the scene.
       To remove a unit, option/Alt click on the unit. You can add and remove
@@ -135,6 +139,7 @@
   
     <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
     <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">  
+    <p id="field_simTime">sim time = 0</p>
 
     <div id="div_palette">
       <!-- new units are added to this div by body onload buildPalette() -->

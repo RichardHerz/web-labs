@@ -11,12 +11,12 @@ class CSTR {
         this.volume = 10;
 
         // timing parameters
-        this.unitStepRepeats = 10; 
+        this.unitStepRepeats = 10;
         this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
         this.residenceTime = 1; // required, used for checkForSteadyState
- 
+
         console.log('  this class unitID = ' + this.unitID);
-        const fieldID= "cstr_num_" + this.unitCount;
+        const fieldID = "cstr_num_" + this.unitCount;
         console.log('  fieldID = ' + fieldID);
         const el = document.getElementById(fieldID);
         if (el) {
@@ -54,6 +54,14 @@ class CSTR {
 
     reset() {
         console.log(`enter class ${this.unitID} reset method`);
+        this.portData.inputs.one.concentration = 0;
+        this.portData.inputs.one.flowrate = 0;
+        this.portData.inputs.two.concentration = 0;
+        this.portData.inputs.two.flowrate = 0;
+        this.portData.outputs.one.concentration = 0;
+        this.portData.outputs.one.flowrate = 0;
+        const el = document.getElementById('cstr_info_' + this.unitCount);
+        el.innerHTML = `c = 0<br>f = 0`;
     } // END OF FUNCTION reset 
 
     updateUIparams() {
@@ -75,12 +83,12 @@ class CSTR {
         let ssFlag = true;
         // this.ssCheckSum set != 0 on updateUIparams() execution
         if (this.ssCheckSum != 0) {
-        ssFlag = false;
+            ssFlag = false;
         }
         this.ssCheckSum = 0;
 
         // XXX TEMP DEV
-        ssFlag = false; 
+        ssFlag = false;
 
         return ssFlag;
     } // END OF FUNCTION checkForSteadyState 
@@ -97,7 +105,7 @@ class CSTR {
         console.log('  display modal dialog to get params');
 
         const modal = document.getElementById('numberModal');
-  
+
         // Store the unitID as a data attribute
         modal.dataset.unitID = this.unitID;
 
@@ -190,10 +198,10 @@ class CSTR {
         Object.keys(this.portData.inputs).forEach(inputKey => {
 
             // Do something with each input
-            console.log('  processing this.portData.inputs, inputKey = ' + inputKey); 
+            console.log('  processing this.portData.inputs, inputKey = ' + inputKey);
 
             const inputID = "cstr_input_" + inputKey + '_' + this.unitCount;
-            console.log('  this inputID = ' + inputID); 
+            console.log('  this inputID = ' + inputID);
 
             const portInNum = inputKey;
             console.log('  portInNum = ' + portInNum);
@@ -209,7 +217,7 @@ class CSTR {
             portInUnitIndex = portINlist.findIndex(finderFunc);
             function finderFunc(thisOne) {
                 return thisOne == inputID;
-            }; 
+            };
 
             if (portInUnitIndex == -1) {
                 console.log('  this input has NO connection to an output');
@@ -232,11 +240,11 @@ class CSTR {
 
                 const portOutUnitID = portOUTunitList[portInUnitIndex];
                 console.log('  portOutUnitID of upstream output = ' + portOutUnitID);
- 
+
                 console.log('  unitList = ' + unitList);
                 const portOutUnitIndex = unitList.findIndex(finderFunc);
                 function finderFunc(thisOne) {
-                  return thisOne == portOutUnitID;
+                    return thisOne == portOutUnitID;
                 }
                 console.log('  portOutUnitIndex of upstream output in unitList= ' + portOutUnitIndex);
 
@@ -254,7 +262,7 @@ class CSTR {
                 //   let out1conc = outputPUunit.portData.outputs.one.concentration;
                 //  METHOD 1
                 //   out1conc = processUnits[outputPUindex].portData.outputs.one.concentration;
- 
+
                 // const out1conc = processUnits[outputPUindex].portData.outputs.one.concentration;
                 // console.log('  upstream out1conc = ' + out1conc);
                 // const out1flow = processUnits[outputPUindex].portData.outputs.one.flowrate;
@@ -272,23 +280,23 @@ class CSTR {
                 // but relies on both in and out ports having same properties
                 // e.g., flowrate and concentration
                 if (this.portData.inputs[portInNum]) {
-                    console.log(`  this.portData.inputs[${portInNum}] DOES exist!`);      
+                    console.log(`  this.portData.inputs[${portInNum}] DOES exist!`);
                     Object.keys(this.portData.inputs[portInNum]).forEach(property => {
                         const value = this.portData.inputs[portInNum][property];
                         console.log(`Property: ${property}, Value: ${value}`);
-                        this.portData.inputs[portInNum][property] = 
+                        this.portData.inputs[portInNum][property] =
                             processUnits[outputPUindex].portData.outputs[portOutNum][property];
                     });
                 } else {
                     console.log(`  this.portData.inputs[${portInNum}] does NOT exist!`);
                 }
-                
+
                 console.log('After copy in << out');
                 this.reportInputStatus();
-                
+
             } // END OF if (portInUnitIndex != -1)
 
-        } ); // END OF repeat through Object.keys
+        }); // END OF repeat through Object.keys
 
         console.log('just before end of upateInputs in CSTR');
         this.reportInputStatus();
@@ -302,7 +310,7 @@ class CSTR {
 
         console.log('  this class unitID = ' + this.unitID);
         console.log('  this.unitCount = ' + this.unitCount);
-   
+
         this.reportInputStatus();
 
         const in1flow = this.portData.inputs.one.flowrate;
@@ -310,7 +318,7 @@ class CSTR {
         const in2flow = this.portData.inputs.two.flowrate;
         const in2conc = this.portData.inputs.two.concentration;
         const out1conc = this.portData.outputs.one.concentration;
- 
+
         // console.log('  in1flow = ' + in1flow);
         // console.log('  in1conc = ' + in1conc);
         // console.log('  in2flow = ' + in2flow);
@@ -328,14 +336,14 @@ class CSTR {
         if (totalINflow > 0) {
             inMIXEDconc = (in1conc * in1flow + in2conc * in2flow) / totalINflow;
         }
-       console.log('  inMIXEDconc = ' + inMIXEDconc);
+        console.log('  inMIXEDconc = ' + inMIXEDconc);
 
         if (this.volume == 0) {
             console.log('ERROR cstr volume = 0 will get div by zero');
         }
 
-        const dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc) 
-                     - this.rateConstant * out1conc;
+        const dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc)
+            - this.rateConstant * out1conc;
 
         // console.log(`  CHECK totalINflow = ${totalINflow}`);
         // console.log(`  CHECK vol = ${this.volume}`);
@@ -351,22 +359,22 @@ class CSTR {
         const cnew = out1conc + dcdt * this.unitTimeStep;
         console.log('  cnew = ' + cnew);
 
-        this.portData.outputs.one.concentration = cnew; 
-        console.log('  this.portData.outputs.one.concentration = ' + 
+        this.portData.outputs.one.concentration = cnew;
+        console.log('  this.portData.outputs.one.concentration = ' +
             this.portData.outputs.one.concentration);
 
         // for no volume accumulation, set outlet flowrate to total input flowrate
         // note that this may also be done in updateInputs()
         this.portData.outputs.one.flowrate = totalINflow;
-        console.log('  this.portData.outputs.one.flowrate = ' + 
+        console.log('  this.portData.outputs.one.flowrate = ' +
             this.portData.outputs.one.flowrate);
 
         // want to update innerHTML text displayed in div id="cstr_info_${zz}"
-        const el = document.getElementById('cstr_info_' + this.unitCount); 
+        const el = document.getElementById('cstr_info_' + this.unitCount);
 
         const thisConc = cnew;
         const thisFlow = totalINflow;
-        
+
         console.log('  CSTR thisConc = ' + thisConc);
         console.log('  CSTR flowrate = ' + thisFlow);
 
@@ -381,12 +389,12 @@ class CSTR {
         this.reportInputStatus();
         console.log('  near end updateState, out 1 conc = ' + this.portData.outputs.one.concentration);
         console.log('end of updateState in CSTR');
- 
+
     } // END OF updateState()
 
     getPortCount() {
         console.log('enter getPortCount');
-        const keyLen = Object.keys(this.portData).length; 
+        const keyLen = Object.keys(this.portData).length;
         console.log('  keyLen = ' + keyLen);
         return keyLen;
     }
@@ -397,7 +405,7 @@ class CSTR {
     //     console.log('  keyLen = ' + keyLen);
     //     return keyLen; 
     // }
-       
+
     // You can also count properties in a specific port
     getInputPortPropertyCount(portName) {
         if (this.portData.inputs[portName]) {

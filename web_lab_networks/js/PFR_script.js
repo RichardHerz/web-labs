@@ -55,25 +55,13 @@ class PFR {
 
     reset() {
         console.log(`enter class ${this.unitID} reset method`);
-    } // END OF FUNCTION reset 
-
-    updateUIparams() {
-        console.log(`enter class ${this.unitID} updateUIparams method`);
-    } // END OF FUNCTION updateUIparams 
-
-    updateDisplay() {
-        console.log(`enter class ${this.unitID} updateDisplay method`);
-    } // END OF FUNCTION updateDisplay 
-
-    checkForSteadyState() {
-        console.log(`enter class ${this.unitID} checkForSteadyState method`);
-    } // END OF FUNCTION checkForSteadyState 
-    initialize() {
-        console.log(`enter class ${this.unitID} initialize method`);
-    } // END OF FUNCTION initialize 
-
-    reset() {
-        console.log(`enter class ${this.unitID} reset method`);
+        this.portData.inputs.one.concentration = 0;
+        this.portData.inputs.one.flowrate = 0;
+        this.conc = new Array(this.numCells + 1).fill(0);
+        this.portData.outputs.one.concentration = 0;
+        this.portData.outputs.one.flowrate = 0;
+        const el = document.getElementById('pfr_info_' + this.unitCount); 
+        el.innerHTML = 'c = 0<br>f = 0';
     } // END OF FUNCTION reset 
 
     updateUIparams() {

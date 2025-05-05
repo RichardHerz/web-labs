@@ -48,6 +48,14 @@ class Tank {
 
     reset() {
         console.log(`enter class ${this.unitID} reset method`);
+        this.portData.inputs.one.concentration = 0;
+        this.portData.inputs.one.flowrate = 0;
+        this.portData.inputs.two.concentration = 0;
+        this.portData.inputs.two.flowrate = 0;
+        this.tankVolume = 0;
+        this.tankConc = 0;
+        const el = document.getElementById('tank_info_' + this.unitCount);
+        el.innerHTML = `c = 0<br>V = 0`;
     } // END OF FUNCTION reset 
 
     updateUIparams() {

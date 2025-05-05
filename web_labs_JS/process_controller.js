@@ -146,6 +146,15 @@ let controller = {
 
   updateDisplay : function() {
 
+    console.log('enter controller updateDisplay')
+
+    console.log('in controller before set simTime');
+    // Display current simulation time in #field_simTime element
+    const fst = document.getElementById('field_simTime');
+    if(fst) {
+      fst.innerHTML = `sim time = ${controller.simTime.toFixed(1)}`;
+    }
+   
     // WARNING: do not change simTimeStep between display updates in order to
     //    maintain correspondence between simTime and real time
 

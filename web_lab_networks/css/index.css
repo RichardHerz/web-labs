@@ -1,4 +1,24 @@
-#div_simFrame {
+#div_page_header {
+  display: block;
+  position: relative;
+  left: 5px;
+  width: 100%;
+  visibility: visible;
+  border-width: 0px;
+  border-color: DodgerBlue;
+  border-style: dotted;
+  background-color: rgb(255,255,255);
+  opacity: 1;
+ }
+ 
+ #div_rlnoticetext {
+   position: relative;
+   width: 100%;
+   padding-top: 50px;
+   font-size: 60%;
+ }
+ 
+ #div_simFrame {
   display: block;
   position: relative;
   left: 0px;
@@ -71,22 +91,70 @@
   /* only used for class selector, document.querySelectorAll */
 } 
 
+#field_simTime {
+  position: absolute;
+  left: 360px;
+  top: -10px;
+  width: 160px;
+  height: 21px;
+  border-width: 1px;
+  visibility: visible;
+  background-color: rgb(255,255,255);
+  border-style: dotted;
+  opacity: 1;
+  font-size: 16px;
+  border-color: DodgerBlue;
+}
+
 #button_runButton {
   position: absolute;
-  /* left: 192px; */
-  left: 80px;
+  left: 160px;
   top: 0px;
   width: 72px;
+  /* height: 26px;
+  border-color: black;
+  border-width: 1px;
+  border-radius: 2px;
+  border-style: outset; */
 }
 
 #button_resetButton {
   position: absolute;
-  /* left: 268px; */
-  left: 156px;
+  left: 236px;
   top: 0px;
   width: 72px;
+  /* height: 26px;
+  border-color: black;
+  border-width: 1px;
+  border-radius: 2px;
+  border-style: outset; */
 }
 
-#div_rlnoticetext {
-  font-size: 50%;
-} 
+/* set basic style of buttons */
+/* https://www.w3schools.com/csS/css3_buttons.asp */
+
+html input[type="button"] {
+  background-color: #ccccff;
+  /* color property is color of text inside button */
+  color: black;
+  border-color: black;
+  border-width: 1px;
+  border-radius: 2px;
+  border-style: outset;
+  height: 23px;
+  text-align: center;
+}
+
+html input[type="button"]:hover {
+  background-color: #9999ff;
+}
+
+/*
+  * change color when click to activate buttons
+  * WARNING: active must appear below hover in css file
+*/
+
+html input[type="button"]:active {
+  background-color: #6666ff;
+  border-style: inset;
+}

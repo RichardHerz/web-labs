@@ -145,17 +145,17 @@ function buildPalette() {
   // currently, each unit is 60px high with 8 pz separation, 
   // so 68px change from one to the next in y-position 
   //---------------------- 
-  el.innerHTML += buildFeed(0, 16, 8);
+  el.innerHTML += buildFeed(0, 16, 10);
   //---------------------- 
-  el.innerHTML += buildCSTR(0, 16, 76);
+  el.innerHTML += buildCSTR(0, 16, 80);
   //---------------------- 
-  el.innerHTML += buildPFR(0, 16, 144);
+  el.innerHTML += buildPFR(0, 16, 150);
   //---------------------- 
-  el.innerHTML += buildMixer(0, 16, 212);
+  el.innerHTML += buildMixer(0, 16, 220);
   //---------------------- 
-  el.innerHTML += buildSplitter(0, 16, 280);
+  el.innerHTML += buildSplitter(0, 16, 290);
   //---------------------- 
-  el.innerHTML += buildTank(0, 16, 348);
+  el.innerHTML += buildTank(0, 16, 360);
   //---------------------- 
   console.log('exit buildPalette()');
 } // END OF FUNCTION buildPalette

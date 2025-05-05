@@ -279,7 +279,7 @@ class Tank {
         console.log('  tank newVol = ' + newVol);
 
         const roundedConc = Math.round(newConc * 100) / 100;
-        const roundedVol = Math.round(newVol * 100) / 100;
+        const roundedVol = Math.round(newVol);
 
         console.log('  tank roundedConc = ' + roundedConc);
         console.log('  tank roundedVol = ' + roundedVol);

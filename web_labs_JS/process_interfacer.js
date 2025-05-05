@@ -8,6 +8,7 @@
 let interfacer = {
   // OBJECT interfacer handles UI controls and input fields in HTML
   // unit objects may write directly to output fields or other elements
+   // this is an "object literal" statement used to create this object
 
   timerID : 0, // used by setInterval & clearInterval in runThisLab & resetThisLab
 

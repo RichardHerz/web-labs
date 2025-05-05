@@ -1,0 +1,92 @@
+#div_simFrame {
+  display: block;
+  position: relative;
+  left: 0px;
+  width: 800px;
+  height: 480px;
+  visibility: visible;
+  background-color: white;
+  border-style: dotted;
+  border-color: blue;
+  border-width: 1px;
+  opacity: 1;
+}
+
+#div_palette {
+  position: absolute;
+  top: 30px;
+  left: 0px;
+  width: 130px;
+  height: 440px;
+  visibility: visible;
+  border-width: 4px;
+  border-style: inset;
+  border-color: red;
+  background-color: white; 
+  opacity: 1;
+}
+
+#div_scene {
+  position: absolute;
+  top: 30px;
+  left: 140px;
+  width: 650px;
+  height: 440px;
+  visibility: visible;
+  border-width: 4px;
+  border-style: inset;
+  border-color: dodgerblue;
+  background-color: white; 
+  opacity: 1;
+}
+
+#svg_pipes {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  border : none;
+  border-width: 1px;
+  border-color: DodgerBlue;
+  /* setting z-index here doesn't work */
+  /* set in process_main.js >> svg.style.zIndex = '1000'; */
+  /* next line allows clicks to pass through to the div below */
+  /* pointer-events: none; */
+  /* or set in process_main.js >> svg.style.pointerEvents = 'none'; */
+}
+
+.param_btn {
+  width: 11px;
+  height: 11px;
+  background-color: black;
+  position: absolute;
+  top: 47px;
+  left: 2px;
+}
+
+.portIN {
+  /* only used for class selector, document.querySelectorAll  */
+}
+
+.portOUT {
+  /* only used for class selector, document.querySelectorAll */
+} 
+
+#button_runButton {
+  position: absolute;
+  /* left: 192px; */
+  left: 80px;
+  top: 0px;
+  width: 72px;
+}
+
+#button_resetButton {
+  position: absolute;
+  /* left: 268px; */
+  left: 156px;
+  top: 0px;
+  width: 72px;
+}
+
+#div_rlnoticetext {
+  font-size: 50%;
+} 

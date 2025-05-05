@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>ReactorLab.net, Reactor Networks</title>
+
+  <!--
+    Design, text, images and code by Richard K. Herz, 2017-2025
+    Copyrights held by Richard K. Herz
+    Licensed for use under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.en.html
+  -->
+
+  <meta name='description' author='Richard Herz'>
+  <meta name="description" content="The Reactor Lab provides interactive chemical reactor
+  simulations for active learning. Web Labs and desktop versions of ReactorLab
+  and SimzLab, including PureWaterLab, are available. Software is provided free of charge
+  and is open source and available at our GitHub site, github.com/RichardHerz. The code is
+  structured to allow fast construction of new simulations of chemical reactors and other systems."/>
+
+  <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
+  <meta name="viewport" content="width=device-width, initial-scale=0.67">
+
+  <!-- load COMMON CSS style sheets FIRST -->
+  <link rel="stylesheet" href="../web_labs_CSS/common.css">
+
+  <!-- load CSS style sheets for this lab  -->
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/popup.css">
+  <link rel="stylesheet" href="css/_Feed.css">
+  <link rel="stylesheet" href="css/_CSTR.css">
+  <link rel="stylesheet" href="css/_PFR.css">
+  <link rel="stylesheet" href="css/_Mixer.css">
+  <link rel="stylesheet" href="css/_Splitter.css">
+  <link rel="stylesheet" href="css/_Tank.css">
+
+  <!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
+
+  <script language="javascript" src="js/process_sim_params.js" type="text/javascript"></script>
+  <script language="javascript" src="js/process_plot_info.js" type="text/javascript"></script>
+
+  <script language="javascript" src="js/process_main.js" type="text/javascript"></script>
+  <script language="javascript" src="js/popup.js" type="text/javascript"></script>
+
+  <script language="javascript" src="js/_Feed_build.js" type="text/javascript"></script>
+  <script language="javascript" src="js/_Feed_script.js" type="text/javascript"></script>
+  
+ <script language="javascript" src="js/_CSTR_build.js" type="text/javascript"></script>
+  <script language="javascript" src="js/_CSTR_script.js" type="text/javascript"></script>
+
+  <script language="javascript" src="js/_PFR_build.js" type="text/javascript"></script>
+  <script language="javascript" src="js/_PFR_script.js" type="text/javascript"></script>
+
+  <script language="javascript" src="js/_Mixer_build.js" type="text/javascript"></script>
+  <script language="javascript" src="js/_Mixer_script.js" type="text/javascript"></script>
+
+  <script language="javascript" src="js/_Splitter_build.js" type="text/javascript"></script>
+  <script language="javascript" src="js/_Splitter_script.js" type="text/javascript"></script>
+
+  <script language="javascript" src="js/_Tank_build.js" type="text/javascript"></script>
+  <script language="javascript" src="js/_Tank_script.js" type="text/javascript"></script>
+
+  <!-- load COMMON JAVASCRIPT for Web Labs -->
+  <script language="javascript" src="../web_labs_JS/process_controller.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_interfacer.js" type="text/javascript"></script>
+  <script language="javascript" src="../web_labs_JS/process_plotter_flot.js" type="text/javascript"></script>
+
+  <!-- initialize simulation after loading of this window -->
+  <script language="javascript">
+    // this works as script in html file but not in external js files
+    window.onload = controller.openThisLab; // can NOT use () after openThisLab
+  </script>
+
+</head>
+
+<body onload="buildPalette()">
+
+  <div id="div_page_header">
+    <p><a href="/web-labs/reactors/">Return to Web Labs</a> at ReactorLab.net</p>
+    <p><b><i>Reactor Networks - add units from palette and connect with pipes</i></b></p>
+    <p>
+      This works with keyboards only: Hold down option/Alt key and click a unit in the palette 
+      on the left, 
+      then click on the scene to the right to add the unit to the scene.
+      To remove a unit, option/Alt click on the unit. You can add and remove
+      multiple units.
+    </p>
+    <p>
+      To add a "pipe" connecting two units,  
+      option/Alt click on a blue output in one of the units in the scene, 
+      then simple-click
+      on a yellow input in another unit. Option/Alt click on a yellow
+      input to remove a pipe. 
+    </p>
+    <p>
+      Click on the small black square in the lower-left corner of a unit to change its 
+      reaction parameters. During a run, concentration (c) and flowrate (f) are displayed
+      in each unit. 
+    </p>
+    <p>
+      Click the Run button to start.
+      Change an input value, then hit the Enter key or click out of the field.
+    </p>
+  </div> <!-- end of div div_page_header -->
+
+  <!-- Modal popup -->
+  <div class="modal-overlay" id="numberModal">
+    <div class="modal-content">
+      <h2>Enter Unit Parameters</h2>
+      <form id="numberForm">
+        <div class="form-group">
+          <label id="firstNumLabel" for="firstNumber">First Number:</label>
+          <input type="number" id="firstNumber" step="any" required>
+          <div class="error" id="firstNumberError">Please enter a valid number</div>
+        </div>
+        <div class="form-group">
+          <label for="secondNumber">Second Number:</label>
+          <input type="number" id="secondNumber" step="any" required>
+          <div class="error" id="secondNumberError">Please enter a valid number</div>
+        </div>
+        <div class="buttons">
+          <button type="button" class="cancel-btn" id="cancelBtn">Cancel</button>
+          <button type="submit" class="submit-btn">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="div_simFrame">
+
+    <button id = "Step">1 Step</button>
+    <!-- eventListener for click on this button in process_main.js -->
+  
+    <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
+    <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">  
+
+    <div id="div_palette">
+      <!-- new units are added to this div by body onload buildPalette() -->
+    </div>
+
+    <div id="div_scene"">
+      <!-- eventListener for click on this div in process_main.js -->
+    
+      <svg xmlns="http://www.w3.org/2000/svg" id="svg_pipes" width="650" height="440">
+      </svg>
+
+    </div>
+
+  </div>
+
+  <!-- div_rlnoticetext filled by interfacer.resetThisLab()
+    and formatted by web_labs_CSS/common.css -->
+  <div id="div_rlnoticetext"></div>
+
+</body>
+</html>

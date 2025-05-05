@@ -20,7 +20,7 @@ html select{
 */
 
 html input[disabled] {
-    cursor: default;
+  cursor: default;
 }
 
 /* set basic style of buttons */

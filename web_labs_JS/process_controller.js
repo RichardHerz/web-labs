@@ -8,6 +8,7 @@
 let controller = {
 
   // OBJECT controller contains functions that run the simulation time stepping
+  // this is an "object literal" statement used to create this object
 
   // SUMMARY OF DEPENDENCIES
   //

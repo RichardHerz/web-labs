@@ -1,0 +1,41 @@
+  <title>ReactorLab.net, PFR + Heat exchanger simulation</title>
+
+  <!--
+    Design, text, images and code by Richard K. Herz, 2017-2020
+    Copyrights held by Richard K. Herz
+    Licensed for use under the GNU General Public License v3.0
+    https://www.gnu.org/licenses/gpl-3.0.en.html
+  -->
+
+  <meta name="description" author="Richard Herz">
+  <meta name="description" content="The Reactor Lab provides interactive chemical reactor
+  simulations for active learning. Web Labs and desktop versions of ReactorLab
+  and SimzLab, including PureWaterLab, are available. Software is provided free of charge
+  and is open source and available at our GitHub site, github.com/RichardHerz. The code is
+  structured to allow fast construction of new simulations of chemical reactors and other systems.">
+
+  <!-- A VIEWPORT META LINE IN HTML HEAD IS NECESSARY FOR CSS @MEDIA TO WORK -->
+  <meta name="viewport" content="width=device-width, initial-scale=0.67"> 
+
+
+=======================================================
+
+<body>
+  <div id="div_page_header">
+    <p><a href="./../../web-labs/reactors/index.html">Return to Web Labs</a> at ReactorLab.net</p>
+    <p><b><i>Adiabatic PFR with feed-product heat exchange</i></b></p>
+    <p>
+      Click the Run button to start.
+      Change an input value, then hit the Enter key or click out of the field.
+      
+      <a href="./images/rxr_hx_info.html" target="new">More info</a>
+    </p>
+  </div> <!-- end of div div_page_header -->
+  
+
+=======================================================
+
+       <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
+     <input type="button" id="button_resetButton" value="Reset" onclick="interfacer.resetThisLab()">
+     
+     

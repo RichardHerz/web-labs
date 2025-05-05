@@ -1,0 +1,117 @@
+.mixer {
+  /* position set by indexed css for each unit */
+  width: 80px;
+  height: 60px;
+  background-color: lightseagreen;
+  border: solid 1px;
+}
+
+/* mixer input one as square */
+/* .mixer_input_one {
+  width: 11px;
+  height: 11px;
+  background-color: yellow;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+} */
+
+/* mixer input two as square */
+/* .mixer_input_two {
+  width: 11px;
+  height: 11px;
+  background-color: yellow;
+  position: absolute;
+  top: 25px;
+  left: 2px;
+} */
+
+/* mixer input one as trapezoid */
+/* https://css-tricks.com/the-shapes-of-css/ */
+.mixer_input_one {
+  border-top: 5px solid transparent;
+  border-left: 11px solid yellow;
+  border-bottom: 5px solid transparent;
+  height: 11px;
+  width: 0px;
+  position: absolute;
+  left: 0px;
+  top: 2px;
+}
+
+/* mixer input two as trapezoid */
+.mixer_input_two {
+  border-top: 5px solid transparent;
+  border-left: 11px solid yellow;
+  border-bottom: 5px solid transparent;
+  height: 11px;
+  width: 0px;
+  position: absolute;
+  top: 25px;
+  left: 0px;
+}
+
+/* mixer output one as circle */
+/* .mixer_output_one {
+  width: 11px;
+  height: 11px;
+  background-color: dodgerblue;
+  position: absolute;
+  top: 25px;
+  left: 47px;
+  border-radius: 50%;
+} */
+
+/* mixer output one as triangle */
+/* https://css-tricks.com/the-shapes-of-css/ */
+.mixer_output_one {
+  width: 0px;
+  height: 0px;
+  border-top: 11px solid transparent;
+  border-left: 20px solid dodgerblue;
+  border-bottom: 11px solid transparent;
+  position: absolute;
+  top: 14px;
+  left: 76px;
+}
+
+.mixer_info {
+  width: 50px;
+  height: 30px;
+  background-color: white; /* Make info white */
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  border: solid black 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: black;
+}
+
+.mixer_type {
+  width: 46px;
+  height: 11px;
+  background-color: whitesmoke;
+  position: absolute;
+  top: 2px;
+  left: 17px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+}
+
+.mixer_num {
+  width: 46px;
+  height: 11px;
+  background-color: whitesmoke;
+  position: absolute;
+  top: 47px;
+  left: 17px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+}

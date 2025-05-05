@@ -1,0 +1,73 @@
+.feed {
+/* position set by indexed css for each unit */
+width: 80px;
+height: 60px;
+background-color: white;
+border: solid 1px red;
+}
+
+/* feed output one as circle */
+/* .feed_output_one {
+  width: 11px;
+  height: 11px;
+  background-color: dodgerblue;
+  position: absolute;
+  top: 25px;
+  left: 47px;
+  border-radius: 50%;
+} */
+
+/* feed output one as triangle */
+/* https://css-tricks.com/the-shapes-of-css/ */
+.feed_output_one {
+    width: 0px;
+    height: 0px;
+    border-top: 11px solid transparent;
+    border-left: 20px solid dodgerblue;
+    border-bottom: 11px solid transparent;
+    position: absolute;
+    top: 14px;
+    left: 76px;
+  }
+
+.feed_info {
+width: 50px;
+height: 30px;
+background-color: white; /* Make info white */
+position: absolute;
+top: 15px;
+left: 15px;
+display: flex;
+border-bottom-style: ;
+justify-content: center;
+align-items: center;
+font-size: 12px;
+color: black;
+border: solid 1px red;
+}
+
+.feed_type {
+width: 46px;
+height: 11px;
+background-color: whitesmoke;
+position: absolute;
+top: 2px;
+left: 17px;
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 10px;
+}
+
+.feed_num {
+width: 46px;
+height: 11px;
+background-color: whitesmoke;
+position: absolute;
+top: 47px;
+left: 17px;
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 10px;
+}

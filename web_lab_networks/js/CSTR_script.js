@@ -1,12 +1,13 @@
-// process unit (object)
-// 	required methods:
+//  process unit (object)
+//  required methods:
 //      initialize() // called by controller.openThisLab()
-// 		reset() // called by interfacer.resetThisLab()
-// 		updateUIparams() // called by interfacer.updateUIparams() or HTML inputs
-// 		updateInputs() // called by controller.updateProcessUnits()
-// 		updateState() // called by controller.updateProcessUnits()
-// 		updateDisplay() // called by controller.updateDisplay()
-// 		checkForSteadyState() // called by controller.checkForSteadyState()
+//      reset() // called by interfacer.resetThisLab()
+//      updateUIparams() // called by interfacer.updateUIparams() or HTML inputs
+//      updateInputs() // called by controller.updateProcessUnits()
+//      updateState() // called by controller.updateProcessUnits()
+//      updateDisplay() // called by controller.updateDisplay()
+//      checkForSteadyState() // called by controller.checkForSteadyState()
+//  variable residenceTime is required, used in checkForSteadyState()
 
 class CSTR {
 

@@ -72,6 +72,10 @@
     // this works as script in html file but not in external js files
     window.onload = controller.openThisLab; // can NOT use () after openThisLab
   </script>
+  <!-- NOTE: openThisLab runs initialize function on all units in processUnits[] 
+  but this networks lab has no units initially and initialization of each unit is 
+  done when the new Class is established in the class constructor function, 
+  so the unit initialize functions here are present but empty -->
 
 </head>
 

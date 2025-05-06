@@ -70,7 +70,7 @@ let interfacer = {
       + 'The code is structured to allow fast construction of new simulations of reactors and other systems. '
       + 'The author of Reactor Lab is Richard K. Herz, emeritus professor of chemical engineering '
       + 'at the University of California, San Diego, <a href="https://ucsd.edu/">UCSD</a>, '
-      + 'in the <a href="http://nanoengineering.ucsd.edu/">Department of NanoEngineering</a>. '
+      + 'in the <a href="http://cne.ucsd.edu/">Department of Chemical and Nano Engineering</a>. '
       + 'Please let us know if you use the Lab or the code. Thanks! '
       + '<a href="mailto:rherz@ucsd.edu?subject=Reactor Lab">rherz@ucsd.edu</a>';
     document.getElementById('div_rlnoticetext').innerHTML = txt;

@@ -1,3 +1,13 @@
+// process unit (object)
+// 	required methods:
+//      initialize() // called by controller.openThisLab()
+// 		reset() // called by interfacer.resetThisLab()
+// 		updateUIparams() // called by interfacer.updateUIparams() or HTML inputs
+// 		updateInputs() // called by controller.updateProcessUnits()
+// 		updateState() // called by controller.updateProcessUnits()
+// 		updateDisplay() // called by controller.updateDisplay()
+// 		checkForSteadyState() // called by controller.checkForSteadyState()
+
 class CSTR {
 
     constructor(unitCount, unitID) {
@@ -49,11 +59,13 @@ class CSTR {
     } // END OF FUNCTION constructor 
 
     initialize() {
-        console.log(`enter class ${this.unitID} initialize method`);
+        // this lab's initialization is accomplished by 
+        // the constructor function, so nothing is done here
+        // but this function is required to remain here
     } // END OF FUNCTION initialize 
 
     reset() {
-        console.log(`enter class ${this.unitID} reset method`);
+        // console.log(`enter class ${this.unitID} reset method`);
         this.portData.inputs.one.concentration = 0;
         this.portData.inputs.one.flowrate = 0;
         this.portData.inputs.two.concentration = 0;
@@ -65,16 +77,16 @@ class CSTR {
     } // END OF FUNCTION reset 
 
     updateUIparams() {
-        console.log(`enter class ${this.unitID} updateUIparams method`);    //
+        // console.log(`enter class ${this.unitID} updateUIparams method`);    //
         // GET INPUT PARAMETER VALUES FROM HTML UI CONTROLS
     } // END OF FUNCTION updateUIparams 
 
     updateDisplay() {
-        console.log(`enter class ${this.unitID} updateDisplay method`);
+        // console.log(`enter class ${this.unitID} updateDisplay method`);
     } // END OF FUNCTION updateDisplay 
 
     checkForSteadyState() {
-        console.log(`enter class ${this.unitID} checkForSteadyState method`);
+        // console.log(`enter class ${this.unitID} checkForSteadyState method`);
         // required - called by controller object
         // returns ssFlag, true if this unit at SS, false if not
         // *IF* NOT used to check for SS *AND* another unit IS checked,
@@ -86,10 +98,7 @@ class CSTR {
             ssFlag = false;
         }
         this.ssCheckSum = 0;
-
-        // XXX TEMP DEV
-        ssFlag = false;
-
+        ssFlag = false; // XXX TEMPORARY FOR DEVELOPMENT
         return ssFlag;
     } // END OF FUNCTION checkForSteadyState 
 

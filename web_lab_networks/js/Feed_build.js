@@ -1,10 +1,19 @@
+'use strict';
+
+/*
+Design, text, images and code by Richard K. Herz, 2024-2025
+Copyrights held by Richard K. Herz
+Licensed for use under the GNU General Public License v3.0
+https://www.gnu.org/licenses/gpl-3.0.en.html
+*/
+
 function buildFeed(zz,x,y) {
   
     console.log('enter function buildFeed, zz,x,y = ' + zz +', '+ x +', '+ y);
 
     // NOTE the back-ticks ` required at start and end of template string buildText
   
-    buildText = ` 
+    let buildText = ` 
 
     <style>
         #feed_${zz} {
@@ -51,4 +60,4 @@ function buildFeed(zz,x,y) {
     console.log('at end function buildFeed');
     
     return buildText;
-    } // END OF FUNCTION buildFeed
+} // END OF FUNCTION buildFeed

@@ -1,8 +1,10 @@
+'use strict';
+
 /*
-  Design, text, images and code by Richard K. Herz, 2024-2025
-  Copyrights held by Richard K. Herz
-  Licensed for use under the GNU General Public License v3.0
-  https://www.gnu.org/licenses/gpl-3.0.en.html
+Design, text, images and code by Richard K. Herz, 2024-2025
+Copyrights held by Richard K. Herz
+Licensed for use under the GNU General Public License v3.0
+https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
 // DECLARE GLOBAL VARIABLES
@@ -142,8 +144,8 @@ function findProcessUnitIndex(searchUnitID) {
 function buildPalette() {
   console.log('enter buildPalette()');
   let el = document.getElementById("div_palette");
-  // currently, each unit is 60px high with 8 pz separation, 
-  // so 68px change from one to the next in y-position 
+  // currently, each unit is 60px high with 10 pz separation, 
+  // so 70px change from one to the next in y-position 
   //---------------------- 
   el.innerHTML += buildFeed(0, 16, 10);
   //---------------------- 
@@ -206,6 +208,8 @@ function sceneDivClicked(event) {
     // note both rect and event.clientX & Y vary with page scroll
     // but their difference is independent of page scroll 
     // so x,y are relative to sceneDiv
+    // use as input arguments to build units for placing 
+    // and unit objects for save & reload flowsheet 
     const rect = event.target.getBoundingClientRect();
     const x = Math.round(event.clientX - rect.left);
     const y = Math.round(event.clientY - rect.top);
@@ -215,57 +219,58 @@ function sceneDivClicked(event) {
     let el = document.getElementById("div_scene");
 
     // NEED SWITCH BLOCK USING global var paletteObject 
+    let unitID;
     switch (paletteObject) {
       case 'feed':
         el.innerHTML += buildFeed(unitCount, x, y);
-        const tempIDfeed = 'feed_' + unitCount;
-        unitList.push(tempIDfeed); // used in unit update functions
+        unitID = 'feed_' + unitCount;
+        unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        processUnits.push(new Feed(unitCount, tempIDfeed) );
+        processUnits.push(new Feed(unitCount, unitID, x, y) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'cstr':
         console.log('sceneDivClicked before call buildCSTR, unitCount = ' + unitCount);
         el.innerHTML += buildCSTR(unitCount, x, y);
         // add unit ID to list of units on display
-        const tempIDcstr = 'cstr_' + unitCount;
-        unitList.push(tempIDcstr); // used in unit update functions
+        unitID = 'cstr_' + unitCount;
+        unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        processUnits.push(new CSTR(unitCount, tempIDcstr) );
+        processUnits.push(new CSTR(unitCount, unitID, x, y) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'pfr':
         console.log('sceneDivClicked before call buildPFR, unitCount = ' + unitCount);
         el.innerHTML += buildPFR(unitCount, x, y);
         // add unit ID to list of units on display
-        const tempIDpfr = 'pfr_' + unitCount;
-        unitList.push(tempIDpfr); // used in unit update functions
+        unitID = 'pfr_' + unitCount;
+        unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        processUnits.push(new PFR(unitCount, tempIDpfr) );
+        processUnits.push(new PFR(unitCount, unitID, x, y) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'mixer':
         el.innerHTML += buildMixer(unitCount, x, y);
-        const tempIDmixer = 'mixer_' + unitCount;
-        unitList.push(tempIDmixer); // used in unit update functions
+        unitID = 'mixer_' + unitCount;
+        unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        processUnits.push(new Mixer(unitCount, tempIDmixer) );
+        processUnits.push(new Mixer(unitCount, unitID, x, y) );;
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'splitter':
         el.innerHTML += buildSplitter(unitCount, x, y);
-        const tempIDsplitter = 'splitter_' + unitCount;
-        unitList.push(tempIDsplitter); // used in unit update functions
+        unitID = 'splitter_' + unitCount;
+        unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        processUnits.push(new Splitter(unitCount, tempIDsplitter) );
+        processUnits.push(new Splitter(unitCount, unitID, x, y) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'tank':
           el.innerHTML += buildTank(unitCount, x, y);
-          const tempIDtank = 'tank_' + unitCount;
-          unitList.push(tempIDtank); // used in unit update functions
+          unitID = 'tank_' + unitCount;
+          unitList.push(unitID); // used in unit update functions
           // add an object to processUnits[] for this new unit
-          processUnits.push(new Tank(unitCount, tempIDtank) );
+          processUnits.push(new Tank(unitCount, unitID, x, y) );
           console.log('add new unit to processUnits[], unitCount = ' + unitCount);
           break;
       default:

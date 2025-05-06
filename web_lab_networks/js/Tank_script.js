@@ -1,21 +1,34 @@
-//  process unit (object)
-//  required methods:
-//      initialize() // called by controller.openThisLab()
-//      reset() // called by interfacer.resetThisLab()
-//      updateUIparams() // called by interfacer.updateUIparams() or HTML inputs
-//      updateInputs() // called by controller.updateProcessUnits()
-//      updateState() // called by controller.updateProcessUnits()
-//      updateDisplay() // called by controller.updateDisplay()
-//      checkForSteadyState() // called by controller.checkForSteadyState()
-//  variable residenceTime is required, used in checkForSteadyState()
+'use strict';
+
+/*
+Design, text, images and code by Richard K. Herz, 2024-2025
+Copyrights held by Richard K. Herz
+Licensed for use under the GNU General Public License v3.0
+https://www.gnu.org/licenses/gpl-3.0.en.html
+*/
+
+/*
+ReactorLab.net Web Labs process unit (Javascript object)
+required methods:
+    initialize() // called by controller.openThisLab()
+    reset() // called by interfacer.resetThisLab()
+    updateUIparams() // called by interfacer.updateUIparams() or HTML inputs
+    updateInputs() // called by controller.updateProcessUnits()
+    updateState() // called by controller.updateProcessUnits()
+    updateDisplay() // called by controller.updateDisplay()
+    checkForSteadyState() // called by controller.checkForSteadyState()
+variable residenceTime is required, used in checkForSteadyState()
+*/
 
 class Tank {
 
-    constructor(unitCount, unitID) {
+    constructor(unitCount, unitID, sceneX, sceneY) {
         console.log('enter class Tank constructor');
 
         this.unitCount = unitCount;
         this.unitID = unitID;
+        this.sceneX = sceneX; // for save & reload flowsheet
+        this.sceneY = sceneY;
 
         // SPECIAL FOR TANK, which has no outlet port
         this.tankVolume = 0;

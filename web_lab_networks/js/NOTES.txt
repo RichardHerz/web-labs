@@ -1,4 +1,41 @@
 =============================== 
+SAVING STATE OF FLOWSHEET 
+
+MINIMUM 
+- list of unitCount, unitID, sceneX, sceneY 
+- arrays for pipes - these have ID's not objects
+  so should be able to save and import as text
+    portOUTlist, portINlist, 
+    portINunitList, portOUTunitList, pipeIDlist 
+
+SEE 
+- let unitCountList = []; // unitCount values of units currently on display
+- let unitList = []; // ID's of unit objects currently on display
+
+FROM unitList get unitCount, sceneX & sceneY for each
+
+DESIRABLE - otherwise will get initial defaults 
+- unit reaction params
+- timing params 
+- current input and output port values 
+
+THREE METHODS - see files import_test.html and .js 
+- write data to a popup window which user can copy & save
+  to a disk file, then later paste into an input form
+  (warn user to allow popups) 
+- write data to a cookie which could be reloaded
+  (warn user to allow cookies)
+- write data to localStorage
+  Note: Cookies are limited in size (typically 4KB). 
+  For larger datasets, consider using localStorage instead
+
+https://www.w3schools.com/js/js_array_methods.asp 
+.toString() converts array to comma-delimited string
+.join() converts array to custom-delimited string   
+.split() imports comma-delimited string to array 
+SEE IN THIS FOLDER import_test.js & import_test.html 
+
+=============================== 
 TIME STEP SIZE & NUMERICAL STABILITY 
 
 All units must use the same time step size set in sim_params. 

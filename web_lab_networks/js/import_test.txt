@@ -1,0 +1,85 @@
+will line 60 to import cookie work when browser window is closed and later reopened?
+
+Yes, the cookie import will work when the browser window is closed and reopened, as long as:
+
+The cookie hasn't expired (currently set to 1 hour with max-age=3600)
+The user hasn't cleared their browser cookies
+However, we should add a check to verify the cookie exists when importing. Here's an improved version:
+
+------------------------------------------------ 
+function testme() {
+    // ...existing code...
+
+    // Function to get cookie by name
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
+    // Try to get saved arrays from cookie
+    const savedArrays = getCookie('arrayData');
+    if (savedArrays) {
+        const decodedData = decodeURIComponent(savedArrays);
+        const cookieLines = decodedData.split('<br>');
+        
+        const cookie_Fruits = cookieLines[0].replace('new_Fruits: ', '').split(', ');
+        const cookie_Trees = cookieLines[1].replace('new_Trees: ', '').split(', ');
+        const cookie_Fish = cookieLines[2].replace('new_Fish: ', '').split(', ');
+
+        console.log('Retrieved from cookie:');
+        console.log('Cookie Fruits:', cookie_Fruits);
+        console.log('Cookie Trees:', cookie_Trees);
+        console.log('Cookie Fish:', cookie_Fish);
+    } else {
+        console.log('No saved arrays found in cookie');
+    }
+    
+    // ...existing code...
+}
+
+---------------------------------------------------
+
+This improved version:
+
+Adds a helper function to reliably get cookies by name
+Handles the case when no cookie exists
+Provides clear console feedback
+Can be called independently of the popup window code
+To test persistence:
+
+Run the code to create the cookie
+Close the browser
+Reopen the browser and the page
+Open DevTools (Command + Option + I)
+Check the console to see the retrieved arrays
+Similar code found with 1 license type - View matches
+
+========== ORIGINAL COOKIE CODE ============= 
+
+   // Get cookie data and create new arrays
+    const cookieValue = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('arrayData='))
+      ?.split('=')[1];
+
+    if (cookieValue) {
+      const decodedData = decodeURIComponent(cookieValue);
+      const cookieLines = decodedData.split('<br>');
+      
+      const cookie_Fruits = cookieLines[0].replace('new_Fruits: ', '').split(', ');
+      const cookie_Trees = cookieLines[1].replace('new_Trees: ', '').split(', ');
+      const cookie_Fish = cookieLines[2].replace('new_Fish: ', '').split(', ');
+
+      // Test the arrays from cookie
+      console.log('Cookie Fruits:', cookie_Fruits);
+      console.log('Cookie Trees:', cookie_Trees);
+      console.log('Cookie Fish:', cookie_Fish);
+    }
+
+} catch (error) {
+    console.error('Error creating popup window:', error);
+    alert('Error creating popup window. Please check console for details.');
+}
+

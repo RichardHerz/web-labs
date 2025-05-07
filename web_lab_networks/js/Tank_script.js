@@ -9,6 +9,8 @@ https://www.gnu.org/licenses/gpl-3.0.en.html
 
 /*
 ReactorLab.net Web Labs process unit (Javascript object)
+required variable: 
+    residenceTime // used in checkForSteadyState()
 required methods:
     initialize() // called by controller.openThisLab()
     reset() // called by interfacer.resetThisLab()
@@ -17,7 +19,6 @@ required methods:
     updateState() // called by controller.updateProcessUnits()
     updateDisplay() // called by controller.updateDisplay()
     checkForSteadyState() // called by controller.checkForSteadyState()
-variable residenceTime is required, used in checkForSteadyState()
 */
 
 class Tank {

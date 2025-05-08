@@ -6,6 +6,8 @@ The cookie hasn't expired (currently set to 1 hour with max-age=3600)
 The user hasn't cleared their browser cookies
 However, we should add a check to verify the cookie exists when importing. Here's an improved version:
 
+Note: Cookies are limited in size (typically 4KB). For larger datasets, consider using localStorage instead
+
 ------------------------------------------------ 
 function testme() {
     // ...existing code...

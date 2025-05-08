@@ -40,15 +40,25 @@ let processUnits = [];
 //       both pieces of info can be obtained from object's entry in processUnits array 
 let unitCountList = []; // unitCount values of units currently on display
 let unitList = []; // ID's of unit objects currently on display
-
+let unitXlist = []; // x,y locations of units in scene
+let unitYlist = []; //    for restoring saved flowsheet
 
 document.addEventListener('DOMContentLoaded', function() {
-  const runButton = document.getElementById('Step');
-  if (runButton) {
-      runButton.addEventListener('click', updateInputsAndState);
+  const stepButton = document.getElementById('Step');
+  if (stepButton) {
+    stepButton.addEventListener('click', updateInputsAndState);
   } else {
-      console.error('RUN button not found in the document');
+      console.error('Step button not found in the document');
   }
+  
+  const exportButton = document.getElementById('Export');
+  if (exportButton) {
+    // exportFLowSheet in file export_flowsheet.js
+    exportButton.addEventListener('click', exportFlowSheet);
+  } else {
+      console.error('exportButton button not found in the document');
+  }
+
   const divScene = document.getElementById('div_scene');
   if (divScene) {
     divScene.addEventListener('click', function(event) {
@@ -71,8 +81,8 @@ window.addEventListener('beforeunload', () => {
 });
 
 function updateInputsAndState() {
-  // called by button RUN on this web page
-  const nmax = 20;
+  // called by button Step on this web page
+  const nmax = 1;
   for (let n = 0; n < nmax; n++) {
     runUpdateInputs();
     runUpdateState();
@@ -220,6 +230,8 @@ function sceneDivClicked(event) {
 
     // NEED SWITCH BLOCK USING global var paletteObject 
     let unitID;
+    unitXlist.push(x);
+    unitYlist.push(y);
     switch (paletteObject) {
       case 'feed':
         el.innerHTML += buildFeed(unitCount, x, y);
@@ -375,11 +387,13 @@ function sceneObjectClicked(event, thisUnit, objectUnit) {
         return thisOne == objectUnit;
       }
       console.log('  remove object from lists, tIndex = ' + tIndex);
-      unitCountList.splice(tIndex, 1); // only used in reportStatus() for debugging 
-      unitList.splice(tIndex, 1); // used in unit update functions 
+      unitCountList.splice(tIndex, 1);
+      unitList.splice(tIndex, 1);
+      unitXlist.splice(tIndex, 1);
+      unitYlist.splice(tIndex, 1); 
 
       // copilot suggested the following to remove object from processUnits 
-      indexToRemove = processUnits.findIndex(unit => {
+      let indexToRemove = processUnits.findIndex(unit => {
         // Check if unit exists before trying to access its properties
         return unit && unit.unitID === objectUnit;
       });
@@ -727,4 +741,4 @@ function reportStatus(caller) {
   // console.log('  portINlist = ' + portINlist);
   // console.log('  portINunitList = ' + portINunitList);
   // console.log('---- end reportStatus ---------');
-} // END OF FUNCTION reportStatus 
+} // END OF FUNCTION reportStatus

@@ -94,7 +94,7 @@
 #field_simTime {
   position: absolute;
   left: 360px;
-  top: -10px;
+  top: -12px;
   width: 160px;
   height: 21px;
   border-width: 1px;
@@ -111,11 +111,6 @@
   left: 160px;
   top: 0px;
   width: 72px;
-  /* height: 26px;
-  border-color: black;
-  border-width: 1px;
-  border-radius: 2px;
-  border-style: outset; */
 }
 
 #button_resetButton {
@@ -123,26 +118,26 @@
   left: 236px;
   top: 0px;
   width: 72px;
-  /* height: 26px;
-  border-color: black;
-  border-width: 1px;
-  border-radius: 2px;
-  border-style: outset; */
 }
 
 /* set basic style of buttons */
 /* https://www.w3schools.com/csS/css3_buttons.asp */
 
 html input[type="button"] {
+  height: 23px;
   background-color: #ccccff;
-  /* color property is color of text inside button */
-  color: black;
+  color: black; /* color of text inside button */
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  text-align: center;
+  line-height: normal;
+  justify-content: center;
+  padding: 2px 10px;
   border-color: black;
   border-width: 1px;
   border-radius: 2px;
   border-style: outset;
-  height: 23px;
-  text-align: center;
 }
 
 html input[type="button"]:hover {

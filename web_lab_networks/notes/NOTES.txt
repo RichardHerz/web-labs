@@ -27,7 +27,10 @@ THREE METHODS - see files import_test.html and .js
   (warn user to allow cookies)
 - write data to localStorage
   Note: Cookies are limited in size (typically 4KB). 
-  For larger datasets, consider using localStorage instead
+    For larger datasets, consider using localStorage instead
+  Note: the cookie import will work when the browser window is closed and reopened, as long as:
+    The cookie hasn't expired (currently set to 1 hour with max-age=3600)
+    The user hasn't cleared their browser cookies
 
 https://www.w3schools.com/js/js_array_methods.asp 
 .toString() converts array to comma-delimited string

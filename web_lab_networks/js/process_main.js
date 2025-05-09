@@ -44,6 +44,16 @@ let unitXlist = []; // x,y locations of units in scene
 let unitYlist = []; //    for restoring saved flowsheet
 
 document.addEventListener('DOMContentLoaded', function() {
+
+  const divScene = document.getElementById('div_scene');
+  if (divScene) {
+    divScene.addEventListener('click', function(event) {
+      sceneDivClicked(event);
+    });
+  } else {
+    console.error('scene div not found in the document');
+  }
+
   const stepButton = document.getElementById('Step');
   if (stepButton) {
     stepButton.addEventListener('click', updateInputsAndState);
@@ -59,14 +69,14 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('exportButton button not found in the document');
   }
 
-  const divScene = document.getElementById('div_scene');
-  if (divScene) {
-    divScene.addEventListener('click', function(event) {
-      sceneDivClicked(event);
-    });
+  const importButton = document.getElementById('Import');
+  if (importButton) {
+    // importFLowSheet in file export_flowsheet.js
+    importButton.addEventListener('click', importFlowSheet);
   } else {
-    console.error('scene div not found in the document');
+    console.error('importButton button not found in the document');
   }
+
 }); // END OF BLOCK adding eventListeners for main html elements
 
 // THIS PUTS UP WARNING ON CLICK LINK ON PAGE TO LEAVE PAGE, E.G., TO WEB LABS...

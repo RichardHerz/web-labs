@@ -91,7 +91,7 @@ function updateInputsAndState() {
 
 function runUpdateInputs() {
   // called by button upIn on this web page
-  for (u in processUnits) {
+  for (let u in processUnits) {
     console.log('>>>> run  updateInputs(), u = ' + u);
     console.log('  unitID = ' + processUnits[u].unitID);
     processUnits[u].updateInputs(u);
@@ -100,7 +100,7 @@ function runUpdateInputs() {
 
 function runUpdateState() {
   // called by button upSt on this web page
-  for (u in processUnits) {
+  for (let u in processUnits) {
     console.log('>>>> run updateState(), u = ' + u);
     console.log('  unitID = ' + processUnits[u].unitID);
     // processUnits[u].getPortCount();

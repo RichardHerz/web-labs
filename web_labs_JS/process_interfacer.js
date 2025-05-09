@@ -321,10 +321,10 @@ let interfacer = {
 
     tText += 'Values of input parameters at time of data capture:<br>';
     // list inputs for all units since, other units may affect these results
-    for (u in processUnits) {
+    for (let u in processUnits) {
       tText += '* ' + processUnits[u]['name'] + '<br>';
       numVar = processUnits[u]['varCount'];
-      for (v = 0; v <= numVar; v++) { // NOTE: <=
+      for (let v = 0; v <= numVar; v++) { // NOTE: <=
         if (processUnits[u]['dataQuizInputs']) {
           // unit has array dataQuizInputs, now check which vars are quiz vars
           if (processUnits[u]['dataQuizInputs'][v]) {
@@ -390,7 +390,7 @@ let interfacer = {
       // first, x-axis variable name for table
       tText += plotInfo[plotIndex]['xAxisTableLabel'] + tItemDelimiter;
       // then other column names for y-axis variables
-      for (v = 0; v < tVarLen; v++) {
+      for (let v = 0; v < tVarLen; v++) {
         tText += plotInfo[plotIndex]['varLabel'][v];
 
         // tText += ' (' + plotInfo[plotIndex]['varDataUnits'][v] + ')';
@@ -409,14 +409,14 @@ let interfacer = {
       varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
       let thisNumPts = processUnits[varUnitIndex][dataName][0].length;
       //
-      for (p = 0; p < thisNumPts; p++) {
+      for (let p = 0; p < thisNumPts; p++) {
         // first get x value in [p][0], get it from ['var'][0]
         // x values should be same for all units for this plot
         varIndex = plotInfo[plotIndex]['var'][0];
         varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][0];
         tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][p][0]) + tItemDelimiter;
           // get y value for each variable in [p][1]
-          for (v = 0; v < tVarLen; v++) {
+          for (let v = 0; v < tVarLen; v++) {
             varIndex = plotInfo[plotIndex]['var'][v];
             varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
             tText += formatNum(processUnits[varUnitIndex][dataName][varIndex][p][1]); // [p][1] is y value
@@ -435,7 +435,7 @@ let interfacer = {
       // first, run count
       tText += 'run #' + tItemDelimiter;
       // then other column names for y-axis variables
-      for (v = 0; v < tVarLen; v++) {
+      for (let v = 0; v < tVarLen; v++) {
         if (processUnits[varUnitIndex]['dataSwitcher'][v] == 1) {
           tText += processUnits[varUnitIndex]['dataHeaders'][v];
           let tUnits = processUnits[varUnitIndex]['dataUnits'][v];
@@ -446,15 +446,15 @@ let interfacer = {
             tText += tItemDelimiter;
           }
         } // END OF if (processUnits[varUnitIndex]['dataSwitcher'][v] = 1)
-      } // END OF for (v = 0; v < tVarLen; v++)
+      } // END OF for (let v = 0; v < tVarLen; v++)
       tText += '</p>';
       // repeat to make each line in table for each data point
       // all unit vars in one plot must have same data array length
-      for (p = 0; p < thisNumPts; p++) {
+      for (let p = 0; p < thisNumPts; p++) {
         // in first column, list the run count (formatNum throws error for it)
         tText += processUnits[varUnitIndex][dataName][tVarLen][p][0] + tItemDelimiter;
         // for lab type 'single' get x value for each variable in [p][0]
-        for (v = 0; v < tVarLen; v++) {
+        for (let v = 0; v < tVarLen; v++) {
           if (processUnits[varUnitIndex]['dataSwitcher'][v] == 1) {
             tText += formatNum(processUnits[varUnitIndex][dataName][v][p][0]);
             if (v < (tVarLen - 1)) {tText += tItemDelimiter;}

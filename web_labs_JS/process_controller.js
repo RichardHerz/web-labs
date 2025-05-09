@@ -131,14 +131,14 @@ let controller = {
     let u; // unit index
 
     // FIRST, have all units update their unit input connections
-    for (u in processUnits) {
+    for (let u in processUnits) {
       processUnits[u].updateInputs();
     }
 
     // NOTE: UI params are updated whenever UI changes by HTML input actions
 
     // SECOND, have all units update their state
-    for (u in processUnits) {
+    for (let u in processUnits) {
         processUnits[u].updateState();
     }
 

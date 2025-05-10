@@ -113,9 +113,16 @@ function importFlowSheet() {
 
     }; // END OF for loop to place units 
 
-    // unitCount should be the last value from loop
-    // but to be sure 
-    unitCount = unitCountList[nmax-1];
+    // unitCount is the last value from loop
+    // process_main.js needs this value of unitCount to add units
+    // correctly after this import
+    // // 
+    // // so don't need to do below to get unitCount but leave this here as warning
+    // // about getting last element in an array which will itself be an array
+    // // and not a scalar & if don't then get future elements as 21, 211, 2111, etc.
+    // // so need to add [0] to get the value of that 1st element of the one element array
+    // unitCount = unitCountList[nmax-1][0];
+    //  // 
     console.log('  final unitCount = ' + unitCount);
 
     // now draw the pipes 

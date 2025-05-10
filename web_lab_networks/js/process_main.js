@@ -672,9 +672,6 @@ function input_clicked(event, theUnit) {
       return;
     };
 
-    // if (isPiping) { // XXX ORIG POSITION
-    // isPiping = false;  // XXX ORIG POSITION
-
     // drawPipe at end sets portIN and portOUT to null
     // add output and input ports to lists
     console.log('  just before drawPipe');

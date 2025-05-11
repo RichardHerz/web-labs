@@ -285,7 +285,7 @@ function sceneDivClicked(event) {
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'splitter':
-        el.innerHTML += buildSplitter(unitCount, x, y, params);
+        el.innerHTML += buildSplitter(unitCount, x, y);
         unitID = 'splitter_' + unitCount;
         unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit

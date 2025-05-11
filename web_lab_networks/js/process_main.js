@@ -1,10 +1,10 @@
 'use strict';
 
 /*
-Design, text, images and code by Richard K. Herz, 2024-2025
-Copyrights held by Richard K. Herz
+Design, text, images and code by Richard . Herz, 2024-2025
+Copyrights held by Richard . Herz
 Licensed for use under the GNU General Public License v3.0
-https://www.gnu.org/licenses/gpl-3.0.en.html
+https://www.gnu.org/licenses/gpl-3.0.en.html 
 */
 
 // DECLARE GLOBAL VARIABLES
@@ -80,16 +80,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 }); // END OF BLOCK adding eventListeners for main html elements
 
-// THIS PUTS UP WARNING ON CLICK LINK ON PAGE TO LEAVE PAGE, E.G., TO WEB LABS...
-// BUT NOT ON CLICK OF BROWSER BACK BUTTON
+// NOTE: CAN ALSO ADD FUNCTION CALL ON WEB LINKS BACK TO WEB LABS 
+
 window.onbeforeunload = function() {
+  console.log('HIT ON window.onbeforeunload ');
+  // custom alert() not allowed while unloading a page 
+  // browser puts up its own alert 
+  exportFlowSheet();
+  console.log('HIT ON after call to exportFlowSheet() ');
   return true;
 };
 
-// THIS WORKS ON FIREFOX BACK BUTTON - except alert - BUT NOT ON SAFARI
-window.addEventListener('beforeunload', () => {
-  alert('you will lose your changes!');
-});
+// // THIS DOES SAME THING AS window.onbeforeunload()
+// window.addEventListener('beforeunload', () => {
+//   console.log('HIT ON window.addEventListener beforeunload ');
+//   // alert() not allowed while unloading a page 
+// });
 
 function updateInputsAndState() {
   // called by button Step on this web page

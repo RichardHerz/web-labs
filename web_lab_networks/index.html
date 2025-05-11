@@ -71,17 +71,23 @@
 
   <!-- initialize simulation after loading of this window -->
   <script language="javascript">
-    // this works as script in html file but not in external js files
-    window.onload = controller.openThisLab; // can NOT use () after openThisLab
+    window.onload = function() {
+      controller.openThisLab();
+      buildPalette();
+      // Check for saved flowsheet data
+      const savedFlowsheet = getCookie('flowsheetData');
+      if (savedFlowsheet) {
+        const loadSaved = confirm('Found saved flowsheet. Would you like to load it?');
+        if (loadSaved) {
+          importFlowSheet();
+        }
+      }
+    }
   </script>
-  <!-- NOTE: openThisLab runs initialize function on all units in processUnits[] 
-  but this networks lab has no units initially and initialization of each unit is 
-  done when the new Class is established in the class constructor function, 
-  so the unit initialize functions here are present but empty -->
-
+ 
 </head>
 
-<body onload="buildPalette()">
+<body>
 
   <div id="div_page_header">
     <p><a href="/web-labs/reactors/">Return to Web Labs</a> at ReactorLab.net</p>

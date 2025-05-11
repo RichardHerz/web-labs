@@ -51,6 +51,7 @@ let controller = {
   stripPlotSpan : 5000,
 
   openThisLab : function() {
+    console.log('enter controller.openThisLab');
 
     // initialize variables in each process unit
     // the order of the numeric index of process units does not affect the simulation
@@ -64,9 +65,12 @@ let controller = {
     plotInfo.initialize();
     // initialize plot arrays after initialize plotInfo
     plotter.plotArrays.initialize();
+    console.log('  before call of interfacer.resetThisLab()');
     interfacer.resetThisLab(); // defined in process_interfacer.js
+    console.log('  after call of interfacer.resetThisLab()');
     simParams.updateCurrentRunCountDisplay(); // defined in process_sim_params.js
 
+    console.log('exit controller.openThisLab');
   }, // END OF function openThisLab
 
   updateProcess : function() {
@@ -146,9 +150,10 @@ let controller = {
 
   updateDisplay : function() {
 
-    console.log('enter controller updateDisplay')
+    console.log('enter controller updateDisplay');
 
     console.log('in controller before set simTime');
+
     // Display current simulation time in #field_simTime element
     const fst = document.getElementById('field_simTime');
     if(fst) {
@@ -173,6 +178,8 @@ let controller = {
     for (let u in processUnits) {
       processUnits[u].updateDisplay();
     }
+
+    console.log('  after all units updateDisplay');
 
     // UPDATE PLOTS HERE AND NOT IN PROCESS UNITS IN ORDER TO ALLOW
     // PLOTS TO CONTAIN DATA FROM MORE THAN ONE PROCESS UNIT
@@ -205,16 +212,20 @@ let controller = {
       }
     } // END OF for (let p in plotInfo)
 
+    console.log('  after get and plot all plots');
+
     // check and set ssFlag to true if at steady state
     // do this here in updateDisplay rather than each process update
     // so that don't suspend before a final display update of the steady state
     controller.checkForSteadyState();
 
+    console.log('just before exit controller updateDisplay return thisMs');
+
     // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
     let thisDate = new Date();
     let thisMs = thisDate.getTime();
     return thisMs;
-
+    
   },  // END OF method updateDisplay
 
   resetSimTime : function() {

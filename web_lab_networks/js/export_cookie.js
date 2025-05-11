@@ -19,10 +19,13 @@ function exportFlowSheet() {
     for (let n = 0; n < numUnits; n++) {
         exportParams[n] = processUnits[n].params
     }
-    console.log('  make exportParams[0][0] = ' + exportParams[0][0]);
-    console.log('  make exportParams[0][1] = ' + exportParams[0][1]);
-    console.log('  make exportParams[1][0] = ' + exportParams[1][0]);
-    console.log('  make exportParams[1][1] = ' + exportParams[1][1]);
+
+    // // WARNING: THIS LOG REQUIRES TWO UNITS WITH TWO PARAMS
+    // // OR GET ERROR
+    // console.log('  make exportParams[0][0] = ' + exportParams[0][0]);
+    // console.log('  make exportParams[0][1] = ' + exportParams[0][1]);
+    // console.log('  make exportParams[1][0] = ' + exportParams[1][0]);
+    // console.log('  make exportParams[1][1] = ' + exportParams[1][1]);
 
     // Create a single object with all arrays
     const flowsheetData = {

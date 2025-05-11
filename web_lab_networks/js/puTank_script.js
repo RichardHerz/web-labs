@@ -23,7 +23,7 @@ required methods:
 
 class Tank {
 
-    constructor(unitCount, unitID, sceneX, sceneY) {
+    constructor(unitCount, unitID, sceneX, sceneY, params) {
         console.log('enter class Tank constructor');
 
         this.unitCount = unitCount;
@@ -34,6 +34,10 @@ class Tank {
         // SPECIAL FOR TANK, which has no outlet port
         this.tankVolume = 0;
         this.tankConc = 0;
+
+        // need for flowsheet export and import
+        // although not used here
+        this.params = params; // for flowsheet export/import
 
         // timing parameters
         this.unitStepRepeats = 1; 

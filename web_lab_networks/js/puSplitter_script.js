@@ -23,7 +23,7 @@ required methods:
 
 class Splitter {
 
-    constructor(unitCount, unitID, sceneX, sceneY) {
+    constructor(unitCount, unitID, sceneX, sceneY, params) {
         console.log('enter class Splitter constructor');
 
         this.unitCount = unitCount;
@@ -32,7 +32,8 @@ class Splitter {
         this.sceneY = sceneY;
 
         // default reaction parameters 
-        this.topFraction = 0.5;
+        this.topFraction = params[0];
+        this.params = params; // for flowsheet export/import
 
         // timing parameters
         this.unitStepRepeats = 1; 
@@ -119,6 +120,8 @@ class Splitter {
         // this function called by modal popup script in popup.js
         console.log(`enter SPLITTER SETPARAMS, pTopFraction, pNotUsed = ${pTopFraction}, ${pNotUsed}`);
         this.topFraction = pTopFraction;
+        // params array used for flowsheet export/import
+        this.params[0] = pTopFraction;
     }
 
     param_btn_clicked() {

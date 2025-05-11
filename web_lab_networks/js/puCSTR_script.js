@@ -23,7 +23,7 @@ required methods:
 
 class CSTR {
 
-    constructor(unitCount, unitID, sceneX, sceneY) {
+    constructor(unitCount, unitID, sceneX, sceneY, params) {
         console.log('enter class CSTR constructor');
 
         this.unitCount = unitCount;
@@ -32,8 +32,12 @@ class CSTR {
         this.sceneY = sceneY;
 
         // default reaction parameters 
-        this.rateConstant = 0;
-        this.volume = 10;
+        this.rateConstant = params[0];
+        this.volume = params[1];
+        this.params = params; // for flowsheet export/import
+        console.log('construct CSTR, this rateConstant = '+ this.rateConstant);
+        console.log('construct CSTR, this volume = '+ this.volume);
+        console.log('construct CSTR, this params = '+ this.params);
 
         // timing parameters
         this.unitStepRepeats = 10;
@@ -122,6 +126,9 @@ class CSTR {
         console.log('enter CSTR SETPARAMS, rateConst, vol = ' + pRateConstant + ', ' + pVolume);
         this.rateConstant = pRateConstant;
         this.volume = pVolume;
+        // params array used for flowsheet export/import
+        this.params[0] = pRateConstant;
+        this.params[1] = pVolume;
     }
 
     param_btn_clicked() {

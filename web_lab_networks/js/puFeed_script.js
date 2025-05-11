@@ -23,7 +23,7 @@ required methods:
 
 class Feed {
 
-    constructor(unitCount, unitID, sceneX, sceneY) {
+    constructor(unitCount, unitID, sceneX, sceneY, params) {
         console.log('enter class Feed constructor');
 
         this.unitCount = unitCount;
@@ -32,9 +32,10 @@ class Feed {
         this.sceneY = sceneY;
 
         // default reaction parameters 
-        this.flowrate = 10;
-        this.concentration = 10;
-
+        this.flowrate = params[0];
+        this.concentration = params[1];
+        this.params = params; // for flowsheet export/import
+ 
         // timing parameters 
         this.unitStepRepeats = 1; 
         this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
@@ -106,7 +107,10 @@ class Feed {
         console.log('enter FEED SETPARAMS, flow, vol = ' + pFlow + ', ' + pConc);
         this.flowrate = pFlow;
         this.concentration = pConc;
-        // also set outputs for feed
+        // params array used for flowsheet export/import
+        this.params[0] = pFlow;
+        this.params[1] = pConc;
+        // SPECIAL FOR FEED: also set outputs for feed
         this.portData.outputs.one.flowrate = this.flowrate;
         this.portData.outputs.one.concentration = this.concentration;
         console.log('exit FEED SETPARAMS, flow, vol = ' + 

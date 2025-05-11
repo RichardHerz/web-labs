@@ -23,7 +23,7 @@ required methods:
 
 class PFR {
 
-    constructor(unitCount, unitID, sceneX, sceneY) {
+    constructor(unitCount, unitID, sceneX, sceneY, params) {
         console.log('enter class PFR constructor');
 
         this.unitCount = unitCount;
@@ -32,13 +32,16 @@ class PFR {
         this.sceneY = sceneY;
 
         // default reaction parameters 
-        this.rateConstant = 0;
-        this.volume = 10;
+        this.rateConstant = params[0];
+        this.volume = params[1];
+        this.params = params; // for flowsheet export/import
+
         this.numCells = 20;
         // WARNING: as the above 3 params and flowrate change 
         //          the time step to prevent numerical 
         //          oscillation changes 
         this.conc = new Array(this.numCells + 1).fill(0);
+        console.log('  this.conc in PFR = ' + this.conc);
 
         // timing parameters
         this.unitStepRepeats = 10; 
@@ -121,6 +124,9 @@ class PFR {
         console.log('enter PFR SETPARAMS, rateConst, vol = ' + pRateConstant + ', ' + pVolume);
         this.rateConstant = pRateConstant;
         this.volume = pVolume;
+        // params array used for flowsheet export/import
+        this.params[0] = pRateConstant;
+        this.params[1] = pVolume;
     }
 
     param_btn_clicked() {

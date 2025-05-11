@@ -19,6 +19,7 @@ let portOUTid = null;
 let portINid = null;
 let portOUTunitID = null;
 let portINunitID = null;
+let params = []; // unit parameters
 let portOUTlist = [];
 let portINlist = [];
 let portOUTunitList = [];
@@ -248,7 +249,8 @@ function sceneDivClicked(event) {
         unitID = 'feed_' + unitCount;
         unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        processUnits.push(new Feed(unitCount, unitID, x, y) );
+        params = [10, 10]; // default flowrate, concentration
+        processUnits.push(new Feed(unitCount, unitID, x, y, params) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'cstr':
@@ -258,7 +260,8 @@ function sceneDivClicked(event) {
         unitID = 'cstr_' + unitCount;
         unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        processUnits.push(new CSTR(unitCount, unitID, x, y) );
+        params = [0, 100]; // default rate constant, volume != 0
+        processUnits.push(new CSTR(unitCount, unitID, x, y, params) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'pfr':
@@ -268,7 +271,8 @@ function sceneDivClicked(event) {
         unitID = 'pfr_' + unitCount;
         unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        processUnits.push(new PFR(unitCount, unitID, x, y) );
+        params = [0, 100]; // default rate constant, volume != 0
+        processUnits.push(new PFR(unitCount, unitID, x, y, params) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'mixer':
@@ -276,25 +280,28 @@ function sceneDivClicked(event) {
         unitID = 'mixer_' + unitCount;
         unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        processUnits.push(new Mixer(unitCount, unitID, x, y) );;
+        params = [];
+        processUnits.push(new Mixer(unitCount, unitID, x, y, params) );;
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'splitter':
-        el.innerHTML += buildSplitter(unitCount, x, y);
+        el.innerHTML += buildSplitter(unitCount, x, y, params);
         unitID = 'splitter_' + unitCount;
         unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        processUnits.push(new Splitter(unitCount, unitID, x, y) );
+        params = [0.5]; // default fraction to upper output port
+        processUnits.push(new Splitter(unitCount, unitID, x, y, params) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
       case 'tank':
-          el.innerHTML += buildTank(unitCount, x, y);
-          unitID = 'tank_' + unitCount;
-          unitList.push(unitID); // used in unit update functions
-          // add an object to processUnits[] for this new unit
-          processUnits.push(new Tank(unitCount, unitID, x, y) );
-          console.log('add new unit to processUnits[], unitCount = ' + unitCount);
-          break;
+        el.innerHTML += buildTank(unitCount, x, y);
+        unitID = 'tank_' + unitCount;
+        unitList.push(unitID); // used in unit update functions
+        // add an object to processUnits[] for this new unit
+        params = [];
+        processUnits.push(new Tank(unitCount, unitID, x, y, params) );
+        console.log('add new unit to processUnits[], unitCount = ' + unitCount);
+        break;
       default:
         console.log('switch DEFAULT in sceneDivClicked');
     }; // END OF SWITCH
@@ -720,7 +727,7 @@ function input_clicked(event, theUnit) {
   }
 
   reportStatus('end of function input_clicked()');
-  console.log('just before end funrction input_clicked(), stopPropagation');
+  console.log('just before end function input_clicked(), stopPropagation');
   event.stopPropagation(); // stops event bubbling up to unit
 
 } // END OF FUNCTION input_clicked 

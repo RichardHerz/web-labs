@@ -23,13 +23,17 @@ required methods:
 
 class Mixer {
 
-    constructor(unitCount, unitID, sceneX, sceneY) {
+    constructor(unitCount, unitID, sceneX, sceneY, params) {
         console.log('enter class Mixer constructor');
 
         this.unitCount = unitCount;
         this.unitID = unitID;
         this.sceneX = sceneX; // for save & reload flowsheet
         this.sceneY = sceneY;
+
+        // need for flowsheet export and import
+        // although not used here
+        this.params = params; // for flowsheet export/import
 
         // timing parameters
         this.unitStepRepeats = 1; 

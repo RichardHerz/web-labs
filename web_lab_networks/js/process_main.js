@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const exportButton = document.getElementById('Export');
   if (exportButton) {
     // exportFLowSheet in file export_flowsheet.js
-    exportButton.addEventListener('click', exportFlowSheet);
+    exportButton.addEventListener('click', exportFlowsheet);
   } else {
       console.error('exportButton button not found in the document');
   }
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const importButton = document.getElementById('Import');
   if (importButton) {
     // importFLowSheet in file export_flowsheet.js
-    importButton.addEventListener('click', importFlowSheet);
+    importButton.addEventListener('click', importFlowsheet);
   } else {
     console.error('importButton button not found in the document');
   }
@@ -86,8 +86,8 @@ window.onbeforeunload = function() {
   console.log('HIT ON window.onbeforeunload ');
   // custom alert() not allowed while unloading a page 
   // browser puts up its own alert 
-  exportFlowSheet();
-  console.log('HIT ON after call to exportFlowSheet() ');
+  exportFlowsheet();
+  console.log('HIT ON after call to exportFlowsheet() ');
   return true;
 };
 

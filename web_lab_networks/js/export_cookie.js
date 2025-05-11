@@ -9,8 +9,8 @@ https://www.gnu.org/licenses/gpl-3.0.en.html
 
 // NOTE BOTH EXPORT & IMPORT SCRIPTS ARE CONTAINED IN THIS FILE 
 
-function exportFlowSheet() {
-    console.log('enter exportFlowSheet');
+function exportFlowsheet() {
+    console.log('enter exportFlowsheet');
 
     // now need to generate a params array 
     // which includes params array from each unit in scene
@@ -56,9 +56,9 @@ function exportFlowSheet() {
     document.cookie = "flowsheetData=" + encodeURIComponent(jsonString) + ";max-age=3600";
     console.log('  flowsheetData saved to cookie');
 
-    console.log('exit exportFlowSheet');
+    console.log('exit exportFlowsheet');
     
-} // END FUNCTION exportFlowSheet 
+} // END FUNCTION exportFlowsheet 
 
 // Function to get cookie by name
 function getCookie(name) {
@@ -68,8 +68,8 @@ function getCookie(name) {
     return null;
 }
 
-function importFlowSheet() {
-    console.log('enter importFlowSheet');
+function importFlowsheet() {
+    console.log('enter importFlowsheet');
 
     let exportParams = [];
     // other arrays are globals declared in process_main.js
@@ -126,7 +126,8 @@ function importFlowSheet() {
         // so need to add [0] to get the first element of that one element array
         let unitObject = unitID.split("_", 1)[0];
         console.log('  in for, unitObject = ' + unitObject);
-        let unitCount = unitCountList[n]; // declared in process_main.js 
+        // global vars unitCount & unitCountList declared at top process_main.js 
+        unitCount = unitCountList[n]; 
         let x = unitXlist[n];
         let y = unitYlist[n];
         let params = exportParams[n];
@@ -135,16 +136,7 @@ function importFlowSheet() {
 
     }; // END OF for loop to place units 
 
-    // unitCount is the last value from loop
-    // process_main.js needs this value of unitCount to add units
-    // correctly after this import
-    // // 
-    // // so don't need to do below to get unitCount but leave this here as warning
-    // // about getting last element in an array which will itself be an array
-    // // and not a scalar & if don't then get future elements as 21, 211, 2111, etc.
-    // // so need to add [0] to get the value of that 1st element of the one element array
-    // unitCount = unitCountList[nmax-1][0];
-    //  // 
+    // final value of global var unitCount is the last value from loop
     console.log('  final unitCount = ' + unitCount);
 
     // now draw the pipes 
@@ -155,8 +147,8 @@ function importFlowSheet() {
         drawPipeOnImport(portINid, portOUTid);
     }; // END OF for loop to draw pipes 
 
-    console.log('exit importFlowSheet');
-} // END OF FUNCTION importFlowSheet
+    console.log('exit importFlowsheet');
+} // END OF FUNCTION importFlowsheet
 
 function placeUnitsOnImport(unitID, unitObject, unitCount, x, y, params) {
     console.log('enter placeUnitsOnImport');
@@ -194,7 +186,7 @@ function placeUnitsOnImport(unitID, unitObject, unitCount, x, y, params) {
             console.log('  add new unit to processUnits[], unitCount = ' + unitCount);
             break;
         default:
-            console.log('  switch DEFAULT in importFlowSheet, unitObject = ' + unitObject);
+            console.log('  switch DEFAULT in importFlowsheet, unitObject = ' + unitObject);
     }; // END OF SWITCH
     console.log('exit placeUnitsOnImport');
 } // END OF FUNCTION placeUnitsOnImport

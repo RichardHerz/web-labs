@@ -1,4 +1,4 @@
- 'use strict';
+'use strict';
 
 /*
 Design, text, images and code by Richard K. Herz, 2024-2025
@@ -12,85 +12,103 @@ https://www.gnu.org/licenses/gpl-3.0.en.html
 function exportFlowSheet() {
     console.log('enter exportFlowSheet');
 
-    const popupMessage = 
-        'unitCountList: ' + unitCountList.join(', ')
-        + '<br>' + 'unitList: ' + unitList.join(', ')
-        + '<br>' + 'unitXlist: ' + unitXlist.join(', ')
-        + '<br>' + 'unitYlist: ' + unitYlist.join(', ')
-        + '<br>' + 'portOUTlist: ' + portOUTlist.join(', ')
-        + '<br>' + 'portINlist: ' + portINlist.join(', ')
-        + '<br>' + 'portOUTunitList: ' + portOUTunitList.join(', ')
-        + '<br>' + 'portINunitList: ' + portINunitList.join(', ')
-        + '<br>' + 'pipeIDlist: ' + pipeIDlist.join(', ')
-        ; // end popupMessage
-
-    try {
-        // Attempt to open popup window
-        let dataWindow = window.open('', 'Copy data',
-            'height=600, left=20, resizable=1, scrollbars=1, top=40, width=600');
-        
-        // Check if window was successfully created
-        if (dataWindow === null) {
-            console.error('Popup window was blocked. Please allow popups for this site.');
-            alert('Please allow popups for this site to view the data.');
-            return;
-        }
-        
-        // Write content to window
-        dataWindow.document.writeln('<html><head><title>Copy data</title></head>' +
-                '<body>' +
-                popupMessage +
-                '</body></html>');
-        dataWindow.document.close();
-    
-    } catch (error) {
-        console.error('Error creating popup window:', error);
-        alert('Error creating popup window. Please check console for details.');
+    // now need to generate a params array 
+    // which includes params array from each unit in scene
+    let exportParams = [];
+    let numUnits = unitList.length;
+    for (let n = 0; n < numUnits; n++) {
+        exportParams[n] = processUnits[n].params
     }
+    console.log('  make exportParams[0][0] = ' + exportParams[0][0]);
+    console.log('  make exportParams[0][1] = ' + exportParams[0][1]);
+    console.log('  make exportParams[1][0] = ' + exportParams[1][0]);
+    console.log('  make exportParams[1][1] = ' + exportParams[1][1]);
 
-    // Set cookie with array data
-    document.cookie = "arrayData=" + encodeURIComponent(popupMessage) + ";max-age=3600";
-    console.log('Array data saved to cookie');
+    // Create a single object with all arrays
+    const flowsheetData = {
+        unitCountList,
+        unitList,
+        unitXlist,
+        unitYlist,
+        portOUTlist,
+        portINlist,
+        portOUTunitList,
+        portINunitList,
+        pipeIDlist,
+        exportParams
+    };
+
+    // Add these debug lines before JSON.stringify
+    console.log('Array dimensions check:');
+    console.log('exportParams (2D):', exportParams);
+    console.log('unitList (1D):', unitList);
+    console.log('Full flowsheetData:', flowsheetData);
+
+    // Convert to JSON string
+    const jsonString = JSON.stringify(flowsheetData);
+    // Add this to verify JSON conversion worked
+    console.log('Parsed back:', JSON.parse(jsonString));
+    
+    // Store in cookie
+    document.cookie = "flowsheetData=" + encodeURIComponent(jsonString) + ";max-age=3600";
+    console.log('  flowsheetData saved to cookie');
 
     console.log('exit exportFlowSheet');
     
 } // END FUNCTION exportFlowSheet 
 
+// Function to get cookie by name
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
+
 function importFlowSheet() {
     console.log('enter importFlowSheet');
 
-    // Function to get cookie by name
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null;
-    }
+    let exportParams = [];
+    // other arrays are globals declared in process_main.js
 
-    // Try to get saved arrays from cookie
-    const savedArrays = getCookie('arrayData');
-    if (savedArrays) {
-        const decodedData = decodeURIComponent(savedArrays);
-        const cookieLines = decodedData.split('<br>');
+    const savedData = getCookie('flowsheetData');
+    if (savedData) {
+        // Parse JSON string back to object
+        const flowsheetData = JSON.parse(decodeURIComponent(savedData));
         
-        // these UNIT arrays are globals declared in process_main.js
-        unitCountList = cookieLines[0].replace('unitCountList: ', '').split(', ');
-        unitList = cookieLines[1].replace('unitList: ', '').split(', ');
-        unitXlist = cookieLines[2].replace('unitXlist: ', '').split(', ');
-        unitYlist = cookieLines[3].replace('unitYlist: ', '').split(', ');
+        // Verify flowsheetData exists and has expected structure
+        if (!flowsheetData) {
+            console.error('Error: flowsheetData is null or undefined');
+            return;
+        }
 
-        // these PIPE arrays are globals declared in process_main.js
-        // only portINlist and portOUTlist are used to draw the pipes 
-        // IMPORTANT >> this sim needs all 5 imported to do other things
-        portOUTlist = cookieLines[4].replace('portOUTlist: ', '').split(', ');
-        portINlist = cookieLines[5].replace('portINlist: ', '').split(', ');
-        portOUTunitList = cookieLines[6].replace('portOUTunitList: ', '').split(', ');
-        portINunitList = cookieLines[7].replace('portINunitList: ', '').split(', ');
-        pipeIDlist = cookieLines[8].replace('pipeIDlist: ', '').split(', ');
+        // Restore all arrays, maintaining original structure
+        ({
+            unitCountList,
+            unitList,
+            unitXlist,
+            unitYlist,
+            portOUTlist,
+            portINlist,
+            portOUTunitList,
+            portINunitList,
+            pipeIDlist,
+            exportParams
+        } = flowsheetData);
 
+        // Verify critical arrays were restored
+        console.log('Restored arrays:');
+        console.log('unitList:', unitList);
+        console.log('exportParams (2D):', exportParams);
     } else {
-        console.log('No saved arrays found in cookie');
+        console.error('No saved flowsheet data found in cookie');
+        return;
     }
+
+    console.log('  get exportParams[0][0] = ' + exportParams[0][0]);
+    console.log('  get exportParams[0][1] = ' + exportParams[0][1]);
+    console.log('  get exportParams[1][0] = ' + exportParams[1][0]);
+    console.log('  get exportParams[1][1] = ' + exportParams[1][1]);
 
     // now use these arrays to rebuild from a blank scene 
 
@@ -108,8 +126,9 @@ function importFlowSheet() {
         let unitCount = unitCountList[n]; // declared in process_main.js 
         let x = unitXlist[n];
         let y = unitYlist[n];
+        let params = exportParams[n];
     
-        placeUnitsOnImport(unitID, unitObject, unitCount, x, y);
+        placeUnitsOnImport(unitID, unitObject, unitCount, x, y, params);
 
     }; // END OF for loop to place units 
 
@@ -136,39 +155,39 @@ function importFlowSheet() {
     console.log('exit importFlowSheet');
 } // END OF FUNCTION importFlowSheet
 
-function placeUnitsOnImport(unitID, unitObject, unitCount, x, y) {
+function placeUnitsOnImport(unitID, unitObject, unitCount, x, y, params) {
     console.log('enter placeUnitsOnImport');
     const el = document.getElementById("div_scene"); 
     // see similar switch in process_main.js as user builds flowsheet manually
     switch (unitObject) {
         case 'feed':
             el.innerHTML += buildFeed(unitCount, x, y);
-            processUnits.push(new Feed(unitCount, unitID, x, y) );
+            processUnits.push(new Feed(unitCount, unitID, x, y, params));
             console.log('    add new unit to processUnits[], unitCount = ' + unitCount);
             break;
         case 'cstr':
             el.innerHTML += buildCSTR(unitCount, x, y);
-            processUnits.push(new CSTR(unitCount, unitID, x, y) );
+            processUnits.push(new CSTR(unitCount, unitID, x, y, params));
             console.log('add new unit to processUnits[], unitCount = ' + unitCount);
             break;
         case 'pfr':
             el.innerHTML += buildPFR(unitCount, x, y);
-            processUnits.push(new PFR(unitCount, unitID, x, y) );
+            processUnits.push(new PFR(unitCount, unitID, x, y, params));
             console.log('  add new unit to processUnits[], unitCount = ' + unitCount);
             break;
         case 'mixer':
             el.innerHTML += buildMixer(unitCount, x, y);
-            processUnits.push(new Mixer(unitCount, unitID, x, y) );;
+            processUnits.push(new Mixer(unitCount, unitID, x, y, params));
             console.log('  add new unit to processUnits[], unitCount = ' + unitCount);
             break;
         case 'splitter':
             el.innerHTML += buildSplitter(unitCount, x, y);
-            processUnits.push(new Splitter(unitCount, unitID, x, y) );
+            processUnits.push(new Splitter(unitCount, unitID, x, y, params));
             console.log('  add new unit to processUnits[], unitCount = ' + unitCount);
             break;
         case 'tank':
             el.innerHTML += buildTank(unitCount, x, y);
-            processUnits.push(new Tank(unitCount, unitID, x, y) );
+            processUnits.push(new Tank(unitCount, unitID, x, y, params));
             console.log('  add new unit to processUnits[], unitCount = ' + unitCount);
             break;
         default:

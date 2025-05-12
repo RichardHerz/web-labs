@@ -12,6 +12,11 @@ https://www.gnu.org/licenses/gpl-3.0.en.html
 function exportFlowsheet() {
     console.log('enter exportFlowsheet');
 
+    if (unitCount == 0) {
+        console.log('RETURN FROM exportFlowsheet, no units!');
+        return;
+    }
+
     // now need to generate a params array 
     // which includes params array from each unit in scene
     let exportParams = [];
@@ -107,12 +112,7 @@ function importFlowsheet() {
         console.error('No saved flowsheet data found in cookie');
         return;
     }
-
-    console.log('  get exportParams[0][0] = ' + exportParams[0][0]);
-    console.log('  get exportParams[0][1] = ' + exportParams[0][1]);
-    console.log('  get exportParams[1][0] = ' + exportParams[1][0]);
-    console.log('  get exportParams[1][1] = ' + exportParams[1][1]);
-
+    
     // now use these arrays to rebuild from a blank scene 
 
     // processUnits[] and unitCount are globals set in process_main.js 

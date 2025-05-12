@@ -17,6 +17,12 @@ let interfacer = {
     // REQUIRES run button id='button_runButton' & display labels be 'Run' & 'Pause'
     // USES OBJECTS simParams, controller
     //
+
+    if (processUnits.length == 0) {
+      console.log('RETURN FROM runThisLab, no units!');
+      return;
+    }
+    
     let el = document.getElementById('button_runButton');
     if (el.value == 'Run') {
 

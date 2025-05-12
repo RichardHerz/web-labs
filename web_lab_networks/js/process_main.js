@@ -80,16 +80,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 }); // END OF BLOCK adding eventListeners for main html elements
 
-// NOTE: CAN ALSO ADD FUNCTION CALL ON WEB LINKS BACK TO WEB LABS 
-
+// export flowsheet to browser cookie to save when page closed
 window.onbeforeunload = function() {
-  console.log('HIT ON window.onbeforeunload ');
-  // custom alert() not allowed while unloading a page 
-  // browser puts up its own alert 
+  console.log('UNLOAD enter window.onbeforeunload ');
+  console.log('  export flowsheet to browser cookie');
   exportFlowsheet();
-  console.log('HIT ON after call to exportFlowsheet() ');
-  return true;
-};
+  console.log('UNLOAD after call to exportFlowsheet() ');
+
+  // NOTE: CAN ALSO ADD FUNCTION CALL ON WEB LINKS BACK TO WEB LABS 
+
+  // return true line below puts up a browser alert
+  // asking whether or not you want to leave the page 
+
+  // return true; // << XXX deactivated
+
+  // a custom alert() is not allowed while unloading a page 
+  // since browser puts up its own alert with return true
+ 
+}; // END OF window.onbeforeunload
 
 // // THIS DOES SAME THING AS window.onbeforeunload()
 // window.addEventListener('beforeunload', () => {

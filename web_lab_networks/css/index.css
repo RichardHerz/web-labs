@@ -22,11 +22,11 @@
   display: block;
   position: relative;
   left: 0px;
-  width: 800px;
+  width: 1000px;
   height: 480px;
   visibility: visible;
   background-color: white;
-  border-style: dotted;
+  border-style: none;
   border-color: blue;
   border-width: 1px;
   opacity: 1;
@@ -50,7 +50,7 @@
   position: absolute;
   top: 30px;
   left: 140px;
-  width: 650px;
+  width: 850px;
   height: 440px;
   visibility: visible;
   border-width: 4px;
@@ -93,17 +93,20 @@
 
 #field_simTime {
   position: absolute;
-  left: 360px;
-  top: -12px;
+  left: 320px;
+  top: -15px;
   width: 160px;
   height: 21px;
   border-width: 1px;
   visibility: visible;
   background-color: rgb(255,255,255);
-  border-style: dotted;
+  border-style: solid;
   opacity: 1;
   font-size: 16px;
   border-color: DodgerBlue;
+  /* Add one of these options: */
+  padding-left: 5px;     /* Option 1: add padding */
+  /* text-align: left; */ /* Option 2: align text */
 }
 
 #button_runButton {

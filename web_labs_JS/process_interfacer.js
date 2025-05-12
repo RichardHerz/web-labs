@@ -1,5 +1,6 @@
+'use strict';
 /*
-  Design, text, images and code by Richard K. Herz, 2017-2020
+  Design, text, images and code by Richard K. Herz, 2017-2025
   Copyrights held by Richard K. Herz
   Licensed for use under the GNU General Public License v3.0
   https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -19,10 +20,12 @@ let interfacer = {
     //
 
     if (processUnits.length == 0) {
+      // this may be the case with Reactor Networks web lab
+      // with a blank scene and no units registered
       console.log('RETURN FROM runThisLab, no units!');
       return;
     }
-    
+
     let el = document.getElementById('button_runButton');
     if (el.value == 'Run') {
 
@@ -391,6 +394,9 @@ let interfacer = {
     let plotType = plotInfo[plotIndex]['type']; // profile or strip or single
     let dataName = plotType + 'Data'; // profileData or stripData
     if ((plotType == 'profile') || (plotType == 'strip')) {
+      // Declare varUnitIndex before use
+      let varUnitIndex; // Add this line
+      
       // column headers
       tText += '<p>';
       // first, x-axis variable name for table

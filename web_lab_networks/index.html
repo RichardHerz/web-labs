@@ -77,7 +77,7 @@
       // Check for saved flowsheet data
       const savedFlowsheet = getCookie('flowsheetData');
       if (savedFlowsheet) {
-        const loadSaved = confirm('Found saved flowsheet. Would you like to load it?');
+        const loadSaved = true; // confirm('Found saved flowsheet. Would you like to load it?');
         if (loadSaved) {
           importFlowsheet();
         }
@@ -91,18 +91,16 @@
 
   <div id="div_page_header">
     <p><a href="/web-labs/reactors/">Return to Web Labs</a> at ReactorLab.net</p>
-    <p><b><i>Reactor Networks - add units from palette and connect with pipes</i></b></p>
+    <p><b><i>Reactor Networks - add complex objects to web page from palette and connect with pipes</i></b></p>
     <p>
-      UNDER CONSTRUCTION. Flowsheets are not saved when browser is quit.
-      Allow browser cookies to save flowsheets when page is closed with browser open. 
-      Only 1st-order reactions are supported in the CSTR and PFR. 
+      UNDER CONSTRUCTION. Currently, only 1st-order reactions are supported. 
     </p>
     <p>
       This works with keyboards only: Hold down option/Alt key and click a unit in the palette 
       on the left, 
       then click on the scene to the right to add the unit to the scene.
       To remove a unit, option/Alt click on the unit. You can add and remove
-      multiple units.
+      multiple units. Allow cookies to save flowsheets when browser is closed.
     </p>
     <p>
       To add a "pipe" connecting two units,  
@@ -147,13 +145,13 @@
 
   <div id="div_simFrame">
 
-    <button id = "Step">Step</button>
+    <!-- <button id = "Step">Step</button> -->
     <!-- eventListener for click on this button in process_main.js -->
 
-    <button id = "Export">Export</button>
+    <!-- <button id = "Export">Export</button> -->
     <!-- eventListener for click on this button in process_main.js -->
 
-    <button id = "Import">Import</button>
+    <!-- <button id = "Import">Import</button> -->
     <!-- eventListener for click on this button in process_main.js -->
 
     <input type="button" id="button_runButton" value="Run" onclick="interfacer.runThisLab()">
@@ -167,7 +165,7 @@
     <div id="div_scene"">
       <!-- eventListener for click on this div in process_main.js -->
     
-      <svg xmlns="http://www.w3.org/2000/svg" id="svg_pipes" width="650" height="440">
+      <svg xmlns="http://www.w3.org/2000/svg" id="svg_pipes" width="850" height="440">
       </svg>
 
     </div>

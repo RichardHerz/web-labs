@@ -57,8 +57,9 @@ function exportFlowsheet() {
     // Add this to verify JSON conversion worked
     console.log('Parsed back:', JSON.parse(jsonString));
     
-    // Store in cookie
-    document.cookie = "flowsheetData=" + encodeURIComponent(jsonString) + ";max-age=3600";
+    // Store in cookie, 
+    // where max-age=34560000 seconds is max allowable 400 days
+    document.cookie = "flowsheetData=" + encodeURIComponent(jsonString) + ";max-age=34560000";
     console.log('  flowsheetData saved to cookie');
 
     console.log('exit exportFlowsheet');
@@ -112,7 +113,7 @@ function importFlowsheet() {
         console.error('No saved flowsheet data found in cookie');
         return;
     }
-    
+
     // now use these arrays to rebuild from a blank scene 
 
     // processUnits[] and unitCount are globals set in process_main.js 

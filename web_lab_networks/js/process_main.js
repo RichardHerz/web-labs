@@ -361,8 +361,14 @@ function sceneObjectClicked(event, thisUnit, objectUnit) {
       reportStatus('sceneObjectClicked, search for pipes to remove then remove object');
 
       console.log('  sceneObjectClicked, top pipe search *IN*');
+      const MAX_ITERATIONS = 2; // max of two input ports per unit
+      let iterCount = 0;
       let tIndex = 0;
       while (tIndex != -1) {
+        if (iterCount >= MAX_ITERATIONS) {
+          console.log('  ERROR Maximum iterations reached in pipe removal');
+          break;
+        }
         // get index of objectUnit in portINunitList
         tIndex = portINunitList.findIndex(finderFunc);
         function finderFunc(thisOne) {
@@ -373,6 +379,7 @@ function sceneObjectClicked(event, thisUnit, objectUnit) {
           console.log('  remove pipe portINlist[tIndex] = ' + portINlist[tIndex]);
           removePipe(portINlist[tIndex]);
         }
+        iterCount++;
       }
       console.log('  sceneObjectClicked, bottom pipe search *IN*');
 
@@ -381,8 +388,13 @@ function sceneObjectClicked(event, thisUnit, objectUnit) {
       // since two outputs, unit may be listed for pipe to each output
       // repeat until tIndex = -1
       console.log('  sceneObjectClicked, top pipe search *OUT*');
+      iterCount = 0;
       tIndex = 0;
       while (tIndex != -1) {
+        if (iterCount >= MAX_ITERATIONS) {
+          console.log('  ERROR Maximum iterations reached in pipe removal');
+          break;
+        }
         // get index of objectUnit in portOUTunitList
         tIndex = portOUTunitList.findIndex(finderFunc);
         function finderFunc(thisOne) {
@@ -394,6 +406,7 @@ function sceneObjectClicked(event, thisUnit, objectUnit) {
           reportStatus('sceneObjectClicked before removePipe(portINlist[tIndex])');
           removePipe(portINlist[tIndex]);
         }
+        iterCount++;
       }
       console.log('  sceneObjectClicked, bottom pipe search *OUT*');
 
@@ -456,9 +469,10 @@ function removePipe(pPortINid) {
   console.log('  pPortINid = ' + pPortINid);
   reportStatus('removePipe on enter removePipe(pPortINid');
 
+  svg = document.getElementById("svg_pipes");
   // Check if SVG container exists, if not exit
   if (!svg) {
-    console.log('   svg does not exist, so RETURN');
+    console.log('  ERROR id svg_pipes does not exist, so RETURN');
     return;
   }
 

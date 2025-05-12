@@ -1,5 +1,6 @@
+'use strict';
 /*
-  Design, text, images and code by Richard K. Herz, 2017-2020
+  Design, text, images and code by Richard K. Herz, 2017-2025
   Copyrights held by Richard K. Herz
   Licensed for use under the GNU General Public License v3.0
   https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -86,7 +87,7 @@ let plotter = {
     if ((plotType == 'profile') || (plotType == 'strip') || (plotType == 'single')) {
       v = 0;
       n = varNumbers[v];
-      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
+      let varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
       thisNumPts = processUnits[varUnitIndex][dataName][n].length;
       plotData = this.initPlotData(numVar, thisNumPts-1); // note thisNumPts-1
     } else {
@@ -97,7 +98,7 @@ let plotter = {
     for (v = 0; v < numVar; v++) {
 
       // get unit index and array name for this variable
-      varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
+      let varUnitIndex = plotInfo[plotIndex]['varUnitIndex'][v];
       // get number n of variable listed in unit's data array
       n = varNumbers[v];
       // copy variable in array from unit
@@ -421,6 +422,7 @@ let plotter = {
     let y;
     // below we have to convert computed color values
     // to text string for fillStyle below, so get pieces ready
+    let tColor;
     let tColor1 = 'rgb(';
     let tColor2;
     let tColor3;
@@ -615,7 +617,7 @@ let plotter = {
     let scaledVarVal; // holds variable value scaled 0-1 by minVarVal & maxVarVal
 
     // repeat through all old and new x,y locations
-    for (i=0; i < xLocArray.length; i++) {
+    for (let i=0; i < xLocArray.length; i++) {
       t = xLocArray[i];
       s = yLocArray[i];
 
@@ -664,7 +666,7 @@ let plotter = {
         context.fillRect(x,y,tPixelsPerPoint,sPixelsPerPoint);
       }
 
-    } // END for (i=0; i < xLocArray.length; i++)
+    } // END for (let i=0; i < xLocArray.length; i++)
 
   }, // END of function plotColorCanvasPixelList
 

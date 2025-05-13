@@ -109,12 +109,12 @@
   /* text-align: left; */ /* Option 2: align text */
 }
 
-#button_clear  {
+#button_clear {
   position: absolute;
   left: 540px;
   top: 0px;
   height: 23px;
-  background-color: pink;
+  background-color: rgb(250, 194, 194); 
 }
 
 

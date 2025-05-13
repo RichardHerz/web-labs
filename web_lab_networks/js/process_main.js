@@ -55,6 +55,13 @@ document.addEventListener('DOMContentLoaded', function() {
     console.error('scene div not found in the document');
   }
 
+  const clearButton = document.getElementById('button_clear');
+  if (clearButton) {
+    clearButton.addEventListener('click', clearFlowsheet);
+  } else {
+      console.error('Clear button not found in the document');
+  }
+  
   const stepButton = document.getElementById('Step');
   if (stepButton) {
     stepButton.addEventListener('click', updateInputsAndState);
@@ -104,6 +111,21 @@ window.onbeforeunload = function() {
 //   console.log('HIT ON window.addEventListener beforeunload ');
 //   // alert() not allowed while unloading a page 
 // });
+
+// clear flowsheet of all units and pipes
+function clearFlowsheet() {
+  console.log('enter clearFlowsheet');
+  const nmax = unitList.length;
+  if (nmax > 0) {
+    // loop down (if up, early units get deleted from list & index shifts)
+    for (let n = nmax-1; n >= 0; n--) {
+      let theObject = unitList[n];
+      console.log(`  theObject, ${theObject} = unitList[${n}]`);
+      removeUnit(theObject);
+    }
+  }
+  console.log('exit clearFlowsheet');
+} // END OF FUNCTION clearFlowsheet
 
 function updateInputsAndState() {
   // called by button Step on this web page
@@ -341,7 +363,7 @@ function checkCursor(event) {
   }
 } // END OF FUNCTION checkCursor
 
-function sceneObjectClicked(event, thisUnit, objectUnit) {
+function sceneObjectClicked(event, objectUnit) {
   console.log('enter sceneObjectClicked');
 
   // WARNING: input argument objectUnit must be specified as a string in _build file, e.g., 
@@ -356,113 +378,123 @@ function sceneObjectClicked(event, thisUnit, objectUnit) {
     // addingUnit might be true if click on existing object to add new overlapping one
     let modkey = event.getModifierState("Alt"); // Alt is Option on Mac
     console.log('  modkey = ' + modkey);
-    if (modkey) {
-
-      reportStatus('sceneObjectClicked, search for pipes to remove then remove object');
-
-      console.log('  sceneObjectClicked, top pipe search *IN*');
-      const MAX_ITERATIONS = 2; // max of two input ports per unit
-      let iterCount = 0;
-      let tIndex = 0;
-      while (tIndex != -1) {
-        if (iterCount >= MAX_ITERATIONS) {
-          console.log('  ERROR Maximum iterations reached in pipe removal');
-          break;
-        }
-        // get index of objectUnit in portINunitList
-        tIndex = portINunitList.findIndex(finderFunc);
-        function finderFunc(thisOne) {
-          return thisOne == objectUnit;
-        }
-        // if found, remove the pipe
-        if (tIndex != -1) {
-          console.log('  remove pipe portINlist[tIndex] = ' + portINlist[tIndex]);
-          removePipe(portINlist[tIndex]);
-        }
-        iterCount++;
-      }
-      console.log('  sceneObjectClicked, bottom pipe search *IN*');
-
-      // search index of object to be deleted in list of pipe OUT units
-      // if there, remove the pipe
-      // since two outputs, unit may be listed for pipe to each output
-      // repeat until tIndex = -1
-      console.log('  sceneObjectClicked, top pipe search *OUT*');
-      iterCount = 0;
-      tIndex = 0;
-      while (tIndex != -1) {
-        if (iterCount >= MAX_ITERATIONS) {
-          console.log('  ERROR Maximum iterations reached in pipe removal');
-          break;
-        }
-        // get index of objectUnit in portOUTunitList
-        tIndex = portOUTunitList.findIndex(finderFunc);
-        function finderFunc(thisOne) {
-          return thisOne == objectUnit;
-        }
-        // if found, remove the pipe
-        if (tIndex != -1) {
-          console.log('    remove portINlist[tIndex] = ' + portINlist[tIndex]);
-          reportStatus('sceneObjectClicked before removePipe(portINlist[tIndex])');
-          removePipe(portINlist[tIndex]);
-        }
-        iterCount++;
-      }
-      console.log('  sceneObjectClicked, bottom pipe search *OUT*');
-
-      let tNumKeys = Object.keys(processUnits).length;
-      console.log('  before removing object, num keys processUnits = ' + tNumKeys);
-
-      // WARNING: input argument objectUnit must be specified as a string in _build file, e.g., 
-      // 'feed_${zz}' in onclick="sceneObjectClicked(event, ${zz}, 'feed_${zz}')" 
-
-      console.log('  before removing object, objectUnit = ' + objectUnit);
-
-      reportStatus('sceneObjectClicked before el.remove() removing an object');
-      const el = document.getElementById(objectUnit);
-      el.remove();
-
-      console.log('  thisUnit before removing from list = ' + thisUnit);
-
-      // delete the unit from the lists 
-      // need array index to delete unit ID from unitList array 
-      tIndex = unitList.findIndex(finderFunc); // used in unit update functions
-      function finderFunc(thisOne) {
-        return thisOne == objectUnit;
-      }
-      console.log('  remove object from lists, tIndex = ' + tIndex);
-      unitCountList.splice(tIndex, 1);
-      unitList.splice(tIndex, 1);
-      unitXlist.splice(tIndex, 1);
-      unitYlist.splice(tIndex, 1); 
-
-      // copilot suggested the following to remove object from processUnits 
-      let indexToRemove = processUnits.findIndex(unit => {
-        // Check if unit exists before trying to access its properties
-        return unit && unit.unitID === objectUnit;
-      });
-      if (indexToRemove !== -1) {
-        console.log('  indexToRemove = ' + indexToRemove);
-        processUnits.splice(indexToRemove, 1);
-        // After splicing, filter out any undefined units
-        processUnits = processUnits.filter(unit => unit !== undefined);
-      }
-
-      reportStatus('sceneObjectClicked after removing an object');
-      tNumKeys = Object.keys(processUnits).length;
-      console.log('  after removing object, num keys processUnits = ' + tNumKeys);
-      if (tNumKeys) {
-        console.log('for each key puKey of processUnits, get unitID');
-        Object.keys(processUnits).forEach(puKey => { 
-          console.log('putKey = ' + puKey);
-          console.log('unitID = ' + processUnits[puKey].unitID);
-        });
-      }
-
+    if (modkey) { 
+      removeUnit(objectUnit);
     }
   }
-
 } // END OF FUNCTION sceneObjectClicked
+
+function removeUnit(objectUnit) {
+  console.log('enter removeUnit, objectUnit = ' + objectUnit); 
+
+  // THIS CAN CALL removePipe()
+
+  reportStatus('  search for pipes to remove then remove object');
+
+  console.log('  sceneObjectClicked, top pipe search *IN*');
+  const MAX_ITERATIONS = 2; // max of two input ports per unit
+  let iterCount = 0;
+  let tIndex = 0;
+  while (tIndex != -1) {
+    if (iterCount >= MAX_ITERATIONS) {
+      console.log('  ERROR Maximum iterations reached in pipe removal');
+      break;
+    }
+    // get index of objectUnit in portINunitList
+    tIndex = portINunitList.findIndex(finderFunc);
+    function finderFunc(thisOne) {
+      return thisOne == objectUnit;
+    }
+    // if found, remove the pipe
+    if (tIndex != -1) {
+      console.log('  remove pipe portINlist[tIndex] = ' + portINlist[tIndex]);
+      removePipe(portINlist[tIndex]);
+    }
+    iterCount++;
+  } // END OF LOOP while (tIndex != -1)
+
+  console.log('  removeUnit, bottom pipe search *IN*');
+
+  // search index of object to be deleted in list of pipe OUT units
+  // if there, remove the pipe
+  // since two outputs, unit may be listed for pipe to each output
+  // repeat until tIndex = -1
+  console.log('  removeUnit, top pipe search *OUT*');
+  iterCount = 0;
+  tIndex = 0;
+  while (tIndex != -1) {
+    if (iterCount >= MAX_ITERATIONS) {
+      console.log('  ERROR Maximum iterations reached in pipe removal');
+      break;
+    }
+    // get index of objectUnit in portOUTunitList
+    tIndex = portOUTunitList.findIndex(finderFunc);
+    function finderFunc(thisOne) {
+      return thisOne == objectUnit;
+    }
+    // if found, remove the pipe
+    if (tIndex != -1) {
+      console.log('    remove portINlist[tIndex] = ' + portINlist[tIndex]);
+      reportStatus('  removeUnit before removePipe(portINlist[tIndex])');
+      removePipe(portINlist[tIndex]);
+    }
+    iterCount++;
+  } // END OF LOOP while (tIndex != -1)
+
+  console.log('  removeUnit, bottom pipe search *OUT*');
+
+  let tNumKeys = Object.keys(processUnits).length;
+  console.log('  before removing object, num keys processUnits = ' + tNumKeys);
+
+  // WARNING: input argument objectUnit must be specified as a string in _build file, e.g., 
+  // 'feed_${zz}' in onclick="sceneObjectClicked(event, ${zz}, 'feed_${zz}')" 
+
+  console.log('  before removing object, objectUnit = ' + objectUnit);
+
+  reportStatus('  removeUnit before el.remove() removing an object');
+  const el = document.getElementById(objectUnit);
+  el.remove();
+
+  console.log('  objectUnit before removing from list = ' + objectUnit);
+
+  // delete the unit from the lists 
+  // need array index to delete unit ID from unitList array 
+  tIndex = unitList.findIndex(finderFunc); // used in unit update functions
+  function finderFunc(thisOne) {
+    return thisOne == objectUnit;
+  }
+  console.log('  remove object from lists, tIndex = ' + tIndex);
+  unitCountList.splice(tIndex, 1);
+  unitList.splice(tIndex, 1);
+  unitXlist.splice(tIndex, 1);
+  unitYlist.splice(tIndex, 1); 
+
+  // copilot suggested the following to remove object from processUnits 
+  let indexToRemove = processUnits.findIndex(unit => {
+    // Check if unit exists before trying to access its properties
+    return unit && unit.unitID === objectUnit;
+  });
+  if (indexToRemove !== -1) {
+    console.log('  indexToRemove = ' + indexToRemove);
+    processUnits.splice(indexToRemove, 1);
+    // After splicing, filter out any undefined units
+    processUnits = processUnits.filter(unit => unit !== undefined);
+  }
+
+  reportStatus('  removeUnit after removing an object');
+  tNumKeys = Object.keys(processUnits).length;
+  console.log('  after removing object, num keys processUnits = ' + tNumKeys);
+  if (tNumKeys) {
+    console.log('  for each key puKey of processUnits, get unitID');
+    Object.keys(processUnits).forEach(puKey => { 
+      console.log('putKey = ' + puKey);
+      console.log('unitID = ' + processUnits[puKey].unitID);
+    });
+  }
+
+  console.log('exit removeUnit');
+
+} // END OF FUNCTION removeUnit
 
 function removePipe(pPortINid) {
   console.log('enter removePipe');

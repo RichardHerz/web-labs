@@ -43,7 +43,7 @@ function buildPFR(zz,x,y) {
         console.log('buildText ELSE, zz = ' + zz); 
         buildText += ` 
            <div id="pfr_${zz}" class="pfr" 
-                onclick="sceneObjectClicked(event, ${zz}, 'pfr_${zz}' )" > 
+                onclick="sceneObjectClicked(event, 'pfr_${zz}' )" > 
                 <div id="pfr_input_one_${zz}" class="portIN pfr_input_one"
                     onclick="input_clicked(event, pfr_${zz})">
                 </div>

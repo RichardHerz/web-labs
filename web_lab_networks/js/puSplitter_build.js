@@ -44,7 +44,7 @@ function buildSplitter(zz,x,y) {
         console.log('buildText ELSE, zz = ' + zz); 
         buildText += ` 
            <div id="splitter_${zz}" class="splitter" 
-                onclick="sceneObjectClicked(event, ${zz}, 'splitter_${zz}' )" > 
+                onclick="sceneObjectClicked(event, 'splitter_${zz}' )" > 
                 <div id="splitter_input_one_${zz}" class="portIN splitter_input_one"
                     onclick="input_clicked(event, splitter_${zz})">
                 </div>

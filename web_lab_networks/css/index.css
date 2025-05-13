@@ -109,6 +109,15 @@
   /* text-align: left; */ /* Option 2: align text */
 }
 
+#button_clear  {
+  position: absolute;
+  left: 540px;
+  top: 0px;
+  height: 23px;
+  background-color: pink;
+}
+
+
 #button_runButton {
   position: absolute;
   left: 160px;

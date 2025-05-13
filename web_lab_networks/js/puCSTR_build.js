@@ -44,7 +44,7 @@ function buildCSTR(zz,x,y) {
         console.log('buildText ELSE, zz = ' + zz); 
         buildText += ` 
            <div id="cstr_${zz}" class="cstr" 
-                onclick="sceneObjectClicked(event, ${zz}, 'cstr_${zz}' )" > 
+                onclick="sceneObjectClicked(event, 'cstr_${zz}' )" > 
                 <div id="cstr_input_one_${zz}" class="portIN cstr_input_one"
                     onclick="input_clicked(event, cstr_${zz})">
                 </div>

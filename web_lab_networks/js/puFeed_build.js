@@ -42,7 +42,7 @@ function buildFeed(zz,x,y) {
         console.log('buildText ELSE, zz = ' + zz); 
         buildText += ` 
            <div id="feed_${zz}" class="feed" 
-                onclick="sceneObjectClicked(event, ${zz}, 'feed_${zz}')" > 
+                onclick="sceneObjectClicked(event, 'feed_${zz}')" > 
                 <div title="opt-alt click to add pipe" id="feed_output_one_${zz}" class="portOUT feed_output_one"
                     onclick="output_clicked(event, feed_${zz})">
                 </div>

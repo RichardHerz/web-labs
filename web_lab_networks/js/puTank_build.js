@@ -42,7 +42,7 @@ function buildTank(zz,x,y) {
         console.log('buildText ELSE, zz = ' + zz); 
         buildText += ` 
            <div id="tank_${zz}" class="tank" 
-                onclick="sceneObjectClicked(event, ${zz}, 'tank_${zz}' )" > 
+                onclick="sceneObjectClicked(event, 'tank_${zz}' )" > 
                 <div id="tank_input_one_${zz}" class="portIN tank_input_one"
                     onclick="input_clicked(event, tank_${zz})">
                 </div>

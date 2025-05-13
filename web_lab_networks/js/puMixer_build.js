@@ -43,7 +43,7 @@ function buildMixer(zz,x,y) {
         console.log('buildText ELSE, zz = ' + zz); 
         buildText += ` 
            <div id="mixer_${zz}" class="mixer" 
-                onclick="sceneObjectClicked(event, ${zz}, 'mixer_${zz}' )" > 
+                onclick="sceneObjectClicked(event, 'mixer_${zz}' )" > 
                 <div id="mixer_input_one_${zz}" class="portIN mixer_input_one"
                     onclick="input_clicked(event, mixer_${zz})">
                 </div>

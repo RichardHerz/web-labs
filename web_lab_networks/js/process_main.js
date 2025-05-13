@@ -179,42 +179,29 @@ function findProcessUnitIndex(searchUnitID) {
   return index; // returns -1 if not found
 } // END OF FUNCTION findProcessUnitIndex 
 
-  // XXX SHOULD updateInputs BE A FUNCTION IN MAIN JS FILE
-  // XXX TO DO GENERAL STUFF, THEN ALSO A LOCAL UPDATE FOR
-  // XXX THINGS SPECIFIC TO TYPE OF UNIT
-  // XXX 
-  // XXX OTHER THAN COMMENTS, CLASS NAME ONLY OCCURS AT 
-  // let inputID in updateInputs
-  // XXX WHICH COULD BE PARSED FROM KNOWN unitID (split with _, el 0)
-  // XXX BUT COULD INDIVIDUAL "this" BE REFERNCED? 
-
-// SEE ZOTERO REFS FOR REPEATING WHEN SOME UNITS DELETED 
-// FOR EXAMPLE (OTHER METHODS) 
-// When iterating, filter out null/undefined entries 
-
-// processUnits.forEach( (unit, index) => {
-//   if (unit) {
-//     // process valid units
-//   }
-// } );
-
 function buildPalette() {
   console.log('enter buildPalette()');
   let el = document.getElementById("div_palette");
-  // currently, each unit is 60px high with 10 pz separation, 
-  // so 70px change from one to the next in y-position 
+  // currently, each palette object is 60px high with 10px separation
+  const objY = 60; // height of each object in palette
+  const sepY = 10; // vertical separation between objects 
+  const sepX = 16; // left margin of objects in palette 
+  // unit count tU for palette object is zero and 
+  // must be specified in function argument because
+  // function buildFeed is also used for all scene objects
+  const tU = 0; 
   //---------------------- 
-  el.innerHTML += buildFeed(0, 16, 10);
+  el.innerHTML += buildFeed(tU, sepX, sepY);
   //---------------------- 
-  el.innerHTML += buildCSTR(0, 16, 80);
+  el.innerHTML += buildCSTR(tU, sepX, sepY+(sepY+objY));
   //---------------------- 
-  el.innerHTML += buildPFR(0, 16, 150);
+  el.innerHTML += buildPFR(tU, sepX, sepY+2*(sepY+objY));
   //---------------------- 
-  el.innerHTML += buildMixer(0, 16, 220);
+  el.innerHTML += buildMixer(tU, sepX, sepY+3*(sepY+objY));
   //---------------------- 
-  el.innerHTML += buildSplitter(0, 16, 290);
+  el.innerHTML += buildSplitter(tU, sepX, sepY+4*(sepY+objY));
   //---------------------- 
-  el.innerHTML += buildTank(0, 16, 360);
+  el.innerHTML += buildTank(tU, sepX, sepY+5*(sepY+objY));
   //---------------------- 
   console.log('exit buildPalette()');
 } // END OF FUNCTION buildPalette

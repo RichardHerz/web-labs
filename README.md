@@ -4,7 +4,7 @@ For information about the structure of the labs, click the "Wiki" tab near the t
 
 To see descriptions of labs, see the top-level index.html file here.
 
-To run these labs, go to http://reactorlab.net/web-labs/
+To run these labs, go to https://reactorlab.net/web-labs/
 
 See Readme's of individual labs for screenshots.
 

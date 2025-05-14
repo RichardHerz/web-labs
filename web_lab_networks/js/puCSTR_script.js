@@ -34,10 +34,12 @@ class CSTR {
         // default reaction parameters 
         this.rateConstant = params[0];
         this.volume = params[1];
+        this.rxnOrder = params[2];
         this.params = params; // for flowsheet export/import
-        console.log('construct CSTR, this rateConstant = '+ this.rateConstant);
-        console.log('construct CSTR, this volume = '+ this.volume);
-        console.log('construct CSTR, this params = '+ this.params);
+        // console.log('construct CSTR, this rateConstant = '+ this.rateConstant);
+        // console.log('construct CSTR, this volume = '+ this.volume);
+        // console.log('construct CSTR, this rxnOrder = '+ this.rxnOrder);
+        // console.log('construct CSTR, this params = '+ this.params);
 
         // timing parameters
         this.unitStepRepeats = 10;
@@ -121,20 +123,26 @@ class CSTR {
         return ssFlag;
     } // END OF FUNCTION checkForSteadyState 
 
-    setParameters(pRateConstant, pVolume) {
+    setParameters(pRateConstant, pVolume, pRxnOrder) {
         // this function called by modal popup script in popup.js
-        console.log('enter CSTR SETPARAMS, rateConst, vol = ' + pRateConstant + ', ' + pVolume);
+        console.log('enter CSTR SETPARAMS, k, vol, order = ' + pRateConstant + ', ' + pVolume+ ', ' + pRxnOrder);
         this.rateConstant = pRateConstant;
         this.volume = pVolume;
+        this.rxnOrder = pRxnOrder;
         // params array used for flowsheet export/import
         this.params[0] = pRateConstant;
         this.params[1] = pVolume;
+        this.params[2] = pRxnOrder;
+        console.log('end CSTR SETPARAMS, this.params = ' + this.params);
+ 
     }
 
     param_btn_clicked() {
+        console.log('enter param_btn_clicked');
         console.log('cstr_btn_one_clicked');
         console.log('  display modal dialog to get params');
-
+        console.log('  this.params = ' + this.params);
+        console.log('  this.rxnOrder = ' + this.rxnOrder);
         const modal = document.getElementById('numberModal');
 
         // Store the unitID as a data attribute
@@ -143,61 +151,39 @@ class CSTR {
         // Set default values for the form inputs
         document.getElementById('firstNumber').value = this.rateConstant;  // default rate constant
         document.getElementById('secondNumber').value = this.volume; // default volume
+        document.getElementById('thirdNumber').value = this.rxnOrder; // default rxnOrder
 
         // Show the modal first
         modal.style.display = 'flex';
 
-        // Try multiple ways to get the label
-        console.log('Debugging label selection:');
+        // show second input
+        document.getElementById('group_second').style.display = 'block';
+        // show third input
+        document.getElementById('group_third').style.display = 'block';
 
-        // NOTE: both methods below work when id given for form label
-        // Claude 3.5 sonnet in copilot says: 
-        // Either method can be used reliably, though using 
-        // getElementById() is slightly more efficient if you have 
-        // the ID available.
-
-        // Method 1: by ID
         let labelById = false;
         labelById = document.getElementById('firstNumLabel');
         if (labelById) {
             console.log('label found by ID:', labelById);
+            labelById.textContent = "Enter rate constant:";
         } else {
             console.log('label not found by ID');
         }
 
-        // Method 2: by query selector
-        let labelByQuery = false;
-        labelByQuery = document.querySelector('label[for="firstNumber"]');
-        if (labelByQuery) {
-            console.log('label found by query:', labelByQuery);
+       labelById = document.getElementById('secondNumLabel');
+        if (labelById) {
+            console.log('label found by ID:', labelById);
+            labelById.textContent = "Enter reactor volume:";
         } else {
-            console.log('label not found by query:', labelByQuery);
+            console.log('label not found by ID');
         }
 
-        // Try updating whichever one exists
-        const targetLabel = labelById || labelByQuery;
-        if (targetLabel) {
-            targetLabel.textContent = "Enter rate constant:";
-            console.log('Label updated');
+        labelById = document.getElementById('thirdNumLabel');
+        if (labelById) {
+            console.log('label found by ID:', labelById);
+            labelById.textContent = "Enter reaction order (1 or 2):";
         } else {
-            console.error('Label not found by any method');
-        }
-
-        // now second number label only by query 
-        // Method 2: by query selector
-        labelByQuery = false;
-        labelByQuery = document.querySelector('label[for="secondNumber"]');
-        if (labelByQuery) {
-            console.log('label found by query:', labelByQuery);
-        } else {
-            console.log('label not found by query:', labelByQuery);
-        }
-
-        if (labelByQuery) {
-            labelByQuery.textContent = "Enter reactor volume:";
-            console.log('second label updated');
-        } else {
-            console.error('second label not found');
+            console.log('label not found by ID');
         }
 
     } // END OF FUNCTION cstr_btn_one_clicked
@@ -374,7 +360,7 @@ class CSTR {
         }
 
         const dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc)
-            - this.rateConstant * out1conc;
+            - this.rateConstant * out1conc**this.rxnOrder;
 
         // console.log(`  CHECK totalINflow = ${totalINflow}`);
         // console.log(`  CHECK vol = ${this.volume}`);

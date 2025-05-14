@@ -134,62 +134,34 @@ class Feed {
        // Set default values for the form inputs
         document.getElementById('firstNumber').value = this.flowrate;  // default flowrate
         document.getElementById('secondNumber').value = this.concentration; // default conc
+        document.getElementById('thirdNumber').value = 1; // default not used
+         // XXX WARNING; WHILE THIS INPUT NOT USED STILL NEED A NUMERICAL VALUE 
+        //          OR GET WARNING IN popup.js 
 
         // Show the modal first
         modal.style.display = 'flex';
 
-        // Try multiple ways to get the label
-        console.log('Debugging label selection:');
-
-        // NOTE: both methods below work when id given for form label
-        // Claude 3.5 sonnet in copilot says: 
-        // Either method can be used reliably, though using 
-        // getElementById() is slightly more efficient if you have 
-        // the ID available.
-
-        // Method 1: by ID
         let labelById = false;
         labelById = document.getElementById('firstNumLabel');
         if (labelById) {
             console.log('label found by ID:', labelById);
+            labelById.textContent = "Enter flow rate:";
         } else {
             console.log('label not found by ID');
         }
 
-        // Method 2: by query selector
-        let labelByQuery = false;
-        labelByQuery = document.querySelector('label[for="firstNumber"]');
-        if (labelByQuery) {
-            console.log('label found by query:', labelByQuery);
+        labelById = document.getElementById('secondNumLabel');
+        if (labelById) {
+            console.log('label found by ID:', labelById);
+            labelById.textContent = "Enter concentration:";
         } else {
-            console.log('label not found by query:', labelByQuery);
+            console.log('label not found by ID');
         }
 
-        // Try updating whichever one exists
-        const targetLabel = labelById || labelByQuery;
-        if (targetLabel) {
-            targetLabel.textContent = "Enter flow rate:";
-            console.log('Label updated');
-        } else {
-            console.error('Label not found by any method');
-        }
-
-        // now second number label only by query 
-        // Method 2: by query selector
-        labelByQuery = false;
-        labelByQuery = document.querySelector('label[for="secondNumber"]');
-        if (labelByQuery) {
-            console.log('label found by query:', labelByQuery);
-        } else {
-            console.log('label not found by query:', labelByQuery);
-        }
-
-        if (labelByQuery) {
-            labelByQuery.textContent = "Enter reactant concentration:";
-            console.log('second label updated');
-        } else {
-            console.error('second label not found');
-        }
+        // show second input
+        document.getElementById('group_second').style.display = 'block';
+        // hide third input
+        document.getElementById('group_third').style.display = 'none';
 
     } // END OF FUNCTION feed_btn_one_clicked 
 

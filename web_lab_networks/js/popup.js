@@ -2,9 +2,12 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
-  // Variables to store the two numbers
+    console.log('enter popup.js event listener');
+
+    // Variables to store the two numbers
   let firstNumber;
   let secondNumber;
+  let thirdNumber;
 
   // DOM Elements
   const modal = document.getElementById('numberModal');
@@ -12,8 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const numberForm = document.getElementById('numberForm');
   const firstNumberInput = document.getElementById('firstNumber');
   const secondNumberInput = document.getElementById('secondNumber');
+  const thirdNumberInput = document.getElementById('thirdNumber');
   const firstNumberError = document.getElementById('firstNumberError');
   const secondNumberError = document.getElementById('secondNumberError');
+  const thirdNumberError = document.getElementById('thirdNumberError');
 
   // Hide the modal when cancel is clicked
   cancelBtn.addEventListener('click', () => {
@@ -46,10 +51,20 @@ document.addEventListener('DOMContentLoaded', function() {
           secondNumberError.style.display = 'none';
       }
 
+      // Validate third number - only allow integers 1 or 2
+      const thirdVal = parseInt(thirdNumberInput.value);
+      if (thirdNumberInput.value === '' || isNaN(thirdVal) || ![1, 2].includes(thirdVal)) {
+          thirdNumberError.style.display = 'block';
+          isValid = false;
+      } else {
+          thirdNumberError.style.display = 'none';
+      }
+
       // If valid, assign values and hide modal
       if (isValid) {
           firstNumber = firstVal;
           secondNumber = secondVal;
+          thirdNumber = thirdVal;
 
           // Get the unit unitID from the modal's data attribute 
           const unitID = modal.dataset.unitID;
@@ -59,9 +74,10 @@ document.addEventListener('DOMContentLoaded', function() {
           const unitIndex = findProcessUnitIndex(unitID);
 
           if (unitIndex !== -1) {
-              processUnits[unitIndex].setParameters(firstNumber, secondNumber);
+              processUnits[unitIndex].setParameters(firstNumber, secondNumber, thirdNumber);
 
-              console.log('  GOOD first, secondNumber = ' + firstNumber +', ' + secondNumber);
+              console.log('  GOOD first, second,thirdNumber = ' + firstNumber 
+                +', ' + secondNumber+', ' + thirdNumber);
           } else {
               console.log('  ERROR no unitIndex from modal.dataset & search');
           }
@@ -72,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           console.log('First Number:', firstNumber);
           console.log('Second Number:', secondNumber);
+          console.log('Third Number:', thirdNumber);
       }
   });
 
@@ -80,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
       numberForm.reset();
       firstNumberError.style.display = 'none';
       secondNumberError.style.display = 'none';
+      thirdNumberError.style.display = 'none';
   }
 
 }); // END OF BLOCK adding eventListeners for main html elements

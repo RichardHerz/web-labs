@@ -116,9 +116,9 @@ class Splitter {
         return ssFlag;
     } // END OF FUNCTION checkForSteadyState  
 
-    setParameters(pTopFraction, pNotUsed) {
+    setParameters(pTopFraction) {
         // this function called by modal popup script in popup.js
-        console.log(`enter SPLITTER SETPARAMS, pTopFraction, pNotUsed = ${pTopFraction}, ${pNotUsed}`);
+        console.log(`enter SPLITTER SETPARAMS, pTopFraction, pNotUsed = ${pTopFraction}`);
         this.topFraction = pTopFraction;
         // params array used for flowsheet export/import
         this.params[0] = pTopFraction;
@@ -136,64 +136,26 @@ class Splitter {
         // Set default values for the form inputs
         document.getElementById('firstNumber').value = this.topFraction;  // default rate constant
         document.getElementById('secondNumber').value = 0; // default not used
-        // XXX WARNING; WHILE THIS INPUT NOT USED STILL NEED A NUMERICAL VALUE 
+        document.getElementById('thirdNumber').value = 1; // default not used
+         // XXX WARNING; WHILE THIS INPUT NOT USED STILL NEED A NUMERICAL VALUE 
         //          OR GET WARNING IN popup.js 
 
         // Show the modal first
         modal.style.display = 'flex';
 
-        // Try multiple ways to get the label
-        console.log('Debugging label selection:');
-
-        // NOTE: both methods below work when id given for form label
-        // Claude 3.5 sonnet in copilot says: 
-        // Either method can be used reliably, though using 
-        // getElementById() is slightly more efficient if you have 
-        // the ID available.
-
-        // Method 1: by ID
         let labelById = false;
         labelById = document.getElementById('firstNumLabel');
         if (labelById) {
             console.log('label found by ID:', labelById);
+            labelById.textContent = "Enter split to top port (e.g. 0.5):";
         } else {
             console.log('label not found by ID');
         }
 
-        // Method 2: by query selector
-        let labelByQuery = false;
-        labelByQuery = document.querySelector('label[for="firstNumber"]');
-        if (labelByQuery) {
-            console.log('label found by query:', labelByQuery);
-        } else {
-            console.log('label not found by query:', labelByQuery);
-        }
-
-        // Try updating whichever one exists
-        const targetLabel = labelById || labelByQuery;
-        if (targetLabel) {
-            targetLabel.textContent = "Enter split to top port (e.g. 0.5):";
-            console.log('Label updated');
-        } else {
-            console.error('Label not found by any method');
-        }
-
-        // now second number label only by query 
-        // Method 2: by query selector
-        labelByQuery = false;
-        labelByQuery = document.querySelector('label[for="secondNumber"]');
-        if (labelByQuery) {
-            console.log('label found by query:', labelByQuery);
-        } else {
-            console.log('label not found by query:', labelByQuery);
-        }
-
-        if (labelByQuery) {
-            labelByQuery.textContent = "(not used)";
-            console.log('second label updated');
-        } else {
-            console.error('second label not found');
-        }
+        // hide second input
+        document.getElementById('group_second').style.display = 'none';
+        // hide third input
+        document.getElementById('group_third').style.display = 'none';
 
     } // END OF FUNCTION splitter_btn_one_clicked
 

@@ -16,10 +16,10 @@
 // *** definitions of those components will change
 
 let plotter = {
-  // plotting with the flot.js library AND ALSO
-  // generates the color canvas plots indpendently of flot.js or other libaries
+  // plotting with the flot.js library... 
+  // AND ALSO generates color canvas plots indpendently of flot.js 
   // USES OBJECT plotInfo in file process_plot_info.js
-   // this is an "object literal" statement used to create this object
+  // this is an "object literal" statement used to create this object
 
   // --------- DEFINE CHILD OBJECT plotArrays ---------------
 

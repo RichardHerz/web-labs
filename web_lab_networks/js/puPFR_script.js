@@ -50,8 +50,8 @@ class PFR {
 
         // timing parameters
         this.unitStepRepeats = 10; 
-        this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
-        this.residenceTime = 1; // required, used for checkForSteadyState
+        this.unitTimeStep = simParams.simTimeStep/this.unitStepRepeats;
+        this.residenceTime = 1; // XXX TEMPORARY, required, used for checkForSteadyState
 
         console.log('  this class unitID = ' + this.unitID);
         const fieldID= "pfr_num_" + this.unitCount;
@@ -178,7 +178,7 @@ class PFR {
         labelById = document.getElementById('thirdNumLabel');
         if (labelById) {
             console.log('label found by ID:', labelById);
-            labelById.textContent = "Enter reaction order (1 or 2):";
+            labelById.textContent = "Enter reaction order (0, 1 or 2):";
         } else {
             console.log('label not found by ID');
         }

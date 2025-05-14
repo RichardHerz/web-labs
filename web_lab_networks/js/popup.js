@@ -51,9 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
           secondNumberError.style.display = 'none';
       }
 
-      // Validate third number - only allow integers 1 or 2
+      // Validate third number - only allow integers 0, 1 or 2
       const thirdVal = parseInt(thirdNumberInput.value);
-      if (thirdNumberInput.value === '' || isNaN(thirdVal) || ![1, 2].includes(thirdVal)) {
+      if (thirdNumberInput.value === '' || isNaN(thirdVal) || ![0, 1, 2].includes(thirdVal)) {
           thirdNumberError.style.display = 'block';
           isValid = false;
       } else {

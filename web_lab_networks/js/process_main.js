@@ -115,6 +115,7 @@ window.onbeforeunload = function() {
 // clear flowsheet of all units and pipes
 function clearFlowsheet() {
   console.log('enter clearFlowsheet');
+  interfacer.resetThisLab(); // stops run timer
   const nmax = unitList.length;
   if (nmax > 0) {
     // loop down (if up, early units get deleted from list & index shifts)

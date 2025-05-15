@@ -36,25 +36,25 @@ class PFR {
         this.volume = params[1];
         this.rxnOrder = params[2];
         this.params = params; // for flowsheet export/import
-        console.log('construct PFR, this rateConstant = '+ this.rateConstant);
-        console.log('construct PFR, this volume = '+ this.volume);
-        console.log('construct PFR, this rxnOrder = '+ this.rxnOrder);
-        console.log('construct PFR, this params = '+ this.params);
+        console.log('construct PFR, this rateConstant = ' + this.rateConstant);
+        console.log('construct PFR, this volume = ' + this.volume);
+        console.log('construct PFR, this rxnOrder = ' + this.rxnOrder);
+        console.log('construct PFR, this params = ' + this.params);
 
-        this.numCells = 20;
-        // WARNING: as the above 3 params and flowrate change 
-        //          the time step to prevent numerical 
-        //          oscillation changes 
+        this.numCells = 40;
+        // XXX WARNING: as the above 3 params and flowrate change 
+        //     the time step to prevent numerical 
+        //     oscillation changes 
         this.conc = new Array(this.numCells + 1).fill(0);
         console.log('  this.conc in PFR = ' + this.conc);
 
         // timing parameters
-        this.unitStepRepeats = 10; 
-        this.unitTimeStep = simParams.simTimeStep/this.unitStepRepeats;
+        this.unitStepRepeats = 20;
+        this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
         this.residenceTime = 1; // XXX TEMPORARY, required, used for checkForSteadyState
 
         console.log('  this class unitID = ' + this.unitID);
-        const fieldID= "pfr_num_" + this.unitCount;
+        const fieldID = "pfr_num_" + this.unitCount;
         console.log('  fieldID = ' + fieldID);
         const el = document.getElementById(fieldID);
         if (el) {
@@ -78,8 +78,7 @@ class PFR {
             }
         };
 
-        this.updateState(); // updates display of conc 
-
+        this.reset();
     } // END OF FUNCTION constructor 
 
     initialize() {
@@ -95,7 +94,7 @@ class PFR {
         this.conc = new Array(this.numCells + 1).fill(0);
         this.portData.outputs.one.concentration = 0;
         this.portData.outputs.one.flowrate = 0;
-        const el = document.getElementById('pfr_info_' + this.unitCount); 
+        const el = document.getElementById('pfr_info_' + this.unitCount);
         el.innerHTML = 'c = 0<br>f = 0';
     } // END OF FUNCTION reset 
 
@@ -126,7 +125,7 @@ class PFR {
 
     setParameters(pRateConstant, pVolume, pRxnOrder) {
         // this function called by modal popup script in popup.js
-        console.log('enter PFR SETPARAMS, k, vol, order = ' + pRateConstant + ', ' + pVolume+ ', ' + pRxnOrder);
+        console.log('enter PFR SETPARAMS, k, vol, order = ' + pRateConstant + ', ' + pVolume + ', ' + pRxnOrder);
         this.rateConstant = pRateConstant;
         this.volume = pVolume;
         this.rxnOrder = pRxnOrder;
@@ -141,7 +140,7 @@ class PFR {
         console.log('  display modal dialog to get params');
 
         const modal = document.getElementById('numberModal');
-  
+
         // Store the unitID as a data attribute
         modal.dataset.unitID = this.unitID;
 
@@ -167,7 +166,7 @@ class PFR {
             console.log('label not found by ID');
         }
 
-       labelById = document.getElementById('secondNumLabel');
+        labelById = document.getElementById('secondNumLabel');
         if (labelById) {
             console.log('label found by ID:', labelById);
             labelById.textContent = "Enter reactor volume:";
@@ -214,10 +213,10 @@ class PFR {
         Object.keys(this.portData.inputs).forEach(inputKey => {
 
             // Do something with each input
-            console.log('  processing this.portData.inputs, inputKey = ' + inputKey); 
+            console.log('  processing this.portData.inputs, inputKey = ' + inputKey);
 
             const inputID = "pfr_input_" + inputKey + '_' + this.unitCount;
-            console.log('  this inputID = ' + inputID); 
+            console.log('  this inputID = ' + inputID);
 
             const portInNum = inputKey;
             console.log('  portInNum = ' + portInNum);
@@ -233,7 +232,7 @@ class PFR {
             portInUnitIndex = portINlist.findIndex(finderFunc);
             function finderFunc(thisOne) {
                 return thisOne == inputID;
-            }; 
+            };
 
             if (portInUnitIndex == -1) {
                 console.log('  this input has NO connection to an output');
@@ -256,11 +255,11 @@ class PFR {
 
                 const portOutUnitID = portOUTunitList[portInUnitIndex];
                 console.log('  portOutUnitID of upstream output = ' + portOutUnitID);
- 
+
                 console.log('  unitList = ' + unitList);
                 const portOutUnitIndex = unitList.findIndex(finderFunc);
                 function finderFunc(thisOne) {
-                  return thisOne == portOutUnitID;
+                    return thisOne == portOutUnitID;
                 }
                 console.log('  portOutUnitIndex of upstream output in unitList= ' + portOutUnitIndex);
 
@@ -278,7 +277,7 @@ class PFR {
                 //   let out1conc = outputPUunit.portData.outputs.one.concentration;
                 //  METHOD 1
                 //   out1conc = processUnits[outputPUindex].portData.outputs.one.concentration;
- 
+
                 // const out1conc = processUnits[outputPUindex].portData.outputs.one.concentration;
                 // console.log('  upstream out1conc = ' + out1conc);
                 // const out1flow = processUnits[outputPUindex].portData.outputs.one.flowrate;
@@ -291,23 +290,23 @@ class PFR {
                 // but relies on both in and out ports having same properties
                 // e.g., flowrate and concentration
                 if (this.portData.inputs[portInNum]) {
-                    console.log(`  this.portData.inputs[${portInNum}] DOES exist!`);      
+                    console.log(`  this.portData.inputs[${portInNum}] DOES exist!`);
                     Object.keys(this.portData.inputs[portInNum]).forEach(property => {
                         const value = this.portData.inputs[portInNum][property];
                         console.log(`Property: ${property}, Value: ${value}`);
-                        this.portData.inputs[portInNum][property] = 
+                        this.portData.inputs[portInNum][property] =
                             processUnits[outputPUindex].portData.outputs[portOutNum][property];
                     });
                 } else {
                     console.log(`  this.portData.inputs[${portInNum}] does NOT exist!`);
                 }
-                
+
                 console.log('After copy in << out');
                 this.reportInputStatus();
-                
+
             } // END OF if (portInUnitIndex != -1)
 
-        } ); // END OF repeat through Object.keys
+        }); // END OF repeat through Object.keys
 
         console.log('just before end of upateInputs in PFR');
         this.reportInputStatus();
@@ -321,12 +320,12 @@ class PFR {
 
         console.log('  this class unitID = ' + this.unitID);
         console.log('  this.unitCount = ' + this.unitCount);
-   
+
         this.reportInputStatus();
 
         const in1flow = this.portData.inputs.one.flowrate;
         const in1conc = this.portData.inputs.one.concentration;
- 
+
         // console.log('  in1flow = ' + in1flow);
         // console.log('  in1conc = ' + in1conc);
         // const out1flow = this.portData.outputs.one.flowrate; 
@@ -344,38 +343,83 @@ class PFR {
             console.log('ERROR pfr volume = 0 will get div by zero');
         }
 
-        const flowFac = totalINflow / (this.volume / this.numCells); 
-        let dcdt = new Array(this.numCells + 1).fill(0);
-
-        // first, compute rate of change in each cell
         this.conc[0] = inMIXEDconc;
-        for (let n = 1; n <= this.numCells; n++) {
-            dcdt[n] = flowFac * (this.conc[n-1] - this.conc[n]) 
-                      - this.rateConstant * this.conc[n]**this.rxnOrder;
-        }
+        const flowFac = totalINflow / (this.volume / this.numCells);
+        const tau = 1 / (flowFac * this.unitStepRepeats);
 
-        // second, update conc in each cell
-        for (let n = 1; n <= this.numCells; n++) {
-            this.conc[n] = this.conc[n] + dcdt[n] * this.unitTimeStep;
-        }
+        const rxrType = 'purePFR'; // 'purePFR' or 'mixCells'
+        switch (rxrType) {
+            case 'purePFR':
+                let newConc = new Array(this.numCells + 1).fill(0);
+                // repeat for unitStepRepeats each time down PFR cells
+                for (let uts = 0; uts < this.unitStepRepeats; uts++) {
+                    // first, compute new conc for each cell
+                    for (let n = 1; n <= this.numCells; n++) {
+                        switch (this.rxnOrder) {
+                        case 0:
+                            // handle zero order
+                            break;
+                        case 1:
+                            // handle first order
+                            newConc[n] = this.conc[n - 1] * Math.exp(-this.rateConstant * tau);
+                            break;
+                        case 2:
+                            // handle second order
+                            break;
+                        case 3:
+                            // handle -1 order
+                            break;
+                        default:
+                            console.log('  DEFAULT in switch rxnOrder');
+                        } // END OF SWITCH for reaction order
+                    } // END OF FOR LOOP down mixing cells
+                    // second, update conc in each cell
+                    for (let n = 1; n <= this.numCells; n++) {
+                        if (newConc[n] < 0) { newConc[n] = 0 }
+                        if (newConc[n] > inMIXEDconc) { newConc[n] = inMIXEDconc }
+                        this.conc[n] = newConc[n];
+                    }
+                } // END FOR LOOP step unit time step uts
+                break;
+            case 'mixCells':
+                let dcdt = new Array(this.numCells + 1).fill(0);
+                // repeat for unitStepRepeats each time down mixing cells
+                for (let uts = 0; uts < this.unitStepRepeats; uts++) {
+                    // first, compute rate of change in each cell
+                    for (let n = 1; n <= this.numCells; n++) {
+                        dcdt[n] = flowFac * (this.conc[n - 1] - this.conc[n])
+                            - this.rateConstant * this.conc[n] ** this.rxnOrder;
+                    }
+                    // second, update conc in each cell
+                    for (let n = 1; n <= this.numCells; n++) {
+                        this.conc[n] = this.conc[n] + dcdt[n] * this.unitTimeStep;
+                        // keep conc in bounds
+                        if (this.conc[n] < 0) { this.conc[n] = 0 }
+                        if (this.conc[n] > inMIXEDconc) { this.conc[n] = inMIXEDconc }
+                    }
+                } // END FOR LOOP step unit time step uts
+                break;
+            default:
+                console.log('  DEFAULT in switch rxrType');
+        } // END OF SWITCH for reactor type
 
         const cnew = this.conc[this.numCells];
 
         console.log('  cnew = ' + cnew);
 
-        this.portData.outputs.one.concentration = cnew; 
-        console.log('  this.portData.outputs.one.concentration = ' + 
+        this.portData.outputs.one.concentration = cnew;
+        console.log('  this.portData.outputs.one.concentration = ' +
             this.portData.outputs.one.concentration);
 
         // for no volume accumulation, set outlet flowrate to total input flowrate
         // note that this may also be done in updateInputs()
         this.portData.outputs.one.flowrate = totalINflow;
-        console.log('  this.portData.outputs.one.flowrate = ' + 
+        console.log('  this.portData.outputs.one.flowrate = ' +
             this.portData.outputs.one.flowrate);
 
         // want to update innerHTML text displayed in div id="pfr_info_${zz}"
-        const el = document.getElementById('pfr_info_' + this.unitCount); 
-        
+        const el = document.getElementById('pfr_info_' + this.unitCount);
+
         console.log('  PFR thisConc = ' + cnew);
         console.log('  PFR flowrate = ' + totalINflow);
 
@@ -390,12 +434,12 @@ class PFR {
         this.reportInputStatus();
         console.log('  near end updateState, out 1 conc = ' + this.portData.outputs.one.concentration);
         console.log('end of updateState in PFR');
- 
+
     } // END OF updateState()
 
     getPortCount() {
         console.log('enter getPortCount');
-        const keyLen = Object.keys(this.portData).length; 
+        const keyLen = Object.keys(this.portData).length;
         console.log('  keyLen = ' + keyLen);
         return keyLen;
     }
@@ -406,7 +450,7 @@ class PFR {
     //     console.log('  keyLen = ' + keyLen);
     //     return keyLen; 
     // }
-       
+
     // You can also count properties in a specific port
     getInputPortPropertyCount(portName) {
         if (this.portData.inputs[portName]) {

@@ -67,8 +67,7 @@ class Tank {
             }
         };
 
-        this.updateState(); // updates display of conc 
-
+        this.reset();
     } // END OF FUNCTION constructor
 
     initialize() {

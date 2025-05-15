@@ -1,3 +1,25 @@
+===============================  
+remember RL method of adding to numerical dynamics 
+exponential decay to analyical steady state 
+
+=============================== 
+OLD PFR UPDATE 
+
+        let dcdt = new Array(this.numCells + 1).fill(0);
+
+
+        // first, compute rate of change in each cell
+        this.conc[0] = inMIXEDconc;
+        for (let n = 1; n <= this.numCells; n++) {
+            dcdt[n] = flowFac * (this.conc[n-1] - this.conc[n]) 
+                      - this.rateConstant * this.conc[n]**this.rxnOrder;
+        }
+
+        // second, update conc in each cell
+        for (let n = 1; n <= this.numCells; n++) {
+            this.conc[n] = this.conc[n] + dcdt[n] * this.unitTimeStep;
+        }
+
 =============================== 
 SAVING STATE OF FLOWSHEET 
 

@@ -75,8 +75,7 @@ class CSTR {
             }
         };
 
-        this.updateState(); // updates display of conc 
-
+t       this.reset();
     } // END OF FUNCTION constructor 
 
     initialize() {

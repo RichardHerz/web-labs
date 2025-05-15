@@ -74,7 +74,7 @@ class Feed {
     } // END OF FUNCTION initialize 
 
     reset() {
-        // console.log(`enter class ${this.unitID} reset method`);
+        // this function is required to remain here
     } // END OF FUNCTION reset 
 
     updateUIparams() {
@@ -164,12 +164,6 @@ class Feed {
         document.getElementById('group_third').style.display = 'none';
 
     } // END OF FUNCTION feed_btn_one_clicked 
-
-    initialize() {
-        console.log('enter class Feed initialize method');
-        console.log('  this class unitID = ' + this.unitID);
-        console.log('  this.unitCount = ' + this.unitCount);
-    } // END OF FUNCTION initialize 
 
     updateInputs() {
         // argument u is the index of this object in processUnits[]

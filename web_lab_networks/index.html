@@ -100,8 +100,8 @@
       on the left, 
       then click on the scene to the right to add the unit to the scene.
       To remove a unit, option/Alt click on the unit. 
-      The PFR is a Plug Flow Reactor, and the CSTR is a Continuous
-      flow Stirred Tank Reactor. 
+      The PFR is a Plug Flow Reactor with some axial dispersion, 
+      and the CSTR is a Continuous flow Stirred Tank Reactor. 
     </p>
     <p> 
       You can add and remove multiple units.
@@ -142,15 +142,15 @@
           <div class="error" id="secondNumberError">Please enter a valid number</div>
         </div>
         <div class="form-group" id="group_third">
-          <label id="thirdNumLabel" for="thirdNumber">Third Number (0, 1 or 2):</label>
+          <label id="thirdNumLabel" for="thirdNumber">Third Number (-1, 0, 1 or 2):</label>
           <input type="number" 
                  id="thirdNumber" 
-                 min="0" 
+                 min="-1" 
                  max="2" 
                  step="1" 
                  pattern="\d*"
                  required>
-          <div class="error" id="thirdNumberError">Please enter either 1 or 2</div>
+          <div class="error" id="thirdNumberError">Please enter either -1, 0, 1, or 2</div>
         </div>
         <div class="buttons">
           <button type="button" class="cancel-btn" id="cancelBtn">Cancel</button>

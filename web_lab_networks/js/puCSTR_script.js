@@ -75,7 +75,7 @@ class CSTR {
             }
         };
 
-t       this.reset();
+       this.reset();
     } // END OF FUNCTION constructor 
 
     initialize() {
@@ -180,7 +180,7 @@ t       this.reset();
         labelById = document.getElementById('thirdNumLabel');
         if (labelById) {
             console.log('label found by ID:', labelById);
-            labelById.textContent = "Enter reaction order (0, 1 or 2):";
+            labelById.textContent = "Enter reaction order (-1, 0, 1 or 2):";
         } else {
             console.log('label not found by ID');
         }
@@ -358,8 +358,19 @@ t       this.reset();
             console.log('ERROR cstr volume = 0 will get div by zero');
         }
 
-        const dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc)
-            - this.rateConstant * out1conc**this.rxnOrder;
+        let dcdt = 0;
+        if (this.rxnOrder >= 0) {
+            dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc)
+                - this.rateConstant * out1conc**this.rxnOrder;
+        } else {
+            // negative order 
+            if (out1conc > 0) {
+                dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc)
+                    - this.rateConstant * out1conc**this.rxnOrder;
+            } else {
+                dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc);
+            }
+        }
 
         // console.log(`  CHECK totalINflow = ${totalINflow}`);
         // console.log(`  CHECK vol = ${this.volume}`);
@@ -372,7 +383,10 @@ t       this.reset();
         // console.log(`  CHECK (inMIXEDconc - out1conc) =  ${(inMIXEDconc - out1conc)}` );
         // console.log(`  CHECK k * inMIXEDconc =  ${this.rateConstant * inMIXEDconc}` );
 
-        const cnew = out1conc + dcdt * this.unitTimeStep;
+        let cnew = out1conc + dcdt * this.unitTimeStep;
+        if (cnew < 0) {cnew = 0;}
+        if (cnew > inMIXEDconc) {cnew = inMIXEDconc;}
+ 
         console.log('  cnew = ' + cnew);
 
         this.portData.outputs.one.concentration = cnew;

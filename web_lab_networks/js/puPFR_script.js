@@ -41,7 +41,7 @@ class PFR {
         console.log('construct PFR, this rxnOrder = ' + this.rxnOrder);
         console.log('construct PFR, this params = ' + this.params);
 
-        this.numCells = 40;
+        this.numCells = 300;
         // XXX WARNING: as the above 3 params and flowrate change 
         //     the time step to prevent numerical 
         //     oscillation changes 
@@ -49,7 +49,7 @@ class PFR {
         console.log('  this.conc in PFR = ' + this.conc);
 
         // timing parameters
-        this.unitStepRepeats = 20;
+        this.unitStepRepeats = 10;
         this.unitTimeStep = simParams.simTimeStep / this.unitStepRepeats;
         this.residenceTime = 1; // XXX TEMPORARY, required, used for checkForSteadyState
 
@@ -177,18 +177,12 @@ class PFR {
         labelById = document.getElementById('thirdNumLabel');
         if (labelById) {
             console.log('label found by ID:', labelById);
-            labelById.textContent = "Enter reaction order (0, 1 or 2):";
+            labelById.textContent = "Enter reaction order (-1, 0, 1 or 2):";
         } else {
             console.log('label not found by ID');
         }
 
     } // END OF FUNCTION pfr_btn_one_clicked
-
-    initialize() {
-        console.log('enter class PFR initialize method');
-        console.log('  this class unitID = ' + this.unitID);
-        console.log('  this.unitCount = ' + this.unitCount);
-    } // END OF FUNCTION initialize 
 
     reportInputStatus() {
         // console.log('---- enter reportInputStatus in PFR ----');
@@ -344,44 +338,75 @@ class PFR {
         }
 
         this.conc[0] = inMIXEDconc;
-        const flowFac = totalINflow / (this.volume / this.numCells);
-        const tau = 1 / (flowFac * this.unitStepRepeats);
 
-        const rxrType = 'purePFR'; // 'purePFR' or 'mixCells'
+        // SELECT WHICH MODEL WE WANT TO USE 
+        const rxrType = 'mixCells'; // 'purePFR' or 'mixCells'
+
         switch (rxrType) {
             case 'purePFR':
+                const tau = (this.volume/totalINflow) / this.numCells;
                 let newConc = new Array(this.numCells + 1).fill(0);
-                // repeat for unitStepRepeats each time down PFR cells
-                for (let uts = 0; uts < this.unitStepRepeats; uts++) {
-                    // first, compute new conc for each cell
-                    for (let n = 1; n <= this.numCells; n++) {
-                        switch (this.rxnOrder) {
+
+                // the process below only does one cell-size shift of
+                // reactant down reactor and does this in time tau
+                // we need numCells of those shifts to get reactant 
+                // entering to reach end of reactor
+                // and that needs to happen such that
+                // elapsed simTime = numCells * tau = (this.volume/totalINflow) 
+                // Now, in one call from controller to this updateState
+                // sim time changes by simTimeStep
+                // so how many calls or (internal repeats in one call)
+                // lets say vol/flow >> simTimeStep
+                // numCalls * simTimeStep = (vol/flow)
+                // numCalls = (vol/flow) / simTimeStep
+                // let's say vol = 100, flow = 1, simTimeStep = 1
+                // is numCalls = (100/1) / 1 = 100 
+                // but numCalls must equal numCells
+                // so numCells = (vol/flow) / simTimeStep 
+                // so simTimeStep = (vol/flow) / numCells
+                // for numCells = 40, vol = 100, flow = 1
+                // simTimeStep = 100/40 = 2.5 
+                // BUT VOL AND FLOW CAN CHANGE DURING A SIM !! 
+                // SO SEEMS IMPOSSIBLE TO MAKE THIS WORK... 
+                // MAYBE JUST USE MIX CELL APPROACH & APPLY
+                // DECAY TOWARD CURRENT ANALYTICAL STEADY STATE
+
+                // first, compute new conc for each cell
+                for (let n = 1; n <= this.numCells; n++) {
+                    switch (this.rxnOrder) {
                         case 0:
                             // handle zero order
+                            // Ca = Cao - kt
                             break;
                         case 1:
                             // handle first order
+                            // Ca = Cao*exp(-kt)
                             newConc[n] = this.conc[n - 1] * Math.exp(-this.rateConstant * tau);
                             break;
                         case 2:
                             // handle second order
+                            // Ca = Cao/(1 + kt*Cao)
                             break;
-                        case 3:
-                            // handle -1 order
+                        case -1:
+                            // handle negative one order
+                            // Ca^2 = Cao^2 + 2kt
+                            const Cao2 = Math.pow(this.conc[n-1], 2);
+                            const term = Cao2 + 2 * this.rateConstant * tau;
+                            newConc[n] = Math.sqrt(Math.max(0, term)); // prevent negative under sqrt
                             break;
                         default:
                             console.log('  DEFAULT in switch rxnOrder');
-                        } // END OF SWITCH for reaction order
-                    } // END OF FOR LOOP down mixing cells
-                    // second, update conc in each cell
-                    for (let n = 1; n <= this.numCells; n++) {
-                        if (newConc[n] < 0) { newConc[n] = 0 }
-                        if (newConc[n] > inMIXEDconc) { newConc[n] = inMIXEDconc }
-                        this.conc[n] = newConc[n];
-                    }
-                } // END FOR LOOP step unit time step uts
+                    } // END OF SWITCH for reaction order
+                } // END OF FOR LOOP down mixing cells
+                // second, update conc in each cell
+                for (let n = 1; n <= this.numCells; n++) {
+                    if (newConc[n] < 0) { newConc[n] = 0 }
+                    if (newConc[n] > inMIXEDconc) { newConc[n] = inMIXEDconc }
+                    this.conc[n] = newConc[n];
+                }
                 break;
             case 'mixCells':
+                const flowFac = totalINflow / (this.volume / this.numCells);
                 let dcdt = new Array(this.numCells + 1).fill(0);
                 // repeat for unitStepRepeats each time down mixing cells
                 for (let uts = 0; uts < this.unitStepRepeats; uts++) {
@@ -460,6 +485,6 @@ class PFR {
         }
     }
 
-} // END OF CLASS 
+} // END OF CLASS
 
 

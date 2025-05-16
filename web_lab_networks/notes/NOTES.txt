@@ -1,13 +1,41 @@
-===============================  
+===============================
+PFR - some tests 
+300 cells, 10 unit step repeats, simTimeStep = 1,
+simStepRepeats = 1 
+feed conc = 10
+RESIDENCE TIME with k = 0
+V = 100, f = 1, c = 5.12 at t=100
+V = 100, f=2, c=5.19 at t=50
+V = 100, f= 3, c = 3.3 at t=33, c=9.96 at t=35
+V = 200, f=1, c=5.1 at t=200
+---
+BELOW, V = 100, feed flow = 1, tau = 100, feed conc = 10
+FIRST ORDER RXN AT SS 
+k = 0.01, c=3.68, analyt = 3.68
+SECOND ORDER
+k = 0.01, f=10, V=100, c=0.92, analyt = 0.91
+ZERO ORDER
+k = 0.05
+c = 5, analyt = 5 
+NEGATIVE ONE ORDER 
+go to near c=1 out of rxr then set to -1 order
+and continue
+k = 0.1, c = 8.94, analyt = 8.94 
+=============================== 
+
+
+
+
+===============================
 remember RL method of adding to numerical dynamics 
 exponential decay to analyical steady state 
 or just wait after change in settings until unit
 gets to its own SS and then just apply these... 
 
-// PFR ANALYTICAL SOLUTIONS 
+// PFR ANALYTICAL SOLUTIONS AT STEADY STATE
 //
 // handle negative one order
-// Ca^2 = Cao^2 + 2kt
+// Ca^2 = Cao^2 - 2kt
 //
 // handle second order
 // Ca = Cao/(1 + kt*Cao)

@@ -117,7 +117,7 @@ class PFR {
         // APPLY PFR SOLUTIONS AT STEADY STATE
         //
         // negative one order
-        // Ca^2 = Cao^2 + 2kt
+        // Ca^2 = Cao^2 - 2kt
         //
         // second order
         // Ca = Cao/(1 + kt*Cao)

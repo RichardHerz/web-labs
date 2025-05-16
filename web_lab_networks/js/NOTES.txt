@@ -1,3 +1,73 @@
+======== SAVE FOR COMMENTS ======= 
+
+   // SELECT WHICH MODEL WE WANT TO USE 
+        const rxrType = 'mixCells'; // 'purePFR' or 'mixCells'
+
+        switch (rxrType) {
+            case 'purePFR':
+                const tauCell = (this.volume/totalINflow) / this.numCells;
+                let newConc = new Array(this.numCells + 1).fill(0);
+
+                // the process below only does one cell-size shift of
+                // reactant down reactor and does this in time tauCell
+                // we need numCells of those shifts to get reactant 
+                // entering to reach end of reactor
+                // and that needs to happen such that
+                // elapsed simTime = numCells * tau = (this.volume/totalINflow) 
+                // Now, in one call from controller to this updateState
+                // sim time changes by simTimeStep
+                // so how many calls or (internal repeats in one call)
+                // lets say vol/flow >> simTimeStep
+                // numCalls * simTimeStep = (vol/flow)
+                // numCalls = (vol/flow) / simTimeStep
+                // let's say vol = 100, flow = 1, simTimeStep = 1
+                // is numCalls = (100/1) / 1 = 100 
+                // but numCalls must equal numCells
+                // so numCells = (vol/flow) / simTimeStep 
+                // so simTimeStep = (vol/flow) / numCells
+                // for numCells = 40, vol = 100, flow = 1
+                // simTimeStep = 100/40 = 2.5 
+                // BUT VOL AND FLOW CAN CHANGE DURING A SIM !! 
+                // SO SEEMS IMPOSSIBLE TO MAKE THIS WORK... 
+                // MAYBE JUST USE MIX CELL APPROACH & APPLY
+                // DECAY TOWARD CURRENT ANALYTICAL STEADY STATE
+                // OR JUST SET TO ANALYTICAL SOLUTION WHEN MIX CELLS REACH SS
+
+                // first, compute new conc for each cell
+                for (let n = 1; n <= this.numCells; n++) {
+                    switch (this.rxnOrder) {
+                        case 0:
+                            // handle zero order
+                            // Ca = Cao - kt
+                            break;
+                        case 1:
+                            // handle first order
+                            // Ca = Cao*exp(-kt)
+                            newConc[n] = this.conc[n - 1] * Math.exp(-this.rateConstant * tau);
+                            break;
+                        case 2:
+                            // handle second order
+                            // Ca = Cao/(1 + kt*Cao)
+                            break;
+                        case -1:
+                            // handle negative one order
+                            // Ca^2 = Cao^2 + 2kt
+                            const Cao2 = Math.pow(this.conc[n-1], 2);
+                            const term = Cao2 + 2 * this.rateConstant * tau;
+                            newConc[n] = Math.sqrt(Math.max(0, term)); // prevent negative under sqrt
+                            break;
+                        default:
+                            console.log('  DEFAULT in switch rxnOrder');
+                    } // END OF SWITCH for reaction order
+                } // END OF FOR LOOP down mixing cells
+                // second, update conc in each cell
+                for (let n = 1; n <= this.numCells; n++) {
+                    if (newConc[n] < 0) { newConc[n] = 0 }
+                    if (newConc[n] > inMIXEDconc) { newConc[n] = inMIXEDconc }
+                    this.conc[n] = newConc[n];
+                }
+                break;
+
 =============================== 
 NEED BUTTON TO CLEAR FLOWSHEET... 
 now that saving and loading cookie works well

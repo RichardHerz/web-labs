@@ -113,6 +113,21 @@ class PFR {
         // *IF* NOT used to check for SS *AND* another unit IS checked,
         // which can not be at SS, *THEN* return ssFlag = true to calling unit
         // HOWEVER, if this unit has UI inputs, need to be able to return false
+        //
+        // APPLY PFR SOLUTIONS AT STEADY STATE
+        //
+        // negative one order
+        // Ca^2 = Cao^2 + 2kt
+        //
+        // second order
+        // Ca = Cao/(1 + kt*Cao)
+        //
+        // first order
+        // Ca = Cao*exp(-kt)
+        //
+        // zero order
+        // Ca = Cao - kt
+        //
         let ssFlag = true;
         // this.ssCheckSum set != 0 on updateUIparams() execution
         if (this.ssCheckSum != 0) {
@@ -338,96 +353,28 @@ class PFR {
         }
 
         this.conc[0] = inMIXEDconc;
-
-        // SELECT WHICH MODEL WE WANT TO USE 
-        const rxrType = 'mixCells'; // 'purePFR' or 'mixCells'
-
-        switch (rxrType) {
-            case 'purePFR':
-                const tau = (this.volume/totalINflow) / this.numCells;
-                let newConc = new Array(this.numCells + 1).fill(0);
-
-                // the process below only does one cell-size shift of
-                // reactant down reactor and does this in time tau
-                // we need numCells of those shifts to get reactant 
-                // entering to reach end of reactor
-                // and that needs to happen such that
-                // elapsed simTime = numCells * tau = (this.volume/totalINflow) 
-                // Now, in one call from controller to this updateState
-                // sim time changes by simTimeStep
-                // so how many calls or (internal repeats in one call)
-                // lets say vol/flow >> simTimeStep
-                // numCalls * simTimeStep = (vol/flow)
-                // numCalls = (vol/flow) / simTimeStep
-                // let's say vol = 100, flow = 1, simTimeStep = 1
-                // is numCalls = (100/1) / 1 = 100 
-                // but numCalls must equal numCells
-                // so numCells = (vol/flow) / simTimeStep 
-                // so simTimeStep = (vol/flow) / numCells
-                // for numCells = 40, vol = 100, flow = 1
-                // simTimeStep = 100/40 = 2.5 
-                // BUT VOL AND FLOW CAN CHANGE DURING A SIM !! 
-                // SO SEEMS IMPOSSIBLE TO MAKE THIS WORK... 
-                // MAYBE JUST USE MIX CELL APPROACH & APPLY
-                // DECAY TOWARD CURRENT ANALYTICAL STEADY STATE
-
-                // first, compute new conc for each cell
-                for (let n = 1; n <= this.numCells; n++) {
-                    switch (this.rxnOrder) {
-                        case 0:
-                            // handle zero order
-                            // Ca = Cao - kt
-                            break;
-                        case 1:
-                            // handle first order
-                            // Ca = Cao*exp(-kt)
-                            newConc[n] = this.conc[n - 1] * Math.exp(-this.rateConstant * tau);
-                            break;
-                        case 2:
-                            // handle second order
-                            // Ca = Cao/(1 + kt*Cao)
-                            break;
-                        case -1:
-                            // handle negative one order
-                            // Ca^2 = Cao^2 + 2kt
-                            const Cao2 = Math.pow(this.conc[n-1], 2);
-                            const term = Cao2 + 2 * this.rateConstant * tau;
-                            newConc[n] = Math.sqrt(Math.max(0, term)); // prevent negative under sqrt
-                            break;
-                        default:
-                            console.log('  DEFAULT in switch rxnOrder');
-                    } // END OF SWITCH for reaction order
-                } // END OF FOR LOOP down mixing cells
-                // second, update conc in each cell
-                for (let n = 1; n <= this.numCells; n++) {
-                    if (newConc[n] < 0) { newConc[n] = 0 }
-                    if (newConc[n] > inMIXEDconc) { newConc[n] = inMIXEDconc }
-                    this.conc[n] = newConc[n];
+        const flowFac = totalINflow / (this.volume / this.numCells);
+        let dcdt = new Array(this.numCells + 1).fill(0);
+        // repeat for unitStepRepeats each time down mixing cells
+        for (let uts = 0; uts < this.unitStepRepeats; uts++) {
+            // first, compute rate of change in each cell
+            for (let n = 1; n <= this.numCells; n++) {
+                if (this.conc[n] > 0) {
+                    dcdt[n] = flowFac * (this.conc[n - 1] - this.conc[n])
+                        - this.rateConstant * this.conc[n] ** this.rxnOrder;
+                } else {
+                    dcdt[n] = flowFac * (this.conc[n - 1] - this.conc[n]);
                 }
-                break;
-            case 'mixCells':
-                const flowFac = totalINflow / (this.volume / this.numCells);
-                let dcdt = new Array(this.numCells + 1).fill(0);
-                // repeat for unitStepRepeats each time down mixing cells
-                for (let uts = 0; uts < this.unitStepRepeats; uts++) {
-                    // first, compute rate of change in each cell
-                    for (let n = 1; n <= this.numCells; n++) {
-                        dcdt[n] = flowFac * (this.conc[n - 1] - this.conc[n])
-                            - this.rateConstant * this.conc[n] ** this.rxnOrder;
-                    }
-                    // second, update conc in each cell
-                    for (let n = 1; n <= this.numCells; n++) {
-                        this.conc[n] = this.conc[n] + dcdt[n] * this.unitTimeStep;
-                        // keep conc in bounds
-                        if (this.conc[n] < 0) { this.conc[n] = 0 }
-                        if (this.conc[n] > inMIXEDconc) { this.conc[n] = inMIXEDconc }
-                    }
-                } // END FOR LOOP step unit time step uts
-                break;
-            default:
-                console.log('  DEFAULT in switch rxrType');
-        } // END OF SWITCH for reactor type
-
+            }
+            // second, update conc in each cell
+            for (let n = 1; n <= this.numCells; n++) {
+                this.conc[n] = this.conc[n] + dcdt[n] * this.unitTimeStep;
+                // keep conc in bounds
+                if (this.conc[n] < 0) { this.conc[n] = 0 }
+                if (this.conc[n] > inMIXEDconc) { this.conc[n] = inMIXEDconc }
+            }
+        } // END FOR LOOP step unit time step uts
+    
         const cnew = this.conc[this.numCells];
 
         console.log('  cnew = ' + cnew);

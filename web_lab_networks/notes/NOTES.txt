@@ -1,6 +1,22 @@
 ===============================  
 remember RL method of adding to numerical dynamics 
 exponential decay to analyical steady state 
+or just wait after change in settings until unit
+gets to its own SS and then just apply these... 
+
+// PFR ANALYTICAL SOLUTIONS 
+//
+// handle negative one order
+// Ca^2 = Cao^2 + 2kt
+//
+// handle second order
+// Ca = Cao/(1 + kt*Cao)
+//
+// handle first order
+// Ca = Cao*exp(-kt)
+//
+// handle zero order
+// Ca = Cao - kt
 
 =============================== 
 OLD PFR UPDATE 

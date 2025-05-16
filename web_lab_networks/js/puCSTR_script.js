@@ -359,17 +359,11 @@ class CSTR {
         }
 
         let dcdt = 0;
-        if (this.rxnOrder >= 0) {
+        if (out1conc > 0) {
             dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc)
                 - this.rateConstant * out1conc**this.rxnOrder;
         } else {
-            // negative order 
-            if (out1conc > 0) {
-                dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc)
-                    - this.rateConstant * out1conc**this.rxnOrder;
-            } else {
-                dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc);
-            }
+            dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc);
         }
 
         // console.log(`  CHECK totalINflow = ${totalINflow}`);

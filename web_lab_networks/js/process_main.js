@@ -273,7 +273,7 @@ function sceneDivClicked(event) {
         unitID = 'feed_' + unitCount;
         unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        params = [10, 10]; // default flowrate, concentration
+        params = [1, 10]; // default flowrate, concentration
         processUnits.push(new Feed(unitCount, unitID, x, y, params) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
@@ -284,7 +284,7 @@ function sceneDivClicked(event) {
         unitID = 'cstr_' + unitCount;
         unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        params = [0, 100, 1]; // default rate constant, volume != 0, order = 1 or 2
+        params = [0.01, 100, 1]; // default rate constant, volume != 0, order = 1 or 2
         processUnits.push(new CSTR(unitCount, unitID, x, y, params) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;
@@ -295,7 +295,7 @@ function sceneDivClicked(event) {
         unitID = 'pfr_' + unitCount;
         unitList.push(unitID); // used in unit update functions
         // add an object to processUnits[] for this new unit
-        params = [0, 100, 1]; // default rate constant, volume != 0, order = 1 or 2
+        params = [0.01, 100, 1]; // default rate constant, volume != 0, order = 1 or 2
         processUnits.push(new PFR(unitCount, unitID, x, y, params) );
         console.log('add new unit to processUnits[], unitCount = ' + unitCount);
         break;

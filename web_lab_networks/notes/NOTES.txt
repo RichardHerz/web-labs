@@ -1,7 +1,7 @@
 ===============================
 PFR - some tests 
-300 cells, 10 unit step repeats, simTimeStep = 1,
-simStepRepeats = 1 
+300 cells, 10 unit step repeats, 
+simTimeStep = 1, simStepRepeats = 1 
 feed conc = 10
 RESIDENCE TIME with k = 0
 V = 100, f = 1, c = 5.12 at t=100

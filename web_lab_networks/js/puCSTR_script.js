@@ -42,7 +42,7 @@ class CSTR {
         // console.log('construct CSTR, this params = '+ this.params);
 
         // timing parameters
-        this.unitStepRepeats = 10;
+        this.unitStepRepeats = 1;
         this.unitTimeStep = simParams.simTimeStep/this.unitStepRepeats;
         this.residenceTime = 1; // XXX TEMPORARY, required, used for checkForSteadyState
 
@@ -359,11 +359,18 @@ class CSTR {
         }
 
         let dcdt = 0;
-        if (out1conc > 0) {
-            dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc)
-                - this.rateConstant * out1conc**this.rxnOrder;
-        } else {
-            dcdt = (totalINflow / this.volume) * (inMIXEDconc - out1conc);
+        let invTau = (totalINflow / this.volume);
+        let cnew = 0;
+        for (let i = 0; i < this.unitStepRepeats; i++) {
+            if (out1conc > 0) {
+                dcdt = invTau * (inMIXEDconc - out1conc)
+                    - this.rateConstant * out1conc**this.rxnOrder;
+            } else {
+                dcdt = invTau * (inMIXEDconc - out1conc);
+            }
+            cnew = out1conc + dcdt * this.unitTimeStep;
+            if (cnew < 0) {cnew = 0;}
+            if (cnew > inMIXEDconc) {cnew = inMIXEDconc;}
         }
 
         // console.log(`  CHECK totalINflow = ${totalINflow}`);
@@ -376,10 +383,6 @@ class CSTR {
         // console.log(`  CHECK (totalINflow / vol) =  ${(totalINflow / this.volume)}` );
         // console.log(`  CHECK (inMIXEDconc - out1conc) =  ${(inMIXEDconc - out1conc)}` );
         // console.log(`  CHECK k * inMIXEDconc =  ${this.rateConstant * inMIXEDconc}` );
-
-        let cnew = out1conc + dcdt * this.unitTimeStep;
-        if (cnew < 0) {cnew = 0;}
-        if (cnew > inMIXEDconc) {cnew = inMIXEDconc;}
  
         console.log('  cnew = ' + cnew);
 

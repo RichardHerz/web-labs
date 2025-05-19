@@ -33,12 +33,18 @@ let simParams = {
   runLoggerURL : "../webAppRunLog.lc",
   runCurrrentRunCountURL : "../webAppCurrentCount.lc",
 
-  // all units use simParams.simTimeStep, getting it at each step in unit updateInputs()
+  // all units use simParams.simTimeStep, 
+  // getting it at each step in unit updateInputs()
+  // AND best to increase simStepRepeats  
+  // since unit repeats don't update unit inputs, whereas
+  // simStepRepeats do update inputs each step
 
   // WARNING: DO NOT CHANGE simTimeStep BETWEEN display updates
 
-  simStepRepeats : 10, // integer number of unit updates between display updates
-  simTimeStep : 0.1, // time step value, simulation time, of main repeat
+  simStepRepeats : 100, // integer number of unit updates between display updates
+  simTimeStep : 0.01, // time step value, simulation time, of main repeat
+  // the PRODUCT simStepRepeats*simTimeStep is the change in sim time
+  // at each display update
 
   // individual units may do more steps in one unit updateState()
   // see individual units for any unitTimeStep and unitStepRepeats

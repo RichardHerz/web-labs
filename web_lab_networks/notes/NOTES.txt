@@ -1,41 +1,78 @@
 ===============================
+remember RL method of adding to numerical dynamics 
+exponential decay to analyical steady state 
+*OR* just wait after change in settings until unit
+gets to its own SS and then just apply these... 
+
+===============================
+CSTR - some tests 
+unit step repeats = 1
+simStepRepeats = 100
+Vol = 100, flow =1, tau = 100
+Ca0 = 10
+SECOND ORDER
+Note: only one SS is positive real 
+  k = 0.1, analyt = 0.95, sim = 0.95
+  k = 0.005 analyt = 3.58, sim = 3.58
+  k = 0.001, analyt = 6.18, sim = 6.18
+FIRST ORDER 
+  k = 1, analyt = 0.10, sim = 0.10
+  k = 0.05, analyt = 1.67, sim = 1.67
+  k = 0.01, analyt = 5.00, sim = 5.0
+  k = 0.005, analyt = 6.67, sim = 6.67
+ZERO ORDER 
+  k = 0.005, analyt = 9.5, sim = 9.5
+  k = 0.05, analyt = 5.00, sim = 5.0
+  k = 0.08, analyt = 2.00, sim = 2.0
+NEGATIVE ONE ORDER 
+Note: the low SS appear unstable
+  k = 0.08, analyt = 9.12 & 0.88, sim = 9.12 & zero
+  k = 0.1, analyt = 8.88 & ,1.13, sim = 8.87 & zero
+  k = 0.2, analyt = 7.24 & 2.76, sim = 7.24 & zero
+
+===============================
+// CSTR ANALYTICAL SOLUTIONS AT STEADY STATE
+//
+// handle second order
+// Ca = (-1 +/- sqrt(1 - 4ktCa0))/2kt
+//
+// handle first order
+// Ca = Cao/(1+kt)
+//
+// handle zero order
+// Ca = Cao - kt
+//
+// handle negative one order
+// Ca = (Ca0 +/- sqrt(Cao^2 - 4kt))/2
+
+===============================
 PFR - some tests 
 300 cells, 10 unit step repeats, 
 simTimeStep = 1, simStepRepeats = 1 
 feed conc = 10
 RESIDENCE TIME with k = 0
 V = 100, f = 1, c = 5.12 at t=100
+>> V = 100, f = 1, c = 5.1 at t=100 FOR 100 simStepRepeats, 1 unit repeat
 V = 100, f=2, c=5.19 at t=50
 V = 100, f= 3, c = 3.3 at t=33, c=9.96 at t=35
 V = 200, f=1, c=5.1 at t=200
 ---
 BELOW, V = 100, feed flow = 1, tau = 100, feed conc = 10
 FIRST ORDER RXN AT SS 
-k = 0.01, c=3.68, analyt = 3.68
+  k = 0.01, c=3.68, analyt = 3.68
 SECOND ORDER
-k = 0.01, f=10, V=100, c=0.92, analyt = 0.91
+  k = 0.01, f=1, V=100, c=0.92, analyt = 0.91
+  >> k = 0.01, f=1, V=100, c=0.92, analyt = 0.91 FOR 100 simStepRepeats, 1 unit repeat
 ZERO ORDER
-k = 0.05
-c = 5, analyt = 5 
+  k = 0.05
+  c = 5, analyt = 5 
 NEGATIVE ONE ORDER 
-go to near c=1 out of rxr then set to -1 order
-and continue
-k = 0.1, c = 8.94, analyt = 8.94 
+  go to near c=10 out of rxr then set to -1 order
+  and continue
+  k = 0.1, c = 8.94, analyt = 8.94 
+  >> k = 0.1, c = 8.94, analyt = 8.94 FOR 100 simStepRepeats, 1 unit repeat
 =============================== 
-
-
-
-
-===============================
-remember RL method of adding to numerical dynamics 
-exponential decay to analyical steady state 
-or just wait after change in settings until unit
-gets to its own SS and then just apply these... 
-
 // PFR ANALYTICAL SOLUTIONS AT STEADY STATE
-//
-// handle negative one order
-// Ca^2 = Cao^2 - 2kt
 //
 // handle second order
 // Ca = Cao/(1 + kt*Cao)
@@ -45,6 +82,9 @@ gets to its own SS and then just apply these...
 //
 // handle zero order
 // Ca = Cao - kt
+//
+// handle negative one order
+// Ca^2 = Cao^2 - 2kt
 
 =============================== 
 OLD PFR UPDATE 

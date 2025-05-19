@@ -42,8 +42,12 @@ class CSTR {
         // console.log('construct CSTR, this params = '+ this.params);
 
         // timing parameters
-        this.unitStepRepeats = 10;
+        // best to increase simStepRepeats in process sim params 
+        // since unit repeats don't update unit inputs, whereas
+        // simStepRepeats do update inputs each step
+        this.unitStepRepeats = 1;
         this.unitTimeStep = simParams.simTimeStep/this.unitStepRepeats;
+
         this.residenceTime = 1; // XXX TEMPORARY, required, used for checkForSteadyState
 
         console.log('  this class unitID = ' + this.unitID);

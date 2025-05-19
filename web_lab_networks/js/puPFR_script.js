@@ -41,7 +41,7 @@ class PFR {
         console.log('construct PFR, this rxnOrder = ' + this.rxnOrder);
         console.log('construct PFR, this params = ' + this.params);
 
-        this.numCells = 300;
+        this.numCells = 200;
         // XXX WARNING: as the above 3 params and flowrate change 
         //     the time step to prevent numerical 
         //     oscillation changes 
@@ -354,14 +354,15 @@ class PFR {
 
         this.conc[0] = inMIXEDconc;
         const flowFac = totalINflow / (this.volume / this.numCells);
+        // const flowFac = totalINflow / this.volume;
         let dcdt = new Array(this.numCells + 1).fill(0);
         // repeat for unitStepRepeats each time down mixing cells
-        for (let uts = 0; uts < this.unitStepRepeats; uts++) {
+        for (let i = 0; i < this.unitStepRepeats; i++) {
             // first, compute rate of change in each cell
             for (let n = 1; n <= this.numCells; n++) {
                 if (this.conc[n] > 0) {
                     dcdt[n] = flowFac * (this.conc[n - 1] - this.conc[n])
-                        - this.rateConstant * this.conc[n] ** this.rxnOrder;
+                        - this.rateConstant * this.conc[n]**this.rxnOrder;
                 } else {
                     dcdt[n] = flowFac * (this.conc[n - 1] - this.conc[n]);
                 }
@@ -373,7 +374,7 @@ class PFR {
                 if (this.conc[n] < 0) { this.conc[n] = 0 }
                 if (this.conc[n] > inMIXEDconc) { this.conc[n] = inMIXEDconc }
             }
-        } // END FOR LOOP step unit time step uts
+        } // END FOR LOOP unitStepRepeats
     
         const cnew = this.conc[this.numCells];
 

@@ -81,6 +81,7 @@
   position: absolute;
   top: 47px;
   left: 2px;
+  z-index: 1; /* to be above reactor image at zero */
 }
 
 .portIN {

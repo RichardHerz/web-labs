@@ -4,6 +4,18 @@
   height: 60px;
   background-color: lightseagreen;
   border: solid 1px;
+  /* with z-index = 1, image @ 0 only shows outside this div */
+  z-index: 1; /* to be above reactor image at zero */
+}
+
+.cstr_img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 0; /* so reactor image is below others at one */
+  /* visibility: hidden; */
+  pointer-events: none; /* allows clicks to pass through to elements above */
 }
 
 /* cstr input one as square */
@@ -37,6 +49,7 @@
   position: absolute;
   left: 0px;
   top: 2px;
+  z-index: 1; /* to be above reactor image at zero */
 }
 
 /* cstr input two as trapezoid */
@@ -49,6 +62,7 @@
   position: absolute;
   top: 25px;
   left: 0px;
+  z-index: 1; /* to be above reactor image at zero */
 }
 
 /* cstr output one as circle */
@@ -73,6 +87,7 @@
   position: absolute;
   top: 14px;
   left: 76px;
+  z-index: 1; /* to be above reactor image at zero */
 }
 
 .cstr_info {
@@ -88,6 +103,7 @@
   align-items: center;
   font-size: 12px;
   color: black;
+  z-index: 1; /* to be above reactor image at zero */
 }
 
 .cstr_type {
@@ -101,6 +117,7 @@
   justify-content: center;
   align-items: center;
   font-size: 10px;
+  z-index: 1; /* to be above reactor image at zero */
 }
 
 .cstr_num {
@@ -114,4 +131,5 @@
   justify-content: center;
   align-items: center;
   font-size: 10px;
+  z-index: 1; /* to be above reactor image at zero */
 }

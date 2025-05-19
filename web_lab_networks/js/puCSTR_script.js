@@ -42,7 +42,7 @@ class CSTR {
         // console.log('construct CSTR, this params = '+ this.params);
 
         // timing parameters
-        this.unitStepRepeats = 1;
+        this.unitStepRepeats = 10;
         this.unitTimeStep = simParams.simTimeStep/this.unitStepRepeats;
         this.residenceTime = 1; // XXX TEMPORARY, required, used for checkForSteadyState
 
@@ -333,7 +333,8 @@ class CSTR {
         const in1conc = this.portData.inputs.one.concentration;
         const in2flow = this.portData.inputs.two.flowrate;
         const in2conc = this.portData.inputs.two.concentration;
-        const out1conc = this.portData.outputs.one.concentration;
+        // out1conc is adjusted below
+        let out1conc = this.portData.outputs.one.concentration;
 
         // console.log('  in1flow = ' + in1flow);
         // console.log('  in1conc = ' + in1conc);
@@ -360,7 +361,6 @@ class CSTR {
 
         let dcdt = 0;
         let invTau = (totalINflow / this.volume);
-        let cnew = 0;
         for (let i = 0; i < this.unitStepRepeats; i++) {
             if (out1conc > 0) {
                 dcdt = invTau * (inMIXEDconc - out1conc)
@@ -368,9 +368,9 @@ class CSTR {
             } else {
                 dcdt = invTau * (inMIXEDconc - out1conc);
             }
-            cnew = out1conc + dcdt * this.unitTimeStep;
-            if (cnew < 0) {cnew = 0;}
-            if (cnew > inMIXEDconc) {cnew = inMIXEDconc;}
+            out1conc = out1conc + dcdt * this.unitTimeStep;
+            if (out1conc < 0) {out1conc = 0;}
+            if (out1conc > inMIXEDconc) {out1conc = inMIXEDconc;}
         }
 
         // console.log(`  CHECK totalINflow = ${totalINflow}`);
@@ -384,9 +384,9 @@ class CSTR {
         // console.log(`  CHECK (inMIXEDconc - out1conc) =  ${(inMIXEDconc - out1conc)}` );
         // console.log(`  CHECK k * inMIXEDconc =  ${this.rateConstant * inMIXEDconc}` );
  
-        console.log('  cnew = ' + cnew);
+        console.log('  out1conc = ' + out1conc);
 
-        this.portData.outputs.one.concentration = cnew;
+        this.portData.outputs.one.concentration = out1conc;
         console.log('  this.portData.outputs.one.concentration = ' +
             this.portData.outputs.one.concentration);
 
@@ -399,7 +399,7 @@ class CSTR {
         // want to update innerHTML text displayed in div id="cstr_info_${zz}"
         const el = document.getElementById('cstr_info_' + this.unitCount);
 
-        const thisConc = cnew;
+        const thisConc = out1conc;
         const thisFlow = totalINflow;
 
         console.log('  CSTR thisConc = ' + thisConc);

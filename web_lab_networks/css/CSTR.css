@@ -10,9 +10,10 @@
 
 .cstr_img {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  top: -10px;
+  left: -6px;
+  width: 110%;
+  height: 128%;
   z-index: 0; /* so reactor image is below others at one */
   /* visibility: hidden; */
   pointer-events: none; /* allows clicks to pass through to elements above */

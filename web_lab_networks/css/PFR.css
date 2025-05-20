@@ -6,6 +6,17 @@
   border: solid 1px;
 }
 
+.pfr_img {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  height: 115%;
+  width: 110%;
+  z-index: 0; /* so reactor image is below others at one */
+  /* visibility: hidden; */
+  pointer-events: none; /* allows clicks to pass through to elements above */
+}
+
 /* pfr input one as trapezoid */
 /* https://css-tricks.com/the-shapes-of-css/ */
 .pfr_input_one {
@@ -17,6 +28,7 @@
   position: absolute;
   left: 0px;
   top: 14px;
+  z-index: 1; /* to be above reactor image at zero */
 }
 
 /* pfr output one as triangle */
@@ -30,6 +42,7 @@
   position: absolute;
   top: 14px;
   left: 76px;
+  z-index: 1; /* to be above reactor image at zero */
 }
 
 .pfr_info {
@@ -45,6 +58,7 @@
   align-items: center;
   font-size: 12px;
   color: black;
+  z-index: 1; /* to be above reactor image at zero */
 }
 
 .pfr_type {
@@ -58,6 +72,7 @@
   justify-content: center;
   align-items: center;
   font-size: 10px;
+  z-index: 1; /* to be above reactor image at zero */
 }
 
 .pfr_num {
@@ -71,4 +86,5 @@
   justify-content: center;
   align-items: center;
   font-size: 10px;
+  z-index: 1; /* to be above reactor image at zero */
 }

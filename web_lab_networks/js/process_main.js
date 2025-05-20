@@ -192,7 +192,7 @@ function buildPalette() {
   // function buildFeed is also used for all scene objects
   const tU = 0; 
   //---------------------- 
-  el.innerHTML += buildFeed(tU, sepX, sepY);
+  el.innerHTML += buildFeed(tU, sepX, sepY-3);
   //---------------------- 
   el.innerHTML += buildCSTR(tU, sepX, sepY+(sepY+objY));
   //---------------------- 

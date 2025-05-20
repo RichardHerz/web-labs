@@ -38,7 +38,7 @@ function buildCSTR(zz,x,y) {
                 <div id="cstr_type_${zz}" class="cstr_type">CSTR</div>
                 <div id="cstr_num_${zz}" class="cstr_num">0</div>
                 <button id="cstr_btn_one_${zz}" class="param_btn"></button>
-                <img id="cstr_img_${zz}" class="cstr_img" src="images/CSTR_0.jpg" alt="CSTR">
+                <img id="cstr_img_${zz}" class="cstr_img" src="images/CSTR_01.jpg" alt="CSTR">
             </div>
         `; // END buildText << NOTE BACK-TICK BEFORE SEMICOLON  
     } else {
@@ -61,7 +61,7 @@ function buildCSTR(zz,x,y) {
                 <button title="view, edit params" id="cstr_btn_one_${zz}" class="param_btn" 
                     onclick="param_btn_clicked(event, ${zz})">
                 </button>
-               <img id="cstr_img_${zz}" class="cstr_img" src="images/CSTR_0.jpg" alt="CSTR">
+               <img id="cstr_img_${zz}" class="cstr_img" src="images/CSTR_01.jpg" alt="CSTR">
              </div>
         `; // END buildText << NOTE BACK-TICK BEFORE SEMICOLON  
     }

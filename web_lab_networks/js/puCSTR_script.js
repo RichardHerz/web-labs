@@ -48,8 +48,6 @@ class CSTR {
         this.unitStepRepeats = 1;
         this.unitTimeStep = simParams.simTimeStep/this.unitStepRepeats;
 
-        this.residenceTime = 1; // XXX TEMPORARY, required, used for checkForSteadyState
-
         console.log('  this class unitID = ' + this.unitID);
         const fieldID = "cstr_num_" + this.unitCount;
         console.log('  fieldID = ' + fieldID);
@@ -73,11 +71,15 @@ class CSTR {
             },
             outputs: {
                 one: {
-                    flowrate: 0,
+                    flowrate: 1, // so no divide by zero for residenceTime
                     concentration: 0
                 }
             }
         };
+
+        // params for steady state checks
+        this.ssCheckSum = 1;
+        this.residenceTime = this.volume / this.portData.outputs.one.flowrate;
 
        this.reset();
     } // END OF FUNCTION constructor 
@@ -95,7 +97,8 @@ class CSTR {
         this.portData.inputs.two.concentration = 0;
         this.portData.inputs.two.flowrate = 0;
         this.portData.outputs.one.concentration = 0;
-        this.portData.outputs.one.flowrate = 0;
+        // out flow != 0 so no divide by zero for residenceTime
+        this.portData.outputs.one.flowrate = 1;
         const el = document.getElementById('cstr_info_' + this.unitCount);
         el.innerHTML = `c = 0<br>f = 0`;
     } // END OF FUNCTION reset 
@@ -110,37 +113,42 @@ class CSTR {
     } // END OF FUNCTION updateDisplay 
 
     checkForSteadyState() {
-        // console.log(`enter class ${this.unitID} checkForSteadyState method`);
-        // required - called by controller object
-        // returns ssFlag, true if this unit at SS, false if not
-        // *IF* NOT used to check for SS *AND* another unit IS checked,
-        // which can not be at SS, *THEN* return ssFlag = true to calling unit
-        // HOWEVER, if this unit has UI inputs, need to be able to return false
-        let ssFlag = true;
-        // this.ssCheckSum set != 0 on updateUIparams() execution
-        if (this.ssCheckSum != 0) {
-            ssFlag = false;
-        }
-        this.ssCheckSum = 0;
-        ssFlag = false; // XXX TEMPORARY FOR DEVELOPMENT
-        return ssFlag;
-    } // END OF FUNCTION checkForSteadyState 
-
-    setParameters(pRateConstant, pVolume, pRxnOrder) {
-        // this function called by modal popup script in popup.js
-        console.log('enter CSTR SETPARAMS, k, vol, order = ' + pRateConstant + ', ' + pVolume+ ', ' + pRxnOrder);
-        this.rateConstant = pRateConstant;
-        this.volume = pVolume;
-        this.rxnOrder = pRxnOrder;
-        // params array used for flowsheet export/import
-        this.params[0] = pRateConstant;
-        this.params[1] = pVolume;
-        this.params[2] = pRxnOrder;
-        console.log('end CSTR SETPARAMS, this.params = ' + this.params);
- 
-    }
+    // required - called by controller object
+    // *IF* NOT used to check for SS *AND* another unit IS checked,
+    // which can not be at SS, *THEN* return ssFlag = true to calling unit
+    // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    // multiply all numbers by a factor to get desired number significant
+    // figures to left decimal point so toFixed() does not return string "0.###"
+    // WARNING: too many sig figs will prevent detecting steady state
+    //
+    let ss1 = 1.0e1 * this.portData.inputs.one.concentration;
+    let ss2 = 1.0e1 * this.portData.inputs.two.concentration;
+    let ss3 = 1.0e2 * this.portData.outputs.one.concentration;
+    let ss4 = 1.0e1 * this.portData.outputs.one.flowrate;
+    ss1 = ss1.toFixed(0); // string
+    ss2 = ss2.toFixed(0);
+    ss3 = ss3.toFixed(0);
+    ss4 = ss4.toFixed(0);
+    // concatenate strings
+    let newCheckSum = ss1 +'.'+ ss2 +'.'+ ss3  +'.'+ ss4;
+    let oldSScheckSum = this.ssCheckSum;
+    // console.log('OLD CHECKSUM = ' + oldSScheckSum);
+    // console.log('NEW CHECKSUM = ' + newCheckSum);
+    let ssFlag = false;
+    if (newCheckSum == oldSScheckSum) {ssFlag = true;}
+    this.ssCheckSum = newCheckSum; // save current value for use next time
+    return ssFlag;
+  } // END checkForSteadyState method
 
     param_btn_clicked() {
+        // this calls modal popup, when that finishes, it calls setParameters
         console.log('enter param_btn_clicked');
         console.log('cstr_btn_one_clicked');
         console.log('  display modal dialog to get params');
@@ -189,7 +197,30 @@ class CSTR {
             console.log('label not found by ID');
         }
 
-    } // END OF FUNCTION cstr_btn_one_clicked
+    } // END OF FUNCTION param_btn_clicked
+
+    // param_btn_clicked puts up modal popup for changing params 
+    // when model popup finishes, setParameters is called
+
+    setParameters(pRateConstant, pVolume, pRxnOrder) {
+        // this function called by modal popup script in popup.js
+        console.log('enter CSTR SETPARAMS, k, vol, order = ' + pRateConstant + ', ' + pVolume+ ', ' + pRxnOrder);
+        this.rateConstant = pRateConstant;
+        this.volume = pVolume;
+        this.rxnOrder = pRxnOrder;
+        // params array used for flowsheet export/import
+        this.params[0] = pRateConstant;
+        this.params[1] = pVolume;
+        this.params[2] = pRxnOrder;
+        console.log('end CSTR SETPARAMS, this.params = ' + this.params);
+ 
+        // params for steady state checks
+        this.ssCheckSum = 1;
+        const flowout = this.portData.outputs.one.flowrate;
+        if (flowout == 0) {flowout = 1;} 
+        this.residenceTime = this.volume / flowout;
+
+    } // END OF FUNCTION setParameters 
 
     reportInputStatus() {
         // console.log('---- enter reportInputStatus in CSTR ----');
@@ -362,6 +393,10 @@ class CSTR {
         if (this.volume == 0) {
             console.log('ERROR cstr volume = 0 will get div by zero');
         }
+
+        // params for steady state checks
+        if (totalINflow == 0) {totalINflow = 1;} 
+        this.residenceTime = this.volume / totalINflow;
 
         let dcdt = 0;
         let invTau = (totalINflow / this.volume);

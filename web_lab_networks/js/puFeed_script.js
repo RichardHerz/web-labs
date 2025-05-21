@@ -98,7 +98,7 @@ class Feed {
             ssFlag = false;
         }
         this.ssCheckSum = 0;
-        ssFlag = false; // XXX TEMPORARY FOR DEVELOPMENT
+        ssFlag = true; // SET TO TRUE BECAUSE CSTR & PFR CHECKING FOR SS
         return ssFlag;
     } // END OF FUNCTION checkForSteadyState  
 

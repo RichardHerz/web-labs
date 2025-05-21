@@ -82,7 +82,11 @@ class PFR {
             }
         };
 
-        this.reset();
+       // params for steady state checks
+        this.ssCheckSum = 1;
+        this.residenceTime = this.volume / this.portData.outputs.one.flowrate;
+
+       this.reset();
     } // END OF FUNCTION constructor 
 
     initialize() {
@@ -97,7 +101,8 @@ class PFR {
         this.portData.inputs.one.flowrate = 0;
         this.conc = new Array(this.numCells + 1).fill(0);
         this.portData.outputs.one.concentration = 0;
-        this.portData.outputs.one.flowrate = 0;
+         // out flow != 0 so no divide by zero for residenceTime
+        this.portData.outputs.one.flowrate = 1;
         const el = document.getElementById('pfr_info_' + this.unitCount);
         el.innerHTML = 'c = 0<br>f = 0';
     } // END OF FUNCTION reset 
@@ -110,37 +115,42 @@ class PFR {
         // console.log(`enter class ${this.unitID} updateDisplay method`);
     } // END OF FUNCTION updateDisplay 
 
-    checkForSteadyState() {
-        // console.log(`enter class ${this.unitID} checkForSteadyState method`);
-        // required - called by controller object
-        // returns ssFlag, true if this unit at SS, false if not
-        // *IF* NOT used to check for SS *AND* another unit IS checked,
-        // which can not be at SS, *THEN* return ssFlag = true to calling unit
-        // HOWEVER, if this unit has UI inputs, need to be able to return false
-        //
-        // APPLY PFR SOLUTIONS AT STEADY STATE
-        //
-        // negative one order
-        // Ca^2 = Cao^2 - 2kt
-        //
-        // second order
-        // Ca = Cao/(1 + kt*Cao)
-        //
-        // first order
-        // Ca = Cao*exp(-kt)
-        //
-        // zero order
-        // Ca = Cao - kt
-        //
-        let ssFlag = true;
-        // this.ssCheckSum set != 0 on updateUIparams() execution
-        if (this.ssCheckSum != 0) {
-            ssFlag = false;
-        }
-        this.ssCheckSum = 0;
-        ssFlag = false; // XXX TEMPORARY FOR DEVELOPMENT
-        return ssFlag;
-    } // END OF FUNCTION checkForSteadyState  
+     checkForSteadyState() {
+    // required - called by controller object
+    // *IF* NOT used to check for SS *AND* another unit IS checked,
+    // which can not be at SS, *THEN* return ssFlag = true to calling unit
+    // returns ssFlag, true if this unit at SS, false if not
+    // uses and sets this.ssCheckSum
+    // this.ssCheckSum can be set by reset() and updateUIparams()
+    // check for SS in order to save CPU time when sim is at steady state
+    // check for SS by checking for any significant change in array end values
+    // but wait at least one residence time after the previous check
+    // to allow changes to propagate down unit
+    //
+    // multiply all numbers by a factor to get desired number significant
+    // figures to left decimal point so toFixed() does not return string "0.###"
+    // WARNING: too many sig figs will prevent detecting steady state
+    //
+    let ss1 = 1.0e2 * this.conc[1];
+    let ss2 = 1.0e2 * this.conc[2];
+    let ss3 = 1.0e2 * this.conc[this.numCells];
+    let ss4 = 1.0e2 * this.conc[this.numCells-1];
+    let ss5 = 1.0e1 * this.portData.outputs.one.flowrate;
+    ss1 = ss1.toFixed(0); // string
+    ss2 = ss2.toFixed(0);
+    ss3 = ss3.toFixed(0);
+    ss4 = ss4.toFixed(0);
+    ss5 = ss5.toFixed(0);
+    // concatenate strings
+    let newCheckSum = ss1 +'.'+ ss2 +'.'+ ss3 +'.'+ ss4 +'.'+ ss5;
+    let oldSScheckSum = this.ssCheckSum;
+    // console.log('OLD CHECKSUM = ' + oldSScheckSum);
+    // console.log('NEW CHECKSUM = ' + newCheckSum);
+    let ssFlag = false;
+    if (newCheckSum == oldSScheckSum) {ssFlag = true;}
+    this.ssCheckSum = newCheckSum; // save current value for use next time
+    return ssFlag;
+  } // END checkForSteadyState method
 
     setParameters(pRateConstant, pVolume, pRxnOrder) {
         // this function called by modal popup script in popup.js
@@ -152,6 +162,12 @@ class PFR {
         this.params[0] = pRateConstant;
         this.params[1] = pVolume;
         this.params[2] = pRxnOrder;
+
+        // params for steady state checks
+        this.ssCheckSum = 1;
+        const flowout = this.portData.outputs.one.flowrate;
+        if (flowout == 0) {flowout = 1;} 
+        this.residenceTime = this.volume / flowout;
     }
 
     param_btn_clicked() {
@@ -355,6 +371,10 @@ class PFR {
         if (this.volume == 0) {
             console.log('ERROR pfr volume = 0 will get div by zero');
         }
+
+        // params for steady state checks
+        if (totalINflow == 0) {totalINflow = 1;} 
+        this.residenceTime = this.volume / totalINflow;
 
         this.conc[0] = inMIXEDconc;
         const flowFac = totalINflow / (this.volume / this.numCells);

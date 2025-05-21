@@ -91,11 +91,11 @@ class Mixer {
     } // END OF FUNCTION reset 
 
     updateUIparams() {
-        console.log(`enter class ${this.unitID} updateUIparams method`);
+        // console.log(`enter class ${this.unitID} updateUIparams method`);
     } // END OF FUNCTION updateUIparams 
 
     updateDisplay() {
-        console.log(`enter class ${this.unitID} updateDisplay method`);
+        // console.log(`enter class ${this.unitID} updateDisplay method`);
     } // END OF FUNCTION updateDisplay 
 
     checkForSteadyState() {

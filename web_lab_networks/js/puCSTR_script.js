@@ -148,6 +148,13 @@ class CSTR {
   } // END checkForSteadyState method
 
     param_btn_clicked() {
+
+        const el = document.getElementById('button_runButton');
+        if (el.value == 'Pause') {
+            // sim is running
+            interfacer.runThisLab(); // pauses sim
+        }
+
         // this calls modal popup, when that finishes, it calls setParameters
         console.log('enter param_btn_clicked');
         console.log('cstr_btn_one_clicked');

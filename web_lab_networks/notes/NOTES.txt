@@ -1,4 +1,13 @@
 ===============================
+Have gotten SS check working for PFR & CSTR 
+- when unit check says SS, set outputs to analytical SS values
+
+I pause sim when modal popup for params 
+displays - do not restart on close of so 
+user can see what time change was made
+
+
+===============================
 remember RL method of adding to numerical dynamics 
 exponential decay to analyical steady state 
 *OR* just wait after change in settings until unit
@@ -85,6 +94,7 @@ NEGATIVE ONE ORDER
 //
 // handle negative one order
 // Ca^2 = Cao^2 - 2kt
+//   Ca = sqrt(Cao^2 - 2kt) 
 
 =============================== 
 OLD PFR UPDATE 

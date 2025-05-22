@@ -171,6 +171,13 @@ class PFR {
     }
 
     param_btn_clicked() {
+ 
+        const el = document.getElementById('button_runButton');
+        if (el.value == 'Pause') {
+            // sim is running
+            interfacer.runThisLab(); // pauses sim
+        }
+
         console.log('pfr_btn_one_clicked');
         console.log('  display modal dialog to get params');
 

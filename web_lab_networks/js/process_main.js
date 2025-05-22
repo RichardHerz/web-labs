@@ -184,23 +184,23 @@ function buildPalette() {
   console.log('enter buildPalette()');
   let el = document.getElementById("div_palette");
   // currently, each palette object is 60px high with 10px separation
-  const objY = 60; // height of each object in palette
-  const sepY = 10; // vertical separation between objects 
+  const objY = 70; // height of each object in palette
+  const sepY = 6; // vertical separation between objects 
   const sepX = 16; // left margin of objects in palette 
   // unit count tU for palette object is zero and 
   // must be specified in function argument because
   // function buildFeed is also used for all scene objects
   const tU = 0; 
   //---------------------- 
-  el.innerHTML += buildFeed(tU, sepX, sepY-3);
+  el.innerHTML += buildFeed(tU, sepX, sepY);
   //---------------------- 
-  el.innerHTML += buildCSTR(tU, sepX, sepY+(sepY+objY));
+  el.innerHTML += buildCSTR(tU, sepX, 14+sepY+(sepY+objY));
   //---------------------- 
-  el.innerHTML += buildPFR(tU, sepX, sepY+2*(sepY+objY));
+  el.innerHTML += buildPFR(tU, sepX, 14+sepY+2*(sepY+objY));
   //---------------------- 
-  el.innerHTML += buildMixer(tU, sepX, sepY+3*(sepY+objY));
+  el.innerHTML += buildMixer(tU, sepX, 14+sepY+3*(sepY+objY));
   //---------------------- 
-  el.innerHTML += buildSplitter(tU, sepX, sepY+4*(sepY+objY));
+  el.innerHTML += buildSplitter(tU, sepX, 6+sepY+4*(sepY+objY));
   //---------------------- 
   el.innerHTML += buildTank(tU, sepX, sepY+5*(sepY+objY));
   //---------------------- 

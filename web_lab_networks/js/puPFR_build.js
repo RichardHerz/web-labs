@@ -37,7 +37,7 @@ function buildPFR(zz,x,y) {
                 <div id="pfr_type_${zz}" class="pfr_type">PFR</div>
                 <div id="pfr_num_${zz}" class="pfr_num">0</div>
                 <button id="pfr_btn_one_${zz}" class="param_btn"></button>
-                <img id="pfr_img_${zz}" class="pfr_img" src="images/PFR_01.jpg" alt="CSTR">
+                <img id="pfr_img_${zz}" class="pfr_img" src="images/PFR_02.png" alt="PFR">
             </div>
         `; // END buildText << NOTE BACK-TICK BEFORE SEMICOLON  
     } else {
@@ -57,7 +57,7 @@ function buildPFR(zz,x,y) {
                 <button title="view, edit params" id="pfr_btn_one_${zz}" class="param_btn" 
                     onclick="param_btn_clicked(event, ${zz})">
                 </button>
-               <img id="pfr_img_${zz}" class="pfr_img" src="images/PFR_01.jpg" alt="CSTR">
+               <img id="pfr_img_${zz}" class="pfr_img" src="images/PFR_02.png" alt="PFR">
              </div>
         `; // END buildText << NOTE BACK-TICK BEFORE SEMICOLON  
     }

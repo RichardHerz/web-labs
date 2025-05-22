@@ -96,44 +96,41 @@
       Below on this page you can design a dynamic simulation of a network of PFRs and CSTRs.  
       The PFR is an isothermal Plug Flow Reactor with some axial dispersion, 
       and the CSTR is an isothermal Continuous flow Stirred Tank Reactor. 
-      See <a href="/resources/cre-notes/index.html" target="new">CRE Notes</a> for info.
-      This simulation was built with simple Javascript with no added libraries.
+      This was built with simple Javascript with no added libraries.
     </p>
     <p> 
-      This works with keyboards only: Hold down option/Alt key and click a unit in the palette 
-      on the left, 
+      This works with keyboards only: Hold down the option/Alt key and click 
+      a unit in the palette on the left, 
       then click on the flowsheet to the right to add the unit.
       To remove a unit, option/Alt click on the unit.
       You can add and remove multiple units.
       Allow cookies to save the flowsheet when the browser is closed.
     </p>
     <p>
-      To add a "pipe" connecting two units,  
+      To add a pipe connecting two units,  
       option/Alt click on a blue output in one of the units in the flowsheet, 
       then simple-click
       on a yellow input in another unit. Option/Alt click on a yellow
       input to remove a pipe. 
     </p>
     <p>
+      Click the Run button to start. The button toggles to Pause. 
+      During a run, concentration (c) and flowrate (f) are displayed.
       Click on the small black square in the lower-left corner of a unit
-      to change its reaction parameters. 
-      You may pause a run, change parameters, then resume the run.
+      to change its reaction parameters. This pauses the run so you
+      can note the time a change was made.
     </p>
     <p>
-      Some things to think about: Note that you can have two separate reactor trains 
+      You can have two separate reactor trains 
       running simultaneously in order to compare them. 
       When does the order of PFRs and CSTRs in a 
       reactor train change outlet conditions? 
       You may notice that reactor outlet concentrations stay zero with 
-      negative-order reactions. Think about how you can change conditions 
+      negative-order reactions. How can you change conditions 
       in a reactor to get positive outlet conditions at steady state
-      with order -1. 
+      with order &ndash;1?
     </p>
-    <p>
-      Click the Run button to start. The button toggles to Pause. 
-      During a run, concentration (c) and flowrate (f) are displayed.
-      <!-- Change an input value, then hit the Enter key or click out of the field. -->
-    </p>
+  
   </div> <!-- end of div div_page_header -->
 
   <!-- Modal popup -->

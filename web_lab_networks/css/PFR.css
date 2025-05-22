@@ -8,10 +8,10 @@
 
 .pfr_img {
   position: absolute;
-  top: -4px;
-  left: -4px;
-  height: 115%;
-  width: 110%;
+  top: -30px;
+  left: -10px;
+  height: 200%;
+  width: 125%;
   z-index: 0; /* so reactor image is below others at one */
   /* visibility: hidden; */
   pointer-events: none; /* allows clicks to pass through to elements above */

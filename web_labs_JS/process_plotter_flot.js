@@ -599,6 +599,7 @@ let plotter = {
     let y;
     // below we have to convert computed color values
     // to text string for fillStyle below, so get pieces ready
+    let tColor;
     let tColor1 = 'rgb(';
     let tColor2;
     let tColor3;

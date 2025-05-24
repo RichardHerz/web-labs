@@ -112,49 +112,23 @@ window.onbeforeunload = function() {
 //   // alert() not allowed while unloading a page 
 // });
 
-// clear flowsheet of all units and pipes
 function clearFlowsheet() {
   console.log('enter clearFlowsheet');
   interfacer.resetThisLab(); // stops run timer
-  const nmax = unitList.length;
-  if (nmax > 0) {
-    // loop down (if up, early units get deleted from list & index shifts)
-    for (let n = nmax-1; n >= 0; n--) {
-      let theObject = unitList[n];
-      console.log(`  theObject, ${theObject} = unitList[${n}]`);
-      removeUnit(theObject);
-    }
+  // Remove all units from the scene
+  // loop down (if up, early units get deleted from list & index shifts)
+  while (unitList.length > 0) {
+    const theObject = unitList[unitList.length - 1];
+    console.log(`  Removing unit: ${theObject}`);
+    removeUnit(theObject); // also removes connected pipes
   }
+  // Optionally, clear other related arrays if needed
+  // unitCountList.length = 0;
+  // unitXlist.length = 0;
+  // unitYlist.length = 0;
+  // processUnits.length = 0;
   console.log('exit clearFlowsheet');
 } // END OF FUNCTION clearFlowsheet
-
-function updateInputsAndState() {
-  // called by button Step on this web page
-  const nmax = 1;
-  for (let n = 0; n < nmax; n++) {
-    runUpdateInputs();
-    runUpdateState();
-  }
-} // END OF FUNCTION runInitialize
-
-function runUpdateInputs() {
-  // called by button upIn on this web page
-  for (let u in processUnits) {
-    console.log('>>>> run  updateInputs(), u = ' + u);
-    console.log('  unitID = ' + processUnits[u].unitID);
-    processUnits[u].updateInputs(u);
-  }
-} // END OF FUNCTION runUpdateInputs 
-
-function runUpdateState() {
-  // called by button upSt on this web page
-  for (let u in processUnits) {
-    console.log('>>>> run updateState(), u = ' + u);
-    console.log('  unitID = ' + processUnits[u].unitID);
-    // processUnits[u].getPortCount();
-    processUnits[u].updateState(u);
-  }
-} // END OF FUNCTION runUpdateState 
 
 function param_btn_clicked(event, tUnitCount) {
   // XXX this gets unit's unitCount but note that input
@@ -211,13 +185,15 @@ function paletteObjectClicked(event, theObject) {
   console.log('enter paletteObjectClicked, theObject = ' + theObject);
   paletteObject = theObject; // used in sceneDivClicked
   clickedID = event.target.id;
-  let modkey = event.getModifierState("Alt"); // Alt is Option on Mac
+  // Use Alt/Option key to trigger addingUnit mode
+  const modkey = event.getModifierState("Alt"); // Alt is Option on Mac
   if (modkey) {
     addingUnit = true; // toggles to false in sceneDivClicked()
-    let el = document.getElementById(clickedID);
-    el.style.cursor = "copy";
-    el = document.getElementById("div_scene");
-    el.style.cursor = "copy";
+    // Set cursor style for clicked element and scene
+    const elClicked = document.getElementById(clickedID);
+    const elScene = document.getElementById("div_scene");
+    if (elClicked) elClicked.style.cursor = "copy";
+    if (elScene) elScene.style.cursor = "copy";
   }
   console.log('exit paletteObjectClicked');
 } // END OF FUNCTION paletteObjectClicked
@@ -225,36 +201,30 @@ function paletteObjectClicked(event, theObject) {
 function sceneDivClicked(event) {
   console.log('enter sceneDivClicked');
 
+  // Handle pipe removal if user clicks off an object while piping
   if (isPiping) {
-    // user drawing pipe but clicked off an object 
-    // want to delete the pipe before connection
-    svg.removeChild(pipe);
-    // Reset variables for next pipe
+    if (svg && pipe) {
+      svg.removeChild(pipe);
+    }
     isPiping = false;
     portOUTid = null;
     portINid = null;
     portOUTunitID = null;
-    event.stopPropagation(); // stops event bubbling up to unit
-  } // END OF if (isPiping)
+    event.stopPropagation();
+    return;
+  }
 
+  // Handle adding a new unit to the scene
   if (addingUnit) {
-
     console.log('  addingUnit true, toggle to false, add unit to scene');
+    addingUnit = false;
 
-    addingUnit = false; // toggles to true in paletteDivClicked() 
-
-    // increment unitCount and add to unitCountList array
     unitCount += 1;
-    unitCountList.push(unitCount); // only used in reportStatus() for debugging 
+    unitCountList.push(unitCount);
 
     console.log('  unitCount = ' + unitCount);
 
-    // get x,y coordinates of click in sceneDiv
-    // note both rect and event.clientX & Y vary with page scroll
-    // but their difference is independent of page scroll 
-    // so x,y are relative to sceneDiv
-    // use as input arguments to build units for placing 
-    // and unit objects for save & reload flowsheet 
+    // Get click coordinates relative to sceneDiv
     const rect = event.target.getBoundingClientRect();
     const x = Math.round(event.clientX - rect.left);
     const y = Math.round(event.clientY - rect.top);
@@ -262,83 +232,66 @@ function sceneDivClicked(event) {
     console.log('  x, y = ' + x + ', ' + y);
 
     let el = document.getElementById("div_scene");
-
-    // NEED SWITCH BLOCK USING global var paletteObject 
     let unitID;
     unitXlist.push(x);
     unitYlist.push(y);
+
+    // Add the selected unit type
     switch (paletteObject) {
       case 'feed':
         el.innerHTML += buildFeed(unitCount, x, y);
-        unitID = 'feed_' + unitCount;
-        unitList.push(unitID); // used in unit update functions
-        // add an object to processUnits[] for this new unit
-        params = [1, 10]; // default flowrate, concentration
-        processUnits.push(new Feed(unitCount, unitID, x, y, params) );
-        console.log('add new unit to processUnits[], unitCount = ' + unitCount);
+        unitID = `feed_${unitCount}`;
+        unitList.push(unitID);
+        params = [1, 10];
+        processUnits.push(new Feed(unitCount, unitID, x, y, params));
         break;
       case 'cstr':
-        console.log('sceneDivClicked before call buildCSTR, unitCount = ' + unitCount);
         el.innerHTML += buildCSTR(unitCount, x, y);
-        // add unit ID to list of units on display
-        unitID = 'cstr_' + unitCount;
-        unitList.push(unitID); // used in unit update functions
-        // add an object to processUnits[] for this new unit
-        params = [0.01, 100, 1]; // default rate constant, volume != 0, order = 1 or 2
-        processUnits.push(new CSTR(unitCount, unitID, x, y, params) );
-        console.log('add new unit to processUnits[], unitCount = ' + unitCount);
+        unitID = `cstr_${unitCount}`;
+        unitList.push(unitID);
+        params = [0.01, 100, 1];
+        processUnits.push(new CSTR(unitCount, unitID, x, y, params));
         break;
       case 'pfr':
-        console.log('sceneDivClicked before call buildPFR, unitCount = ' + unitCount);
         el.innerHTML += buildPFR(unitCount, x, y);
-        // add unit ID to list of units on display
-        unitID = 'pfr_' + unitCount;
-        unitList.push(unitID); // used in unit update functions
-        // add an object to processUnits[] for this new unit
-        params = [0.01, 100, 1]; // default rate constant, volume != 0, order = 1 or 2
-        processUnits.push(new PFR(unitCount, unitID, x, y, params) );
-        console.log('add new unit to processUnits[], unitCount = ' + unitCount);
+        unitID = `pfr_${unitCount}`;
+        unitList.push(unitID);
+        params = [0.01, 100, 1];
+        processUnits.push(new PFR(unitCount, unitID, x, y, params));
         break;
       case 'mixer':
         el.innerHTML += buildMixer(unitCount, x, y);
-        unitID = 'mixer_' + unitCount;
-        unitList.push(unitID); // used in unit update functions
-        // add an object to processUnits[] for this new unit
+        unitID = `mixer_${unitCount}`;
+        unitList.push(unitID);
         params = [];
-        processUnits.push(new Mixer(unitCount, unitID, x, y, params) );;
-        console.log('add new unit to processUnits[], unitCount = ' + unitCount);
+        processUnits.push(new Mixer(unitCount, unitID, x, y, params));
         break;
       case 'splitter':
         el.innerHTML += buildSplitter(unitCount, x, y);
-        unitID = 'splitter_' + unitCount;
-        unitList.push(unitID); // used in unit update functions
-        // add an object to processUnits[] for this new unit
-        params = [0.5]; // default fraction to upper output port
-        processUnits.push(new Splitter(unitCount, unitID, x, y, params) );
-        console.log('add new unit to processUnits[], unitCount = ' + unitCount);
+        unitID = `splitter_${unitCount}`;
+        unitList.push(unitID);
+        params = [0.5];
+        processUnits.push(new Splitter(unitCount, unitID, x, y, params));
         break;
       case 'tank':
         el.innerHTML += buildTank(unitCount, x, y);
-        unitID = 'tank_' + unitCount;
-        unitList.push(unitID); // used in unit update functions
-        // add an object to processUnits[] for this new unit
+        unitID = `tank_${unitCount}`;
+        unitList.push(unitID);
         params = [];
-        processUnits.push(new Tank(unitCount, unitID, x, y, params) );
-        console.log('add new unit to processUnits[], unitCount = ' + unitCount);
+        processUnits.push(new Tank(unitCount, unitID, x, y, params));
         break;
       default:
-        console.log('switch DEFAULT in sceneDivClicked');
-    }; // END OF SWITCH
+        console.warn('Unknown paletteObject:', paletteObject);
+        break;
+    }
 
+    // Reset cursor styles
     el.style.cursor = "default";
+    const clickedEl = document.getElementById(clickedID);
+    if (clickedEl) clickedEl.style.cursor = "default";
 
-    el = document.getElementById(clickedID);
-    el.style.cursor = "default";
-
-    reportStatus('at end sceneDivClicked'); 
-
-  } // END OF if (addingUnit) 
-
+    reportStatus('at end sceneDivClicked');
+  }
 } // END OF FUNCTION sceneDivClicked
 
 function checkCursor(event) {
@@ -373,164 +326,82 @@ function sceneObjectClicked(event, objectUnit) {
 } // END OF FUNCTION sceneObjectClicked
 
 function removeUnit(objectUnit) {
-  console.log('enter removeUnit, objectUnit = ' + objectUnit); 
+  console.log('enter removeUnit, objectUnit = ' + objectUnit);
 
-  // THIS CAN CALL removePipe()
+  // Remove all pipes connected to this unit
+  removeConnectedPipes(objectUnit, portINunitList, portINlist);
+  removeConnectedPipes(objectUnit, portOUTunitList, portINlist);
 
-  reportStatus('  search for pipes to remove then remove object');
-
-  console.log('  sceneObjectClicked, top pipe search *IN*');
-  const MAX_ITERATIONS = 2; // max of two input ports per unit
-  let iterCount = 0;
-  let tIndex = 0;
-  while (tIndex != -1) {
-    if (iterCount >= MAX_ITERATIONS) {
-      console.log('  ERROR Maximum iterations reached in pipe removal');
-      break;
-    }
-    // get index of objectUnit in portINunitList
-    tIndex = portINunitList.findIndex(finderFunc);
-    function finderFunc(thisOne) {
-      return thisOne == objectUnit;
-    }
-    // if found, remove the pipe
-    if (tIndex != -1) {
-      console.log('  remove pipe portINlist[tIndex] = ' + portINlist[tIndex]);
-      removePipe(portINlist[tIndex]);
-    }
-    iterCount++;
-  } // END OF LOOP while (tIndex != -1)
-
-  console.log('  removeUnit, bottom pipe search *IN*');
-
-  // search index of object to be deleted in list of pipe OUT units
-  // if there, remove the pipe
-  // since two outputs, unit may be listed for pipe to each output
-  // repeat until tIndex = -1
-  console.log('  removeUnit, top pipe search *OUT*');
-  iterCount = 0;
-  tIndex = 0;
-  while (tIndex != -1) {
-    if (iterCount >= MAX_ITERATIONS) {
-      console.log('  ERROR Maximum iterations reached in pipe removal');
-      break;
-    }
-    // get index of objectUnit in portOUTunitList
-    tIndex = portOUTunitList.findIndex(finderFunc);
-    function finderFunc(thisOne) {
-      return thisOne == objectUnit;
-    }
-    // if found, remove the pipe
-    if (tIndex != -1) {
-      console.log('    remove portINlist[tIndex] = ' + portINlist[tIndex]);
-      reportStatus('  removeUnit before removePipe(portINlist[tIndex])');
-      removePipe(portINlist[tIndex]);
-    }
-    iterCount++;
-  } // END OF LOOP while (tIndex != -1)
-
-  console.log('  removeUnit, bottom pipe search *OUT*');
-
-  let tNumKeys = Object.keys(processUnits).length;
-  console.log('  before removing object, num keys processUnits = ' + tNumKeys);
-
-  // WARNING: input argument objectUnit must be specified as a string in _build file, e.g., 
-  // 'feed_${zz}' in onclick="sceneObjectClicked(event, ${zz}, 'feed_${zz}')" 
-
-  console.log('  before removing object, objectUnit = ' + objectUnit);
-
-  reportStatus('  removeUnit before el.remove() removing an object');
+  // Remove the unit's DOM element
   const el = document.getElementById(objectUnit);
-  el.remove();
+  if (el) el.remove();
 
-  console.log('  objectUnit before removing from list = ' + objectUnit);
+  // Remove from arrays
+  removeFromArray(unitList, objectUnit);
+  removeFromArray(unitCountList, objectUnit);
+  removeFromArray(unitXlist, objectUnit);
+  removeFromArray(unitYlist, objectUnit);
 
-  // delete the unit from the lists 
-  // need array index to delete unit ID from unitList array 
-  tIndex = unitList.findIndex(finderFunc); // used in unit update functions
-  function finderFunc(thisOne) {
-    return thisOne == objectUnit;
+  // Remove from processUnits
+  const indexToRemove = processUnits.findIndex(unit => unit && unit.unitID === objectUnit);
+  if (indexToRemove !== -1) processUnits.splice(indexToRemove, 1);
+
+  reportStatus('removeUnit after removing an object');
+} // END OF FUNCTION removeUnit 
+
+function removeConnectedPipes(objectUnit, unitList, pipeList) {
+  let tIndex;
+  while ((tIndex = unitList.findIndex(u => u === objectUnit)) !== -1) {
+    removePipe(pipeList[tIndex]);
   }
-  console.log('  remove object from lists, tIndex = ' + tIndex);
-  unitCountList.splice(tIndex, 1);
-  unitList.splice(tIndex, 1);
-  unitXlist.splice(tIndex, 1);
-  unitYlist.splice(tIndex, 1); 
+}
 
-  // copilot suggested the following to remove object from processUnits 
-  let indexToRemove = processUnits.findIndex(unit => {
-    // Check if unit exists before trying to access its properties
-    return unit && unit.unitID === objectUnit;
-  });
-  if (indexToRemove !== -1) {
-    console.log('  indexToRemove = ' + indexToRemove);
-    processUnits.splice(indexToRemove, 1);
-    // After splicing, filter out any undefined units
-    processUnits = processUnits.filter(unit => unit !== undefined);
-  }
-
-  reportStatus('  removeUnit after removing an object');
-  tNumKeys = Object.keys(processUnits).length;
-  console.log('  after removing object, num keys processUnits = ' + tNumKeys);
-  if (tNumKeys) {
-    console.log('  for each key puKey of processUnits, get unitID');
-    Object.keys(processUnits).forEach(puKey => { 
-      console.log('putKey = ' + puKey);
-      console.log('unitID = ' + processUnits[puKey].unitID);
-    });
-  }
-
-  console.log('exit removeUnit');
-
-} // END OF FUNCTION removeUnit
+function removeFromArray(arr, value) {
+  const idx = arr.indexOf(value);
+  if (idx !== -1) arr.splice(idx, 1);
+}
 
 function removePipe(pPortINid) {
   console.log('enter removePipe');
   console.log('  pPortINid = ' + pPortINid);
   reportStatus('removePipe on enter removePipe(pPortINid');
 
-  svg = document.getElementById("svg_pipes");
-  // Check if SVG container exists, if not exit
+  const svg = document.getElementById("svg_pipes");
   if (!svg) {
-    console.log('  ERROR id svg_pipes does not exist, so RETURN');
+    console.error('  ERROR: id svg_pipes does not exist, so RETURN');
     return;
   }
 
-  // get index of pPortINid in portINlist
-  const tIndex = portINlist.findIndex(finderFunc);
-  function finderFunc(thisOne) {
-    return thisOne == pPortINid;
+  // Find the index of the pipe to remove
+  const tIndex = portINlist.findIndex(thisOne => thisOne === pPortINid);
+  if (tIndex === -1) {
+    console.warn(`  WARNING: pPortINid ${pPortINid} not found in portINlist`);
+    return;
   }
-  console.log('  index of pPortINid in portINlist, tIndex = ' + tIndex);
 
-  const temp = portOUTlist[tIndex];
-  console.log('  portOUTid in portOUTlist at this index = ' + temp);
+  const pipeIdToRemove = pipeIDlist[tIndex];
+  if (!pipeIdToRemove) {
+    console.warn(`  WARNING: No pipeID found at index ${tIndex}`);
+    return;
+  }
 
-  // now use index to get corresponding units
-  const thisID = pipeIDlist[tIndex];
-  console.log('  pipeID in pipeIDList at tIndex = ' + thisID);
+  // Remove the SVG pipe element if it exists
+  const pipeElement = document.getElementById(pipeIdToRemove);
+  if (pipeElement) {
+    pipeElement.remove();
+    console.log(`  Removed SVG pipe element with id ${pipeIdToRemove}`);
+  } else {
+    console.warn(`  WARNING: SVG pipe element with id ${pipeIdToRemove} not found`);
+  }
 
-  reportStatus('>>>>> removePipe() just before remove pipe <<<<<');
-
-  // remove pipe
-
-  // this seems more reliable than svg.removeChild(pipeChild)
-  // pipeID set in drawPipe()
-  console.log('  before document.getElementById(pipeID).remove(), pipeID = ' + thisID);
-  document.getElementById(thisID).remove();
-
-  // svg.removeChild() failed when add two unit03, add pipe between, 
-  // add 3rd unit03, then try to delete pipe or delete first unit03
-  // both using pipeObject or pipeChild had same problem 
-
-  // remove deleted elements from lists
+  // Remove associated data from all lists
   portOUTlist.splice(tIndex, 1);
   portINlist.splice(tIndex, 1);
   portINunitList.splice(tIndex, 1);
   portOUTunitList.splice(tIndex, 1);
   pipeIDlist.splice(tIndex, 1);
 
-  // Reset variables for next pipe
+  // Reset pipe-related globals
   isPiping = false;
   portOUTid = null;
   portINid = null;
@@ -539,16 +410,19 @@ function removePipe(pPortINid) {
 
   reportStatus('end of removePipe()');
   console.log('just before end removePipe');
-
 } // END OF FUNCTION removePipe
 
 function drawPipe(event) {
-
   console.log('enter drawPipe');
   console.log('  portOUTid = ' + portOUTid);
 
   const divScene = document.getElementById('div_scene');
   const divOUT = document.getElementById(portOUTid);
+
+  if (!divScene || !divOUT) {
+    console.error('div_scene or portOUT element not found');
+    return;
+  }
 
   const divSceneRect = divScene.getBoundingClientRect();
   const divOUTRect = divOUT.getBoundingClientRect();
@@ -559,29 +433,28 @@ function drawPipe(event) {
   const y1 = Math.round(nudge + divOUTRect.top - divSceneRect.top + divOUTRect.height / 2);
 
   svg = document.getElementById("svg_pipes");
+  if (!svg) {
+    console.error('SVG element with id "svg_pipes" not found');
+    return;
+  }
 
-  // setting z-index in CSS file didn't work
-  // next pipe works to put pipes on top of scene objects
-  svg.style.zIndex = '1000'; // Add z-index to ensure SVG is on top
-  // but also need to disable pointer events for svg
-  // so clicks go to objects in scene and not stop on svg
+  // Ensure SVG is on top and does not block pointer events
+  svg.style.zIndex = '1000';
   svg.style.pointerEvents = 'none';
-
-  console.log('  just before create pipe element');
 
   // Create marker definition if it doesn't exist
   if (!document.getElementById("arrowhead")) {
     const defs = document.createElementNS(svgNS, "defs");
     const marker = document.createElementNS(svgNS, "marker");
     marker.setAttribute("id", "arrowhead");
-    marker.setAttribute("markerWidth", "5");    // changed from 10 to 5
-    marker.setAttribute("markerHeight", "3.5"); // changed from 7 to 3.5
-    marker.setAttribute("refX", "4.5");         // changed from 9 to 4.5
-    marker.setAttribute("refY", "1.75");        // changed from 3.5 to 1.75
+    marker.setAttribute("markerWidth", "5");
+    marker.setAttribute("markerHeight", "3.5");
+    marker.setAttribute("refX", "4.5");
+    marker.setAttribute("refY", "1.75");
     marker.setAttribute("orient", "auto");
 
     const polygon = document.createElementNS(svgNS, "polygon");
-    polygon.setAttribute("points", "0 0, 5 1.75, 0 3.5"); // changed from "0 0, 10 3.5, 0 7"
+    polygon.setAttribute("points", "0 0, 5 1.75, 0 3.5");
     polygon.setAttribute("fill", "black");
 
     marker.appendChild(polygon);
@@ -591,108 +464,67 @@ function drawPipe(event) {
 
   // Create pipe element, as svg line, with arrowhead
   pipe = document.createElementNS(svgNS, "line");
+  pipeID = 'pipe_' + portOUTid;
+  pipe.setAttribute('id', pipeID);
   pipe.setAttribute('x1', x1);
   pipe.setAttribute('y1', y1);
 
-  pipeID = 'pipe_' + portOUTid; // also used in other functions & pipeIDlist[]
-
-  pipe.setAttribute('id', pipeID);
-  // add ID to pipeIDlist when pipe fixed to an input 
-
-  const thisID = document.getElementById(portOUTid);
-  console.log('  >>>> svg thisID = ' + thisID.id);
-
-  // Calculate pipe end position relative to scene div, accounting for scroll
+  // Calculate pipe end position relative to scene div
   const x2 = Math.round(nudge + event.clientX - divSceneRect.left);
   const y2 = Math.round(nudge + event.clientY - divSceneRect.top);
   pipe.setAttribute('x2', x2);
   pipe.setAttribute('y2', y2);
 
-  console.log('  pipe start x1, y1 = ' + x1 + ', ' + y1);
-  console.log('  pipe start x2, y2 = ' + x2 + ', ' + y2);
-
   pipe.setAttribute('stroke', 'black');
   pipe.setAttribute('stroke-width', '3');
-  pipe.setAttribute('marker-end', 'url(#arrowhead)');  // Add arrowhead
+  pipe.setAttribute('marker-end', 'url(#arrowhead)');
 
   svg.appendChild(pipe);
 
   document.addEventListener('mousemove', updatePipe);
 
-  reportStatus('end drawpipe()');
+  reportStatus('end drawPipe()');
   console.log('just before end drawPipe()');
-
 } // END OF FUNCTION drawPipe
 
 function output_clicked(event, theUnit) {
 
   console.log('enter output_clicked');
 
-  // USE OF THE TWO INPUT ARGUMENTS in output_clicked() 
-  // (1) event.target is used to get portOUT, then 
-  //     portOUT.id is used to get portOUTid, then 
-  //     portOUTid is used to search for the index of the port in portOUTlist 
-  //  event is also used to stopPropagation 
-  //  event is also used in line drawPipe(event) 
-  // (2) theUnit.id is used to get portOUTunitID 
-  //     portOUTunitID is not used in again in output_clicked() 
-  //     BUT it is a global and is used several times in input_clicked() 
-
+  // Get port and unit IDs
   portOUT = event.target;
   portOUTid = portOUT.id;
   portOUTunitID = theUnit.id;
 
-  // do not start line if port out already has a pipe 
-  // search for portOUT in portOUTlist
-  const tIndex = portOUTlist.findIndex(finderFunc);
-  function finderFunc(thisOne) {
-    return thisOne == portOUTid;
-  }
-  // if tIndex = -1 then continue, else port out already has a pipe 
+  // Check if this output port already has a pipe
+  const tIndex = portOUTlist.findIndex(thisOne => thisOne === portOUTid);
   if (tIndex > -1) {
-    // don't start the pipe, this out port already has a pipe
-    event.stopPropagation(); // stops event bubbling up to unit
-    console.log('  RETURN port out already has pipe!')
+    // Don't start the pipe, this out port already has pipe
+    event.stopPropagation();
+    console.log('  RETURN port out already has pipe!');
     return;
   }
 
-  // if mod key down & not already piping & no pipe in port, then
-  // set isPiping to true and draw pipe
-  let modkey = event.getModifierState("Alt"); // Alt is Option on Mac // NEW PIPE
-  if (modkey && !isPiping && (tIndex == -1)) {
+  // Only start piping if Alt/Option key is down, not already piping, and port is free
+  const modkey = event.getModifierState("Alt"); // Alt is Option on Mac
+  if (modkey && !isPiping && tIndex === -1) {
     isPiping = true;
-
     console.log('  set isPiping = true');
-    console.log('  portOUTid = ' + portOUTid)
+    console.log('  portOUTid = ' + portOUTid);
 
     drawPipe(event);
     reportStatus('output_clicked just after drawPipe(event)');
   }
 
   console.log('just before end output_clicked, stopPropagation');
-  event.stopPropagation(); // stops event bubbling up to unit
-
+  event.stopPropagation();
 } // END OF FUNCTION output_clicked
 
 function input_clicked(event, theUnit) {
 
   console.log('enter function input_clicked()');
 
-  // USE OF THE TWO INPUT ARGUMENTS IN input_clicked() 
-  // (1) event is used to stopPropagation several times 
-  // event.target is used to get portIN, then 
-  //   portIN.id is used to get portINid 
-  // event.getModifierState is used to get modKey 
-  // (2) theUnit.id is used to get portInUnitID, 
-  // then portInUnitID is used in these lines 
-  //     if (portINunitID == portOUTunitID) { 
-  //     portINunitList.push(portINunitID); 
-  //     portINunitID = null; 
-
-  // if piping, set isPiping to false and draw pipe
-  // if not piping and mod key down, remove pipe
-  // if not piping and no mod key, do nothing
-
+  // Get port and unit IDs
   portIN = event.target;
   portINid = portIN.id;
   portINunitID = theUnit.id;
@@ -702,33 +534,35 @@ function input_clicked(event, theUnit) {
   console.log('  portOUTunitID = ' + portOUTunitID);
 
   if (isPiping) {
-    isPiping = false;
-
-    if (portINunitID == portOUTunitID) {
-      console.log('  port in on same unit as port out!')
-      // don't allow pipe to same unit
-      // don't end the pipe, user needs to click on empty scene to remove
-      event.stopPropagation(); // stops event bubbling up to unit
-      console.log('  RETURN clicked same unit');
+    // Prevent piping to the same unit
+    if (portINunitID === portOUTunitID) {
+      console.log('  port in on same unit as port out!');
+      if (svg && pipe) {
+        svg.removeChild(pipe);
+      }
+      // Reset piping state and globals
+      isPiping = false;
+      portOUTid = null;
+      portINid = null;
+      pipeID = null;
+      portOUTunitID = null;
+      portINunitID = null;
+      document.removeEventListener('mousemove', updatePipe);
+      event.stopPropagation();
+      console.log('  RETURN clicked same unit, pipe removed');
       return;
     }
 
-    // do not end pipe if port in already has a pipe 
-    // search for portIN in portINlist
-    const tIndex = portINlist.findIndex(finderFunc);
-    function finderFunc(thisOne) {
-      return thisOne == portINid;
-    }
-    // if tIndex = -1 then continue, else port in already has a pipe 
+    // Prevent connecting to an input that already has a pipe
+    const tIndex = portINlist.findIndex(id => id === portINid);
     if (tIndex > -1) {
       console.log('  port in already has pipe!');
-      event.stopPropagation(); // stops event bubbling up to unit
+      event.stopPropagation();
       console.log('  RETURN clicked port in already with pipe');
       return;
-    };
+    }
 
-    // drawPipe at end sets portIN and portOUT to null
-    // add output and input ports to lists
+    // Add pipe connections
     console.log('  just before drawPipe');
     console.log('  portOUTid = ' + portOUTid);
     console.log('  portINid = ' + portINid);
@@ -736,25 +570,21 @@ function input_clicked(event, theUnit) {
     portINlist.push(portINid);
     portINunitList.push(portINunitID);
     portOUTunitList.push(portOUTunitID);
-    // set svg pipe id so not same as portOUT's ID 
-    //   avoid confusion, e.g., when computing portOUT center 
     pipeIDlist.push(pipeID); // pipeID set in drawPipe()
 
     document.removeEventListener('mousemove', updatePipe);
 
-    // end pipe at center of portIN
+    // End pipe at center of portIN
     const divScene = document.getElementById('div_scene');
     const divIN = document.getElementById(portINid);
     const divSceneRect = divScene.getBoundingClientRect();
     const divINRect = divIN.getBoundingClientRect();
-    // Calculate center relative to divScene's top-left corner
-    const nudge = -4; // nudge to center pipe on div
+    const nudge = -4;
     const x2 = Math.round(nudge + divINRect.left - divSceneRect.left + divINRect.width / 2);
     const y2 = Math.round(nudge + divINRect.top - divSceneRect.top + divINRect.height / 2);
     pipe.setAttribute('x2', x2);
     pipe.setAttribute('y2', y2);
 
-    // Reset variables for next pipe
     // Reset variables for next pipe
     isPiping = false;
     portOUTid = null;
@@ -764,9 +594,9 @@ function input_clicked(event, theUnit) {
     portINunitID = null;
 
     reportStatus('  function input_clicked() after pipe added');
-
   } else {
-    let modkey = event.getModifierState("Alt"); // Alt is Option on Mac
+    // If not piping and Alt/Option key is down, remove pipe from this input
+    const modkey = event.getModifierState("Alt");
     if (modkey) {
       reportStatus('  function input_clicked() just before removePipe');
       removePipe(portINid);
@@ -782,6 +612,11 @@ function input_clicked(event, theUnit) {
 
 function updatePipe(event) {
   const divScene = document.getElementById('div_scene');
+  if (!divScene || !pipe) {
+    console.warn('updatePipe: div_scene or pipe not found');
+    return;
+  }
+
   const divSceneRect = divScene.getBoundingClientRect();
   const nudge = -4; // match nudge used in drawPipe
 

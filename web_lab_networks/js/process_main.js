@@ -63,11 +63,6 @@ window.onbeforeunload = function() {
 
 }; // END OF window.onbeforeunload
 
-// XXX TO DO - look for the build functions which 
-//         are defined in the _build.js files 
-//         should these be added to each unit class?
-//         or put in a separate object/class? 
-
 // DEFINE GLOBAL VARIABLE called by controller
 // processUnits[] holds an object for each unit currently on display
 // in web labs, used this >> let processUnits = new Object();
@@ -77,6 +72,25 @@ let processUnits = [];
 
 // DEFINE OBJECT main WITH MAIN FUNCTIONS FOR THE SIM
 const main = {
+
+  // METHODS: 
+    // clearFlowsheet 
+    // param_btn_clicked 
+    // findProcessUnitIndex 
+    // buildPalette 
+    // paletteObjectClicked 
+    // sceneDivClicked 
+    // checkCursor 
+    // sceneObjectClicked 
+    // removeUnit 
+    // removeConnectedPipes 
+    // removeFromArray 
+    // removePipe 
+    // drawPipe 
+    // output_clicked 
+    // input_clicked 
+    // updatePipe 
+    // reportStatus 
 
   // DECLARE VARIABLES USED THROUGHOUT main OBJECT
   addingUnit: false, // toggles for option key down (true) or not (false) on click

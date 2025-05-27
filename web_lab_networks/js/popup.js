@@ -2,9 +2,9 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    console.log('enter popup.js event listener');
+  console.log('enter popup.js event listener');
 
-    // Variables to store the two numbers
+  // Variables to store the two numbers
   let firstNumber;
   let secondNumber;
   let thirdNumber;

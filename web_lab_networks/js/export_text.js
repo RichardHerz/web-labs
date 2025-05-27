@@ -15,7 +15,7 @@ function exportAsText() {
     // now need to generate a params array 
     // which includes params array from each unit in scene
     let exportParams = [];
-    let numUnits = unitList.length;
+    let numUnits = main.unitList.length;
     for (let n = 0; n < numUnits; n++) {
         exportParams[n] = processUnits[n].params
     }
@@ -25,15 +25,15 @@ function exportAsText() {
     console.log('  make exportParams[1][1] = ' + exportParams[1][1]);
 
     const popupMessage = 
-        'unitCountList: ' + unitCountList.join(', ')
-        + '<br>' + 'unitList: ' + unitList.join(', ')
-        + '<br>' + 'unitXlist: ' + unitXlist.join(', ')
-        + '<br>' + 'unitYlist: ' + unitYlist.join(', ')
-        + '<br>' + 'portOUTlist: ' + portOUTlist.join(', ')
-        + '<br>' + 'portINlist: ' + portINlist.join(', ')
-        + '<br>' + 'portOUTunitList: ' + portOUTunitList.join(', ')
-        + '<br>' + 'portINunitList: ' + portINunitList.join(', ')
-        + '<br>' + 'pipeIDlist: ' + pipeIDlist.join(', ')
+        'main.unitCountList: ' + main.unitCountList.join(', ')
+        + '<br>' + 'main.unitList: ' + main.unitList.join(', ')
+        + '<br>' + 'main.unitXlist: ' + main.unitXlist.join(', ')
+        + '<br>' + 'main.unitYlist: ' + main.unitYlist.join(', ')
+        + '<br>' + 'main.portOUTlist: ' + main.portOUTlist.join(', ')
+        + '<br>' + 'main.portINlist: ' + main.portINlist.join(', ')
+        + '<br>' + 'main.portOUTunitList: ' + main.portOUTunitList.join(', ')
+        + '<br>' + 'main.portINunitList: ' + main.portINunitList.join(', ')
+        + '<br>' + 'main.pipeIDlist: ' + main.pipeIDlist.join(', ')
         + '<br>' + 'exportParams: ' + JSON.stringify(exportParams)
         ; // end popupMessage
 

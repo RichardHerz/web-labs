@@ -40,11 +40,13 @@
 
   <script language="javascript" src="js/process_sim_params.js" type="text/javascript"></script>
   <script language="javascript" src="js/process_plot_info.js" type="text/javascript"></script>
-
+  
   <script language="javascript" src="js/process_main.js" type="text/javascript"></script>
   <script language="javascript" src="js/popup.js" type="text/javascript"></script>
   <script language="javascript" src="js/export_cookie.js" type="text/javascript"></script>
-  <script language="javascript" src="js/export_text.js" type="text/javascript"></script>
+
+  <!-- THIS FILE IS NOT ACTIVE - NEEDS WORK -->
+  <!-- <script language="javascript" src="js/export_text.js" type="text/javascript"></script> -->
 
   <script language="javascript" src="js/puCSTR_build.js" type="text/javascript"></script>
   <script language="javascript" src="js/puCSTR_script.js" type="text/javascript"></script>
@@ -73,12 +75,14 @@
   <script language="javascript">
     window.onload = function() {
       controller.openThisLab();
-      buildPalette();
+      main.buildPalette();
       // Check for saved flowsheet data
+      // function getCookie is in file export_cookie.js 
       const savedFlowsheet = getCookie('flowsheetData');
       if (savedFlowsheet) {
         const loadSaved = true; // confirm('Found saved flowsheet. Would you like to load it?');
         if (loadSaved) {
+          // importFlowsheet is in file export_cookie.js 
           importFlowsheet();
         }
       }
@@ -96,12 +100,12 @@
       Below on this page you can design a dynamic simulation of a network of PFRs and CSTRs.  
       The PFR is an isothermal Plug Flow Reactor with some axial dispersion, 
       and the CSTR is an isothermal Continuous flow Stirred Tank Reactor. 
-      See our <a href="https://reactorlab.net/web_labs/web_lab_networks/2025/05/22/design-your-own-reactor-network-in-web-labs/">blog post</a> about this lab and its history (opens in new tab).
+      See our <a href="https://reactorlab.net/web_labs/web_lab_networks/2025/05/22/design-your-own-reactor-network-in-web-labs/">blog post</a> about this lab and its history.
     </p>
     <p> 
       This works with keyboards only: Hold down the option/Alt key and click 
       a unit in the palette on the left, 
-      then click on the flowsheet to the right to add the unit.
+      then simple-click on the flowsheet to the right to add the unit.
       To remove a unit, option/Alt click on the unit.
       You can add and remove multiple units.
       Allow cookies to save the flowsheet when the browser is closed.
@@ -166,6 +170,10 @@
       </form>
     </div>
   </div>
+
+  <!-- FOR TESTING EXPORT-IMPORT TO COOKIE -->
+  <!-- <input type="button" id="button_exportFlowsheet" value="export" onclick="exportFlowsheet()"> -->
+  <!-- <input type="button" id="button_importFlowsheet" value="import" onclick="importFlowsheet()"> -->
 
   <div id="div_simFrame">
 

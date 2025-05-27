@@ -30,7 +30,7 @@ function buildFeed(zz,x,y) {
         console.log('buildText if (zz == 0), zz = ' + zz); 
         buildText += ` 
             <div id="feed_${zz}" class="feed" 
-                onclick="paletteObjectClicked(event, 'feed' )" > 
+                onclick="main.paletteObjectClicked(event, 'feed' )" > 
                 <div id="feed_output_one_${zz}" class="feed_output_one"></div>
                 <div id="feed_info_${zz}" class="feed_info">info</div>
                 <div id="feed_type_${zz}" class="feed_type">FEED</div>
@@ -42,15 +42,15 @@ function buildFeed(zz,x,y) {
         console.log('buildText ELSE, zz = ' + zz); 
         buildText += ` 
            <div id="feed_${zz}" class="feed" 
-                onclick="sceneObjectClicked(event, 'feed_${zz}')" > 
+                onclick="main.sceneObjectClicked(event, 'feed_${zz}')" > 
                 <div title="opt-alt click to add pipe" id="feed_output_one_${zz}" class="portOUT feed_output_one"
-                    onclick="output_clicked(event, feed_${zz})">
+                    onclick="main.output_clicked(event, feed_${zz})">
                 </div>
                 <div id="feed_info_${zz}" class="feed_info">info</div>
                 <div id="feed_type_${zz}" class="feed_type">FEED</div>
                 <div id="feed_num_${zz}" class="feed_num">1</div>
                 <button title="view, edit params" id="feed_btn_one_${zz}" class="param_btn" 
-                    onclick="param_btn_clicked(event, ${zz})">
+                    onclick="main.param_btn_clicked(event, ${zz})">
                 </button>
             </div>
         `; // END buildText << NOTE BACK-TICK BEFORE SEMICOLON  

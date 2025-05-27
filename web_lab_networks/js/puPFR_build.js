@@ -30,7 +30,7 @@ function buildPFR(zz,x,y) {
         console.log('buildText if (zz == 0), zz = ' + zz); 
         buildText += ` 
             <div id="pfr_${zz}" class="pfr" 
-                onclick="paletteObjectClicked(event, 'pfr' )" > 
+                onclick="main.paletteObjectClicked(event, 'pfr' )" > 
                 <div id="pfr_input_one_${zz}" class="pfr_input_one"></div>
                 <div id="pfr_output_one_${zz}" class="pfr_output_one"></div>
                 <div id="pfr_info_${zz}" class="pfr_info">info</div>
@@ -44,18 +44,18 @@ function buildPFR(zz,x,y) {
         console.log('buildText ELSE, zz = ' + zz); 
         buildText += ` 
            <div id="pfr_${zz}" class="pfr" 
-                onclick="sceneObjectClicked(event, 'pfr_${zz}' )" > 
+                onclick="main.sceneObjectClicked(event, 'pfr_${zz}' )" > 
                 <div id="pfr_input_one_${zz}" class="portIN pfr_input_one"
-                    onclick="input_clicked(event, pfr_${zz})">
+                    onclick="main.input_clicked(event, pfr_${zz})">
                 </div>
                 <div title="opt-alt click to add pipe" id="pfr_output_one_${zz}" class="portOUT pfr_output_one"
-                    onclick="output_clicked(event, pfr_${zz})">
+                    onclick="main.output_clicked(event, pfr_${zz})">
                 </div>
                 <div id="pfr_info_${zz}" class="pfr_info">info</div>
                 <div id="pfr_type_${zz}" class="pfr_type">PFR</div>
                 <div id="pfr_num_${zz}" class="pfr_num">1</div>
                 <button title="view, edit params" id="pfr_btn_one_${zz}" class="param_btn" 
-                    onclick="param_btn_clicked(event, ${zz})">
+                    onclick="main.param_btn_clicked(event, ${zz})">
                 </button>
                <img id="pfr_img_${zz}" class="pfr_img" src="images/PFR_02.png" alt="PFR">
              </div>

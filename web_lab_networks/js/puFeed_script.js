@@ -21,6 +21,16 @@ required methods:
     checkForSteadyState() // called by controller.checkForSteadyState()
 */
 
+/*
+arrays & function from object 'main' in process_main.js used here
+    main.unitList > used in updateInputs() 
+    main.portINlist, main.portOUTlist, and 
+        main.portOUTunitList used in updateInputs() 
+    function main.findProcessUnitIndex() used in updateInputs()
+        to get index of a unit in processUnits[]
+        and is defined in process_main.js
+*/
+
 class Feed {
 
     constructor(unitCount, unitID, sceneX, sceneY, params) {
@@ -117,10 +127,6 @@ class Feed {
             this.portData.outputs.one.flowrate + ', ' + this.portData.outputs.one.concentration);
         this.updateState(); // for feed just updates display of conc 
     }
-
-    // FROM ORIG FEED BUILD
-    // <button id="feed_btn_one_${zz}" class="feed_btn_one" 
-    //                 onclick="feed_btn_one_clicked(event, feed_${zz})"></button>
 
     param_btn_clicked() {
  

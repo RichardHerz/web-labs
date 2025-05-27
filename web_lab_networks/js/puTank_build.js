@@ -30,7 +30,7 @@ function buildTank(zz,x,y) {
         console.log('buildText if (zz == 0), zz = ' + zz); 
         buildText += ` 
             <div id="tank_${zz}" class="tank" 
-                onclick="paletteObjectClicked(event, 'tank' )" > 
+                onclick="main.paletteObjectClicked(event, 'tank' )" > 
                 <div id="tank_input_one_${zz}" class="tank_input_one"></div>
                 <div id="tank_input_two_${zz}" class="tank_input_two"></div>
                 <div id="tank_info_${zz}" class="tank_info">info</div>
@@ -42,12 +42,12 @@ function buildTank(zz,x,y) {
         console.log('buildText ELSE, zz = ' + zz); 
         buildText += ` 
            <div id="tank_${zz}" class="tank" 
-                onclick="sceneObjectClicked(event, 'tank_${zz}' )" > 
+                onclick="main.sceneObjectClicked(event, 'tank_${zz}' )" > 
                 <div id="tank_input_one_${zz}" class="portIN tank_input_one"
-                    onclick="input_clicked(event, tank_${zz})">
+                    onclick="main.input_clicked(event, tank_${zz})">
                 </div>
                 <div id="tank_input_two_${zz}" class="portIN tank_input_two"
-                    onclick="input_clicked(event, tank_${zz})">
+                    onclick="main.input_clicked(event, tank_${zz})">
                 </div>
                 <div id="tank_info_${zz}" class="tank_info">info</div>
                 <div id="tank_type_${zz}" class="tank_type">TANK</div>

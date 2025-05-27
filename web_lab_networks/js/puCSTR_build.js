@@ -30,7 +30,7 @@ function buildCSTR(zz,x,y) {
         console.log('buildText if (zz == 0), zz = ' + zz); 
         buildText += ` 
             <div id="cstr_${zz}" class="cstr" 
-                onclick="paletteObjectClicked(event, 'cstr' )" > 
+                onclick="main.paletteObjectClicked(event, 'cstr' )" > 
                 <div id="cstr_input_one_${zz}" class="cstr_input_one"></div>
                 <div id="cstr_input_two_${zz}" class="cstr_input_two"></div>
                 <div id="cstr_output_one_${zz}" class="cstr_output_one"></div>
@@ -45,21 +45,21 @@ function buildCSTR(zz,x,y) {
         console.log('buildText ELSE, zz = ' + zz); 
         buildText += ` 
            <div id="cstr_${zz}" class="cstr" 
-                onclick="sceneObjectClicked(event, 'cstr_${zz}' )" > 
+                onclick="main.sceneObjectClicked(event, 'cstr_${zz}' )" > 
                 <div id="cstr_input_one_${zz}" class="portIN cstr_input_one"
-                    onclick="input_clicked(event, cstr_${zz})">
+                    onclick="main.input_clicked(event, cstr_${zz})">
                 </div>
                 <div id="cstr_input_two_${zz}" class="portIN cstr_input_two" 
-                    onclick="input_clicked(event, cstr_${zz})">
+                    onclick="main.input_clicked(event, cstr_${zz})">
                 </div>
                 <div title="opt-alt click to add pipe" id="cstr_output_one_${zz}" class="portOUT cstr_output_one"
-                    onclick="output_clicked(event, cstr_${zz})">
+                    onclick="main.output_clicked(event, cstr_${zz})">
                 </div>
                 <div id="cstr_info_${zz}" class="cstr_info">info</div>
                 <div id="cstr_type_${zz}" class="cstr_type">CSTR</div>
                 <div id="cstr_num_${zz}" class="cstr_num">1</div>
                 <button title="view, edit params" id="cstr_btn_one_${zz}" class="param_btn" 
-                    onclick="param_btn_clicked(event, ${zz})">
+                    onclick="main.param_btn_clicked(event, ${zz})">
                 </button>
                <img id="cstr_img_${zz}" class="cstr_img" src="images/CSTR_02.jpg" alt="CSTR">
              </div>

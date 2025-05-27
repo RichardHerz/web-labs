@@ -21,6 +21,16 @@ required methods:
     checkForSteadyState() // called by controller.checkForSteadyState()
 */
 
+/*
+arrays & function from object 'main' in process_main.js used here
+    main.unitList > used in updateInputs() 
+    main.portINlist, main.portOUTlist, and 
+        main.portOUTunitList used in updateInputs() 
+    function main.findProcessUnitIndex() used in updateInputs()
+        to get index of a unit in processUnits[]
+        and is defined in process_main.js
+*/
+
 class CSTR {
 
     constructor(unitCount, unitID, sceneX, sceneY, params) {
@@ -264,7 +274,7 @@ class CSTR {
             const portInNum = inputKey;
             console.log('  portInNum = ' + portInNum);
 
-            // now search for inputID in portINlist[] 
+            // now search for inputID in main.portINlist[] 
             // which is filled in process_main.js 
             // in this project, only one connection to each of two inputs 
             // if found, get the connected outputID and
@@ -272,7 +282,7 @@ class CSTR {
 
             // get index of input's unit in portINunitList
             let portInUnitIndex = -1;
-            portInUnitIndex = portINlist.findIndex(finderFunc);
+            portInUnitIndex = main.portINlist.findIndex(finderFunc);
             function finderFunc(thisOne) {
                 return thisOne == inputID;
             };
@@ -283,7 +293,7 @@ class CSTR {
                 console.log('this input HAS a connection to an output');
                 // copy portData from output to this input
                 // get ID of output port
-                const portOutID = portOUTlist[portInUnitIndex];
+                const portOutID = main.portOUTlist[portInUnitIndex];
                 console.log('  connected output portOutID = ' + portOutID);
                 // want portData.outputs. and one or two
                 // so need to get one or two from end of tOutID
@@ -296,21 +306,21 @@ class CSTR {
                 // const portOutName = "_" + portOutNum;
                 // console.log('  portOutName of upstream output port = ' + portOutName); 
 
-                const portOutUnitID = portOUTunitList[portInUnitIndex];
+                const portOutUnitID = main.portOUTunitList[portInUnitIndex];
                 console.log('  portOutUnitID of upstream output = ' + portOutUnitID);
 
-                console.log('  unitList = ' + unitList);
-                const portOutUnitIndex = unitList.findIndex(finderFunc);
+                console.log('  main.unitList = ' + main.unitList);
+                const portOutUnitIndex = main.unitList.findIndex(finderFunc);
                 function finderFunc(thisOne) {
                     return thisOne == portOutUnitID;
                 }
-                console.log('  portOutUnitIndex of upstream output in unitList= ' + portOutUnitIndex);
+                console.log('  portOutUnitIndex of upstream output in main.unitList= ' + portOutUnitIndex);
 
                 const tNumKeys = Object.keys(processUnits).length;
                 console.log('  num index keys processUnits array = ' + tNumKeys);
 
-                // function findProcessUnitIndex() is in main file process_main.js
-                const outputPUindex = findProcessUnitIndex(portOutUnitID);
+                // function main.findProcessUnitIndex() is in main file process_main.js
+                const outputPUindex = main.findProcessUnitIndex(portOutUnitID);
                 console.log('  outputPUindex in processUnits[] = ' + outputPUindex);
                 console.log('  portOutUnitID using this index = ' + processUnits[outputPUindex].unitID);
 
@@ -388,7 +398,7 @@ class CSTR {
 
         //  MIX BOTH INPUTS 
 
-        const totalINflow = in1flow + in2flow;
+        let totalINflow = in1flow + in2flow;
         console.log('  totalINflow = ' + totalINflow);
 
         let inMIXEDconc = 0;

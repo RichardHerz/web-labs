@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // and call class setParameters function
  
-          const unitIndex = findProcessUnitIndex(unitID);
+          const unitIndex = main.findProcessUnitIndex(unitID);
 
           if (unitIndex !== -1) {
               processUnits[unitIndex].setParameters(firstNumber, secondNumber, thirdNumber);

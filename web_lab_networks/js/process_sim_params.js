@@ -7,7 +7,7 @@ Licensed for use under the GNU General Public License v3.0
 https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-let simParams = {
+const simParams = {
   //
   // ----- DEFINE LAB-SPECIFIC SIMULATION PARAMETERS ---------
   //

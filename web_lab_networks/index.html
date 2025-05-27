@@ -78,12 +78,12 @@
       main.buildPalette();
       // Check for saved flowsheet data
       // function getCookie is in file export_cookie.js 
-      const savedFlowsheet = getCookie('flowsheetData');
+      const savedFlowsheet = expImpCookie.getCookie('flowsheetData');
       if (savedFlowsheet) {
         const loadSaved = true; // confirm('Found saved flowsheet. Would you like to load it?');
         if (loadSaved) {
           // importFlowsheet is in file export_cookie.js 
-          importFlowsheet();
+          expImpCookie.importFlowsheet();
         }
       }
     }
@@ -172,8 +172,9 @@
   </div>
 
   <!-- FOR TESTING EXPORT-IMPORT TO COOKIE -->
-  <!-- <input type="button" id="button_exportFlowsheet" value="export" onclick="exportFlowsheet()"> -->
-  <!-- <input type="button" id="button_importFlowsheet" value="import" onclick="importFlowsheet()"> -->
+  <!-- <input type="button" id="button_exportFlowsheet" value="export" onclick="expImpCookie.exportFlowsheet()"> -->
+  <!-- <input type="button" id="button_importFlowsheet" value="import" onclick="expImpCookie.importFlowsheet()"> -->
+ <!-- <input type="button" id="button_reportCookie" value="report" onclick="expImpCookie.reportCookie()"> -->
 
   <div id="div_simFrame">
 

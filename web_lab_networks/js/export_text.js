@@ -7,6 +7,8 @@ Licensed for use under the GNU General Public License v3.0
 https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
+// ***XXX WARNING - UNDER CONSTRUCTION *** 
+
 // NOTE BOTH EXPORT & IMPORT SCRIPTS ARE CONTAINED IN THIS FILE 
 
 function exportAsText() {

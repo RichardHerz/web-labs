@@ -41,7 +41,7 @@ window.onbeforeunload = function() {
   // event.preventDefault(); // Not required, but recommended for clarity
   // event.returnValue = ''; // Required to trigger the dialog in most browsers
 
-  exportFlowsheet(); // exportFlowsheet() in file export_cookie.js 
+  expImpCookie.exportFlowsheet(); // exportFlowsheet() in file export_cookie.js 
   
   console.log('UNLOAD after call to exportFlowsheet() ');
 
@@ -133,7 +133,7 @@ const main = {
     this.pipeIDlist.length = 0;
 
     // clear flowsheet cookie
-    clearFlowsheetCookie(); // in export_cookie.js
+    expImpCookie.clearFlowsheetCookie(); // in export_cookie.js
 
     console.log('exit clearFlowsheet');
   }, // END OF FUNCTION clearFlowsheet

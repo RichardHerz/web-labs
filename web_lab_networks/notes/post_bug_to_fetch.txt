@@ -1,0 +1,44 @@
+ASKED OF CLAUDE SONNET 3.5 IN COPILOT 
+
+$.post in (process_sim_params.js) requires jquery 
+but jquery interferes with other operations - 
+is there another way to do the post method, preferrably in plain javascript
+
+GitHub Copilot
+Yes, you can replace jQuery's $.post with vanilla JavaScript's fetch API. 
+Here's how to refactor the code:
+
+======================= 
+
+updateRunCount: function() {
+    console.log('ENTER SIMPARAMS UPDATERUNCOUNT');
+    
+    fetch(this.runLoggerURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'webAppNumber=' + encodeURIComponent('reactor NETWORKS')
+    })
+    .then(response => response.text())
+    .then(data => {
+        // document.getElementById("field_run_counter").innerHTML = 
+        //     `<i>Total runs = ${data}</i>`;
+    })
+    .catch(error => console.error('Error:', error));
+}, 
+
+updateCurrentRunCountDisplay: function() {
+    fetch(this.runCurrrentRunCountURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+    })
+    .then(response => response.text())
+    .then(data => {
+        // document.getElementById("field_run_counter").innerHTML = 
+        //     `<i>Total runs = ${data}</i>`;
+    })
+    .catch(error => console.error('Error:', error));
+},

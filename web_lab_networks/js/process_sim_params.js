@@ -56,23 +56,58 @@ const simParams = {
   // WARNING: NEED LITERAL, e.g., "field_run_counter" in methods below
   //      e.g., this.runCounterFieldID does NOT work
 
-  updateRunCount : function() {
-    // WARNING: NEED LITERAL, e.g., "field_run_counter" below
-    //      e.g., this.runCounterFieldID does NOT work
-    //
-    $.post(this.runLoggerURL,{webAppNumber: "reactor NETWORKS"})
-      .done(
-        function(data) {
-          // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>";
-        } // END OF function(data)
-      ) // END OF .done(
-  }, // END OF updateRunCount
+  updateRunCount: function() {
+    console.log('ENTER SIMPARAMS UPDATERUNCOUNT');
+    
+    fetch(this.runLoggerURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'webAppNumber=' + encodeURIComponent('reactor NETWORKS')
+    })
+    .then(response => response.text())
+    .then(data => {
+        // document.getElementById("field_run_counter").innerHTML = 
+        //     `<i>Total runs = ${data}</i>`;
+    })
+    .catch(error => console.error('Error in updateRunCount:', error));
+  }, 
 
-  updateCurrentRunCountDisplay : function() {
-    // WARNING: NEED LITERAL, e.g., "field_run_counter" below
-    //      e.g., this.runCounterFieldID does NOT work
-    // $.post(this.runCurrrentRunCountURL) .done(function(data) {
-      // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
+  updateCurrentRunCountDisplay: function() {
+    fetch(this.runCurrrentRunCountURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+    })
+    .then(response => response.text())
+    .then(data => {
+        // document.getElementById("field_run_counter").innerHTML = 
+        //     `<i>Total runs = ${data}</i>`;
+    })
+    .catch(error => console.error('Error in updateCurrentRunCountDisplay:', error));
   },
+
+  // updateRunCount : function() {
+  //   console.log('ENTER SIMPARAMS UPDATERUNCOUNT');
+  //   // WARNING: NEED LITERAL, e.g., "field_run_counter" below
+  //   //      e.g., this.runCounterFieldID does NOT work
+  //   //
+  //   // XXX $.post() REQUIRES JQUERY BUT SEE NOTE IN INDEX.html 
+  //   $.post(this.runLoggerURL,{webAppNumber: "reactor NETWORKS"})
+  //     .done(
+  //       function(data) {
+  //         // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>";
+  //       } // END OF function(data)
+  //     ) // END OF .done(
+  // }, // END OF updateRunCount
+
+  // updateCurrentRunCountDisplay : function() {
+  //   // WARNING: NEED LITERAL, e.g., "field_run_counter" below
+  //   //      e.g., this.runCounterFieldID does NOT work
+  //   // $.post(this.runCurrrentRunCountURL) .done(function(data) {
+  //     // document.getElementById("field_run_counter").innerHTML = "<i>Total runs = " + data + "</i>"; } );
+  // },
 
 }; // END simParams object

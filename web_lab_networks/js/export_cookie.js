@@ -319,6 +319,7 @@ const expImpCookie = {
         console.log('  >>>> svg thisID = ' + thisID.id);
 
         // end pipe at center of portIN
+        console.log(`  just before get by id, portINid = ${portINid}`);
         const divIN = document.getElementById(portINid);
         const divINRect = divIN.getBoundingClientRect();
         // Calculate center relative to divScene's top-left corner

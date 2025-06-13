@@ -1,11 +1,25 @@
 ===============================
+Thinking about modular simulation... 
+
+Is there a way to combine in some manner the method of pipe 
+connection networks with inputs in other web labs? 
+
+Is there a way to have a layer in which the connections between 
+units are drawn have have that communicate with a presentation 
+layer with plots and graphics?
+
+Is there a way to represent data collection and plots in the 
+network connection layer and have those appear in the display layer?
+Seems like maybe LabView had that setup...? 
+
+
+===============================
 Have gotten SS check working for PFR & CSTR 
 - when unit check says SS, set outputs to analytical SS values
 
 I pause sim when modal popup for params 
 displays - do not restart on close of so 
 user can see what time change was made
-
 
 ===============================
 remember RL method of adding to numerical dynamics 

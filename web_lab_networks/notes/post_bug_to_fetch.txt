@@ -1,5 +1,7 @@
 ASKED OF CLAUDE SONNET 3.5 IN COPILOT 
 
+NOTE: I MADE CLAUDE'S SUGGESTED CHANGE AND IT WORKED! 
+
 $.post in (process_sim_params.js) requires jquery 
 but jquery interferes with other operations - 
 is there another way to do the post method, preferrably in plain javascript

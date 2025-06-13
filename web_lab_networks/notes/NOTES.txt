@@ -12,6 +12,20 @@ Is there a way to represent data collection and plots in the
 network connection layer and have those appear in the display layer?
 Seems like maybe LabView had that setup...? 
 
+In Networks, the connections are recorded in these arrays in which 
+each pipe connection is at the same array index in all arrays: 
+  portOUTlist: [],
+  portINlist: [],
+  portOUTunitList: [],
+  portINunitList: [],
+
+A process unit, in updateInputs(), scans for its ID in the lists,
+then copies inputs, though all units must use same (or a subset)
+process variables or "properties" in this excerpt: 
+  // this copies ALL the properties to portInNum from portOutNum
+  // but relies on both in and out ports having same properties
+  // e.g., flowrate and concentration
+
 
 ===============================
 Have gotten SS check working for PFR & CSTR 

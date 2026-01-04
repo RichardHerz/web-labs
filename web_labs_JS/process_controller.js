@@ -6,7 +6,13 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-let controller = {
+// Configuration constants for the controller
+const CONTROLLER_CONFIG = {
+  RESIDENCE_TIME_MULTIPLIER: 2,  // multiply residence time for steady state check
+  COLOR_SATURATION_REPS: 5       // number of redraws for color saturation (max effective value)
+};
+
+const controller = {
 
   // OBJECT controller contains functions that run the simulation time stepping
   // this is an "object literal" statement used to create this object
@@ -93,8 +99,8 @@ let controller = {
 
     // get time at start of updates
     // for use in development timing check below
-    let startDate = new Date(); // need this here
-    let startMs = startDate.getTime();
+    const startDate = new Date(); // need this here
+    const startMs = startDate.getTime();
 
     // repeating updateProcessUnits must finish before
     // latest real time at which updateDisplay must occur in order
@@ -106,7 +112,7 @@ let controller = {
 
     // update display
     // return time for use in development timing check below
-    let currentMs = controller.updateDisplay();
+    const currentMs = controller.updateDisplay();
 
     // // *** SAVE - FOR DEVELOPMENT TIMING CHECK - SAVE ***
     // //
@@ -168,8 +174,8 @@ let controller = {
       // BUT FIRST MUST DO THIS (also done below at end normal update)
       // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
       // or, if do not do here, simTime will race ahead
-      let thisDate = new Date();
-      let thisMs = thisDate.getTime();
+      const thisDate = new Date();
+      const thisMs = thisDate.getTime();
       return thisMs;
     }
 
@@ -196,8 +202,7 @@ let controller = {
         if (simParams.labType != 'Dynamic') {
           // plot color canvas again for better color saturation
           // in non-dynamic labs - do not slow down dynamic labs
-          let numSatReps = 5; // 5 is max to have effect
-          for (let k = 0; k < numSatReps; k++) {
+          for (let k = 0; k < CONTROLLER_CONFIG.COLOR_SATURATION_REPS; k++) {
             plotter.plotColorCanvasPlot(p);
           }
         }
@@ -221,8 +226,8 @@ let controller = {
     console.log('just before exit controller updateDisplay return thisMs');
 
     // RETURN REAL TIME OF THIS DISPLAY UPDATE (milliseconds)
-    let thisDate = new Date();
-    let thisMs = thisDate.getTime();
+    const thisDate = new Date();
+    const thisMs = thisDate.getTime();
     return thisMs;
     
   },  // END OF method updateDisplay
@@ -283,7 +288,7 @@ let controller = {
     }
 
     // check all units to see if any not at steady state
-    if (controller.simTime >= controller.oldSimTime + 2 * resTime) {
+    if (controller.simTime >= controller.oldSimTime + CONTROLLER_CONFIG.RESIDENCE_TIME_MULTIPLIER * resTime) {
 
       // get ssFlag from each unit
       let thisFlag = true; // changes to false if any unit not at steady state

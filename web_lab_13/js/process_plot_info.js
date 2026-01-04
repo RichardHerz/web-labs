@@ -9,15 +9,15 @@
 //     READ THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
 //     https://github.com/RichardHerz/web-labs/wiki/process_plot_info
 
-let plotInfo = {
+const plotInfo = {
 
   initialize : function() {
 
-    let unum = 0; // useful when only one unit in plot, processUnits[unum]
+    const unum = 0; // useful when only one unit in plot, processUnits[unum]
 
     // plot 0 info
     let pnum = 0;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Batch history';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_profile'; // flot.js wants ID with prefix #
@@ -71,7 +71,7 @@ let plotInfo = {
     // ---------------------------------------------------
     // plot 1 info
     pnum = 1;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'single';
     plotInfo[pnum]['title'] = 'Batch history';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_single'; // flot.js wants ID with prefix #

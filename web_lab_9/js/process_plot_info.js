@@ -9,7 +9,7 @@
 //     READ THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
 //     https://github.com/RichardHerz/web-labs/wiki/process_plot_info
 
-let plotInfo = {
+const plotInfo = {
 
   initialize : function() {
 
@@ -21,7 +21,7 @@ let plotInfo = {
 
     // plot 0 info
     let pnum = 0;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'strip';
     plotInfo[pnum]['title'] = 'Reactant Concentration';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotConcentration'; // flot.js wants ID with prefix #
@@ -61,13 +61,13 @@ let plotInfo = {
     // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
     // WARNING: all below with prefix 'var' must have same number of child objects,
     // one for each variable placed on plot
-    plotInfo[pnum]['varUnitIndex'] = new Array();
-    plotInfo[pnum]['var'] = new Array();
-    plotInfo[pnum]['varLabel'] = new Array();
-    plotInfo[pnum]['varDataUnits'] = new Array();
-    plotInfo[pnum]['varShow'] = new Array();
-    plotInfo[pnum]['varYaxis'] = new Array();
-    plotInfo[pnum]['varYscaleFactor'] = new Array();
+    plotInfo[pnum]['varUnitIndex'] = [];
+    plotInfo[pnum]['var'] = [];
+    plotInfo[pnum]['varLabel'] = [];
+    plotInfo[pnum]['varDataUnits'] = [];
+    plotInfo[pnum]['varShow'] = [];
+    plotInfo[pnum]['varYaxis'] = [];
+    plotInfo[pnum]['varYscaleFactor'] = [];
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //
@@ -128,7 +128,7 @@ let plotInfo = {
     //
     // plot 1 info
     pnum = 1;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Steady-State Conversion after each reactor based on feed concentration';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotSSconversion'; // flot.js wants ID with prefix #
@@ -165,13 +165,13 @@ let plotInfo = {
     // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
     // WARNING: all below with prefix 'var' must have same number of child objects,
     // one for each variable placed on plot
-    plotInfo[pnum]['varUnitIndex'] = new Array();
-    plotInfo[pnum]['var'] = new Array();
-    plotInfo[pnum]['varLabel'] = new Array();
-    plotInfo[pnum]['varDataUnits'] = new Array();
-    plotInfo[pnum]['varShow'] = new Array();
-    plotInfo[pnum]['varYaxis'] = new Array();
-    plotInfo[pnum]['varYscaleFactor'] = new Array();
+    plotInfo[pnum]['varUnitIndex'] = [];
+    plotInfo[pnum]['var'] = [];
+    plotInfo[pnum]['varLabel'] = [];
+    plotInfo[pnum]['varDataUnits'] = [];
+    plotInfo[pnum]['varShow'] = [];
+    plotInfo[pnum]['varYaxis'] = [];
+    plotInfo[pnum]['varYscaleFactor'] = [];
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //
@@ -237,7 +237,7 @@ let plotInfo = {
 
     // plot 2 info
     pnum = 2;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Steady-State Rate as average dimensionless turnover frequency at bulk conc in rxr';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotSSrate'; // flot.js wants ID with prefix #
@@ -274,13 +274,13 @@ let plotInfo = {
     // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
     // WARNING: all below with prefix 'var' must have same number of child objects,
     // one for each variable placed on plot
-    plotInfo[pnum]['varUnitIndex'] = new Array();
-    plotInfo[pnum]['var'] = new Array();
-    plotInfo[pnum]['varLabel'] = new Array();
-    plotInfo[pnum]['varDataUnits'] = new Array();
-    plotInfo[pnum]['varShow'] = new Array();
-    plotInfo[pnum]['varYaxis'] = new Array();
-    plotInfo[pnum]['varYscaleFactor'] = new Array();
+    plotInfo[pnum]['varUnitIndex'] = [];
+    plotInfo[pnum]['var'] = [];
+    plotInfo[pnum]['varLabel'] = [];
+    plotInfo[pnum]['varDataUnits'] = [];
+    plotInfo[pnum]['varShow'] = [];
+    plotInfo[pnum]['varYaxis'] = [];
+    plotInfo[pnum]['varYscaleFactor'] = [];
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //

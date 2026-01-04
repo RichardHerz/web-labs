@@ -5,7 +5,7 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-let simParams = {
+const simParams = {
   //
   // ----- DEFINE LAB-SPECIFIC SIMULATION PARAMETERS ---------
   //

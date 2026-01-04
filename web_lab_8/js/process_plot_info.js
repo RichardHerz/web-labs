@@ -9,15 +9,19 @@
 //     READ THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
 //     https://github.com/RichardHerz/web-labs/wiki/process_plot_info
 
-let plotInfo = {
+const plotInfo = {
 
   initialize : function() {
+
+    // Get unit references by name instead of hardcoded indices
+    const reactorUnit = processUnits.find(unit => unit.name === 'Adiabatic Packed Bed PFR');
+    const heatExchangerUnit = processUnits.find(unit => unit.name === 'Counter-Current Heat Exchanger');
 
     let unum = 0; // useful when only one unit in plot, processUnits[unum]
 
     // plot 0 info
     let pnum = 0;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Reactor Profiles';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_PFR_plot'; // flot.js wants ID with prefix #
@@ -64,7 +68,7 @@ let plotInfo = {
     plotInfo[pnum]['var'][vnum] = 0; // value is variable index in plot data array
     plotInfo[pnum]['varLabel'][vnum] = 'Trxr';
     // varDataUnits are dimensional units used in copy data table, along with varLabel
-    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][7]; // 1st var
+    plotInfo[pnum]['varDataUnits'][vnum] = reactorUnit['dataUnits'][7]; // 1st var
     // varShow values are 'show' to show on plot and legend,
     // 'tabled' to not show on plot nor legend but list in copy data table
     // and any other value, e.g., 'hide' to not show on plot but do show in legend
@@ -77,14 +81,14 @@ let plotInfo = {
     plotInfo[pnum]['varUnitIndex'][1] = unum;
     plotInfo[pnum]['var'][vnum] = 1;
     plotInfo[pnum]['varLabel'][vnum] = 'Ca';
-    plotInfo[pnum]['varDataUnits'][vnum] = processUnits[unum]['dataUnits'][8];
+    plotInfo[pnum]['varDataUnits'][vnum] = reactorUnit['dataUnits'][8];
     plotInfo[pnum]['varShow'][vnum] = 'show';
     plotInfo[pnum]['varYaxis'][vnum] = 'right';
     plotInfo[pnum]['varYscaleFactor'][vnum] = 1;
     //
     // plot 1 info
     pnum = 1;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'canvas';
     plotInfo[pnum]['title'] = 'reactor color canvas';
     plotInfo[pnum]['canvas'] = 'canvas_CANVAS_reactor'; // without prefix #
@@ -92,7 +96,7 @@ let plotInfo = {
     plotInfo[pnum]['varUnitIndex'] = unum; // index of unit in processUnits object
     plotInfo[pnum]['var'] = 0; // variable number in array spaceTimeData, 0, 1, etc.
     // varTimePts & varSpacePts must match values used in unit array colorCanvasData
-    plotInfo[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
+    plotInfo[pnum]['varTimePts'] = reactorUnit['numNodes'];
     plotInfo[pnum]['varSpacePts'] = 1;
     plotInfo[pnum]['varValueMin'] = 320; // or processUnits[unum]['dataMin'][9]; // [9] is Trxr
     plotInfo[pnum]['varValueMax'] = 420; // or processUnits[unum]['dataMax'][9];
@@ -104,7 +108,7 @@ let plotInfo = {
 
     // plot 2 info
     pnum = 2;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'Heat Exchanger Temperature Profiles';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_T_plot'; // flot.js wants ID with prefix #
@@ -172,7 +176,7 @@ let plotInfo = {
 
     // plot 3 info
     pnum = 3;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'canvas';
     plotInfo[pnum]['title'] = 'hot side color canvas';
     plotInfo[pnum]['canvas'] = 'canvas_CANVAS_hot'; // without prefix #
@@ -180,7 +184,7 @@ let plotInfo = {
     plotInfo[pnum]['varUnitIndex'] = unum; // index of unit in processUnits object
     plotInfo[pnum]['var'] = 0; // variable number in data array for plot; 0, 1, etc.
     // varTimePts & varSpacePts must match values used in unit array colorCanvasData
-    plotInfo[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
+    plotInfo[pnum]['varTimePts'] = heatExchangerUnit['numNodes'];
     plotInfo[pnum]['varSpacePts'] = 1;
     plotInfo[pnum]['varValueMin'] = 320; // or processUnits[unum]['dataMin'][1]; // [1] is TinCold
     plotInfo[pnum]['varValueMax'] = 450; // or processUnits[unum]['dataMax'][0]; // [0] is TinHot
@@ -188,7 +192,7 @@ let plotInfo = {
 
     // plot 4 info
     pnum = 4;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'canvas';
     plotInfo[pnum]['title'] = 'cold side color canvas';
     plotInfo[pnum]['canvas'] = 'canvas_CANVAS_cold'; // without prefix #
@@ -196,7 +200,7 @@ let plotInfo = {
     plotInfo[pnum]['varUnitIndex'] = unum; // index of unit in processUnits object
     plotInfo[pnum]['var'] = 1; // variable number in array for plot: 0, 1, etc.
     // varTimePts & varSpacePts must match values used in unit array colorCanvasData
-    plotInfo[pnum]['varTimePts'] = processUnits[unum]['numNodes'];
+    plotInfo[pnum]['varTimePts'] = heatExchangerUnit['numNodes'];
     plotInfo[pnum]['varSpacePts'] = 1;
     plotInfo[pnum]['varValueMin'] = 320; // or processUnits[unum]['dataMin'][1]; // [1] is TinCold
     plotInfo[pnum]['varValueMax'] = 450; // or processUnits[unum]['dataMax'][0]; // [0] is TinHot
@@ -211,12 +215,12 @@ let plotInfo = {
 
     // plot 5 info
     pnum = 5;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'strip';
     plotInfo[pnum]['title'] = 'Temperature history';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_strip_plot'; // flot.js wants ID with prefix #
     // set numberPoints < = than width of plot in HTML pixels for fast plotting
-    let npts = 400; // special so can use value below at xAxisMax
+    const npts = 400; // special so can use value below at xAxisMax
     // WARNING: require 'numberPoints' here because it is used in multiple units
     // to create data arrays of same length for this plot
     plotInfo[pnum]['numberPoints'] = npts; // special, required since multiple units on this plot

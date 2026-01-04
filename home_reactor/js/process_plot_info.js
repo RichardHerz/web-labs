@@ -10,19 +10,19 @@
 // where number plot points + 1 for origin are plotted
 
 // these vars used several places below in this file for static profile plot
-let numProfileVars = 2;
-let numProfilePts = 100;
+const numProfileVars = 2;
+const numProfilePts = 100;
 
 // these vars used several places below this file for scrolling strip chart plot
-let numStripVars = 0;
-let numStripPts = 0;
+const numStripVars = 0;
+const numStripPts = 0;
 
 // DECLARE PARENT OBJECT TO HOLD PLOT INFO
 // more than one plot can be put one one web page by
 // defining multiple object children, where the first index
 // plotsObj[0] is the plot number index (starting at 0)
 //
-let plotsObj = new Object();
+const plotsObj = {};
 //
 // USE THIS TO GET NUMBER OF plots, i.e., top-level children of plotsObj
 //    Object.keys(plotsObj).length;

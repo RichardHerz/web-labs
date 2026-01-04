@@ -9,7 +9,7 @@
 //     READ THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
 //     https://github.com/RichardHerz/web-labs/wiki/process_plot_info
 
-let plotInfo = {
+const plotInfo = {
 
   // BOTH LINES BELOW WORK (Flanagan, 6.10.5, 7th ed., p. 149)
   // initialize : function() {
@@ -17,7 +17,7 @@ let plotInfo = {
 
     // plot 0 info
     let pnum = 0;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'strip';
     plotInfo[pnum]['title'] = 'Bioreactor Control';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_plotData'; // flot.js wants ID with prefix #
@@ -52,13 +52,13 @@ let plotInfo = {
     // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
     // WARNING: all below with prefix 'var' must have same number of child objects,
     // one for each variable placed on plot
-    plotInfo[pnum]['varUnitIndex'] = new Array();
-    plotInfo[pnum]['var'] = new Array();
-    plotInfo[pnum]['varLabel'] = new Array();
-    plotInfo[pnum]['varDataUnits'] = new Array();
-    plotInfo[pnum]['varShow'] = new Array();
-    plotInfo[pnum]['varYaxis'] = new Array();
-    plotInfo[pnum]['varYscaleFactor'] = new Array();
+    plotInfo[pnum]['varUnitIndex'] = [];
+    plotInfo[pnum]['var'] = [];
+    plotInfo[pnum]['varLabel'] = [];
+    plotInfo[pnum]['varDataUnits'] = [];
+    plotInfo[pnum]['varShow'] = [];
+    plotInfo[pnum]['varYaxis'] = [];
+    plotInfo[pnum]['varYscaleFactor'] = [];
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //

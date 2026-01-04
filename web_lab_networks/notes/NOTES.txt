@@ -1,8 +1,26 @@
+=============================== 
+Thinking about LiveCode reaction networks vs. Web Labs networks... 
+
+Unit ports in LC are objects which have images and custom properties 
+associated with them. Unit ports in WL are not an object but are composed
+of separate html div, css, and code associated with the div by div ID. 
+
+I asked Claude for more modular approaches 
+
+SEE MY REPO ON COPILOT EXPERIMENTS FOR modular_examples BY CLAUDE 
+
+
 ===============================
 Thinking about modular simulation... 
 
 Is there a way to combine in some manner the method of pipe 
 connection networks with inputs in other web labs? 
+
+Could we write a unit and connection definition that is same or very similar 
+both for traditional web labs as well as reactor networks? In a way, a 
+traditional web lab, with units connected, is same idea as reactor networks,
+just that connections are hand coded (each connection is an individual variable 
+value) in trad labs.
 
 Is there a way to have a layer in which the connections between 
 units are drawn have have that communicate with a presentation 
@@ -14,10 +32,10 @@ Seems like maybe LabView had that setup...?
 
 In Networks, the connections are recorded in these arrays in which 
 each pipe connection is at the same array index in all arrays: 
-  portOUTlist: [],
-  portINlist: [],
-  portOUTunitList: [],
-  portINunitList: [],
+  main.portOUTlist: [],
+  main.portINlist: [],
+  main.portOUTunitList: [],
+  main.portINunitList: [],
 
 A process unit, in updateInputs(), scans for its ID in the lists,
 then copies inputs, though all units must use same (or a subset)
@@ -26,6 +44,20 @@ process variables or "properties" in this excerpt:
   // but relies on both in and out ports having same properties
   // e.g., flowrate and concentration
 
+For energy-only flows, or flows of different types of materials 
+between units could have different type of connection ports 
+
+In the other web labs, the connections are listed in the unit object,
+and so could be of a variety of different flows between units.
+The other web labs also get input from fields and buttons, which 
+the user may change during a sim. 
+
+In a completely differnt approach for networks would be to 
+have user write a config file that specifies, e.g., units present
+and unit connections, then web page could draw the layout.
+
+Or for other types of labs, have connections for a unit specified 
+in a config file... 
 
 ===============================
 Have gotten SS check working for PFR & CSTR 

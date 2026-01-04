@@ -9,13 +9,13 @@
 //     READ THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
 //     https://github.com/RichardHerz/web-labs/wiki/process_plot_info
 
-let plotInfo = {
+const plotInfo = {
 
   // BOTH LINES BELOW WORK (Flanagan, 6.10.5, 7th ed., p. 149)
   // initialize : function() {
   initialize() {
 
-    // let unum = 0; // useful when only one unit in plot, processUnits[unum]
+    // const unum = 0; // useful when only one unit in plot, processUnits[unum]
 
     // SPECIAL - ['type'] can = 'canvas' or 'profile' or 'strip' or other
     // if other, AS IS HERE, then plotting not called by controller and
@@ -23,8 +23,8 @@ let plotInfo = {
 
     // plot 0 info
     let pnum = 0;
-    let unum = 0;
-    plotInfo[pnum] = new Object();
+    const unum = 0;
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'canvas';
     plotInfo[pnum]['title'] = 'Bed_0';
     plotInfo[pnum]['canvas'] = 'canvas_CANVAS_bed_0'; // without prefix #
@@ -40,7 +40,7 @@ let plotInfo = {
     // plot 1 info
     pnum = 1;
     unum = 1;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'canvas';
     plotInfo[pnum]['title'] = 'Bed_1';
     plotInfo[pnum]['canvas'] = 'canvas_CANVAS_bed_1'; // without prefix #

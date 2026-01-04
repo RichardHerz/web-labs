@@ -194,7 +194,7 @@ function puBioRxrFeed(pUnitIndex) {
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    const timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (v = 0; v < numStripVars; v += 1) {
       for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
         // note want p <= numStripPoints so get # 0 to  # numStripPoints of points

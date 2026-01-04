@@ -563,7 +563,7 @@ function puSpiritStill(pUnitIndex) {
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    const timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (v = 0; v < numPlotVars; v += 1) {
       for (p = 0; p <= numPlotPts; p += 1) { // note = in p <= numPlotPts
         // note want p <= numPlotPts so get # 0 to # numPlotPts of points

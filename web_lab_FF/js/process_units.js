@@ -24,7 +24,7 @@
 //    used to construct new trees in processUnits[0].initialize() below
 // ===================================================================
 
-let processUnits = new Object();
+const processUnits = [];
 
 processUnits[0] = {
   //

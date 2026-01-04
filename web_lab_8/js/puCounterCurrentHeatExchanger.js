@@ -16,7 +16,21 @@
 
 // -------------------------------------------------------------------
 
-let puCounterCurrentHeatExchanger = {
+// Configuration constants for the Counter-Current Heat Exchanger
+const HX_CONFIG = {
+  // Simulation parameters
+  UNIT_STEP_REPEATS: 100,
+  NUM_NODES: 200,
+
+  // Physical properties
+  FLUID_DENSITY: 1000.0,  // (kg/m3) - fluid density specified to be that of water
+  CP_HOT: 2.24,           // (kJ/kg/K) - hot fluid heat capacity
+  CP_COLD: 2.24,          // (kJ/kg/K) - cold fluid heat capacity
+  DIAMETER: 0.1,          // (m) - tube diameter (arbitrary, fixed for integration)
+  DISPERSION: 0.0         // turbulent dispersion coefficient (zero for this application)
+};
+
+const puCounterCurrentHeatExchanger = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'Counter-Current Heat Exchanger',
@@ -33,8 +47,10 @@ let puCounterCurrentHeatExchanger = {
   residenceTime : 0, // for timing checks for steady state check
 
   updateInputs : function() {
-    this.TinHot = processUnits[0].Tout;
-    this.residenceTime = processUnits[0].residenceTime;
+    // Get reference to reactor unit by name instead of hardcoded index
+    const reactorUnit = processUnits.find(unit => unit.name === 'Adiabatic Packed Bed PFR');
+    this.TinHot = reactorUnit.Tout;
+    this.residenceTime = reactorUnit.residenceTime;
   },
 
   // *******************************************
@@ -91,8 +107,8 @@ let puCounterCurrentHeatExchanger = {
 
   // allow this unit to take more than one step within one main loop step in updateState method
   // WARNING: see special handling for time step in this unit's updateInputs method
-  unitStepRepeats : 100,
-  unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
+  unitStepRepeats : HX_CONFIG.UNIT_STEP_REPEATS,
+  unitTimeStep : simParams.simTimeStep / HX_CONFIG.UNIT_STEP_REPEATS,
 
   // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
   // REDUCE size of time steps FOR NUMERICAL STABILITY BY SQUARE OF THE FACTOR
@@ -103,9 +119,9 @@ let puCounterCurrentHeatExchanger = {
 
   // check for any changes to simTimeStep and simStepRepeats if change numNodes
   // numNodes is accessed in process_plot_info.js
-  numNodes : 200,
+  numNodes : HX_CONFIG.NUM_NODES,
 
-  FluidDensity : 1000.0, // kg/m3, fluid density specified to be that of water
+  FluidDensity : HX_CONFIG.FLUID_DENSITY, // kg/m3, fluid density specified to be that of water
 
   ssCheckSum : 0, // used to check for steady state
 
@@ -178,14 +194,14 @@ let puCounterCurrentHeatExchanger = {
     this.FlowCold = this.FlowHot;
 
     // initialize profile data array
-    let numProfileVars = plotInfo[2]['var'].length; // plot 2 only has HX unit vars
-    let numProfilePts = this.numNodes;
+    const numProfileVars = plotInfo[2]['var'].length; // plot 2 only has HX unit vars
+    const numProfilePts = this.numNodes;
     this.profileData = plotter.initPlotData(numProfileVars,numProfilePts); // holds data for static profile plots
 
     // // initialize strip chart data array
     // plot 5 has vars from 2 units so can't use ['var'].length
-    let numStripVars = 4; // the 4 end T's of the heat exchanger
-    let numStripPts = plotInfo[5]['numberPoints'];
+    const numStripVars = 4; // the 4 end T's of the heat exchanger
+    const numStripPts = plotInfo[5]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
 
     // initialize local array to hold color-canvas data, e.g., space-time data -
@@ -215,7 +231,7 @@ let puCounterCurrentHeatExchanger = {
       this.profileData[1][k][1] = this.dataMin[1];
     }
 
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    const timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (k=0; k<=numStripPts; k+=1) {
       for (v = 0; v < numStripVars; v += 1) {
         // x-axis values will not change
@@ -248,7 +264,7 @@ let puCounterCurrentHeatExchanger = {
     // note: processUnits[pUnitIndex]['dataValues'][pVar]
     //   is only used in copyData() to report input values
     //
-    let unum = this.unitIndex;
+    const unum = this.unitIndex;
     //
     this.Flowrate = this.dataValues[0] = interfacer.getInputValue(unum, 0);
     this.Tin = this.dataValues[1] = interfacer.getInputValue(unum, 1);
@@ -283,38 +299,38 @@ let puCounterCurrentHeatExchanger = {
 
     // *** NEW FOR ADIABATIC RXR + HX ***
     // fix Cp's here
-    const CpHot = 2.24; // kJ/kg/K
-    const CpCold = CpHot;
+    const CpHot = HX_CONFIG.CP_HOT; // kJ/kg/K
+    const CpCold = HX_CONFIG.CP_COLD;
 
     // this HX uses length for integration
     // so need to make some assumptions to obtain HX length
     // residenceTime is obtained in updateInputs() from reactor
-    let Volume = this.residenceTime * this.Flowrate; // use Flowrate (m3/s)
-    const Diam = 0.1; // (m), arbitrary, fix so can get length for integratino
-    let Length = Volume * 4.0 / Math.PI / Math.pow(Diam, 2); // (m)
+    const Volume = this.residenceTime * this.Flowrate; // use Flowrate (m3/s)
+    const Diam = HX_CONFIG.DIAMETER; // (m), arbitrary, fix so can get length for integration
+    const Length = Volume * 4.0 / Math.PI / Math.pow(Diam, 2); // (m)
 
-    let Ax = Math.PI * Math.pow(Diam, 2) / 4.0; // (m2), cross-sectional area for flow
-    let VelocHot = this.Flowrate / Ax; // (m/s), linear fluid velocity
-    let VelocCold = VelocHot;
+    const Ax = Math.PI * Math.pow(Diam, 2) / 4.0; // (m2), cross-sectional area for flow
+    const VelocHot = this.Flowrate / Ax; // (m/s), linear fluid velocity
+    const VelocCold = VelocHot;
 
     // this.UAcoef from UI input has units of (kW/K)
-    let Awall = Math.PI * Diam * Length; // (m2)
-    let Ucoef = this.UAcoef / Awall; // (kW/m2/K)
+    const Awall = Math.PI * Diam * Length; // (m2)
+    const Ucoef = this.UAcoef / Awall; // (kW/m2/K)
 
     // note XferCoefHot = U * (wall area per unit length) / (rho * Cp * Ax)
-    let XferCoefHot = Ucoef * (Awall / Length) / (this.FluidDensity * CpHot * Ax);
-    let XferCoefCold = XferCoefHot;
+    const XferCoefHot = Ucoef * (Awall / Length) / (this.FluidDensity * CpHot * Ax);
+    const XferCoefCold = XferCoefHot;
 
     // *** FOR RXR + HX USE ZERO TURBULENT DISPERSION COEFFICIENT ***
     // *** will get effective dispersion due to finite difference approx ***
-    let DispHot = 0.0;
-    let DispCold = DispHot;
+    const DispHot = HX_CONFIG.DISPERSION;
+    const DispCold = HX_CONFIG.DISPERSION;
 
-    let dz = Length / this.numNodes; // (m), distance between nodes
-    let VelocHotOverDZ = VelocHot / dz; // precompute to save time in loop
-    let VelocColdOverDZ = VelocCold / dz; // precompute to save time in loop
-    let DispHotOverDZ2 = DispHot / Math.pow(dz, 2);  // precompute to save time in loop
-    let DispColdOverDZ2 = DispCold / Math.pow(dz, 2);  // precompute to save time in loop
+    const dz = Length / this.numNodes; // (m), distance between nodes
+    const VelocHotOverDZ = VelocHot / dz; // precompute to save time in loop
+    const VelocColdOverDZ = VelocCold / dz; // precompute to save time in loop
+    const DispHotOverDZ2 = DispHot / Math.pow(dz, 2);  // precompute to save time in loop
+    const DispColdOverDZ2 = DispCold / Math.pow(dz, 2);  // precompute to save time in loop
 
     let i = 0; // index for step repeats
     let n = 0; // index for nodes
@@ -439,9 +455,9 @@ let puCounterCurrentHeatExchanger = {
 
     let v = 0; // used as index
     let p = 0; // used as index
-    let numStripPoints = plotInfo[5]['numberPoints'];
-    let numStripVars = 4; // only the variables from this unit
-    let nn = this.numNodes;
+    const numStripPoints = plotInfo[5]['numberPoints'];
+    const numStripVars = 4; // only the variables from this unit
+    const nn = this.numNodes;
 
     // handle System Inlet T
     v = 0;
@@ -485,7 +501,7 @@ let puCounterCurrentHeatExchanger = {
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    const timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (v = 0; v < numStripVars; v += 1) {
       for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
         // note want p <= numStripPoints so get # 0 to  # numStripPoints of points
@@ -519,7 +535,7 @@ let puCounterCurrentHeatExchanger = {
     // figures to left decimal point so toFixed() does not return string "0.###"
     // WARNING: too many sig figs will prevent detecting steady state
     //
-    let nn = this.numNodes;
+    const nn = this.numNodes;
     let hlt = 1.0e1 * this.Thot[nn];
     let hrt = 1.0e1 * this.Thot[0];
     let clt = 1.0e1 * this.Tcold[nn];
@@ -529,8 +545,8 @@ let puCounterCurrentHeatExchanger = {
     clt = clt.toFixed(0);
     crt = crt.toFixed(0);
     // concatenate strings
-    let newCheckSum = hlt +'.'+ hrt +'.'+ clt  +'.'+ crt;
-    let oldSScheckSum = this.ssCheckSum;
+    const newCheckSum = hlt +'.'+ hrt +'.'+ clt  +'.'+ crt;
+    const oldSScheckSum = this.ssCheckSum;
     // console.log('OLD CHECKSUM = ' + oldSScheckSum);
     // console.log('NEW CHECKSUM = ' + newCheckSum);
     let ssFlag = false;

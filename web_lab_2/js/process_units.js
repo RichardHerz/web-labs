@@ -18,7 +18,7 @@
 
 // -------------------------------------------------------------------
 
-let processUnits = new Object();
+const processUnits = [];
 // assign process unit objects to this object
 // as indexed child objects in order to allow object controller
 // to access them in a repeat with numeric index

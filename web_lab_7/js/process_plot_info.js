@@ -9,15 +9,15 @@
 //     READ THE WIKI PAGE FOR THIS FILE AT OUR GITHUB SITE
 //     https://github.com/RichardHerz/web-labs/wiki/process_plot_info
 
-let plotInfo = {
+const plotInfo = {
 
   initialize : function() {
 
-    let unum = 0; // useful when only one unit in plot, processUnits[unum]
+    const unum = 0; // useful when only one unit in plot, processUnits[unum]
 
     // plot 0 info
     let pnum = 0;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'profile';
     plotInfo[pnum]['title'] = 'PFR Profiles';
     plotInfo[pnum]['canvas'] = '#div_PLOTDIV_PFR_plot'; // flot.js wants ID with prefix #
@@ -51,13 +51,13 @@ let plotInfo = {
     // SET UP ARRAYS TO HOLD INFO FOR EACH VARIABLE on plot and/or copy data table
     // WARNING: all below with prefix 'var' must have same number of child objects,
     // one for each variable placed on plot
-    plotInfo[pnum]['varUnitIndex'] = new Array();
-    plotInfo[pnum]['var'] = new Array();
-    plotInfo[pnum]['varLabel'] = new Array();
-    plotInfo[pnum]['varDataUnits'] = new Array();
-    plotInfo[pnum]['varShow'] = new Array();
-    plotInfo[pnum]['varYaxis'] = new Array();
-    plotInfo[pnum]['varYscaleFactor'] = new Array();
+    plotInfo[pnum]['varUnitIndex'] = [];
+    plotInfo[pnum]['var'] = [];
+    plotInfo[pnum]['varLabel'] = [];
+    plotInfo[pnum]['varDataUnits'] = [];
+    plotInfo[pnum]['varShow'] = [];
+    plotInfo[pnum]['varYaxis'] = [];
+    plotInfo[pnum]['varYscaleFactor'] = [];
     //
     // ADD SETTINGS FOR EACH VARIABLE
     //
@@ -86,7 +86,7 @@ let plotInfo = {
     //
     // plot 1 info
     pnum = 1;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'canvas';
     plotInfo[pnum]['title'] = 'reactor color canvas';
     plotInfo[pnum]['canvas'] = 'canvas_CANVAS_reactor'; // without prefix #
@@ -102,7 +102,7 @@ let plotInfo = {
 
     // plot 2 info
     pnum = 2;
-    plotInfo[pnum] = new Object();
+    plotInfo[pnum] = {};
     plotInfo[pnum]['type'] = 'canvas';
     plotInfo[pnum]['title'] = 'jacket color canvas';
     plotInfo[pnum]['canvas'] = 'canvas_CANVAS_jacket'; // without prefix #

@@ -15,7 +15,7 @@
 // *** COMPONENTS (functions, objects) NAMES SHOULD STAY SAME BUT
 // *** definitions of those components will change
 
-let plotter = {
+const plotter = {
   // plotting with the flot.js library... 
   // AND ALSO generates color canvas plots indpendently of flot.js 
   // USES OBJECT plotInfo in file process_plot_info.js
@@ -65,8 +65,8 @@ let plotter = {
     let sf = 1; // scale factor used below and possibly modified
     let thisNumPts; // used a couple places below with array .length
     let dataName;
-    let varNumbers = plotInfo[plotIndex]['var'];
-    let numVar = varNumbers.length;
+    const varNumbers = plotInfo[plotIndex]['var'];
+    const numVar = varNumbers.length;
 
     let xVar; // used for plot type single
     let yVar; // used for plot type single
@@ -82,7 +82,7 @@ let plotter = {
     // WARNING: you must do full initialization for plots which involve more
     //          than one variable per unit but do it here for all plots
     let plotData = []; // this function will fill and return plotData
-    let plotType = plotInfo[plotIndex]['type']; // profile or strip
+    const plotType = plotInfo[plotIndex]['type']; // profile or strip
     dataName = plotType + 'Data';
     if ((plotType == 'profile') || (plotType == 'strip') || (plotType == 'single')) {
       v = 0;
@@ -205,15 +205,15 @@ let plotter = {
 
     // get info about the variables
 
-    let plotList = plotInfo[pIndex]['var'];
+    const plotList = plotInfo[pIndex]['var'];
     // plotList is array whose elements are the values of the
     // first index in pData array which holds the x,y values to plot
 
     let k = 0; // used as index in plotList
     let v = 0; // value of element k in plotList
-    let vLabel = []; // array to hold variable names for plot legend
-    let yAxis = []; // array to hold y-axis, "left" or "right"
-    let vShow = []; // array to hold "show", "tabled", or empty or other, e.g., "hide"
+    const vLabel = []; // array to hold variable names for plot legend
+    const yAxis = []; // array to hold y-axis, "left" or "right"
+    const vShow = []; // array to hold "show", "tabled", or empty or other, e.g., "hide"
     plotList.forEach(fGetAxisData);
     function fGetAxisData(v,k) {
   	  // v = value of element k of plotList array
@@ -234,10 +234,10 @@ let plotter = {
     //    e.g., plotInfo[pnum]['varShow'][vnum] = 'show';
     // interfacer.copyData tabulates all variables in plotInfo regardless of the varShow value
 
-    let plotCanvasHtmlID = plotInfo[pIndex]['canvas'];
+    const plotCanvasHtmlID = plotInfo[pIndex]['canvas'];
 
-    let dataToPlot = [];
-    let numVar = plotList.length;
+    const dataToPlot = [];
+    const numVar = plotList.length;
     let numToShow = 0; // index for variables to show on plot
     // KEEP numToShow as well as for index k because not all k vars will show!
     // only variables with property "show" will appear on plot
@@ -275,20 +275,20 @@ let plotter = {
 
     // set up the plot axis labels and plot legend
 
-    let xShow = plotInfo[pIndex]['xAxisShow'];
-    let xLabel = plotInfo[pIndex]['xAxisLabel'];
-    let xMin= plotInfo[pIndex]['xAxisMin'];
-    let xMax = plotInfo[pIndex]['xAxisMax'];
-    let yLeftLabel = plotInfo[pIndex]['yLeftAxisLabel'];
-    let yLeftMin = plotInfo[pIndex]['yLeftAxisMin'];
-    let yLeftMax = plotInfo[pIndex]['yLeftAxisMax'];
-    let yRightLabel = plotInfo[pIndex]['yRightAxisLabel'];
-    let yRightMin = plotInfo[pIndex]['yRightAxisMin'];
-    let yRightMax = plotInfo[pIndex]['yRightAxisMax'];
-    let plotLegendPosition = plotInfo[pIndex]['plotLegendPosition'];
-    let plotLegendShow = plotInfo[pIndex]['plotLegendShow']; // Boolean 0,1
-    let plotGridBgColor = plotInfo[pIndex]['plotGridBgColor'];
-    let plotDataSeriesColors = plotInfo[pIndex]['plotDataSeriesColors'];
+    const xShow = plotInfo[pIndex]['xAxisShow'];
+    const xLabel = plotInfo[pIndex]['xAxisLabel'];
+    const xMin= plotInfo[pIndex]['xAxisMin'];
+    const xMax = plotInfo[pIndex]['xAxisMax'];
+    const yLeftLabel = plotInfo[pIndex]['yLeftAxisLabel'];
+    const yLeftMin = plotInfo[pIndex]['yLeftAxisMin'];
+    const yLeftMax = plotInfo[pIndex]['yLeftAxisMax'];
+    const yRightLabel = plotInfo[pIndex]['yRightAxisLabel'];
+    const yRightMin = plotInfo[pIndex]['yRightAxisMin'];
+    const yRightMax = plotInfo[pIndex]['yRightAxisMax'];
+    const plotLegendPosition = plotInfo[pIndex]['plotLegendPosition'];
+    const plotLegendShow = plotInfo[pIndex]['plotLegendShow']; // Boolean 0,1
+    const plotGridBgColor = plotInfo[pIndex]['plotGridBgColor'];
+    const plotDataSeriesColors = plotInfo[pIndex]['plotDataSeriesColors'];
     // check if want lines and/or points shown
     // default is lines only
     let plotDataPoints = false;
@@ -304,7 +304,7 @@ let plotter = {
       plotDataLines = plotInfo[pIndex]['plotDataLines'];
     }
 
-    let options = {
+    const options = {
       // axisLabels REQUIRES LIBRARY flot.axislabels.js, SEE
       //     https://github.com/markrcote/flot-axislabels
       axisLabels : {show: true},

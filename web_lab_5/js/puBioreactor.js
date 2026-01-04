@@ -256,7 +256,7 @@ function puBioReactor(pUnitIndex) {
     // except do all plotting at main controller updateDisplay
     // since some plots may contain data from more than one process unit
 
-    let el = document.querySelector(theDisplayReactorContentsID);
+    const el = document.querySelector(theDisplayReactorContentsID);
 
     const colorMax = 240;
     const biomassMax = this.dataMax[5];
@@ -277,7 +277,7 @@ function puBioReactor(pUnitIndex) {
     let p = 0; // used as index
     let tempArray = [];
     let numStripPoints = plotInfo[0]['numberPoints'];
-    let numStripVars = 2; // only the variables from this unit
+    const numStripVars = 2; // only the variables from this unit
 
     // handle biomass
     v = 0;
@@ -301,7 +301,7 @@ function puBioReactor(pUnitIndex) {
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    const timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (v = 0; v < numStripVars; v += 1) {
       for (p = 0; p <= numStripPoints; p += 1) { // note = in p <= numStripPoints
         // note want p <= numStripPoints so get # 0 to  # numStripPoints of points

@@ -5,7 +5,7 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-let reactor = {
+const reactor = {
 
   updateDisplayTimingMs : 100,
   reactantConcInitial : 1,
@@ -26,7 +26,7 @@ let reactor = {
 
   openThisLab : function() {
 
-    let el = document.querySelector("#div_PLOTDIV_reactor_contents");
+    const el = document.querySelector("#div_PLOTDIV_reactor_contents");
     el.style.top = "129px";
     el.style.height = "70px";
     el.style.backgroundColor = "rgb(0,0,255)";
@@ -110,7 +110,7 @@ let reactor = {
 
     // put this before change height & color or change each onclick
     // both two lines below work by themselves and don't require jquery
-    let el = document.querySelector("#div_PLOTDIV_reactor_contents");
+    const el = document.querySelector("#div_PLOTDIV_reactor_contents");
     // let el = document.getElementById("div_PLOTDIV_reactor_contents");
     // get current top and height
     let top = parseFloat(el.style.top); // convert, e.g., "100px" to 100
@@ -168,7 +168,7 @@ let reactor = {
     }
 
     // both two lines below work by themselves and don't require jquery
-    let el = document.querySelector("#div_PLOTDIV_reactor_contents");
+    const el = document.querySelector("#div_PLOTDIV_reactor_contents");
     // let el = document.getElementById("div_PLOTDIV_reactor_contents");
     let top = parseFloat(el.style.top); // convert, e.g., "100px" to 100
     let height = parseFloat(el.style.height); // convert, e.g., "100px" to 100
@@ -326,7 +326,7 @@ let reactor = {
     // console.log('in reactReactorContinue, reactor.reactTimeSteps = ' + reactor.reactTimeSteps);
 
     // both two lines below work by themselves and don't require jquery
-    let el = document.querySelector("#div_PLOTDIV_reactor_contents");
+    const el = document.querySelector("#div_PLOTDIV_reactor_contents");
     // let el = document.getElementById("div_PLOTDIV_reactor_contents");
 
     // step reaction

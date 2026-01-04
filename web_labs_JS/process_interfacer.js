@@ -6,7 +6,15 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-let interfacer = {
+// Configuration constants for the interfacer
+const INTERFACER_CONFIG = {
+  QUIZ_ANSWER_TOLERANCE: 0.2,  // +/- 20% tolerance for quiz answers
+  LOG_NORMAL_SIGMA: 0.5,       // standard deviation for log-normal distribution
+  LOG_NORMAL_MU: 0.5,          // mean for log-normal distribution
+  LOG_NORMAL_ZMAX: 5           // max value for log-normal distribution
+};
+
+const interfacer = {
   // OBJECT interfacer handles UI controls and input fields in HTML
   // unit objects may write directly to output fields or other elements
    // this is an "object literal" statement used to create this object
@@ -26,7 +34,7 @@ let interfacer = {
       return;
     }
 
-    let el = document.getElementById('button_runButton');
+    const el = document.getElementById('button_runButton');
     if (el.value == 'Run') {
 
       // button label is 'Run' & was clicked, so start running
@@ -67,11 +75,11 @@ let interfacer = {
     }
     controller.resetSSflagsFalse();
     controller.updateDisplay();
-    let el = document.getElementById('button_runButton');
+    const el = document.getElementById('button_runButton');
     el.value = 'Run';
     // do NOT update process nor display again here (will take one step)
 
-    let txt = 'The Reactor Lab provides interactive '
+    const txt = 'The Reactor Lab provides interactive '
       + 'simulations for active learning. The web site is '
       + '<a href="https://reactorlab.net/">ReactorLab.net</a>. '
       + 'The lab is provided free of charge and code is open source and available '
@@ -99,13 +107,13 @@ let interfacer = {
     // let varInputID = processUnits[u].dataInputs[v]; // THIS WORKS
     // processUnits[u].dataInputs.v does *NOT* work
 
-    let varInputID = processUnits[u]['dataInputs'][v];
+    const varInputID = processUnits[u]['dataInputs'][v];
 
     // console.log('  varInputID = ' + varInputID);
 
-    let varDefault = processUnits[u]['dataDefault'][v];
-    let varMin = processUnits[u]['dataMin'][v];
-    let varMax = processUnits[u]['dataMax'][v];
+    const varDefault = processUnits[u]['dataDefault'][v];
+    const varMin = processUnits[u]['dataMin'][v];
+    const varMax = processUnits[u]['dataMax'][v];
     let varValue; // set below
     // have to get any quiz vars from array and not html input field
     let qflag = false;
@@ -211,10 +219,10 @@ let interfacer = {
     function randomLogNormal(vmin,vmax) {
       // return values will have close to a log-normal distribution
       // skewed toward vmin >> see Box-Muller transform
-      let sigma = 0.5; // std deviation
-      let mu = 0.5; // mean
+      const sigma = INTERFACER_CONFIG.LOG_NORMAL_SIGMA; // std deviation
+      const mu = INTERFACER_CONFIG.LOG_NORMAL_MU; // mean
       let u; let v; let x; let y;
-      let zmax = 5;
+      const zmax = INTERFACER_CONFIG.LOG_NORMAL_ZMAX;
       let z = 1 + zmax;
       // z's will have a log-normal distribution but clipped at zmax value
       // so z's will be 0 to zmax skewed towards zero
@@ -248,9 +256,10 @@ let interfacer = {
       varValue = this.formatNumToNum(varValue);
       txt = "You entered: " + varAnswer + " correct is " + varValue;
       // heats of rxn can be < 0 so compare absolute values
-      let absVarAnswer = Math.abs(varAnswer);
-      let absVarValue = Math.abs(varValue);
-      if ((absVarAnswer >= 0.8 * absVarValue) && (absVarAnswer <= 1.2 * absVarValue)){
+      const absVarAnswer = Math.abs(varAnswer);
+      const absVarValue = Math.abs(varValue);
+      const tolerance = INTERFACER_CONFIG.QUIZ_ANSWER_TOLERANCE;
+      if ((absVarAnswer >= (1 - tolerance) * absVarValue) && (absVarAnswer <= (1 + tolerance) * absVarValue)){
         alert("Good work! " + txt);
         // put the value in the input field
         let el = document.getElementById(processUnits[u]['dataInputs'][v]);
@@ -265,7 +274,8 @@ let interfacer = {
         // put value into processUnits[u]['dataValues'][v] for copyData
         processUnits[u]['dataValues'][v] = varValue;
       } else {
-        alert(varAnswer + " not within +/- 20%. Try again.");
+        const tolerancePercent = (INTERFACER_CONFIG.QUIZ_ANSWER_TOLERANCE * 100).toFixed(0);
+        alert(varAnswer + " not within +/- " + tolerancePercent + "%. Try again.");
       }
     }
   }, // END OF function checkQuizAnswer
@@ -289,7 +299,7 @@ let interfacer = {
     // copy grabs what is showing on plot when copy button clicked
     // so want user to be able to take screenshot to compare with data copied
     // this will let last updateDisplay of updateProcess finish before sim pauses
-    let el = document.getElementById('button_runButton');
+    const el = document.getElementById('button_runButton');
     if (el.value == 'Pause') {
       // button label is 'Pause', lab is running, call runThisLab to toggle to stop running
       interfacer.runThisLab(); // toggles running state
@@ -304,8 +314,8 @@ let interfacer = {
     let varIndex; // index of selected variable in unit local data array
     let varUnitIndex; // index of unit from which variable is to be obtained
     let tText; // we will put the data into this variable
-    let tItemDelimiter = ', &nbsp;';
-    let tVarLen = plotInfo[plotIndex]['var'].length; // length for loops below
+    const tItemDelimiter = ', &nbsp;';
+    const tVarLen = plotInfo[plotIndex]['var'].length; // length for loops below
 
     tText = '<p>Web Labs at ReactorLab.net &nbsp; &gt; &nbsp;' + simParams.title + '</p>';
 
@@ -492,7 +502,7 @@ let interfacer = {
     //
     // NOTE: window.open VERSION BELOW OPENS NEW TAB IN SAME BROWSER WINDOW
     //       NEED TO ADD TOOLTIP TO BTN AND/OR TEXT OR LINK ON COPY DATA TAB...
-    // let dataWindow = window.open('',
+    // const dataWindow = window.open('',
     //       'height=600, left=20, resizable=1, scrollbars=1, top=40, width=600');
     //
 

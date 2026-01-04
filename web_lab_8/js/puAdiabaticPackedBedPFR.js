@@ -16,7 +16,21 @@
 
 // -------------------------------------------------------------------
 
-let puAdiabaticPackedBedPFR = {
+// Configuration constants for the Adiabatic Packed Bed PFR
+const PFR_CONFIG = {
+  // Simulation parameters
+  UNIT_STEP_REPEATS: 100,
+  NUM_NODES: 200,
+
+  // Physical properties
+  FLUID_CP: 2.24,        // (kJ/kg/K) - fluid heat capacity
+  FLUID_DENSITY: 1000,   // (kg/m3) - fluid density
+  CATALYST_DENSITY: 1000, // (kg/m3) - catalyst density
+  VOID_FRACTION: 0.3,    // bed void fraction
+  CATALYST_CP: 1.24      // (kJ/kg/K) - catalyst heat capacity
+};
+
+const puAdiabaticPackedBedPFR = {
   unitIndex : 0, // index of this unit as child in processUnits parent object
   // unitIndex used in this object's updateUIparams() method
   name : 'Adiabatic Packed Bed PFR',
@@ -32,7 +46,9 @@ let puAdiabaticPackedBedPFR = {
   Tin : 320,
 
   updateInputs : function() {
-    this.Tin = processUnits[1].ToutCold;
+    // Get reference to heat exchanger unit by name instead of hardcoded index
+    const heatExchangerUnit = processUnits.find(unit => unit.name === 'Counter-Current Heat Exchanger');
+    this.Tin = heatExchangerUnit.ToutCold;
     this.updateInputsFinish(); // SPECIAL - get new adiabatic T limits
   },
 
@@ -95,8 +111,8 @@ let puAdiabaticPackedBedPFR = {
   colorCanvasData : [], // for color canvas plots, plot script requires this name
 
   // allow this unit to take more than one step within one main loop step in updateState method
-  unitStepRepeats : 100,
-  unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
+  unitStepRepeats : PFR_CONFIG.UNIT_STEP_REPEATS,
+  unitTimeStep : simParams.simTimeStep / PFR_CONFIG.UNIT_STEP_REPEATS,
 
   // WARNING: IF INCREASE NUM NODES IN HEAT EXCHANGER BY A FACTOR THEN HAVE TO
   // REDUCE size of time steps FOR NUMERICAL STABILITY BY SQUARE OF THE FACTOR
@@ -108,14 +124,14 @@ let puAdiabaticPackedBedPFR = {
 
   // WARNING: have to check for any changes to simTimeStep and simStepRepeats if change numNodes
   // WARNING: numNodes is accessed in process_plot_info.js
-  numNodes : 200,
+  numNodes : PFR_CONFIG.NUM_NODES,
 
   ssCheckSum : 0, // used to check for steady state
 
-  CpFluid : 2.24, // (kJ/kg/K)
-  densFluid : 1000, // (kg/m3)
-  densCat : 1000, // (kg/m3)
-  voidFrac : 0.3, // bed void fraction
+  CpFluid : PFR_CONFIG.FLUID_CP, // (kJ/kg/K)
+  densFluid : PFR_CONFIG.FLUID_DENSITY, // (kg/m3)
+  densCat : PFR_CONFIG.CATALYST_DENSITY, // (kg/m3)
+  voidFrac : PFR_CONFIG.VOID_FRACTION, // bed void fraction
 
   initialize : function() {
     //
@@ -221,14 +237,14 @@ let puAdiabaticPackedBedPFR = {
     }
 
     // initialize profile data array
-    let numProfileVars = plotInfo[0]['var'].length; // plot 0 only has reactor unit vars
-    let numProfilePts = this.numNodes;
+    const numProfileVars = plotInfo[0]['var'].length; // plot 0 only has reactor unit vars
+    const numProfilePts = this.numNodes;
     this.profileData = plotter.initPlotData(numProfileVars,numProfilePts); // holds data for static profile plots
 
     // initialize strip chart data array
     // plot 5 has vars from 2 units - rxr & hx so can't use ['var'].length
-    let numStripVars = 1; // only outlet conc from this unit on plot 5
-    let numStripPts = plotInfo[5]['numberPoints'];
+    const numStripVars = 1; // only outlet conc from this unit on plot 5
+    const numStripPts = plotInfo[5]['numberPoints'];
     this.stripData = plotter.initPlotData(numStripVars,numStripPts); // holds data for scrolling strip chart plots
 
     // initialize local array to hold color-canvas data, e.g., space-time data -
@@ -248,7 +264,7 @@ let puAdiabaticPackedBedPFR = {
       this.profileData[1][k][1] = this.dataDefault[4]; // [4] is Cain
     }
 
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    const timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (k = 0; k <= numStripPts; k += 1) {
       // x-axis values
       // x-axis values will not change during sim
@@ -284,7 +300,7 @@ let puAdiabaticPackedBedPFR = {
     // note: this.dataValues.[pVar]
     //   is only used in copyData() to report input values
     //
-    let unum = this.unitIndex;
+    const unum = this.unitIndex;
     //
     this.Kf300 = this.dataValues[0] = interfacer.getInputValue(unum, 0);
     this.Ea = this.dataValues[1] = interfacer.getInputValue(unum, 1);
@@ -298,7 +314,7 @@ let puAdiabaticPackedBedPFR = {
 
     // update residenceTime, which is needed by HX to match that of RXR
     // in case any change in Wcat or Flowrate
-    let densBed = this.densCat * (1 - this.voidFrac);
+    const densBed = this.densCat * (1 - this.voidFrac);
     this.residenceTime = this.Wcat * this.voidFrac / densBed / this.Flowrate;
 
   }, // END of updateUIparams()
@@ -308,8 +324,8 @@ let puAdiabaticPackedBedPFR = {
     // called by updateUnits above
     // *** UPDATE MIN-MAX T FOR ADIABATIC REACTOR ***
     // calc adiabatic delta T, positive for negative H (exothermic)
-    let adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
-    let varMinMaxT = 7; // 7 is Trxr used for constraint during integration
+    const adiabDeltaT = -this.DelH * this.Cain / this.densFluid / this.CpFluid;
+    const varMinMaxT = 7; // 7 is Trxr used for constraint during integration
     // calc max possible T
     if(this.DelH < 0) {
       // exothermic
@@ -350,22 +366,22 @@ let puAdiabaticPackedBedPFR = {
     let varMinMaxT = 7; // 7 is Trxr used for constraint during integration
 
     // CpFluid, voidFrac, densCat and densFluid properties of puPlugFlowReactor
-    let CpCat= 1.24; // (kJ/kg/K), catalyst heat capacity
-    let densBed = (1 - this.voidFrac) * this.densCat; // (kg/m3), bed density
+    const CpCat = PFR_CONFIG.CATALYST_CP; // (kJ/kg/K), catalyst heat capacity
+    const densBed = (1 - this.voidFrac) * this.densCat; // (kg/m3), bed density
     // assume fluid and catalyst at same T at each position in reactor
-    let CpMean = this.voidFrac * this.CpFluid + (1 - this.voidFrac) * CpCat;
+    const CpMean = this.voidFrac * this.CpFluid + (1 - this.voidFrac) * CpCat;
 
-    let dW = this.Wcat / this.numNodes;
-    let Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
+    const dW = this.Wcat / this.numNodes;
+    const Rg = 8.31446e-3; // (kJ/K/mol), ideal gas constant
     let kT = 0; // will vary with T below
-    let EaOverRg = this.Ea / Rg; // so not compute in loop below
-    let EaOverRg300 = EaOverRg / 300; // so not compute in loop below
+    const EaOverRg = this.Ea / Rg; // so not compute in loop below
+    const EaOverRg300 = EaOverRg / 300; // so not compute in loop below
 
-    let flowCoef = this.Flowrate * densBed / this.voidFrac / dW;
-    let rxnCoef = densBed / this.voidFrac;
+    const flowCoef = this.Flowrate * densBed / this.voidFrac / dW;
+    const rxnCoef = densBed / this.voidFrac;
 
-    let energyFlowCoef = this.Flowrate * this.densFluid * this.CpFluid / CpMean / dW;
-    let energyRxnCoef = this.DelH / CpMean;
+    const energyFlowCoef = this.Flowrate * this.densFluid * this.CpFluid / CpMean / dW;
+    const energyRxnCoef = this.DelH / CpMean;
 
     // *** FOR ADIABATIC RXR + HX, no heat transfer to rxr walls ***
 
@@ -493,9 +509,9 @@ let puAdiabaticPackedBedPFR = {
     let v = 0; // used as index
     let p = 0; // used as index
     // plot 5 has vars from 2 units - rxr & hx so can't use ['var'].length
-    let numStripVars = 1; // only outlet conc from this unit on plot 5
-    let numStripPts = plotInfo[5]['numberPoints'];
-    let nn = this.numNodes;
+    const numStripVars = 1; // only outlet conc from this unit on plot 5
+    const numStripPts = plotInfo[5]['numberPoints'];
+    const nn = this.numNodes;
 
     // handle Rxr Outlet Conc
     v = 0;
@@ -509,7 +525,7 @@ let puAdiabaticPackedBedPFR = {
 
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    const timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (v = 0; v < numStripVars; v += 1) {
       for (p = 0; p <= numStripPts; p += 1) { // note = in p <= numStripPts
         // note want p <= numStripPts so get # 0 to  # numStripPts of points

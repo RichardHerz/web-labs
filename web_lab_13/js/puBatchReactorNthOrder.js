@@ -390,7 +390,7 @@ let puBatchReactorNthOrder = {
     document.getElementById("field_run_count").innerHTML = "Total runs = " + this.runCount;
 
     // set reactor contents color to final color
-    let el = document.querySelector(this.displayReactorContents);
+    const el = document.querySelector(this.displayReactorContents);
     // el.style.backgroundColor = "rgb(0,0,255)";
     // compute color for this reactantConc
     let cafinal = this.cA_final;

@@ -5,6 +5,19 @@
   https://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
+// Configuration constants for the catalyst layer
+const CATALYST_LAYER_CONFIG = {
+  NUM_NODES: 50,
+  NUM_STRIP_PTS: 80,
+  UNIT_STEP_REPEATS: 1200,
+  LAYER_VOID_FRACTION: 0.3,          // layer void fraction, eps
+  LAYER_PELLET_VOLUME_RATIO: 2,      // layer-pellet/cell volume ratio Vp/Vc
+  PHASE_SHIFT: 1.5 * Math.PI,
+  NUM_STRIP_VARS: 3,                 // for strip chart data (Ain, Aout, Bout)
+  RESIDENCE_TIME: 100,               // for SS check, never at SS so set large
+  SS_CHECK_MULTIPLIER: 1.0e3         // multiplier for SS check significant figures
+};
+
 // ------------ PROCESS UNIT OBJECT DEFINITIONS ----------------------
 
 // EACH PROCESS UNIT DEFINITION MUST CONTAIN AT LEAST THESE 7 FUNCTIONS:
@@ -107,11 +120,11 @@ let puCatalystLayer = {
 
   // WARNING: have to change simTimeStep and simStepRepeats if change numNodes
   // WARNING: numNodes is accessed  in process_plot_info.js
-  numNodes : 50,
+  numNodes : CATALYST_LAYER_CONFIG.NUM_NODES,
 
   // numStripPts used for strip charts and also color canvas
   // this value is also accessed by plotter_plot_info.js
-  numStripPts : 80,
+  numStripPts : CATALYST_LAYER_CONFIG.NUM_STRIP_PTS,
 
   // WARNING: IF INCREASE NUM NODES IN CATALYST LAYER BY A FACTOR THEN HAVE TO
   // REDUCE size of time steps FOR NUMERICAL STABILITY BY SQUARE OF THE FACTOR
@@ -120,8 +133,8 @@ let puCatalystLayer = {
 
   // allow this unit to take more than one step within one main loop step in updateState method
   // WARNING: see special handling for dt in this case in this unit's updateInputs method
-  unitStepRepeats : 1200,
-  unitTimeStep : simParams.simTimeStep / this.unitStepRepeats,
+  unitStepRepeats : CATALYST_LAYER_CONFIG.UNIT_STEP_REPEATS,
+  unitTimeStep : simParams.simTimeStep / CATALYST_LAYER_CONFIG.UNIT_STEP_REPEATS,
 
   // kinetic model
   Model : 2, // use integers 1,2 - used in Math.pow(), selects rate determining step
@@ -153,7 +166,7 @@ let puCatalystLayer = {
     this.dataMin[v] = 0;
     this.dataMax[v] = 1;
     this.dataDefault[v] = 0;
-    //
+
     v = 1;
     this.dataHeaders[v] = 'CmaxSlider';
     this.dataInputs[v] = 'range_setCmax_slider';
@@ -299,7 +312,7 @@ let puCatalystLayer = {
     // residenceTime of this unit required to check for steady state in controller object
     // SPECIAL this unit prob never at SS and checkForSteadyState below
     // always returns false so set a large number here
-    this.residenceTime = 100;
+    this.residenceTime = CATALYST_LAYER_CONFIG.RESIDENCE_TIME;
 
     // updateUIparams gets called on page load but not new range and input
     // updates, so need to call updateUIfeedInput here
@@ -340,8 +353,8 @@ let puCatalystLayer = {
     // at least for now, do not check existence of UI element as above
 
     // Model radio buttons - selects rate determing step
-    let m01 = document.querySelector('#' + this.inputModel01);
-    let m02 = document.querySelector('#' + this.inputModel02);
+    const m01 = document.querySelector('#' + this.inputModel01);
+    const m02 = document.querySelector('#' + this.inputModel02);
     if (m01.checked) {
       this.Model = 1;
     } else {
@@ -349,10 +362,10 @@ let puCatalystLayer = {
     }
 
     // Input Shape radio buttons
-    let el0 = document.querySelector('#' + this.inputRadioConstant);
-    let el1 = document.querySelector('#' + this.inputRadioSine);
-    let el2 = document.querySelector('#' + this.inputRadioSquare);
-    let el3 = document.querySelector('#' + this.inputCheckBoxFeed);
+    const el0 = document.querySelector('#' + this.inputRadioConstant);
+    const el1 = document.querySelector('#' + this.inputRadioSine);
+    const el2 = document.querySelector('#' + this.inputRadioSquare);
+    const el3 = document.querySelector('#' + this.inputCheckBoxFeed);
     if (el2.checked) {
       this.Shape = 'square';
     } else if (el1.checked) {
@@ -368,8 +381,8 @@ let puCatalystLayer = {
 
     // console.log('updateUIparams, this.Shape = ' + this.Shape);
 
-    let Krxn = Math.pow(this.Phi, 2)*this.Kdiff/0.3/this.Alpha/this.Kads;
-    // note eps is local to updateState, so use 0.3 here
+    const Krxn = Math.pow(this.Phi, 2)*this.Kdiff/CATALYST_LAYER_CONFIG.LAYER_VOID_FRACTION/this.Alpha/this.Kads;
+    // note eps is defined in CATALYST_LAYER_CONFIG
     document.getElementById(this.displayKrxn).innerHTML = Krxn.toFixed(4);
 
     // console.log('Phi = ' + this.Phi);
@@ -392,7 +405,7 @@ let puCatalystLayer = {
     // called in HTML input element
     // [0] is field, [1] is slider
     // get field value
-    let unum = 0;
+    const unum = 0;
     this.Cmax = this.dataValues[0] = interfacer.getInputValue(unum, 0);
       // update slider position
     document.getElementById(this.dataInputs[1]).value = this.Cmax;
@@ -408,7 +421,7 @@ let puCatalystLayer = {
     // called in HTML input element
     // [0] is field, [1] is slider
     // get slider value
-    let unum = 0;
+    const unum = 0;
     this.Cmax = this.dataValues[1] = interfacer.getInputValue(unum, 1);
     // update field display
     document.getElementById(this.dataInputs[0]).value = this.Cmax;
@@ -434,23 +447,23 @@ let puCatalystLayer = {
 
     // document.getElementById("dev01").innerHTML = "UPDATE time = " + controller.simTime.toFixed(0) + "; y = " + this.y[20];
 
-    let eps = 0.3; // layer void fraction, constant
-    let Vratio = 2; // layer-pellet/cell volume ratio Vp/Vc, keep constant
-    let phaseShift = 1.5 * Math.PI; // keep constant
+    const eps = CATALYST_LAYER_CONFIG.LAYER_VOID_FRACTION;
+    const Vratio = CATALYST_LAYER_CONFIG.LAYER_PELLET_VOLUME_RATIO;
+    const phaseShift = CATALYST_LAYER_CONFIG.PHASE_SHIFT;
 
     // compute these products outside of repeat
 
     // compute 0 to this.numNodes points, therefore this.numNodes divisions
-    let dz = 1/this.numNodes; // dless distance between nodes in layer
+    const dz = 1/this.numNodes; // dless distance between nodes in layer
 
-    let inverseDz2 = Math.pow(1/dz, 2);
-    let KflowCell = this.Kflow*Vratio; // Q/Vc/k-1 = (Q/Vp/k-1)*(Vp/Vc)
-    let KdOeps = this.Kdiff / eps;
-    let KdOepsOAlpha = KdOeps / this.Alpha;
-    let dtKdOepsOAlpha = this.unitTimeStep * KdOepsOAlpha;
-    let dtKdOeps = this.unitTimeStep * KdOeps;
-    let Phi2 = Math.pow(this.Phi, 2);
-    let flowFactor = this.Kflow / this.Alpha / eps; // for aveRate
+    const inverseDz2 = Math.pow(1/dz, 2);
+    const KflowCell = this.Kflow*Vratio; // Q/Vc/k-1 = (Q/Vp/k-1)*(Vp/Vc)
+    const KdOeps = this.Kdiff / eps;
+    const KdOepsOAlpha = KdOeps / this.Alpha;
+    const dtKdOepsOAlpha = this.unitTimeStep * KdOepsOAlpha;
+    const dtKdOeps = this.unitTimeStep * KdOeps;
+    const Phi2 = Math.pow(this.Phi, 2);
+    const flowFactor = this.Kflow / this.Alpha / eps; // for aveRate
 
     // console.log('inverseDz2 = ' + inverseDz2);
     // console.log('KflowCell = ' + KflowCell);
@@ -656,7 +669,7 @@ let puCatalystLayer = {
     let s; // used as index
     let t; // used as index
     let tempArray = []; // for shifting data in strip chart plots
-    let tempSpaceData = []; // for shifting data in color canvas plots
+    const tempSpaceData = []; // for shifting data in color canvas plots
 
     // display average rate and average conversion
     document.getElementById(this.displayAveRate).innerHTML = this.aveRate.toExponential(3);
@@ -721,8 +734,8 @@ let puCatalystLayer = {
     // re-number the x-axis values to equal time values
     // so they stay the same after updating y-axis values
 
-    let numStripVars = 3; // xxx change to use var value
-    let timeStep = simParams.simTimeStep * simParams.simStepRepeats;
+    const numStripVars = CATALYST_LAYER_CONFIG.NUM_STRIP_VARS;
+    const timeStep = simParams.simTimeStep * simParams.simStepRepeats;
     for (v = 0; v < numStripVars; v += 1) {
       for (p = 0; p <= this.numStripPts; p += 1) { // note = in p <= this.numStripPts
         // note want p <= this.numStripPts so get # 0 to  # this.numStripPts of points
@@ -778,18 +791,18 @@ let puCatalystLayer = {
     // figures to left decimal point so toFixed() does not return string "0.###"
     // WARNING: too many sig figs will prevent detecting steady state
     //
-    let rc = 1.0e3 * this.y[1]; // reactant at center of layer
-    let rt = 1.0e3 * this.y[this.numNodes]; // reactant at outer surface layer
-    let lt = 1.0e3 * this.y2[0]; // product at center of layer
-    let lc = 1.0e3 * this.y2[this.numNodes]; // product at outer surface layer
+    let rc = CATALYST_LAYER_CONFIG.SS_CHECK_MULTIPLIER * this.y[1]; // reactant at center of layer
+    let rt = CATALYST_LAYER_CONFIG.SS_CHECK_MULTIPLIER * this.y[this.numNodes]; // reactant at outer surface layer
+    let lt = CATALYST_LAYER_CONFIG.SS_CHECK_MULTIPLIER * this.y2[0]; // product at center of layer
+    let lc = CATALYST_LAYER_CONFIG.SS_CHECK_MULTIPLIER * this.y2[this.numNodes]; // product at outer surface layer
     rc = rc.toFixed(0); // strings
     rt = rt.toFixed(0);
     lt = lt.toFixed(0);
     lc = lc.toFixed(0);
     // concatenate strings
-    let newCheckSum = rc +'.'+ rt +'.'+ lt +'.'+ lc;
+    const newCheckSum = rc +'.'+ rt +'.'+ lt +'.'+ lc;
     //
-    let oldSScheckSum = this.ssCheckSum;
+    const oldSScheckSum = this.ssCheckSum;
     let ssFlag = false;
     if (newCheckSum == oldSScheckSum) {ssFlag = true;}
     this.ssCheckSum = newCheckSum; // save current value for use next time

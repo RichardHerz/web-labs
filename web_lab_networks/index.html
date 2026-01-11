@@ -38,55 +38,55 @@
 
   <!-- load SPECIFIC JAVASCRIPT for this lab FIRST-->
 
-  <script language="javascript" src="js/process_sim_params.js" type="text/javascript"></script>
-  <script language="javascript" src="js/process_plot_info.js" type="text/javascript"></script>
-  
-  <script language="javascript" src="js/process_main.js" type="text/javascript"></script>
-  <script language="javascript" src="js/popup.js" type="text/javascript"></script>
-  <script language="javascript" src="js/export_cookie.js" type="text/javascript"></script>
+  <script src="js/process_sim_params.js"></script>
+  <script src="js/process_plot_info.js"></script>
+
+  <script src="js/process_main.js"></script>
+  <script src="js/popup.js"></script>
+  <script src="js/export_cookie.js"></script>
 
   <!-- THIS FILE IS NOT ACTIVE - NEEDS WORK -->
-  <!-- <script language="javascript" src="js/export_text.js" type="text/javascript"></script> -->
+  <!-- <script src="js/export_text.js"></script> -->
 
-  <script language="javascript" src="js/puCSTR_build.js" type="text/javascript"></script>
-  <script language="javascript" src="js/puCSTR_script.js" type="text/javascript"></script>
+  <script src="js/puCSTR_build.js"></script>
+  <script src="js/puCSTR_script.js"></script>
 
-  <script language="javascript" src="js/puFeed_build.js" type="text/javascript"></script>
-  <script language="javascript" src="js/puFeed_script.js" type="text/javascript"></script>
-  
-  <script language="javascript" src="js/puMixer_build.js" type="text/javascript"></script>
-  <script language="javascript" src="js/puMixer_script.js" type="text/javascript"></script>
+  <script src="js/puFeed_build.js"></script>
+  <script src="js/puFeed_script.js"></script>
 
-  <script language="javascript" src="js/puPFR_build.js" type="text/javascript"></script>
-  <script language="javascript" src="js/puPFR_script.js" type="text/javascript"></script>
+  <script src="js/puMixer_build.js"></script>
+  <script src="js/puMixer_script.js"></script>
 
-  <script language="javascript" src="js/puSplitter_build.js" type="text/javascript"></script>
-  <script language="javascript" src="js/puSplitter_script.js" type="text/javascript"></script>
+  <script src="js/puPFR_build.js"></script>
+  <script src="js/puPFR_script.js"></script>
 
-  <script language="javascript" src="js/puTank_build.js" type="text/javascript"></script>
-  <script language="javascript" src="js/puTank_script.js" type="text/javascript"></script>
+  <script src="js/puSplitter_build.js"></script>
+  <script src="js/puSplitter_script.js"></script>
+
+  <script src="js/puTank_build.js"></script>
+  <script src="js/puTank_script.js"></script>
 
   <!-- load COMMON JAVASCRIPT for Web Labs -->
-  <script language="javascript" src="../web_labs_JS/process_controller.js" type="text/javascript"></script>
-  <script language="javascript" src="../web_labs_JS/process_interfacer.js" type="text/javascript"></script>
-  <script language="javascript" src="../web_labs_JS/process_plotter_flot.js" type="text/javascript"></script>
+  <script src="../web_labs_JS/process_controller.js"></script>
+  <script src="../web_labs_JS/process_interfacer.js"></script>
+  <script src="../web_labs_JS/process_plotter_flot.js"></script>
 
   <!-- XXX JQUERY INTERFERES WITH CURSOR, SVG FOR PIPES, ETC. XXX  -->
   <!-- load jquery for logging -->
   <!--<script language="javascript" src="../web_labs_JS/jquery/new_jquery/jquery-3.3.1.min.js" type="text/javascript"></script>-->
 
   <!-- initialize simulation after loading of this window -->
-  <script language="javascript">
+  <script>
     window.onload = function() {
       controller.openThisLab();
       main.buildPalette();
       // Check for saved flowsheet data
-      // function getCookie is in file export_cookie.js 
+      // function getCookie is in file export_cookie.js
       const savedFlowsheet = expImpCookie.getCookie('flowsheetData');
       if (savedFlowsheet) {
         const loadSaved = true; // confirm('Found saved flowsheet. Would you like to load it?');
         if (loadSaved) {
-          // importFlowsheet is in file export_cookie.js 
+          // importFlowsheet is in file export_cookie.js
           expImpCookie.importFlowsheet();
         }
       }

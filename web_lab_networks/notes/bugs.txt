@@ -1,0 +1,8 @@
+-------
+BUG? 
+direct connect source to tank
+then run
+tank immediately maxes out at c=10, V=2 
+even though clock keeps running 
+------- 
+

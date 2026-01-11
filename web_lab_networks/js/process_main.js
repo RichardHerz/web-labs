@@ -185,18 +185,18 @@ const main = {
     // must be specified in function argument because
     // function buildFeed is also used for all scene objects
     const tU = 0; 
-    //---------------------- 
-    el.innerHTML += buildFeed(tU, sepX, sepY);
-    //---------------------- 
-    el.innerHTML += buildCSTR(tU, sepX, 14+sepY+(sepY+objY));
-    //---------------------- 
-    el.innerHTML += buildPFR(tU, sepX, 14+sepY+2*(sepY+objY));
-    //---------------------- 
-    el.innerHTML += buildMixer(tU, sepX, 14+sepY+3*(sepY+objY));
-    //---------------------- 
-    el.innerHTML += buildSplitter(tU, sepX, 6+sepY+4*(sepY+objY));
-    //---------------------- 
-    el.innerHTML += buildTank(tU, sepX, sepY+5*(sepY+objY));
+    //----------------------
+    el.insertAdjacentHTML('beforeend', buildFeed(tU, sepX, sepY));
+    //----------------------
+    el.insertAdjacentHTML('beforeend', buildCSTR(tU, sepX, 14+sepY+(sepY+objY)));
+    //----------------------
+    el.insertAdjacentHTML('beforeend', buildPFR(tU, sepX, 14+sepY+2*(sepY+objY)));
+    //----------------------
+    el.insertAdjacentHTML('beforeend', buildMixer(tU, sepX, 14+sepY+3*(sepY+objY)));
+    //----------------------
+    el.insertAdjacentHTML('beforeend', buildSplitter(tU, sepX, 6+sepY+4*(sepY+objY)));
+    //----------------------
+    el.insertAdjacentHTML('beforeend', buildTank(tU, sepX, sepY+5*(sepY+objY)));
     //---------------------- 
     console.log('exit buildPalette()');
   }, // END OF FUNCTION buildPalette
@@ -261,7 +261,7 @@ const main = {
       // Add the selected unit type
       switch (this.paletteObject) {
         case 'feed':
-          el.innerHTML += buildFeed(this.unitCount, x, y);
+          el.insertAdjacentHTML('beforeend', buildFeed(this.unitCount, x, y));
           unitID = `feed_${this.unitCount}`;
           this.unitList.push(unitID);
           this.params = [1, 10];
@@ -269,7 +269,7 @@ const main = {
           processUnits.push(new Feed(this.unitCount, unitID, x, y, this.params));
           break;
         case 'cstr':
-          el.innerHTML += buildCSTR(this.unitCount, x, y);
+          el.insertAdjacentHTML('beforeend', buildCSTR(this.unitCount, x, y));
           unitID = `cstr_${this.unitCount}`;
           this.unitList.push(unitID);
           this.params = [0.01, 100, 1];
@@ -277,7 +277,7 @@ const main = {
           processUnits.push(new CSTR(this.unitCount, unitID, x, y, this.params));
           break;
         case 'pfr':
-          el.innerHTML += buildPFR(this.unitCount, x, y);
+          el.insertAdjacentHTML('beforeend', buildPFR(this.unitCount, x, y));
           unitID = `pfr_${this.unitCount}`;
           this.unitList.push(unitID);
           this.params = [0.01, 100, 1];
@@ -285,7 +285,7 @@ const main = {
           processUnits.push(new PFR(this.unitCount, unitID, x, y, this.params));
           break;
         case 'mixer':
-          el.innerHTML += buildMixer(this.unitCount, x, y);
+          el.insertAdjacentHTML('beforeend', buildMixer(this.unitCount, x, y));
           unitID = `mixer_${this.unitCount}`;
           this.unitList.push(unitID);
           this.params = [];
@@ -293,7 +293,7 @@ const main = {
           processUnits.push(new Mixer(this.unitCount, unitID, x, y, this.params));
           break;
         case 'splitter':
-          el.innerHTML += buildSplitter(this.unitCount, x, y);
+          el.insertAdjacentHTML('beforeend', buildSplitter(this.unitCount, x, y));
           unitID = `splitter_${this.unitCount}`;
           this.unitList.push(unitID);
           this.params = [0.5];
@@ -301,7 +301,7 @@ const main = {
           processUnits.push(new Splitter(this.unitCount, unitID, x, y, this.params));
           break;
         case 'tank':
-          el.innerHTML += buildTank(this.unitCount, x, y);
+          el.insertAdjacentHTML('beforeend', buildTank(this.unitCount, x, y));
           unitID = `tank_${this.unitCount}`;
           this.unitList.push(unitID);
           this.params = [];

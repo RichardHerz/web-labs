@@ -41,7 +41,3 @@ processUnits[0] = Object.create(puFluidBedAnimation_0);
 processUnits[0].unitIndex = 0;
 processUnits[1] = puFluidBedAnimation_1;
 processUnits[1].unitIndex = 1;
-
-// clear separate process units for garbage collection
-puFluidBedAnimation_0 = null;
-puFluidBedAnimation_1 = null;

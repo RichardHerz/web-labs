@@ -45,7 +45,3 @@ processUnits[0].unitIndex = 0;
 // can only add one instance
 processUnits[1] = puCounterCurrentHeatExchanger;
 processUnits[1].unitIndex = 1;
-
-// clear separate process units for garbage collection
-puAdiabaticPackedBedPFR = null;
-puCounterCurrentHeatExchanger = null;

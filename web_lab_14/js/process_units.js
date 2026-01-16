@@ -39,6 +39,3 @@ const processUnits = [];
 
 processUnits[0] = puCSTRnthOrder;
 processUnits[0].unitIndex = 0;
-
-// clear separate process units for garbage collection
-puCSTRnthOrder = null;
